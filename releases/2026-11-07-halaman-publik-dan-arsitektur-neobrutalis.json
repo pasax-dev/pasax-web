@@ -1,0 +1,37 @@
+{
+    "date": "2026-11-07",
+    "type": "feature",
+    "project": {
+        "name": "Pasak Cloud Dashboard"
+    },
+    "title": {
+        "id": "Peluncuran Halaman Publik Responsif dan Simulator Ancaman Berbasis Neobrutalisme",
+        "en": "Launch of Responsive Public Landing Page and Real-time Threat Simulator with Neobrutalism Design"
+    },
+    "body": {
+        "id": "Menghadirkan halaman beranda publik yang sepenuhnya responsif di rute utama konsol Pasak Cloud. Mengadopsi pedoman desain Neobrutalisme modern dengan kontras tinggi, navigasi taktil, cuplikan terminal instalasi satu-perintah, demonstrasi pencegahan serangan kernel secara interaktif, komparasi matriks dengan SIEM konvensional, dan panduan FAQ teknis.",
+        "en": "Introduced a fully responsive public landing page on the primary root route of Pasak Cloud console. Adopts modern Neobrutalism design principles with high contrast, tactile navigation, one-line install terminal snippets, interactive live kernel threat interception simulator, comparative matrix against legacy SIEMs, and technical FAQ guides."
+    },
+    "items": [
+        {
+            "type": "feature",
+            "id": "Halaman Publik Responsif Penuh: Tampilan beranda berdaya estetika Neobrutalisme dengan navigasi taktil cerdas, pengalih mode gelap/terang, laci navigasi seluler, dan kartu sorotan metrik performa tinggi.",
+            "en": "Fully Responsive Public Page: High-aesthetic Neobrutalism landing experience with smart tactile navigation, dark/light mode toggle, mobile navigation drawer, and high-performance metric highlight cards."
+        },
+        {
+            "type": "feature",
+            "id": "Simulator Ancaman Interaktif Langsung: Demonstrasi langsung kemampuan Sentinel mengisolasi serangan pada level kernel (nftables) dan memulihkan hak akses berkas (.env) dalam hitungan milidetik dengan tombol simulasi serangan.",
+            "en": "Interactive Threat Interception Simulator: Live interactive component demonstrating Sentinel's capability to drop attacks in kernel space (nftables) and auto-heal compromised files within milliseconds upon clicking attack simulation."
+        },
+        {
+            "type": "feature",
+            "id": "Matriks Komparasi dan Tiga Lapis Pertahanan: Perbandingan mendalam antara Ekosistem Pasak, SIEM Tradisional (Wazuh/Datadog), Cloudflare WAF, dan Fail2ban dalam hal latensi kernel, konsumsi memori (<20MB), serta ketiadaan port terbuka.",
+            "en": "Comparative Benchmark & Triple Defense Breakdown: In-depth architectural comparison between Pasak Suite, Traditional SIEMs, Cloudflare WAF, and Fail2ban covering kernel latency, low memory footprint (<20MB), and zero open inbound ports."
+        },
+        {
+            "type": "improvement",
+            "id": "Komponen Terminal dan FAQ Akordeon: Terminal instalasi cepat satu-perintah untuk curl, Docker, dan Go CLI serta akordeon tanya jawab teknis berbasis pustaka Base UI.",
+            "en": "One-Line Terminal & FAQ Accordion: One-line quickstart command terminal with copy feedback for curl, Docker, and Go CLI alongside technical FAQ accordions powered by Base UI."
+        }
+    ]
+}

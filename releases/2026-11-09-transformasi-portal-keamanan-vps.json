@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-09",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.is-a.dev"
+  },
+  "title": {
+    "id": "Pembaruan Antarmuka Portal dan Solusi Perlindungan Khusus Server Web Mandiri",
+    "en": "Portal Interface Redesign and Dedicated Linux Server Protection Suite"
+  },
+  "body": {
+    "id": "Penyegaran menyeluruh pada beranda utama Pasak untuk menyajikan solusi perlindungan keamanan server mandiri (VPS) bagi pengelola web dan aplikasi. Menampilkan panduan komparasi sistem perlindungan ringan tanpa membebani memori, kompatibilitas lintas penyedia komputasi awan, simulasi beban kerja aplikasi web populer, serta alur aktivasi perlindungan instan dalam 60 detik.",
+    "en": "Comprehensive visual and content redesign of Pasak's front portal tailored specifically for developers and sysadmins running independent Linux web servers. Highlights ultra-lightweight zero-overhead defense comparisons, broad cloud provider compatibility, protection scenarios for popular web workloads, and a 60-second instant onboarding workflow."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Penyajian Komparasi Nyata Keamanan Server: Informasi visual perbandingan antara risiko server tanpa pelindung dan ketahanan server dengan pencegahan otomatis berbobot memori sangat ringan.",
+      "en": "Real-World Server Defense Comparison: Visual side-by-side comparison between unprotected servers and ultra-lightweight autonomous defense without out-of-memory crashes."
+    },
+    {
+      "type": "feature",
+      "id": "Panduan Beban Kerja Aplikasi Terintegrasi: Solusi skenario perlindungan khusus untuk aplikasi web, toko daring, layanan API modern, dan pengelolaan armada server skala agensi.",
+      "en": "Integrated Web Workload Scenarios: Dedicated defense blueprints for modern web applications, e-commerce stores, backend APIs, and multi-server agency fleets."
+    },
+    {
+      "type": "feature",
+      "id": "Jaminan Kompatibilitas Lintas Penyedia Layanan Awan: Indikator kesiapan pada berbagai penyedia server populer dan ragam distribusi sistem operasi modern.",
+      "en": "Cross-Cloud Provider Compatibility: Readiness badges across leading VPS providers and modern 64-bit operating systems."
+    },
+    {
+      "type": "improvement",
+      "id": "Peningkatan Tata Letak dan Keterbacaan Mobile: Perapian tata letak neobrutalisme, navigasi responsif, serta kenyamanan akses perintah instalasi pada seluruh resolusi layar.",
+      "en": "Responsive Layout and Mobile Usability Enhancements: Neobrutalist layout polish, responsive mobile navigation, and optimized terminal snippet copying across all screen sizes."
+    }
+  ]
+}

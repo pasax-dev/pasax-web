@@ -1,0 +1,37 @@
+{
+    "date": "2026-11-07",
+    "type": "feature",
+    "project": {
+        "name": "Pasak Cloud Dashboard"
+    },
+    "title": {
+        "id": "Peluncuran Perdana Konsol Manajemen Keamanan Terpusat Bergaya Neobrutalis",
+        "en": "Initial Launch of Centralized Cloud Security Operations Console with Neobrutalism Design"
+    },
+    "body": {
+        "id": "Peluncuran perdana portal pemantauan dan intelijen keamanan awan terpusat berbasis antarmuka Neobrutalisme modern berdaya kontras tinggi. Menggabungkan telemetri armada server VPS, pelaporan insiden keamanan secara langsung, inspeksi bukti forensik digital, pengawasan sertifikat domain, serta daftar pemblokiran penyerang global yang dapat dipasang ke server baru hanya dengan satu baris perintah.",
+        "en": "Initial launch of the centralized cloud security operations and intelligence console featuring modern, high-contrast Neobrutalism aesthetics. Unifies multi-server fleet telemetry, live threat incident feeds, digital forensic evidence inspection, domain certificate surveillance, and global crowdsourced attacker blocklists deployable to new servers with a single command."
+    },
+    "items": [
+        {
+            "type": "feature",
+            "id": "Desain Antarmuka Neobrutalisme Modern: Pengalaman visual berkarakter tegas dengan garis batas tebal, bayangan fisik taktil, dan tata warna kontras tinggi yang memudahkan operator keamanan membaca data operasional secara cepat dan jelas.",
+            "en": "Modern Neobrutalism Interface Design: High-contrast visual architecture with prominent borders, tactile physical shadows, and distinct alert color palettes enabling security operators to review complex data with maximum clarity."
+        },
+        {
+            "type": "feature",
+            "id": "Matriks Operasi Keamanan Terpadu 4 Panel: Pemantauan terpusat atas kesehatan dan beban perangkat server, aliran insiden penyusupan seketika, status sertifikat keamanan per domain, serta koordinasi daftar blokir bersama lintas server.",
+            "en": "Integrated 4-Panel Security Operations Matrix: Unified console covering server fleet load, real-time intrusion event streams, domain certificate expiration tracking, and coordinated multi-server crowd defense blocklists."
+        },
+        {
+            "type": "feature",
+            "id": "Inspeksi Forensik Bukti Insiden Digital: Jendela dialog interaktif untuk menelaah rincian teknis peristiwa keamanan secara mendalam, termasuk perbandingan sidik jari kriptografi SHA-256 berkas sebelum dan sesudah kejadian serta identitas asal penyerang.",
+            "en": "Digital Incident Forensic Evidence Inspection: Interactive inspection modal providing in-depth analysis of security events, featuring cryptographic SHA-256 before/after hash comparisons and attacker identification."
+        },
+        {
+            "type": "improvement",
+            "id": "Pemasangan Agen Cepat Satu Perintah: Fasilitas generator perintah terminal yang memudahkan penambahan server baru ke dalam jaringan pemantauan dalam hitungan detik tanpa konfigurasi manual yang rumit.",
+            "en": "One-Line Host Agent Provisioning Wizard: Built-in command generator allowing operators to onboard new Linux servers into the monitoring mesh in seconds without manual setup overhead."
+        }
+    ]
+}

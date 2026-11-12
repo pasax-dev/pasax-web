@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-07",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard"
+  },
+  "title": {
+    "id": "Dukungan Penuh Mode Gelap dengan Desain Neobrutalisme Berkualitas Tinggi",
+    "en": "Comprehensive High-Contrast Neobrutalism Dark Mode Support"
+  },
+  "body": {
+    "id": "Menyempurnakan konsol pusat keamanan awan dan portal publik dengan dukungan mode gelap secara menyeluruh. Menghadirkan palet warna gelap kontras tinggi yang nyaman di mata untuk pemantauan malam hari tanpa kehilangan identitas desain Neobrutalisme yang tegas, dilengkapi tombol pengalih tema instan di bilah navigasi utama dan pintasan papan ketik cepat.",
+    "en": "Upgraded the central cloud security console and public portal with comprehensive dark mode support. Delivers an ergonomic high-contrast dark theme optimized for night-time security operations while preserving bold Neobrutalism design aesthetics, complete with an instant theme toggle in the primary navigation header and quick keyboard hotkeys."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Pengalih Tema Taktil dan Pintasan Cepat: Tombol pengalih mode gelap dan terang berdaya respons tinggi di bilah atas konsol, menu akun pengguna, dan beranda publik dengan dukungan tombol pintasan huruf D.",
+      "en": "Tactile Theme Switcher & Quick Hotkey: High-responsiveness dark/light theme switchers integrated into the top console header, user profile menu, and public navigation with keyboard shortcut D support."
+    },
+    {
+      "type": "improvement",
+      "id": "Palet Warna Neobrutalisme Ergonomis: Permukaan panel gelap terukur dengan garis batas kontras tajam dan bayangan khas yang mempertahankan keterbacaan data metrik dan diagram ancaman keamanan.",
+      "en": "Ergonomic Neobrutalism Dark Palette: Calibrated dark surface panels with sharp high-contrast borders and signature hard shadows ensuring total legibility of metrics and threat telemetry charts."
+    },
+    {
+      "type": "fix",
+      "id": "Koreksi Kontras Teks dan Tabel: Memperbaiki keterbacaan teks judul kartu, kepala tabel operasi, bilah navigasi sisi samping, dan bilah kemajuan beban memori pada tema gelap.",
+      "en": "Text Contrast and Table Readability Fixes: Refined text contrast across stat card labels, operations table headers, navigation sidebars, and system resource indicators under dark theme."
+    }
+  ]
+}
+

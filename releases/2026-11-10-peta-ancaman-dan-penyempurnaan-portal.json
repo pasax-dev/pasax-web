@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-10",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.is-a.dev"
+  },
+  "title": {
+    "id": "Peta Ancaman Interaktif Real-Time, Kebijakan Privasi, dan Penyempurnaan Taktis Antarmuka",
+    "en": "Interactive Real-Time Threat Map, Privacy Policies, and Tactical Interface Polish"
+  },
+  "body": {
+    "id": "Penyempurnaan menyeluruh pada antarmuka publik Pasak dengan integrasi visual peta ancaman global real-time, simulasi penangkis serangan siber, dokumen Kebijakan Privasi dan Ketentuan Layanan resmi, serta peningkatan navigasi responsif dan animasi terminal.",
+    "en": "Comprehensive public portal enhancements featuring a real-time global threat radar simulation, cyber attack interception visualization, official Privacy Policy and Terms of Service documents, and responsive navigation typography polish."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Peta Ancaman Siber Global 2D: Simulasi penangkis serangan siber lintas benua yang memvisualisasikan simpul server terlindungi dan intersepsi ancaman secara instan di layer kernel.",
+      "en": "2D Global Cyber Threat Map: Cross-continent attack interception simulation visualizing armored server nodes and instant kernel-level packet drops."
+    },
+    {
+      "type": "new",
+      "id": "Halaman Kebijakan Privasi dan Ketentuan Layanan: Penyediaan dokumen transparansi perlindungan data, kepatuhan privasi, dan pedoman operasional layanan resmi.",
+      "en": "Privacy Policy and Terms of Service Pages: Delivery of official data protection transparency, privacy compliance, and service usage terms."
+    },
+    {
+      "type": "improvement",
+      "id": "Konsol Radar Taktis Diperkaya: Penambahan pemilih vektor serangan cepat, inspeksi forensik ancaman, serta aliran telemetri mitigasi kernel langsung.",
+      "en": "Enriched Tactical Radar Console: Added quick attack vector selector, in-depth forensic inspection cards, and live kernel mitigation stream."
+    },
+    {
+      "type": "improvement",
+      "id": "Efek Ketik Terminal dan Tipografi Responsif: Pengalaman teks ketik bergaya terminal pertahanan siber yang stabil tanpa pergeseran tata letak halaman.",
+      "en": "Cyber Terminal Typing Text and Responsive Typography: Terminal-inspired decrypt and typing text experience optimized for zero layout shift across all devices."
+    }
+  ]
+}

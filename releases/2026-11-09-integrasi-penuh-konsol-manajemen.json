@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-09",
+  "type": "deploy",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.is-a.dev"
+  },
+  "title": {
+    "id": "Peluncuran Produksi Konsol Manajemen Pasak Cloud di Domain Resmi",
+    "en": "Production Deployment of Pasak Cloud Management Console to Official Domain"
+  },
+  "body": {
+    "id": "Konsol pusat pemantauan Pasak Cloud resmi disebarkan ke infrastruktur produksi global di pasak.is-a.dev dan terhubung langsung ke mesin koordinasi pasak-api. Memantau armada server, sertifikat SSL domain, peta ancaman serangan 3D waktu nyata, dan kebijakan pemblokiran kernel secara tersentralisasi.",
+    "en": "Pasak Cloud central management console officially deployed to global production infrastructure at pasak.is-a.dev and directly connected to the pasak-api coordination engine. Features fleet monitoring, domain SSL status, real-time 3D attack threat map, and centralized kernel blocklist policies."
+  },
+  "items": [
+    {
+      "type": "deploy",
+      "id": "Penyebaran Produksi Global: Aplikasi aktif secara penuh di domain resmi pasak.is-a.dev dengan jaringan pengiriman tepi berkinerja tinggi.",
+      "en": "Global Production Deployment: Fully live on official domain pasak.is-a.dev with high-performance edge delivery network."
+    },
+    {
+      "type": "feature",
+      "id": "Sinkronisasi Telemetri Armada Server Nyata: Konsol secara berkala memperbarui kondisi beban kerja, kapasitas memori, dan status sertifikat web server dari seluruh perangkat terkelola.",
+      "en": "Live Fleet Server Telemetry Synchronization: The console periodically refreshes workload status, memory capacity, and web server certificate health across all managed servers."
+    },
+    {
+      "type": "feature",
+      "id": "Pemantauan Insiden dan Daftar Blokir Terpusat: Penyajian log ancaman dan daftar alamat internet berisiko secara global yang otomatis diperbarui dari deteksi seluruh simpul pertahanan.",
+      "en": "Centralized Incident and Blocklist Monitoring: Visual presentation of threat events and globally flagged risky addresses automatically synchronized across all defense nodes."
+    },
+    {
+      "type": "improvement",
+      "id": "Ketahanan Data Cadangan Tanpa Henti: Penyediaan sistem penyimpanan cerdas berlapis yang menjaga kelancaran navigasi antarmuka peramban meskipun jaringan koordinasi sedang mengalami jeda koneksi.",
+      "en": "Seamless Offline Fallback Resilience: Multi-layered smart caching architecture ensuring smooth browser navigation even during network coordination pauses."
+    }
+  ]
+}

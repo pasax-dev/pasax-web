@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-08",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard"
+  },
+  "title": {
+    "id": "Peningkatan Animasi Interaktif Peta Bola Dunia dan Visual Neobrutalisme",
+    "en": "Interactive 3D Threat Globe Upgrades and Dynamic Neobrutalism Visuals"
+  },
+  "body": {
+    "id": "Menghadirkan pembaruan visual komprehensif pada beranda dan konsol pemantauan. Dilengkapi interaksi penyorotan negara dan rotasi halus pada peta bola dunia 3D, radar keliling berpresisi tinggi dengan jejak sapuan sinyal, serta atmosfer latar belakang animasi neobrutalisme yang dinamis di setiap bagian halaman.",
+    "en": "Delivered comprehensive visual upgrades to the public landing page and security console. Introduces interactive country hover inspection and smooth cinematic rotation to the 3D globe, high-precision tactical radar sweep with target decay persistence, and dynamic neobrutalism background matrix animations across all landing sections."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Inspeksi Negara Interaktif pada Peta 3D: Arahkan kursor ke negara mana pun pada bola dunia untuk melihat kartu telemetri instan berisi status pertahanan aktif, tingkat keparahan ancaman, serta perlambatan rotasi otomatis untuk memudahkan pengamatan.",
+      "en": "Interactive Country Inspection on 3D Globe: Hover over any country on the 3D globe to reveal an instant telemetry card displaying active defense status, threat severity, and an automatic rotation slow-down for effortless inspection."
+    },
+    {
+      "type": "improvement",
+      "id": "Radar Pemantauan Taktis Berakurasi Tinggi: Pembaruan mesin radar dengan busur derajat keliling 360 derajat, sapuan sinar bergradien mulus, penguncian koordinat target instan, dan efek pudar sinyal yang realistis.",
+      "en": "High-Precision Tactical Perimeter Radar: Overhauled the radar display engine with 360-degree compass ticks, smooth gradient sweep wedge, instant target coordinate lock-on, and realistic signal fade decay."
+    },
+    {
+      "type": "new",
+      "id": "Latar Belakang Animasi Neobrutalisme Dinamis: Suasana visual baru dengan kisi cetak biru taktis, ornamen geometris taktil melayang, dan garis pemindai keamanan halus di seluruh bagian halaman beranda publik.",
+      "en": "Dynamic Neobrutalism Background Atmospheres: Enriched every landing section with tactile blueprint grid matrices, floating geometric stickers with hard physical shadows, and subtle security scanlines."
+    },
+    {
+      "type": "improvement",
+      "id": "Tipografi Judul dan Telemetri Lebih Tajam: Pembaruan jenis huruf judul berkarakter tegas dan format angka monospasi taktis pada metrik operasional untuk keterbacaan data yang optimal.",
+      "en": "Crisp Typography for Headings and Telemetry: Upgraded bold display typeface for section titles and dedicated tactile monospace formatting for operational metrics, maximizing readability across devices."
+    },
+    {
+      "type": "improvement",
+      "id": "Buku Panduan Standar Desain Visual: Penyusunan dokumentasi arsitektur desain komprehensif untuk memastikan konsistensi visual tata letak, warna, tipografi, dan komponen di seluruh ekosistem layanan.",
+      "en": "Standardized Visual Design Guide: Formulated a comprehensive design system blueprint ensuring harmonious layout rules, color tokens, typography scales, and tactile components across all ecosystem surfaces."
+    }
+  ]
+}

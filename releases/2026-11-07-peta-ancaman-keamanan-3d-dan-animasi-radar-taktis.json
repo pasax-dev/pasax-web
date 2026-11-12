@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-07",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard"
+  },
+  "title": {
+    "id": "Peluncuran Peta Ancaman Siber 3D Interaktif dan Animasi Telemetri Taktis",
+    "en": "Launch of Interactive 3D Cyber Threat Map and Tactical Telemetry Animations"
+  },
+  "body": {
+    "id": "Menghadirkan fitur visualisasi keamanan siber tingkat lanjut yang terinspirasi dari ThreatsEye ke dalam ekosistem Pasak. Dilengkapi peta bola dunia 3D interaktif berbasis Three.js dengan lintasan serangan balistik real-time, widget radar keliling 360 derajat dengan dok kemampuan terintegrasi, visualisasi aliran data pertahanan tiga lapis (Triple Defense Flow Network), serta bilah status telemetri langsung.",
+    "en": "Introduced advanced cybersecurity visualizations inspired by ThreatsEye into the Pasak ecosystem. Features a Three.js-powered interactive 3D rotating globe with real-time ballistic attack arcs, a 360-degree tactical perimeter radar with an interactive capability dock, a 3-stage Triple Defense Flow Network dataflow visualizer, and live telemetry ticker bars."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Peta Bola Dunia Ancaman Siber 3D (/threats-map): Menampilkan rotasi bumi 3D, batas benua, lintasan proyektil serangan berkilau, lingkaran riak gelombang kejut pada node pertahanan Sentinel, tombol alih proyeksi 2D/3D, dan dok fokus cepat antar-benua.",
+      "en": "Interactive 3D Cyber Threat Map (/threats-map): Features 3D earth rotation, continent boundaries, ballistic projectile arcs with traveling energy comets, impact shockwave ripples on Sentinel nodes, a 2D/3D projection toggle, and continent quick-focus docks."
+    },
+    {
+      "type": "feature",
+      "id": "Aliran Umpan Ancaman Siber Real-time: Panel sisi umpan serangan langsung dengan indikator keparahan, bendera negara asal penyerang, lencana mitigasi (nftables, Shield WAF, Honeypot), filter kategori, dan pengatur kecepatan stream.",
+      "en": "Real-time Cyber Threat Feeds: Live attack feed sidebar featuring severity badges, attacker geolocation flags, defense mitigation tags (nftables kernel drops, Shield WAF, Honeypots), category filters, and stream rate controls."
+    },
+    {
+      "type": "improvement",
+      "id": "Widget Radar Taktis 360 Derajat & Aliran Pertahanan 3 Lapis: Menambahkan animasi sapuan sinar radar 360° dengan target ancaman aktif, dok diagnostik (Perimeter, nftables, FIM, Mesh), serta visualisasi aliran data terinspeksi dari middleware PHP hingga kernel Linux.",
+      "en": "360° Tactical Perimeter Radar & Triple-Defense Flow: Added a rotating 360° radar sweep widget with active target blips, capability docks, and an interactive dataflow visualizer bridging PHP middleware down to Linux kernel eBPF drops."
+    },
+    {
+      "type": "feature",
+      "id": "Integrasi Navigasi & Ticker Status Mesin: Tautan langsung Threat Map dengan titik berdenyut merah di bilah navigasi utama dan bilah sisi konsol SOC, serta bilah status telemetri langsung di bawah bagian hero beranda.",
+      "en": "Navigation Integration & Live Telemetry Ticker: Integrated Threat Map navigation links with pulsing red live indicators in the public header and SOC sidebar, plus a real-time mesh telemetry bar below the hero section."
+    }
+  ]
+}
+

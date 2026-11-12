@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-09",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.is-a.dev/docs"
+  },
+  "title": {
+    "id": "Pemisahan Dokumentasi Multi-Produk dan Peluncuran REST API CRUD Dokumentasi",
+    "en": "Multi-Product Documentation Tree Separation and Headless Documentation CRUD REST API"
+  },
+  "body": {
+    "id": "Memisahkan struktur penyimpanan dokumentasi menjadi tiga modul khusus: pasak-security-monitor untuk aplikasi Laravel, pasak-sentinel untuk kernel host daemon Go, dan core untuk platform platform suite. Meluncurkan REST API CRUD /api/v1/docs terproteksi yang memungkinkan AI Agent membaca, menambah, memperbarui, dan menghapus dokumen secara otonom saat ada pembaruan fitur di repositori sumber.",
+    "en": "Separated documentation storage into three dedicated product trees: pasak-security-monitor for Laravel applications, pasak-sentinel for the Go kernel host daemon, and core for the platform suite. Launched a protected headless CRUD REST API at /api/v1/docs enabling AI agents to autonomously read, create, update, and delete markdown documents upon code changes in source repositories."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Pemisahan Tiga Direktori Dokumentasi Khusus: content/docs (core suite), content/pasak-security-monitor/docs (Laravel WAF), dan content/pasak-sentinel/docs (Go daemon).",
+      "en": "Three Dedicated Documentation Trees: content/docs (core suite), content/pasak-security-monitor/docs (Laravel WAF), and content/pasak-sentinel/docs (Go daemon)."
+    },
+    {
+      "type": "feature",
+      "id": "REST API CRUD Dokumentasi (/api/v1/docs): Endpoint GET, POST (upsert), dan DELETE dokumen dengan otentikasi header X-Docs-Key dan proteksi traversal.",
+      "en": "Documentation CRUD REST API (/api/v1/docs): GET, POST (upsert), and DELETE endpoints with X-Docs-Key header authentication and traversal protection."
+    },
+    {
+      "type": "feature",
+      "id": "Skill AI docs-sync Terdistribusi: Panduan otomatisasi AI terpasang di seluruh repositori (pasak, pasak-sentinel, pasak-dashboard) untuk menjaga akurasi dokumentasi teknis publik.",
+      "en": "Distributed AI docs-sync Skill: Automation guide installed across all repositories (pasak, pasak-sentinel, pasak-dashboard) to keep public technical docs synchronized."
+    }
+  ]
+}

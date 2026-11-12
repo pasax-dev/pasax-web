@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-09",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.is-a.dev/docs"
+  },
+  "title": {
+    "id": "Peluncuran Portal Dokumentasi Resmi Produk pasak-security-monitor",
+    "en": "Official Documentation Portal Launch for pasak-security-monitor Product"
+  },
+  "body": {
+    "id": "Menyediakan portal dokumentasi teknis lengkap produk pasak-security-monitor yang disajikan secara langsung pada halaman publik antarmuka dashboard. Dilengkapi 29 panduan lengkap mulai dari instalasi Laravel murni 100% PHP tanpa dependensi NPM, arsitektur WAF instan, karantina perangkat pada NAT bersama, mitigasi brute-force bertingkat, pemindai webshell, hingga referensi headless REST API dan konfigurasi web server.",
+    "en": "Delivered the comprehensive official technical documentation portal for the pasak-security-monitor product hosted directly within the public dashboard interface. Features 29 complete guides covering zero NPM 100% pure PHP Laravel installation, instant WAF architecture, shared NAT device quarantine, stepped brute-force mitigation, webshell scanners, headless REST APIs, and web server hardening."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Katalog 29 Panduan Teknis Lengkap: Mencakup modul Memulai, Arsitektur Inti, Modul Keamanan, Referensi REST API, CLI Artisan, Hardening Nginx/Apache, dan Panduan Integrasi.",
+      "en": "Complete 29 Technical Guides Catalog: Covering Getting Started, Core Architecture, Security Modules, REST API Reference, Artisan CLI, Nginx/Apache Hardening, and Integration Guides."
+    },
+    {
+      "type": "feature",
+      "id": "Antarmuka Neobrutalisme Responsif: Navigasi samping interaktif dengan fitur filter pencarian instan, daftar isi mengambang otomatis, dan tombol salin kode pada setiap blok instruksi.",
+      "en": "Responsive Neobrutalism UI: Interactive sidebar with instant search filtering, dynamic floating table of contents, and one-click code copy buttons on instruction blocks."
+    },
+    {
+      "type": "improvement",
+      "id": "Prerender Statis Performa Tinggi: Seluruh 29 halaman dokumentasi dioptimalkan secara pra-render (SSG) untuk pemuatan halaman instan dan keterbacaan mesin pencari maksimal.",
+      "en": "High-Performance Static Prerendering: All 29 documentation pages statically prerendered for instantaneous page loads and optimal search engine discoverability."
+    }
+  ]
+}

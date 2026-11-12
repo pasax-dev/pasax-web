@@ -1,0 +1,22 @@
+{
+  "name": "Pasak Suite — Linux VPS & Web Security",
+  "short_name": "Pasak",
+  "description": "Kernel-level defense, automated file integrity monitoring, and autonomous SOC mesh for Linux VPS & Web Fleets.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffc83b",
+  "background_color": "#090d16",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
