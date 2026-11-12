@@ -2,7 +2,25 @@
 
 All notable changes to the **Pasak Cloud Central Monitoring Console** will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [0.8.1] - 2026-11-13
+
+### Changed
+
+- **Penyelarasan Dokumentasi Ekosistem Pasak (`pasak-dev/secure-monitor` & `Pasak\SecureMonitor`)**:
+  - Memperbarui `README.md` dan `docs/01-architecture.md` untuk menyelaraskan referensi paket WAF Laravel ke `pasak-dev/secure-monitor` dengan namespace kanonikal `Pasak\SecureMonitor`.
+  - Memperbarui `docs/03-api-reference.md` dengan skema payload telemetri dan pelaporan insiden ancaman WAF dari modul aplikasi Laravel.
+  - Memperbarui panduan operasional AI Agent di `AGENTS.md` (6-chapter docs suite).
+
+### Added
+
+- **Bab Baru Dokumentasi Ekosistem**:
+  - Menambahkan Bab 06: `docs/06-ecosystem-integration.md` yang merinci integrasi terpadu tiga pilar pertahanan Pasak (`pasak-sentinel`, `pasak-dev/secure-monitor`, dan `pasak-dashboard`).
+  - Memperbarui indeks suite dokumentasi pada `docs/README.md`.
 
 ---
 

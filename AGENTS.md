@@ -94,7 +94,7 @@ pasak-dashboard/
 │   ├── pasak-operations-panel.tsx # 4-tab SOC operations matrix
 │   ├── section-cards.tsx    # Fleet metric stat cards
 │   └── site-header.tsx      # Top bar with live Sentinel mesh status
-├── docs/                    # Authoritative 5-chapter documentation suite
+├── docs/                    # Authoritative 6-chapter documentation suite
 ├── lib/
 │   ├── store.ts             # Shared in-memory and persistent state store
 │   └── utils.ts             # Tailwind class merging helper (cn)
