@@ -1,6 +1,6 @@
 import { NodeTelemetry, ThreatEvent, pasakStore, VHostInfo } from "./store"
 
-const DEFAULT_API_URL = "https://pasak-api.vercel.app"
+const DEFAULT_API_URL = "https://pasak-service.vercel.app"
 
 export function getPasakApiUrl(): string {
   if (typeof process !== "undefined" && process.env.PASAK_API_URL) {

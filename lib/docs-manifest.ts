@@ -542,6 +542,26 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
             product: "pasak-sentinel",
             order: 7,
           },
+          {
+            slug: "08-ai-agent-vps-runbook",
+            title: "AI Agent VPS Runbook & Prompting Guide",
+            description:
+              "Panduan instruksi prompt mandiri bagi AI Agent di VPS Linux untuk audit, instalasi, dan penghubungan otomatis Pasak Suite.",
+            category: "Host & Kernel Defense",
+            filePath: "08-ai-agent-vps-runbook.md",
+            product: "pasak-sentinel",
+            order: 8,
+          },
+          {
+            slug: "09-installation-guide",
+            title: "Panduan Lengkap Instalasi & Deployment",
+            description:
+              "Langkah-langkah instalasi cepat satu baris (one-line installer), manual systemd, konfigurasi sentinel.yaml, dan integrasi Laravel WAF.",
+            category: "Host & Kernel Defense",
+            filePath: "09-installation-guide.md",
+            product: "pasak-sentinel",
+            order: 9,
+          },
         ],
       },
     ],

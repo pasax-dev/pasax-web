@@ -19,7 +19,7 @@ export interface ParsedDoc {
 const PASAK_API_URL =
   process.env.NEXT_PUBLIC_PASAK_API_URL ||
   process.env.PASAK_API_URL ||
-  "https://pasak-api.vercel.app"
+  "https://pasak-service.vercel.app"
 
 function slugify(text: string): string {
   return text
@@ -64,8 +64,31 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
     )
   }
 
+  // Local filesystem fallback
+  if (!markdownBody && typeof window === "undefined") {
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const candidates = [
+        path.join(process.cwd(), "docs", item.product, item.filePath),
+        path.join(process.cwd(), "docs", item.filePath),
+        path.join(process.cwd(), "docs", item.product, `${item.slug}.md`),
+        path.join(process.cwd(), "docs", `${item.slug}.md`),
+      ];
+      for (const p of candidates) {
+        if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
+          const raw = fs.readFileSync(/*turbopackIgnore: true*/ p, "utf-8");
+          markdownBody = raw.replace(/^---[\s\S]*?---\s*/, "");
+          break;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
   if (!markdownBody) {
-    return null
+    return null;
   }
 
   // Transform Astro Starlight component syntax if present
