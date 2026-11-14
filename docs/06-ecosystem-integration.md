@@ -99,3 +99,16 @@ use Internal\SecurityMonitor\Services\PasakService;
 ```
 
 All classes seamlessly resolve to their canonical `Pasak\SecureMonitor` targets.
+
+---
+
+## 6. Automated Pentest Reports & Date Range Aggregation
+
+Starting in v1.1.2+, `pasak-dev/secure-monitor` provides an automated server security hardening & penetration testing audit report engine in standard Markdown (`.md`):
+
+- **Executive & Compliance Export**: Evaluates 42 server hardening parameters, SHA-256 file integrity status, webshell scanner results, and maps findings directly to **OWASP Top 10 (2021)** standards.
+- **Date Range Recap Timeline**: Supports single date (`?date=YYYY-MM-DD`) and full date ranges (`?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`), automatically compiling daily threat breakdown timelines (`| Tanggal | Total | Kritis | Tinggi | Sedang | Rendah | Diblokir |`).
+- **Dedicated Dashboard Panel**: Accessible via `/pasak/reports` with dual tab previews (live rendered HTML and raw Markdown) plus quick export modal triggers in `/pasak/server`.
+- **REST API Endpoints**:
+  - `GET /pasak/server/report/export?start_date=...&end_date=...`
+  - `GET /api/pasak/server/report/export?start_date=...&end_date=...`
