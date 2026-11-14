@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-15",
+  "type": "update",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak-market.vercel.app"
+  },
+  "title": {
+    "id": "Peluncuran Portal Produksi Publik, Pemantauan Simpul Server Langsung, dan Akses Cepat Agen",
+    "en": "Public Production Portal Launch, Live Server Fleet Monitoring, and Quick Agent Deployment"
+  },
+  "body": {
+    "id": "Meluncurkan portal operasional keamanan dan pusat edukasi Pasak ke lingkungan produksi publik berkinerja tinggi. Menyajikan visualisasi status server yang terlindungi secara langsung dari layanan cloud, peta ancaman siber interaktif, dokumentasi teknis lengkap, serta fasilitas penyebaran agen keamanan ke server Linux hanya dengan satu baris perintah.",
+    "en": "Launched the public production operations portal and security education center. Delivers real-time server fleet health visualizations connected to live cloud services, interactive cyber threat radar, comprehensive technical documentation, and one-command agent deployment for Linux servers."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Peluncuran Portal Produksi Publik: Platform kini dapat diakses secara bebas oleh pengguna dan administrator dengan kecepatan pemuatan instan dan koneksi terenkripsi.",
+      "en": "Public Production Portal Deployment: The platform is now publicly accessible for users and operators with instant load speeds and end-to-end encryption."
+    },
+    {
+      "type": "feature",
+      "id": "Pemantauan Simpul Server Langsung: Menampilkan daftar server yang terlindungi beserta status kesehatan, penggunaan sumber daya, dan deteksi domain web secara seketika.",
+      "en": "Live Server Fleet Monitoring: Displays protected servers with real-time health indicators, resource utilization metrics, and web domain discovery."
+    },
+    {
+      "type": "feature",
+      "id": "Pemasangan Agen Cepat Satu Perintah: Menyediakan panduan dan perintah terminal instan bagi pengguna untuk langsung mengamankan server VPS mereka dalam hitungan detik.",
+      "en": "One-Command Rapid Agent Deployment: Provides instant terminal commands allowing users to secure their Linux VPS in seconds."
+    },
+    {
+      "type": "improvement",
+      "id": "Integrasi Peta Ancaman dan Dokumentasi Terpadu: Penyelarasan aliran data radar serangan global dan pustaka panduan teknis yang selalu mutakhir dengan sistem cloud.",
+      "en": "Unified Threat Radar and Documentation Integration: Synchronized global attack radar data streams and technical documentation hub with live cloud services."
+    }
+  ]
+}
