@@ -19,9 +19,9 @@ import { PRODUCTS_CONFIG, DOCS_MANIFEST } from "@/lib/docs-manifest"
 import { Badge } from "@/components/ui/badge"
 
 export const metadata = {
-  title: "Dokumentasi Resmi — pasak-security-monitor & Pasak Suite",
+  title: "Dokumentasi Resmi — pasak-secure-monitor & Pasak Suite",
   description:
-    "Portal dokumentasi resmi ekosistem Pasak Suite: pasak-security-monitor (Laravel WAF), pasak-sentinel (Go daemon), dan cloud control plane.",
+    "Portal dokumentasi resmi ekosistem Pasak Suite: pasak-secure-monitor (Laravel WAF), pasak-sentinel (Go daemon), dan cloud control plane.",
 }
 
 const iconMap: Record<string, React.ElementType> = {
@@ -47,7 +47,7 @@ export default function DocsHomePage() {
               variant="outline"
               className="border-2 border-border bg-main font-mono text-xs font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
             >
-              pasak-security-monitor
+              pasak-secure-monitor
             </Badge>
             <Badge
               variant="outline"
@@ -66,7 +66,7 @@ export default function DocsHomePage() {
           <h1 className="font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
             Portal Dokumentasi Resmi <br className="hidden sm:inline" />
             <span className="text-main underline decoration-4 underline-offset-8">
-              pasak-security-monitor
+              pasak-secure-monitor
             </span>
           </h1>
 
@@ -79,7 +79,7 @@ export default function DocsHomePage() {
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
-              href="/docs/pasak-security-monitor"
+              href="/docs/pasak-secure-monitor"
               className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-main px-4 py-2 font-heading text-sm font-black text-main-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_var(--border)]"
             >
               <span>Mulai: Security Monitor</span>
@@ -116,7 +116,7 @@ export default function DocsHomePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {/* Card 1: pasak-security-monitor */}
+          {/* Card 1: pasak-secure-monitor */}
           <div className="flex flex-col justify-between space-y-3 rounded-base border-2 border-border bg-background p-5 shadow-[3px_3px_0px_0px_var(--border)]">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -131,7 +131,7 @@ export default function DocsHomePage() {
                 </span>
               </div>
               <h3 className="font-heading text-base font-black text-foreground">
-                pasak-security-monitor
+                pasak-secure-monitor
               </h3>
               <p className="text-xs leading-relaxed text-foreground/75">
                 WAF mandiri 100% PHP murni untuk Laravel 10–13, karantina
@@ -140,7 +140,7 @@ export default function DocsHomePage() {
               </p>
             </div>
             <Link
-              href="/docs/pasak-security-monitor"
+              href="/docs/pasak-secure-monitor"
               className="inline-flex w-full items-center justify-between border-t border-border/40 pt-3 font-mono text-xs font-bold text-main hover:underline"
             >
               <span>Buka Dokumentasi WAF</span>
@@ -219,7 +219,7 @@ export default function DocsHomePage() {
         <div className="flex items-center gap-2">
           <Rocket className="size-5 stroke-[2.5] text-main" />
           <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-            Instalasi Cepat pasak-security-monitor
+            Instalasi Cepat pasak-secure-monitor
           </h2>
         </div>
 
@@ -281,11 +281,11 @@ export default function DocsHomePage() {
         </div>
       </section>
 
-      {/* Directory of All Document Categories for pasak-security-monitor */}
+      {/* Directory of All Document Categories for pasak-secure-monitor */}
       <section className="space-y-6 pt-4">
         <div>
           <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-            Katalog Modul pasak-security-monitor
+            Katalog Modul pasak-secure-monitor
           </h2>
           <p className="text-xs font-medium text-foreground/70 sm:text-sm">
             Jelajahi panduan teknis mendalam untuk setiap modul pertahanan
@@ -319,7 +319,7 @@ export default function DocsHomePage() {
                   {cat.items.map((item) => (
                     <li key={item.slug}>
                       <Link
-                        href={`/docs/pasak-security-monitor/${item.slug}`}
+                        href={`/docs/pasak-secure-monitor/${item.slug}`}
                         className="group flex items-center justify-between py-1 text-xs text-foreground/80 hover:text-foreground"
                       >
                         <span className="line-clamp-1 font-medium underline-offset-2 group-hover:text-main group-hover:underline">

@@ -58,10 +58,10 @@ export function DocsSidebar({ className }: { className?: string }) {
   const detectedProduct = React.useMemo(() => {
     if (pathname.includes("/docs/pasak-sentinel")) return "pasak-sentinel"
     if (pathname.includes("/docs/core")) return "core"
-    if (pathname.includes("/docs/pasak-security-monitor"))
-      return "pasak-security-monitor"
+    if (pathname.includes("/docs/pasak-secure-monitor"))
+      return "pasak-secure-monitor"
     const doc = findDocBySlug(pathname)
-    return doc?.product || "pasak-security-monitor"
+    return doc?.product || "pasak-secure-monitor"
   }, [pathname])
 
   const [activeProduct, setActiveProduct] =
@@ -79,7 +79,7 @@ export function DocsSidebar({ className }: { className?: string }) {
   }
 
   const activeConfig =
-    PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasak-security-monitor"]
+    PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasak-secure-monitor"]
 
   // Filter items if search is active
   const filteredCategories = React.useMemo(() => {
@@ -110,14 +110,14 @@ export function DocsSidebar({ className }: { className?: string }) {
           </span>
           <div className="grid grid-cols-3 gap-1 rounded-base border-2 border-border bg-background p-1 shadow-[2px_2px_0px_0px_var(--border)]">
             <Link
-              href="/docs/pasak-security-monitor"
+              href="/docs/pasak-secure-monitor"
               onClick={() => {
-                setActiveProduct("pasak-security-monitor")
+                setActiveProduct("pasak-secure-monitor")
                 setMobileOpen(false)
               }}
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
-                activeProduct === "pasak-security-monitor"
+                activeProduct === "pasak-secure-monitor"
                   ? "bg-main text-main-foreground shadow-sm"
                   : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
               )}

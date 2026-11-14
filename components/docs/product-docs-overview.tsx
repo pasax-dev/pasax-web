@@ -14,14 +14,14 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-export type ProductType = "core" | "pasak-security-monitor" | "pasak-sentinel"
+export type ProductType = "core" | "pasak-secure-monitor" | "pasak-sentinel"
 
 interface ProductDocsOverviewProps {
   product: ProductType
 }
 
 const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
-  "pasak-security-monitor": {
+  "pasak-secure-monitor": {
     label: "Composer Require",
     cmd: "composer require pasak-dev/secure-monitor",
   },

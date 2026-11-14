@@ -21,7 +21,7 @@ export const siteConfig = {
   keywords: [
     "Pasak Suite",
     "Pasak Sentinel",
-    "pasak-security-monitor",
+    "pasak-secure-monitor",
     "Linux VPS Security",
     "Kernel Firewall",
     "nftables",

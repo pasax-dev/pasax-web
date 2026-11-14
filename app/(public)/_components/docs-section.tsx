@@ -15,7 +15,7 @@ export function DocsSection() {
             <span>OFFICIAL DOCUMENTATION PORTAL</span>
           </div>
           <h2 className="font-heading text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-            Dokumentasi Lengkap <span className="text-main">pasak-security-monitor</span>
+            Dokumentasi Lengkap <span className="text-main">pasak-secure-monitor</span>
           </h2>
           <p className="mt-4 max-w-3xl mx-auto text-sm sm:text-base text-foreground/80 font-base leading-relaxed">
             Panduan arsitektur keamanan, instalasi Laravel Spatie-compliant 100% Pure PHP,
@@ -109,7 +109,7 @@ export function DocsSection() {
               "inline-flex items-center gap-2 font-heading font-black shadow-shadow"
             )}
           >
-            <span>Jelajahi Seluruh 29 Dokumen pasak-security-monitor</span>
+            <span>Jelajahi Seluruh 29 Dokumen pasak-secure-monitor</span>
             <ArrowRight className="size-5" />
           </Link>
         </div>

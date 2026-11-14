@@ -79,7 +79,7 @@ export function ForbiddenView() {
           </div>
 
           <p className="text-sm leading-relaxed text-foreground/80">
-            Permintaan Anda dihentikan oleh modul WAF <strong>pasak-security-monitor</strong>{" "}
+            Permintaan Anda dihentikan oleh modul WAF <strong>pasak-secure-monitor</strong>{" "}
             atau daemon <strong>pasak-sentinel</strong> karena terdeteksi pola aktivitas
             mencurigakan, IP dibatasi dalam daftar karantina, atau sesi tidak memiliki
             hak akses (RBAC) yang memadai.
@@ -174,7 +174,7 @@ export function ForbiddenView() {
             </Link>
 
             <Link
-              href="/docs/pasak-security-monitor"
+              href="/docs/pasak-secure-monitor"
               className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-4 py-2 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5"
             >
               <Terminal className="size-4 text-main" />

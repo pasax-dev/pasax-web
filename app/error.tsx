@@ -98,7 +98,7 @@ export default function ErrorBoundary({
               </Link>
 
               <Link
-                href="/docs/pasak-security-monitor"
+                href="/docs/pasak-secure-monitor"
                 className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-4 py-2 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5"
               >
                 <Terminal className="size-4 text-main" />

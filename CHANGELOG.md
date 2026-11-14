@@ -30,10 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Rute Dokumentasi Khusus Mandiri per Produk (Product-Scoped Dedicated Docs Hub)**:
   - Menyediakan halaman beranda mandiri khusus untuk tiap produk:
-    - `/docs/pasak-security-monitor`: Pusat dokumentasi WAF mandiri murni PHP untuk Laravel 10–13.
+    - `/docs/pasak-secure-monitor`: Pusat dokumentasi WAF mandiri murni PHP untuk Laravel 10–13.
     - `/docs/pasak-sentinel`: Pusat dokumentasi kernel daemon Linux Go 1.24 dengan nftables & inotify FIM.
     - `/docs/core`: Pusat arsitektur platform terpadu Pasak Trinity Defense.
-  - Struktur rute dokumen dengan prefix produk: `/docs/:product/:slug` (misal `/docs/pasak-security-monitor/getting-started/introduction`), serta tetap mendukung fallback slug kompatibilitas.
+  - Struktur rute dokumen dengan prefix produk: `/docs/:product/:slug` (misal `/docs/pasak-secure-monitor/getting-started/introduction`), serta tetap mendukung fallback slug kompatibilitas.
   - Komponen ikhtisar `ProductDocsOverview` (`components/docs/product-docs-overview.tsx`) dengan perintah instalasi instan dan katalog artikel interaktif.
   - Sidebar dokumentasi yang secara otomatis mendeteksi produk aktif berdasarkan URL dan memungkinkan navigasi instan antar-tab produk.
 
@@ -79,5 +79,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Pemisahan Pohon Dokumentasi Khusus Produk (Multi-Product Tree)**:
   - `content/docs/`: Dokumentasi platform suite inti (`overview.md`, `architecture.md`, `quickstart.md`, `soc-console.md`, `cloud-api.md`).
-  - `content/pasak-security-monitor/docs/`: 29 panduan lengkap WAF murni PHP untuk Laravel (`pasak-dev/secure-monitor`).
+  - `content/pasak-secure-monitor/docs/`: 29 panduan lengkap WAF murni PHP untuk Laravel (`pasak-dev/secure-monitor`).
   - `content/pasak-sentinel/docs/`: 8 panduan lengkap host & kernel daemon Linux Go 1.24 (`01-architecture` sampai `07-cloud-telemetry`).

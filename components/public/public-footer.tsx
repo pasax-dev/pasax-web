@@ -87,7 +87,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link
-                  href="/docs/pasak-security-monitor"
+                  href="/docs/pasak-secure-monitor"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
                   pasak/shield (Laravel WAF)
@@ -145,7 +145,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link
-                  href="/docs/pasak-security-monitor"
+                  href="/docs/pasak-secure-monitor"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
                   Laravel WAF &amp; Honeypots

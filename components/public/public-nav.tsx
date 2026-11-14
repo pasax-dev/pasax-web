@@ -136,7 +136,7 @@ export function PublicNav() {
                       </NavigationMenuLink>
 
                       <NavigationMenuLink
-                        render={<Link href="/docs/pasak-security-monitor" />}
+                        render={<Link href="/docs/pasak-secure-monitor" />}
                         className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
                       >
                         <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -286,7 +286,7 @@ export function PublicNav() {
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
-                      render={<Link href="/docs/pasak-security-monitor" />}
+                      render={<Link href="/docs/pasak-secure-monitor" />}
                       className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
                     >
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -294,7 +294,7 @@ export function PublicNav() {
                       </div>
                       <div className="space-y-1">
                         <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                          pasak-security-monitor
+                          pasak-secure-monitor
                         </span>
                         <p className="text-[11px] text-foreground/75 leading-tight">
                           29 panduan Spatie-compliant Laravel WAF &amp; webshell scanner.
@@ -494,7 +494,7 @@ export function PublicNav() {
                     <Badge variant="outline" className="font-mono text-[9px]">Go 1.24</Badge>
                   </Link>
                   <Link
-                    href="/docs/pasak-security-monitor"
+                    href="/docs/pasak-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
                   >
@@ -593,11 +593,11 @@ export function PublicNav() {
                     Portal Dokumentasi Resmi
                   </Link>
                   <Link
-                    href="/docs/pasak-security-monitor"
+                    href="/docs/pasak-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    Panduan pasak-security-monitor
+                    Panduan pasak-secure-monitor
                   </Link>
                   <Link
                     href="/docs/pasak-sentinel"

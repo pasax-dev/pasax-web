@@ -6,12 +6,12 @@
     "url": "https://pasak.is-a.dev/docs"
   },
   "title": {
-    "id": "Peluncuran Portal Dokumentasi Resmi Produk pasak-security-monitor",
-    "en": "Official Documentation Portal Launch for pasak-security-monitor Product"
+    "id": "Peluncuran Portal Dokumentasi Resmi Produk pasak-secure-monitor",
+    "en": "Official Documentation Portal Launch for pasak-secure-monitor Product"
   },
   "body": {
-    "id": "Menyediakan portal dokumentasi teknis lengkap produk pasak-security-monitor yang disajikan secara langsung pada halaman publik antarmuka dashboard. Dilengkapi 29 panduan lengkap mulai dari instalasi Laravel murni 100% PHP tanpa dependensi NPM, arsitektur WAF instan, karantina perangkat pada NAT bersama, mitigasi brute-force bertingkat, pemindai webshell, hingga referensi headless REST API dan konfigurasi web server.",
-    "en": "Delivered the comprehensive official technical documentation portal for the pasak-security-monitor product hosted directly within the public dashboard interface. Features 29 complete guides covering zero NPM 100% pure PHP Laravel installation, instant WAF architecture, shared NAT device quarantine, stepped brute-force mitigation, webshell scanners, headless REST APIs, and web server hardening."
+    "id": "Menyediakan portal dokumentasi teknis lengkap produk pasak-secure-monitor yang disajikan secara langsung pada halaman publik antarmuka dashboard. Dilengkapi 29 panduan lengkap mulai dari instalasi Laravel murni 100% PHP tanpa dependensi NPM, arsitektur WAF instan, karantina perangkat pada NAT bersama, mitigasi brute-force bertingkat, pemindai webshell, hingga referensi headless REST API dan konfigurasi web server.",
+    "en": "Delivered the comprehensive official technical documentation portal for the pasak-secure-monitor product hosted directly within the public dashboard interface. Features 29 complete guides covering zero NPM 100% pure PHP Laravel installation, instant WAF architecture, shared NAT device quarantine, stepped brute-force mitigation, webshell scanners, headless REST APIs, and web server hardening."
   },
   "items": [
     {

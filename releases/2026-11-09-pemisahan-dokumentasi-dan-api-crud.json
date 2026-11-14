@@ -10,14 +10,14 @@
     "en": "Multi-Product Documentation Tree Separation and Headless Documentation CRUD REST API"
   },
   "body": {
-    "id": "Memisahkan struktur penyimpanan dokumentasi menjadi tiga modul khusus: pasak-security-monitor untuk aplikasi Laravel, pasak-sentinel untuk kernel host daemon Go, dan core untuk platform platform suite. Meluncurkan REST API CRUD /api/v1/docs terproteksi yang memungkinkan AI Agent membaca, menambah, memperbarui, dan menghapus dokumen secara otonom saat ada pembaruan fitur di repositori sumber.",
-    "en": "Separated documentation storage into three dedicated product trees: pasak-security-monitor for Laravel applications, pasak-sentinel for the Go kernel host daemon, and core for the platform suite. Launched a protected headless CRUD REST API at /api/v1/docs enabling AI agents to autonomously read, create, update, and delete markdown documents upon code changes in source repositories."
+    "id": "Memisahkan struktur penyimpanan dokumentasi menjadi tiga modul khusus: pasak-secure-monitor untuk aplikasi Laravel, pasak-sentinel untuk kernel host daemon Go, dan core untuk platform platform suite. Meluncurkan REST API CRUD /api/v1/docs terproteksi yang memungkinkan AI Agent membaca, menambah, memperbarui, dan menghapus dokumen secara otonom saat ada pembaruan fitur di repositori sumber.",
+    "en": "Separated documentation storage into three dedicated product trees: pasak-secure-monitor for Laravel applications, pasak-sentinel for the Go kernel host daemon, and core for the platform suite. Launched a protected headless CRUD REST API at /api/v1/docs enabling AI agents to autonomously read, create, update, and delete markdown documents upon code changes in source repositories."
   },
   "items": [
     {
       "type": "feature",
-      "id": "Pemisahan Tiga Direktori Dokumentasi Khusus: content/docs (core suite), content/pasak-security-monitor/docs (Laravel WAF), dan content/pasak-sentinel/docs (Go daemon).",
-      "en": "Three Dedicated Documentation Trees: content/docs (core suite), content/pasak-security-monitor/docs (Laravel WAF), and content/pasak-sentinel/docs (Go daemon)."
+      "id": "Pemisahan Tiga Direktori Dokumentasi Khusus: content/docs (core suite), content/pasak-secure-monitor/docs (Laravel WAF), dan content/pasak-sentinel/docs (Go daemon).",
+      "en": "Three Dedicated Documentation Trees: content/docs (core suite), content/pasak-secure-monitor/docs (Laravel WAF), and content/pasak-sentinel/docs (Go daemon)."
     },
     {
       "type": "feature",

@@ -77,7 +77,7 @@ export function DocsContentView({
             variant="outline"
             className="border-2 border-border bg-main font-mono text-[11px] font-bold text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
           >
-            pasak-security-monitor
+            pasak-secure-monitor
           </Badge>
           <Badge
             variant="outline"
@@ -114,7 +114,7 @@ export function DocsContentView({
       <footer className="mt-12 flex flex-col items-center justify-between gap-4 border-t-2 border-border pt-6 font-mono text-xs text-foreground/70 sm:flex-row">
         <div className="flex items-center gap-2">
           <span>
-            Produk: <strong>pasak-security-monitor</strong>
+            Produk: <strong>pasak-secure-monitor</strong>
           </span>
           <span>·</span>
           <span>Lisensi: MIT Open Source</span>
