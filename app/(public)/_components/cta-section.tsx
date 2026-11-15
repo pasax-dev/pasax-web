@@ -23,7 +23,7 @@ export function CtaSection() {
               "flex items-center gap-2 border-2 border-border bg-secondary-background font-heading font-black text-foreground shadow-[4px_4px_0px_0px_var(--border)] hover:bg-background"
             )}
           >
-            <span>Launch Free Console</span>
+            <span>Launch SOC Console</span>
             <ArrowRight className="size-5" />
           </Link>
           <a

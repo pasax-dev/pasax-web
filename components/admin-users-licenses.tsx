@@ -64,7 +64,7 @@ export function AdminUsersLicenses({
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [keys, setKeys] = React.useState<ManagedLicenseKey[]>(initialKeys)
   const [copiedKey, setCopiedKey] = React.useState<string | null>(null)
-  const [activeSubTab, setActiveSubTab] = React.useState<"users" | "keys" | "business">("users")
+  const [activeSubTab, setActiveSubTab] = React.useState<"users" | "keys">("users")
 
   // Modal State: Create User
   const [isCreateUserOpen, setIsCreateUserOpen] = React.useState(false)
@@ -221,7 +221,7 @@ export function AdminUsersLicenses({
         onValueChange={(v) => setActiveSubTab(v as any)}
         className="w-full space-y-4"
       >
-        <TabsList className="grid w-full grid-cols-3 max-w-md border-2 border-border bg-background p-1 shadow-[3px_3px_0px_0px_var(--border)]">
+        <TabsList className="grid w-full grid-cols-2 max-w-sm border-2 border-border bg-background p-1 shadow-[3px_3px_0px_0px_var(--border)]">
           <TabsTrigger
             value="users"
             className="gap-1.5 font-mono text-xs font-bold data-[state=active]:bg-main data-[state=active]:text-main-foreground"
@@ -235,13 +235,6 @@ export function AdminUsersLicenses({
           >
             <Key className="size-3.5" />
             <span>Lisensi Token ({keys.length})</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="business"
-            className="gap-1.5 font-mono text-xs font-bold data-[state=active]:bg-main data-[state=active]:text-main-foreground"
-          >
-            <CreditCard className="size-3.5" />
-            <span>Model Bisnis</span>
           </TabsTrigger>
         </TabsList>
 
@@ -268,7 +261,7 @@ export function AdminUsersLicenses({
                     <TableRow className="border-b-2 border-border bg-secondary-background/60 font-mono text-xs">
                       <TableHead>Nama & Identitas</TableHead>
                       <TableHead>Peran (Role)</TableHead>
-                      <TableHead>Paket Langganan</TableHead>
+                      <TableHead>Profil Armada</TableHead>
                       <TableHead>Kuota VPS</TableHead>
                       <TableHead>Organisasi</TableHead>
                       <TableHead>Status</TableHead>
@@ -475,134 +468,6 @@ export function AdminUsersLicenses({
             </CardContent>
           </Card>
         </TabsContent>
-
-        {/* ------------------------------------------------------------- */}
-        {/* TAB 3: BUSINESS MODEL & SUBSCRIPTION TIERS                    */}
-        {/* ------------------------------------------------------------- */}
-        <TabsContent value="business" className="space-y-6">
-          {/* Revenue & Tier Strategy Hero */}
-          <div className="rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)]">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div>
-                <Badge className="border-2 border-border bg-main font-mono text-[10px] font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] mb-2">
-                  STRATEGI MONETISASI PASAK CYBER SOC
-                </Badge>
-                <h3 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                  Arsitektur Model Bisnis & Paket Berlangganan
-                </h3>
-                <p className="font-mono text-xs text-muted-foreground max-w-2xl mt-1">
-                  Tiga pilar lisensi dirancang fleksibel untuk menjangkau pengembang independen hingga skala kedaulatan digital instansi pemerintahan dengan pertahanan Linux Kernel tingkat militer.
-                </p>
-              </div>
-              <div className="flex items-center gap-4 border-2 border-border p-3 rounded-base bg-secondary-background/80 shadow-[2px_2px_0px_0px_var(--border)]">
-                <div>
-                  <div className="font-mono text-[10px] text-muted-foreground uppercase">Total Node Capacity</div>
-                  <div className="font-heading text-lg font-black text-foreground">
-                    {users.reduce((acc, u) => acc + u.serverQuota, 0)} VPS
-                  </div>
-                </div>
-                <div className="border-l border-border pl-4">
-                  <div className="font-mono text-[10px] text-muted-foreground uppercase">Aktif Tenant</div>
-                  <div className="font-heading text-lg font-black text-emerald-500">
-                    {users.length} Akun
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Pricing Tier Grid */}
-          <div className="grid gap-6 md:grid-cols-3">
-            {SUBSCRIPTION_PLANS.map((plan) => (
-              <Card
-                key={plan.id}
-                className={`relative border-2 border-border shadow-[4px_4px_0px_0px_var(--border)] flex flex-col justify-between ${
-                  plan.recommended
-                    ? "bg-gradient-to-b from-main/5 to-background ring-2 ring-main"
-                    : "bg-card"
-                }`}
-              >
-                {plan.recommended && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <Badge className="border-2 border-border bg-main font-mono text-[10px] font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]">
-                      PALING DIREKOMENDASIKAN
-                    </Badge>
-                  </div>
-                )}
-
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="font-heading text-lg font-black">{plan.name}</CardTitle>
-                    <Badge variant="outline" className="font-mono text-[10px] uppercase">
-                      {plan.id}
-                    </Badge>
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-heading text-2xl font-black text-foreground">
-                        {plan.priceIdr === 0 ? "Rp 0" : `Rp ${(plan.priceIdr / 1000).toLocaleString("id-ID")}.000`}
-                      </span>
-                      <span className="font-mono text-xs text-muted-foreground">/ bulan</span>
-                    </div>
-                    {plan.priceYearlyIdr > 0 && (
-                      <div className="font-mono text-[11px] text-emerald-600 dark:text-emerald-400">
-                        Rp {(plan.priceYearlyIdr / 1000).toLocaleString("id-ID")}.000 / tahun (Hemat 2 Bulan)
-                      </div>
-                    )}
-                  </div>
-                  <CardDescription className="font-mono text-xs mt-2">
-                    {plan.tagline}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent className="space-y-4 flex-1">
-                  <div className="rounded-base border border-border bg-secondary-background/60 p-3 font-mono text-xs space-y-1.5">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Kuota VPS Nodes:</span>
-                      <span className="font-bold text-foreground">{plan.serverQuota} Server</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Kuota Web Apps:</span>
-                      <span className="font-bold text-foreground">
-                        {plan.appQuota === -1 ? "UNLIMITED" : `${plan.appQuota} Apps`}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Retensi Log:</span>
-                      <span className="font-bold text-foreground">{plan.retentionDays} Hari</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Linux Kernel Firewall:</span>
-                      <span className={`font-bold ${plan.kernelFirewallEnabled ? "text-emerald-500" : "text-muted-foreground"}`}>
-                        {plan.kernelFirewallEnabled ? "Tersedia (<0.2ms)" : "Tidak"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">File Integrity (FIM):</span>
-                      <span className={`font-bold ${plan.fimEnabled ? "text-emerald-500" : "text-muted-foreground"}`}>
-                        {plan.fimEnabled ? "Aktif Realtime" : "Tidak"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 pt-2">
-                    <div className="font-mono text-[11px] font-bold uppercase text-foreground/80">
-                      Fitur Termasuk:
-                    </div>
-                    <ul className="space-y-1.5 font-mono text-xs text-muted-foreground">
-                      {plan.features.map((f, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <Check className="size-3.5 text-main shrink-0 mt-0.5" />
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
       </Tabs>
 
       {/* ------------------------------------------------------------- */}
@@ -658,7 +523,7 @@ export function AdminUsersLicenses({
               </div>
 
               <div>
-                <label className="font-bold uppercase">Paket Bisnis</label>
+                <label className="font-bold uppercase">Profil Armada</label>
                 <select
                   value={userPlan}
                   onChange={(e) => {
@@ -668,7 +533,7 @@ export function AdminUsersLicenses({
                   }}
                   className="mt-1 w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs text-foreground"
                 >
-                  <option value="free">Starter (Free - 1 VPS)</option>
+                  <option value="free">Starter Node (1 VPS)</option>
                   <option value="pro">Pro Fleet (10 VPS)</option>
                   <option value="enterprise">Enterprise (100 VPS)</option>
                 </select>

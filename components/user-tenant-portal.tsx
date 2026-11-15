@@ -86,7 +86,7 @@ export function UserTenantPortal({
   return (
     <div className="space-y-6 px-4 lg:px-6 py-4">
       {/* ------------------------------------------------------------- */}
-      {/* 1. STATUS PAKET LANGGANAN & KUOTA SAYA                        */}
+      {/* 1. STATUS PROFIL SISTEM & KUOTA SERVER                        */}
       {/* ------------------------------------------------------------- */}
       <div className="rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -96,13 +96,13 @@ export function UserTenantPortal({
                 variant="outline"
                 className="border-2 border-border bg-main font-mono text-[11px] font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] uppercase"
               >
-                PAKET SAYA: {data.plan.name}
+                PROFIL ARMADA: {data.plan.name}
               </Badge>
               <Badge
                 variant="outline"
                 className="border-emerald-500 bg-emerald-500/10 font-mono text-[11px] font-bold text-emerald-600 dark:text-emerald-400"
               >
-                STATUS: LANGGANAN AKTIF
+                STATUS: SISTEM AKTIF
               </Badge>
               <Badge
                 variant="outline"

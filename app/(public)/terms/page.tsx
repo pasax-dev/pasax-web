@@ -181,7 +181,7 @@ export default function TermsOfServicePage() {
                   <li>Deploying Pasak on hosts, cloud instances, or networks for which you do not possess verified ownership or express written authorization.</li>
                   <li>Using Pasak telemetry endpoints to launch denial-of-service (DDoS) attacks, flood reputation feeds, or poison global threat blocklists.</li>
                   <li>Attempting to spoof node identity tokens or intercept mTLS telemetry from neighboring nodes.</li>
-                  <li>Circumventing licensing, billing meters, or rate-limiting thresholds implemented by the Pasak Cloud API.</li>
+                  <li>Circumventing security controls, rate-limiting thresholds, or abuse protections implemented by the Pasak Cloud API.</li>
                 </ul>
               </div>
             </div>
@@ -240,13 +240,13 @@ export default function TermsOfServicePage() {
 
                 <div className="rounded-base border-2 border-border bg-secondary-background p-4">
                   <Badge variant="outline" className="font-mono text-[10px] font-bold">
-                    Proprietary SaaS / Cloud Console
+                    Community Control Plane
                   </Badge>
                   <h4 className="mt-2 font-heading text-sm font-black text-foreground">
                     Pasak Cloud SOC Platform
                   </h4>
                   <p className="mt-1 text-xs text-foreground/75 leading-relaxed">
-                    The hosted multi-tenant cloud dashboard, 3D threat map visualization, and real-time mesh routing infrastructure are proprietary services provided under subscription or free-tier quotas.
+                    The hosted community cloud dashboard, 3D threat map visualization, and real-time mesh routing infrastructure are provided to the developer community under fair-use quotas.
                   </p>
                 </div>
               </div>

@@ -339,16 +339,16 @@ export function PublicNav() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* 4. PRICING DIRECT LINK */}
+              {/* 4. BENCHMARK DIRECT LINK */}
               <NavigationMenuItem>
                 <NavigationMenuLink
-                  render={<Link href="/#pricing" />}
+                  render={<Link href="/#comparison" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
                     "font-heading text-xs font-bold uppercase tracking-wider"
                   )}
                 >
-                  Pricing
+                  Benchmark
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
@@ -617,14 +617,14 @@ export function PublicNav() {
               )}
             </div>
 
-            {/* Direct Links: Pricing & FAQ */}
+            {/* Direct Links: Benchmark & FAQ */}
             <div className="grid grid-cols-2 gap-2">
               <Link
-                href="/#pricing"
+                href="/#comparison"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-base border-2 border-border bg-background p-2.5 text-center font-heading text-xs font-black uppercase tracking-wider text-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main hover:text-main-foreground"
               >
-                Pricing
+                Benchmark
               </Link>
               <Link
                 href="/#faq"

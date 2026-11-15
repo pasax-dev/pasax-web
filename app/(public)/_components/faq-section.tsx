@@ -110,7 +110,7 @@ export function FaqSection() {
             <AccordionContent>
               The sentinel binary is less than 15MB, requires under 20MB of
               RAM, and runs smoothly on low-end 1-vCPU VPS instances (such as
-              $4/mo DigitalOcean or Hetzner droplets) running Linux kernel 5.4
+              1GB RAM DigitalOcean or Hetzner VPS instances) running Linux kernel 5.4
               or higher (Ubuntu 20.04+, Debian 11+, RHEL/Rocky 9+, Alpine
               Linux).
             </AccordionContent>

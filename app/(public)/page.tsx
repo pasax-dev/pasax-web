@@ -10,7 +10,6 @@ import {
   FeaturesSection,
   DeploySection,
   ComparisonSection,
-  PricingSection,
   DocsSection,
   FaqSection,
   CtaSection,
@@ -81,10 +80,7 @@ export default function PublicLandingPage() {
       {/* 5. Benchmark & Legacy Comparison Matrix */}
       <ComparisonSection />
 
-      {/* 6. Transparent Pricing Tiers */}
-      <PricingSection />
-
-      {/* 6.5. Official Documentation Portal */}
+      {/* 6. Official Documentation Portal */}
       <DocsSection />
 
       {/* 7. Frequently Asked Questions (Accordion) */}
