@@ -238,7 +238,7 @@ export default function DocsHomePage() {
               Unduh paket resmi dari Packagist ke aplikasi Laravel Anda.
             </p>
             <pre className="overflow-x-auto rounded-sm border border-border bg-secondary-background p-2.5 font-mono text-[11px] text-foreground">
-              composer require pasax-dev/secure-monitor
+              composer require pasax/secure-monitor
             </pre>
           </div>
 

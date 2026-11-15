@@ -2,7 +2,7 @@
 
 **Pasax Cloud** is the central SaaS monitoring console, intelligence hub, and Security Operations Center (SOC) for the **Pasax Security Ecosystem** (`pasax-suit`).
 
-Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic **[Neobrutalism Design System](https://www.neobrutalism.dev/)**, Pasax Cloud unifies host-level Linux telemetry (`pasax-sentinel`), application-layer Laravel WAF tripwires (`pasax-dev/secure-monitor` / `Pasax\SecureMonitor`), and global crowdsourced threat intelligence into a single retro-modern command center.
+Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic **[Neobrutalism Design System](https://www.neobrutalism.dev/)**, Pasax Cloud unifies host-level Linux telemetry (`pasax-sentinel`), application-layer Laravel WAF tripwires (`pasax/secure-monitor` / `Pasax\SecureMonitor`), and global crowdsourced threat intelligence into a single retro-modern command center.
 
 ---
 
@@ -107,7 +107,7 @@ export function ShieldCard() {
 
 ## 📡 Control Plane Ingestion APIs
 
-`pasax-web` provides REST endpoints designed for `pasax-sentinel` Go agents and `pasax-dev/secure-monitor` Laravel WAF instances:
+`pasax-web` provides REST endpoints designed for `pasax-sentinel` Go agents and `pasax/secure-monitor` Laravel WAF instances:
 
 | Method   | Endpoint                               | Description                                                          |
 | :------- | :------------------------------------- | :------------------------------------------------------------------- |
@@ -127,7 +127,7 @@ export function ShieldCard() {
 - **Release Changelog**: Track all updates in [`CHANGELOG.md`](./CHANGELOG.md).
 - **AI Agent Guidelines**: Operational invariants and rules in [`AGENTS.md`](./AGENTS.md).
 - **Go Host Daemon**: Located in `../pasax-sentinel/`.
-- **Laravel WAF Core**: Located in `../pasax-secure-monitor-laravel/` (Composer package: `pasax-dev/secure-monitor`, namespace: `Pasax\SecureMonitor`).
+- **Laravel WAF Core**: Located in `../pasax-secure-monitor-laravel/` (Composer package: `pasax/secure-monitor`, namespace: `Pasax\SecureMonitor`).
 
 ---
 

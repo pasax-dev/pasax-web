@@ -23,7 +23,7 @@ interface ProductDocsOverviewProps {
 const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
   "pasax-secure-monitor": {
     label: "Composer Require",
-    cmd: "composer require pasax-dev/secure-monitor",
+    cmd: "composer require pasax/secure-monitor",
   },
   "pasax-sentinel": {
     label: "Single Binary Download",

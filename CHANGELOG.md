@@ -11,15 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Penyelarasan Dokumentasi Ekosistem Pasax (`pasax-dev/secure-monitor` & `Pasax\SecureMonitor`)**:
-  - Memperbarui `README.md` dan `docs/01-architecture.md` untuk menyelaraskan referensi paket WAF Laravel ke `pasax-dev/secure-monitor` dengan namespace kanonikal `Pasax\SecureMonitor`.
+- **Penyelarasan Dokumentasi Ekosistem Pasax (`pasax/secure-monitor` & `Pasax\SecureMonitor`)**:
+  - Memperbarui `README.md` dan `docs/01-architecture.md` untuk menyelaraskan referensi paket WAF Laravel ke `pasax/secure-monitor` dengan namespace kanonikal `Pasax\SecureMonitor`.
   - Memperbarui `docs/03-api-reference.md` dengan skema payload telemetri dan pelaporan insiden ancaman WAF dari modul aplikasi Laravel.
   - Memperbarui panduan operasional AI Agent di `AGENTS.md` (6-chapter docs suite).
 
 ### Added
 
 - **Bab Baru Dokumentasi Ekosistem**:
-  - Menambahkan Bab 06: `docs/06-ecosystem-integration.md` yang merinci integrasi terpadu tiga pilar pertahanan Pasax (`pasax-sentinel`, `pasax-dev/secure-monitor`, dan `pasax-web`).
+  - Menambahkan Bab 06: `docs/06-ecosystem-integration.md` yang merinci integrasi terpadu tiga pilar pertahanan Pasax (`pasax-sentinel`, `pasax/secure-monitor`, dan `pasax-web`).
   - Memperbarui indeks suite dokumentasi pada `docs/README.md`.
 
 ---
@@ -79,5 +79,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Pemisahan Pohon Dokumentasi Khusus Produk (Multi-Product Tree)**:
   - `content/docs/`: Dokumentasi platform suite inti (`overview.md`, `architecture.md`, `quickstart.md`, `soc-console.md`, `cloud-api.md`).
-  - `content/pasax-secure-monitor/docs/`: 29 panduan lengkap WAF murni PHP untuk Laravel (`pasax-dev/secure-monitor`).
+  - `content/pasax-secure-monitor/docs/`: 29 panduan lengkap WAF murni PHP untuk Laravel (`pasax/secure-monitor`).
   - `content/pasax-sentinel/docs/`: 8 panduan lengkap host & kernel daemon Linux Go 1.24 (`01-architecture` sampai `07-cloud-telemetry`).

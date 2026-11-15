@@ -16,7 +16,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/pasax-dev/pasax-secure-monitor-laravel",
     docs: "/docs",
-    packagist: "https://packagist.org/packages/pasax-dev/secure-monitor",
+    packagist: "https://packagist.org/packages/pasax/secure-monitor",
   },
   keywords: [
     "Pasax Suite",

@@ -1,12 +1,12 @@
-# Chapter 06: Ecosystem Integration & Laravel WAF (`pasax-dev/secure-monitor`)
+# Chapter 06: Ecosystem Integration & Laravel WAF (`pasax/secure-monitor`)
 
 ## 1. Overview
 The **Pasax Security Ecosystem** (`pasax-suit`) provides unified defense across the infrastructure stack:
-- **Application Layer**: `pasax-dev/secure-monitor` (Laravel package, namespace `Pasax\SecureMonitor`)
+- **Application Layer**: `pasax/secure-monitor` (Laravel package, namespace `Pasax\SecureMonitor`)
 - **Host & Kernel Layer**: `pasax-sentinel` (Go Linux daemon + nftables + inotify)
 - **Management & SOC Plane**: `pasax-web` (Next.js 16 + React 19) backed by `pasax-api`
 
-This chapter details how Laravel applications protected by `pasax-dev/secure-monitor` seamlessly connect with both `pasax-sentinel` on the local VPS and `pasax-web` in the cloud.
+This chapter details how Laravel applications protected by `pasax/secure-monitor` seamlessly connect with both `pasax-sentinel` on the local VPS and `pasax-web` in the cloud.
 
 ---
 
@@ -14,7 +14,7 @@ This chapter details how Laravel applications protected by `pasax-dev/secure-mon
 
 | Parameter | Specification |
 | :--- | :--- |
-| **Package Name** | `pasax-dev/secure-monitor` |
+| **Package Name** | `pasax/secure-monitor` |
 | **PHP Namespace** | `Pasax\SecureMonitor\` |
 | **PHP Compatibility** | `^8.2 \| ^8.3 \| ^8.4 \| ^8.5` |
 | **Laravel Compatibility** | `^10.0 \| ^11.0 \| ^12.0 \| ^13.0` |
@@ -104,7 +104,7 @@ All classes seamlessly resolve to their canonical `Pasax\SecureMonitor` targets.
 
 ## 6. Automated Pentest Reports & Date Range Aggregation
 
-Starting in v1.1.2+, `pasax-dev/secure-monitor` provides an automated server security hardening & penetration testing audit report engine in standard Markdown (`.md`):
+Starting in v1.1.2+, `pasax/secure-monitor` provides an automated server security hardening & penetration testing audit report engine in standard Markdown (`.md`):
 
 - **Executive & Compliance Export**: Evaluates 42 server hardening parameters, SHA-256 file integrity status, webshell scanner results, and maps findings directly to **OWASP Top 10 (2021)** standards.
 - **Date Range Recap Timeline**: Supports single date (`?date=YYYY-MM-DD`) and full date ranges (`?start_date=YYYY-MM-DD&end_date=YYYY-MM-DD`), automatically compiling daily threat breakdown timelines (`| Tanggal | Total | Kritis | Tinggi | Sedang | Rendah | Diblokir |`).

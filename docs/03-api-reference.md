@@ -1,7 +1,7 @@
 # Chapter 03: Cloud Ingestion API Reference
 
 ## 1. Overview
-`pasax-web` exposes high-throughput REST API route handlers under `/api/v1/` to communicate seamlessly with `pasax-sentinel` daemons, `pasax-dev/secure-monitor` (`Pasax\SecureMonitor`) Laravel instances, and external automation scripts.
+`pasax-web` exposes high-throughput REST API route handlers under `/api/v1/` to communicate seamlessly with `pasax-sentinel` daemons, `pasax/secure-monitor` (`Pasax\SecureMonitor`) Laravel instances, and external automation scripts.
 
 ---
 
@@ -75,7 +75,7 @@
     "timestamp": 1773070425
   }
   ```
-- **Request Body (WAF Threat from `pasax-dev/secure-monitor`)**:
+- **Request Body (WAF Threat from `pasax/secure-monitor`)**:
   ```json
   {
     "node_id": "nd_01HW8P9Y124XQW7V6B9R41ZX9A",
@@ -89,7 +89,7 @@
       "request_uri": "/api/users?id=1' UNION SELECT * FROM users--",
       "user_agent": "sqlmap/1.7#stable",
       "blocked_duration": 2592000,
-      "source_package": "pasax-dev/secure-monitor",
+      "source_package": "pasax/secure-monitor",
       "namespace": "Pasax\\SecureMonitor"
     },
     "timestamp": 1773070430

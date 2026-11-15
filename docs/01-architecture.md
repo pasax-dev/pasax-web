@@ -3,7 +3,7 @@
 ## 1. Overview
 `pasax-web` is the centralized SaaS cloud management portal and intelligence hub for the Pasax Security Ecosystem (`pasax-suit`). It ingests telemetry, audit metrics, and threat events from:
 1. **Linux VPS Hosts** running the `pasax-sentinel` kernel daemon (Go + nftables + inotify FIM).
-2. **Laravel Host Applications** running `pasax-dev/secure-monitor` (PHP + WAF + Stepped Login Throttling, namespace `Pasax\SecureMonitor`).
+2. **Laravel Host Applications** running `pasax/secure-monitor` (PHP + WAF + Stepped Login Throttling, namespace `Pasax\SecureMonitor`).
 
 Security operators and incident responders utilize `pasax-web` for real-time visibility, automated fleet-wide IP blacklisting, forensic file integrity analysis, and virtual host inventory.
 
@@ -35,7 +35,7 @@ Security operators and incident responders utilize `pasax-web` for real-time vis
 +--------v-------------------------------+             +-----------------v---------+
 | Host Layer: pasax-sentinel             |             | App Layer: Secure Monitor |
 | - Linux Kernel Daemon (Go 1.24)        |             | - Laravel WAF & Throttler |
-| - Sub-0.2ms nftables drop rules        | <========== | - pasax-dev/secure-monitor|
+| - Sub-0.2ms nftables drop rules        | <========== | - pasax/secure-monitor|
 | - inotify File Integrity Monitor (FIM) |  Unix Sock  | - Pasax\SecureMonitor     |
 | - /run/pasax/agent.sock bridge         |             | - Zero NPM, Pure PHP      |
 +----------------------------------------+             +---------------------------+
@@ -57,7 +57,7 @@ Security operators and incident responders utilize `pasax-web` for real-time vis
 
 ## 4. Ecosystem Integration Pillars
 The Pasax defense suite operates in three coordinated tiers:
-1. **Application Shield (`pasax-dev/secure-monitor`)**:
+1. **Application Shield (`pasax/secure-monitor`)**:
    - Installed inside Laravel host applications under namespace `Pasax\SecureMonitor`.
    - Protects HTTP endpoints against SQL injection, XSS, remote shell uploads, and brute force credential attacks.
    - Forwards local block requests to Sentinel via `/run/pasax/agent.sock` and telemetry to Pasax Cloud via `PasaxCloudService`.

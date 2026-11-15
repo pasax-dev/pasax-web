@@ -23,7 +23,7 @@ Salin blok teks berikut ke dalam sesi AI Agent di VPS Anda:
 Anda bertindak sebagai **DevSecOps Engineer Otomatis** untuk sistem pertahanan **Pasax Suite** pada VPS Linux ini.
 
 Tugas Anda adalah:
-1. Mengaudit status instalasi paket WAF Laravel (`pasax-dev/secure-monitor`) dan Host Daemon (`pasax-sentinel`).
+1. Mengaudit status instalasi paket WAF Laravel (`pasax/secure-monitor`) dan Host Daemon (`pasax-sentinel`).
 2. Jika salah satu atau keduanya belum terpasang, lakukan instalasi dan konfigurasi sampai selesai.
 3. Menghubungkan jembatan komunikasi lokal (Unix Domain Socket IPC) dan konektivitas Cloud Telemetry.
 4. Melakukan verifikasi pengujian end-to-end dan melaporkan statusnya secara terperinci.
@@ -38,7 +38,7 @@ Jalankan perintah berikut untuk mengecek status komponen:
    Cari direktori aplikasi web Laravel (biasanya di `/var/www/`, `/home/*/public_html`, atau folder kerja aktif).
    Periksa apakah paket WAF terpasang:
    ```bash
-   composer show pasax-dev/secure-monitor 2>/dev/null || composer show robyajo/pasax 2>/dev/null
+   composer show pasax/secure-monitor 2>/dev/null || composer show robyajo/pasax 2>/dev/null
    ```
 
 2. **Cek Daemon Pasax Sentinel**:
@@ -90,12 +90,12 @@ Jika daemon `pasax-sentinel` belum ada atau belum berjalan sebagai service:
    sudo systemctl status pasax-sentinel --no-pager
    ```
 
-##### Skenario B: Package Laravel `pasax-dev/secure-monitor` Belum Terpasang
+##### Skenario B: Package Laravel `pasax/secure-monitor` Belum Terpasang
 Jika aplikasi Laravel ditemukan tetapi belum memiliki package WAF:
 
 1. Masuk ke direktori root aplikasi Laravel dan pasang paket via Composer:
    ```bash
-   composer require "pasax-dev/secure-monitor:^1.0.0"
+   composer require "pasax/secure-monitor:^1.0.0"
    ```
 
 2. Publikasikan aset, migrasi, dan konfigurasi otomatis:

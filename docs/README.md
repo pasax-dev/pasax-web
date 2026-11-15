@@ -13,7 +13,7 @@ Welcome to the technical documentation for **Pasax Dashboard**, the central SaaS
 | **03** | [Cloud Ingestion API Reference](./03-api-reference.md) | REST endpoints for Sentinel telemetry (`/api/v1/nodes/telemetry`), threat alerts, and global blocklists. |
 | **04** | [Security Operations Matrix](./04-operations-console.md) | Fleet overview, Threat incidents feed, VHost/SSL recon, and Crowd Defense blocklist. |
 | **05** | [Agent Provisioning & Onboarding](./05-agent-provisioning.md) | Host registration workflow, one-line curl command generator, and token authentication. |
-| **06** | [Ecosystem Integration & Laravel WAF](./06-ecosystem-integration.md) | Integration between `pasax-web`, `pasax-sentinel`, and `pasax-dev/secure-monitor` (`Pasax\SecureMonitor`). |
+| **06** | [Ecosystem Integration & Laravel WAF](./06-ecosystem-integration.md) | Integration between `pasax-web`, `pasax-sentinel`, and `pasax/secure-monitor` (`Pasax\SecureMonitor`). |
 
 ---
 

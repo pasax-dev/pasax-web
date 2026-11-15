@@ -126,13 +126,13 @@ sudo systemctl status pasax-sentinel
 
 ---
 
-## 3. Menghubungkan Laravel WAF (`pasax-dev/secure-monitor`)
+## 3. Menghubungkan Laravel WAF (`pasax/secure-monitor`)
 
 Bila aplikasi Laravel berjalan di server yang sama:
 
 1. Pastikan paket terpasang:
    ```bash
-   composer require "pasax-dev/secure-monitor:^1.0.0"
+   composer require "pasax/secure-monitor:^1.0.0"
    php artisan pasax:install --migrate --with-dashboard
    ```
 
