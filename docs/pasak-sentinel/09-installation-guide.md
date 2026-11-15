@@ -22,7 +22,7 @@ curl -sSL https://raw.githubusercontent.com/pasak-dev/pasak-sentinel/main/script
 ```
 
 ### Opsi Parameter Skrip:
-- `--token=...` : Token aktivasi lisensi dari dashboard [Pasak Market](https://pasak-market.vercel.app).
+- `--token=...` : Token aktivasi lisensi dari dashboard [Pasak Market](https://pasak-web.vercel.app).
 - `--cloud-url=...` : URL endpoint Cloud API (default: `https://pasak-service.vercel.app`).
 - `--project=...` : ID Proyek (opsional, default: `default`).
 
@@ -159,7 +159,7 @@ Bila aplikasi Laravel berjalan di server yang sama:
 ## 4. Pemantauan di Pasak Market Cloud Console
 
 Setelah Sentinel aktif, buka:
-- **Peta Ancaman Real-time**: [https://pasak-market.vercel.app/threats-map](https://pasak-market.vercel.app/threats-map)
-- **Status Armada Server**: [https://pasak-market.vercel.app/dashboard](https://pasak-market.vercel.app/dashboard)
+- **Peta Ancaman Real-time**: [https://pasak-web.vercel.app/threats-map](https://pasak-web.vercel.app/threats-map)
+- **Status Armada Server**: [https://pasak-web.vercel.app/dashboard](https://pasak-web.vercel.app/dashboard)
 
 VPS Anda akan langsung muncul sebagai node terproteksi dalam status **ONLINE** dengan identifikasi arsitektur OS, beban CPU/RAM, dan status sertifikat SSL domain yang aktif.

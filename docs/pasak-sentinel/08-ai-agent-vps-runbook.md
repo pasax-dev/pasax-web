@@ -71,7 +71,7 @@ Jika daemon `pasak-sentinel` belum ada atau belum berjalan sebagai service:
      --token="<TOKEN_LISENSI_USER>" \
      --cloud-url="https://pasak-service.vercel.app"
    ```
-   *(Gunakan token lisensi pengguna dari dashboard https://pasak-market.vercel.app).*
+   *(Gunakan token lisensi pengguna dari dashboard https://pasak-web.vercel.app).*
 
 2. Pastikan berkas konfigurasi `/etc/pasak/sentinel.yaml` memiliki socket aktif dan izin akses yang memadai:
    ```yaml
@@ -155,7 +155,7 @@ Jalankan rangkaian pengujian berikut untuk memastikan seluruh rantai keamanan be
    ```bash
    curl -s https://pasak-service.vercel.app/api/v1/nodes | grep -o "$(hostname)"
    ```
-   Buka dashboard publik [https://pasak-market.vercel.app/threats-map](https://pasak-market.vercel.app/threats-map) untuk memantau status VPS secara langsung di peta ancaman.
+   Buka dashboard publik [https://pasak-web.vercel.app/threats-map](https://pasak-web.vercel.app/threats-map) untuk memantau status VPS secara langsung di peta ancaman.
 
 ---
 
@@ -202,7 +202,7 @@ Setelah menyelesaikan audit dan eksekusi di atas, berikan tabel ringkasan:
                                |
                +---------------v---------------+
                | Validasi Node di Cloud Mesh   |
-               | pasak-market.vercel.app       |
+               | pasak-web.vercel.app       |
                +-------------------------------+
 ```
 

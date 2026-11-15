@@ -3,7 +3,7 @@
   "type": "update",
   "project": {
     "name": "Pasak Cloud Dashboard",
-    "url": "https://pasak-market.vercel.app"
+    "url": "https://pasak-web.vercel.app"
   },
   "title": {
     "id": "Peluncuran Portal Produksi Publik, Pemantauan Simpul Server Langsung, dan Akses Cepat Agen",

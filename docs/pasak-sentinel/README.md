@@ -26,4 +26,4 @@ Welcome to the technical documentation for **Pasak Sentinel**, the high-performa
 - **Socket Path**: `/run/pasak/agent.sock` (fallback: `/tmp/pasak/agent.sock`)
 - **Unit File**: `scripts/pasak-sentinel.service`
 - **Cloud Control Plane**: `https://pasak-service.vercel.app`
-- **Public Market Portal**: `https://pasak-market.vercel.app`
+- **Public Market Portal**: `https://pasak-web.vercel.app`
