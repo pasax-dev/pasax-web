@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { pasakCloud } from "@/lib/pasak-cloud"
+import { pasaxCloud } from "@/lib/pasax-cloud"
 
 export const dynamic = "force-dynamic"
 
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const event = await pasakCloud.reportThreat({
+    const event = await pasaxCloud.reportThreat({
       node_id: body.node_id || "unknown_node",
       project_id: body.project_id || "default",
       event_type: eventType,
@@ -39,6 +39,6 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const limit = parseInt(searchParams.get("limit") || "50", 10)
-  const threats = await pasakCloud.fetchThreats(limit)
+  const threats = await pasaxCloud.fetchThreats(limit)
   return NextResponse.json(threats)
 }

@@ -8,11 +8,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Agent Guidelines for `pasak-dashboard`
+# Agent Guidelines for `pasax-web`
 
 ## 1. Project Overview & Foundational Context
 
-This repository is **`pasak-dashboard`**, the central SaaS cloud monitoring console and control plane for the Pasak Security Ecosystem. It receives live telemetry, FIM tamper alerts, and WAF trips from connected `pasak-sentinel` Linux host daemons and provides an interactive Security Operations Center (SOC) web portal.
+This repository is **`pasax-web`**, the central SaaS cloud monitoring console and control plane for the Pasax Security Ecosystem. It receives live telemetry, FIM tamper alerts, and WAF trips from connected `pasax-sentinel` Linux host daemons and provides an interactive Security Operations Center (SOC) web portal.
 
 - **Framework**: Next.js `16.4+` (App Router, Turbopack)
 - **Runtime**: React `19+`, Node.js `20+`
@@ -79,7 +79,7 @@ pnpm build
 ## 6. Directory Structure
 
 ```text
-pasak-dashboard/
+pasax-web/
 ├── app/
 │   ├── api/v1/              # Ingestion API routes (telemetry, threats, blocklist)
 │   ├── dashboard/           # Main SOC monitoring dashboard page
@@ -91,7 +91,7 @@ pasak-dashboard/
 │   ├── app-sidebar.tsx      # Neobrutalism collapsible navigation sidebar
 │   ├── chart-area-interactive.tsx # Interactive threat velocity area chart
 │   ├── install-agent-dialog.tsx   # One-line provisioning modal
-│   ├── pasak-operations-panel.tsx # 4-tab SOC operations matrix
+│   ├── pasax-operations-panel.tsx # 4-tab SOC operations matrix
 │   ├── section-cards.tsx    # Fleet metric stat cards
 │   └── site-header.tsx      # Top bar with live Sentinel mesh status
 ├── docs/                    # Authoritative 6-chapter documentation suite
@@ -117,7 +117,7 @@ Setiap selesai mengerjakan perubahan yang **dirasakan pengguna** (fitur baru, pe
      {
        "date": "YYYY-MM-DD",
        "type": "feature",
-       "project": { "name": "Pasak Cloud Dashboard" },
+       "project": { "name": "Pasax Cloud Dashboard" },
        "title": { "id": "...", "en": "..." },
        "body": { "id": "...", "en": "..." },
        "items": [{ "type": "feature", "id": "...", "en": "..." }]

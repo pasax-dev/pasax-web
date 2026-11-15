@@ -4,12 +4,12 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
-import { PasakOperationsPanel } from "@/components/pasak-operations-panel"
+import { PasaxOperationsPanel } from "@/components/pasax-operations-panel"
 import { AdminUsersLicenses } from "@/components/admin-users-licenses"
 import { UserTenantPortal } from "@/components/user-tenant-portal"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import { pasakCloud } from "@/lib/pasak-cloud"
-import { pasakStore } from "@/lib/store"
+import { pasaxCloud } from "@/lib/pasax-cloud"
+import { pasaxStore } from "@/lib/store"
 
 export const dynamic = "force-dynamic"
 
@@ -18,19 +18,19 @@ export default async function Page() {
 
   // Determine current user and role
   const userRole = (session?.user as any)?.role || "Superadmin"
-  const userEmail = session?.user?.email || "superadmin@pasak.id"
+  const userEmail = session?.user?.email || "superadmin@pasax.id"
   const userName = session?.user?.name || "Roby Kartis (Chief SOC)"
 
   // Fetch all fleet telemetry in parallel
   const [nodes, threats, blocklist] = await Promise.all([
-    pasakCloud.fetchNodes(),
-    pasakCloud.fetchThreats(50),
-    pasakCloud.fetchBlocklist(),
+    pasaxCloud.fetchNodes(),
+    pasaxCloud.fetchThreats(50),
+    pasaxCloud.fetchBlocklist(),
   ])
 
-  const users = pasakStore.getUsers()
-  const licenseKeys = pasakStore.getLicenseKeys()
-  const tenantOverview = pasakStore.getUserTenantOverview(userEmail)
+  const users = pasaxStore.getUsers()
+  const licenseKeys = pasaxStore.getLicenseKeys()
+  const tenantOverview = pasaxStore.getUserTenantOverview(userEmail)
 
   // Calculate vhosts count across all nodes
   let vhostsCount = 0
@@ -115,7 +115,7 @@ export default async function Page() {
 
                 {/* 4. Main Operations Matrix: Fleet, Threats, VHosts, Blocklist */}
                 <div id="nodes">
-                  <PasakOperationsPanel
+                  <PasaxOperationsPanel
                     initialNodes={nodes}
                     initialThreats={threats}
                     initialBlocklist={blocklist}

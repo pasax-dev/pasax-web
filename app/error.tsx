@@ -14,7 +14,7 @@ export default function ErrorBoundary({
 }) {
   React.useEffect(() => {
     // Log exception to console
-    console.error("Pasak Dashboard Runtime Error:", error)
+    console.error("Pasax Dashboard Runtime Error:", error)
   }, [error])
 
   return (
@@ -28,7 +28,7 @@ export default function ErrorBoundary({
           <div className="flex size-8 items-center justify-center rounded-base border-2 border-border bg-destructive text-destructive-foreground shadow-[2px_2px_0px_0px_var(--border)]">
             <AlertTriangle className="size-4 stroke-[2.5]" />
           </div>
-          <span>PASAK DEFENSE</span>
+          <span>PASAX DEFENSE</span>
         </Link>
         <Badge variant="outline" className="font-mono text-xs font-bold border-2 border-border bg-destructive/15 text-destructive">
           ERR_CRITICAL_500
@@ -98,7 +98,7 @@ export default function ErrorBoundary({
               </Link>
 
               <Link
-                href="/docs/pasak-secure-monitor"
+                href="/docs/pasax-secure-monitor"
                 className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-4 py-2 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5"
               >
                 <Terminal className="size-4 text-main" />
@@ -111,7 +111,7 @@ export default function ErrorBoundary({
 
       {/* Footer */}
       <footer className="text-center font-mono text-xs text-foreground/50 py-4">
-        Pasak Defense Suite &bull; System Fault Boundary
+        Pasax Defense Suite &bull; System Fault Boundary
       </footer>
     </div>
   )

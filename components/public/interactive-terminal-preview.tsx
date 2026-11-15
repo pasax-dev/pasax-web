@@ -120,7 +120,7 @@ export function InteractiveTerminalPreview() {
           <div className="h-4 w-px bg-border hidden sm:block" />
           <div className="flex items-center gap-2">
             <span className="font-mono text-xs font-bold text-foreground">
-              node-sgp-01.mesh.pasak
+              node-sgp-01.mesh.pasax
             </span>
             <span className="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-green-600 dark:text-green-400 border border-green-500/30">
               <span className="size-1.5 rounded-full bg-green-500 animate-pulse" />

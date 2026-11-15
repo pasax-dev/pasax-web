@@ -1,8 +1,8 @@
-# Pasak Cloud Dashboard 🛡️
+# Pasax Cloud Dashboard 🛡️
 
-**Pasak Cloud** is the central SaaS monitoring console, intelligence hub, and Security Operations Center (SOC) for the **Pasak Security Ecosystem** (`pasak-suit`).
+**Pasax Cloud** is the central SaaS monitoring console, intelligence hub, and Security Operations Center (SOC) for the **Pasax Security Ecosystem** (`pasax-suit`).
 
-Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic **[Neobrutalism Design System](https://www.neobrutalism.dev/)**, Pasak Cloud unifies host-level Linux telemetry (`pasak-sentinel`), application-layer Laravel WAF tripwires (`pasak-dev/secure-monitor` / `Pasak\SecureMonitor`), and global crowdsourced threat intelligence into a single retro-modern command center.
+Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic **[Neobrutalism Design System](https://www.neobrutalism.dev/)**, Pasax Cloud unifies host-level Linux telemetry (`pasax-sentinel`), application-layer Laravel WAF tripwires (`pasax-dev/secure-monitor` / `Pasax\SecureMonitor`), and global crowdsourced threat intelligence into a single retro-modern command center.
 
 ---
 
@@ -13,8 +13,8 @@ Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic 
 - 🔬 **Forensic Evidence Inspector**: Interactive modal inspecting raw incident JSON payloads, attacker IPs, process PIDs, and cryptographic SHA-256 before/after hash comparisons.
 - 🌐 **VHost & SSL Reconnaissance**: Auto-discovered virtual hosts across Nginx and Apache2 instances with active SSL certificate expiration countdowns.
 - 🔥 **Crowd Defense Blocklist**: Centralized malicious IP list automatically distributed and enforced across all client nodes at the kernel layer via `nftables` or `iptables`.
-- ⚡ **One-Line Agent Provisioning**: Built-in modal generating one-click curl commands (`curl -sSL https://get.pasak.is-a.dev/install.sh | sudo bash ...`) to onboard new Linux servers in under 10 seconds.
-- 🔌 **High-Throughput Ingestion REST APIs**: Native `/api/v1/` endpoints for `pasak-sentinel` heartbeats, WAF threat dispatches, and blocklist synchronization.
+- ⚡ **One-Line Agent Provisioning**: Built-in modal generating one-click curl commands (`curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash ...`) to onboard new Linux servers in under 10 seconds.
+- 🔌 **High-Throughput Ingestion REST APIs**: Native `/api/v1/` endpoints for `pasax-sentinel` heartbeats, WAF threat dispatches, and blocklist synchronization.
 
 ---
 
@@ -41,7 +41,7 @@ The user interface follows the **[Neobrutalism](https://www.neobrutalism.dev/doc
 Clone the repository and install dependencies:
 
 ```bash
-cd pasak-dashboard
+cd pasax-web
 pnpm install
 ```
 
@@ -107,7 +107,7 @@ export function ShieldCard() {
 
 ## 📡 Control Plane Ingestion APIs
 
-`pasak-dashboard` provides REST endpoints designed for `pasak-sentinel` Go agents and `pasak-dev/secure-monitor` Laravel WAF instances:
+`pasax-web` provides REST endpoints designed for `pasax-sentinel` Go agents and `pasax-dev/secure-monitor` Laravel WAF instances:
 
 | Method   | Endpoint                               | Description                                                          |
 | :------- | :------------------------------------- | :------------------------------------------------------------------- |
@@ -126,11 +126,11 @@ export function ShieldCard() {
 - **Detailed Technical Documentation**: Explore the 6-chapter suite in [`docs/`](./docs/README.md).
 - **Release Changelog**: Track all updates in [`CHANGELOG.md`](./CHANGELOG.md).
 - **AI Agent Guidelines**: Operational invariants and rules in [`AGENTS.md`](./AGENTS.md).
-- **Go Host Daemon**: Located in `../pasak-sentinel/`.
-- **Laravel WAF Core**: Located in `../pasak-secure-monitor-laravel/` (Composer package: `pasak-dev/secure-monitor`, namespace: `Pasak\SecureMonitor`).
+- **Go Host Daemon**: Located in `../pasax-sentinel/`.
+- **Laravel WAF Core**: Located in `../pasax-secure-monitor-laravel/` (Composer package: `pasax-dev/secure-monitor`, namespace: `Pasax\SecureMonitor`).
 
 ---
 
 ## 📄 License
 
-Proprietary & Confidential — Part of the **Pasak Security Ecosystem** (`pasak-suit`).
+Proprietary & Confidential — Part of the **Pasax Security Ecosystem** (`pasax-suit`).

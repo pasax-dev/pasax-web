@@ -77,7 +77,7 @@ export function UserTenantPortal({
   }
 
   const handleCopyEnv = () => {
-    const envSnippet = `APP_NAME=Laravel\nAPP_URL=http://localhost:8000\nPASAK_CLOUD_KEY=${activeKey}\nPASAK_CLOUD_URL=https://pasak-api.vercel.app`
+    const envSnippet = `APP_NAME=Laravel\nAPP_URL=http://localhost:8000\nPASAX_CLOUD_KEY=${activeKey}\nPASAX_CLOUD_URL=https://pasax-service.vercel.app`
     navigator.clipboard.writeText(envSnippet)
     setCopiedEnv(true)
     setTimeout(() => setCopiedEnv(false), 2000)
@@ -197,11 +197,11 @@ export function UserTenantPortal({
               </Button>
             </div>
             <div className="font-mono text-[11px] bg-secondary-background/80 p-2 rounded border border-border text-foreground space-y-0.5">
-              <div>PASAK_CLOUD_KEY={activeKey}</div>
-              <div className="text-muted-foreground">PASAK_CLOUD_URL=https://pasak-api.vercel.app</div>
+              <div>PASAX_CLOUD_KEY={activeKey}</div>
+              <div className="text-muted-foreground">PASAX_CLOUD_URL=https://pasax-service.vercel.app</div>
             </div>
             <div className="font-mono text-[10px] text-muted-foreground">
-              Jalankan: <code className="font-bold text-foreground">php artisan pasak:cloud test</code> untuk memverifikasi koneksi.
+              Jalankan: <code className="font-bold text-foreground">php artisan pasax:cloud test</code> untuk memverifikasi koneksi.
             </div>
           </div>
         </div>
@@ -224,7 +224,7 @@ export function UserTenantPortal({
               </Badge>
             </div>
             <CardDescription className="font-mono text-xs">
-              Aplikasi web yang terhubung otomatis menggunakan PASAK_CLOUD_KEY Anda.
+              Aplikasi web yang terhubung otomatis menggunakan PASAX_CLOUD_KEY Anda.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-0">

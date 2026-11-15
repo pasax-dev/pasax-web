@@ -23,7 +23,7 @@ export function SiteHeader() {
             className="flex items-center gap-1.5 font-heading font-black tracking-tight text-foreground transition-colors hover:text-main"
           >
             <ShieldCheck className="size-4 text-main" />
-            <span>PASAK SOC</span>
+            <span>PASAX SOC</span>
           </Link>
           <span className="text-muted-foreground">/</span>
           <span className="hidden font-mono text-xs font-semibold text-foreground/80 sm:inline-flex items-center gap-1.5">

@@ -111,7 +111,7 @@ function LoginFormContent() {
 
   const fillQuickRole = (roleEmail: string) => {
     setEmail(roleEmail)
-    setPassword("pasak@admin123")
+    setPassword("pasax@admin123")
   }
 
   return (
@@ -123,7 +123,7 @@ function LoginFormContent() {
             <div className="flex size-14 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5">
               <Image
                 src="/icon.png"
-                alt="Pasak Suite Icon"
+                alt="Pasax Suite Icon"
                 width={56}
                 height={56}
                 className="size-full object-contain p-1"
@@ -140,7 +140,7 @@ function LoginFormContent() {
             </Badge>
           </div>
           <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-            Masuk ke Pasak Suite
+            Masuk ke Pasax Suite
           </h1>
           <p className="text-xs text-foreground/75">
             Pusat kendali pertahanan web Laravel, daemon Sentinel, & kontrol
@@ -254,27 +254,27 @@ function LoginFormContent() {
             {[
               {
                 role: "Superadmin",
-                email: "superadmin@pasak.id",
+                email: "superadmin@pasax.id",
                 bg: "bg-red-500 text-white",
               },
               {
                 role: "Admin",
-                email: "admin@pasak.id",
+                email: "admin@pasax.id",
                 bg: "bg-main text-main-foreground",
               },
               {
                 role: "Support",
-                email: "support@pasak.id",
+                email: "support@pasax.id",
                 bg: "bg-emerald-500 text-white",
               },
               {
                 role: "Teknis",
-                email: "teknis@pasak.id",
+                email: "teknis@pasax.id",
                 bg: "bg-sky-500 text-white",
               },
               {
                 role: "User",
-                email: "user@pasak.id",
+                email: "user@pasax.id",
                 bg: "bg-background text-foreground",
               },
             ].map((p) => (

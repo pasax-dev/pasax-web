@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "SOC Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "operator@pasak.id" },
+        email: { label: "Email", type: "email", placeholder: "operator@pasax.id" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -85,7 +85,7 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || "pasak-defense-suite-super-secret-key-32chars",
+  secret: process.env.NEXTAUTH_SECRET || "pasax-defense-suite-super-secret-key-32chars",
   session: {
     strategy: "jwt",
   },

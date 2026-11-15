@@ -1,24 +1,24 @@
-import { NodeTelemetry, ThreatEvent, pasakStore, VHostInfo } from "./store"
+import { NodeTelemetry, ThreatEvent, pasaxStore, VHostInfo } from "./store"
 
-const DEFAULT_API_URL = "https://pasak-service.vercel.app"
+const DEFAULT_API_URL = "https://pasax-service.vercel.app"
 
-export function getPasakApiUrl(): string {
-  if (typeof process !== "undefined" && process.env.PASAK_API_URL) {
-    return process.env.PASAK_API_URL.replace(/\/$/, "")
+export function getPasaxApiUrl(): string {
+  if (typeof process !== "undefined" && process.env.PASAX_API_URL) {
+    return process.env.PASAX_API_URL.replace(/\/$/, "")
   }
-  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_PASAK_API_URL) {
-    return process.env.NEXT_PUBLIC_PASAK_API_URL.replace(/\/$/, "")
+  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_PASAX_API_URL) {
+    return process.env.NEXT_PUBLIC_PASAX_API_URL.replace(/\/$/, "")
   }
   return DEFAULT_API_URL
 }
 
-export const pasakCloud = {
+export const pasaxCloud = {
   /**
-   * Fetch all registered Sentinel nodes from Pasak Cloud API (backed by Neon PostgreSQL),
+   * Fetch all registered Sentinel nodes from Pasax Cloud API (backed by Neon PostgreSQL),
    * falling back to local memory store if the remote cloud is unreachable.
    */
   async fetchNodes(): Promise<NodeTelemetry[]> {
-    const apiUrl = getPasakApiUrl()
+    const apiUrl = getPasaxApiUrl()
     try {
       const res = await fetch(`${apiUrl}/api/v1/nodes`, {
         cache: "no-store",
@@ -88,7 +88,7 @@ export const pasakCloud = {
           })
 
           // Also merge any local seed nodes not present in Cloud
-          const localNodes = pasakStore.getNodes()
+          const localNodes = pasaxStore.getNodes()
           const cloudIds = new Set(mapped.map((m) => m.node_id))
           for (const loc of localNodes) {
             if (!cloudIds.has(loc.node_id)) {
@@ -100,17 +100,17 @@ export const pasakCloud = {
         }
       }
     } catch (err) {
-      console.warn("[PasakCloud] Could not connect to remote API, falling back to local store:", err)
+      console.warn("[PasaxCloud] Could not connect to remote API, falling back to local store:", err)
     }
 
-    return pasakStore.getNodes()
+    return pasaxStore.getNodes()
   },
 
   /**
-   * Fetch latest threat audit events from Pasak Cloud API.
+   * Fetch latest threat audit events from Pasax Cloud API.
    */
   async fetchThreats(limit = 50): Promise<ThreatEvent[]> {
-    const apiUrl = getPasakApiUrl()
+    const apiUrl = getPasaxApiUrl()
     try {
       const res = await fetch(`${apiUrl}/api/v1/events/threat?limit=${limit}`, {
         cache: "no-store",
@@ -144,7 +144,7 @@ export const pasakCloud = {
           }))
 
           // Merge local in-memory threats
-          const localThreats = pasakStore.getThreats(limit)
+          const localThreats = pasaxStore.getThreats(limit)
           const cloudIds = new Set(mapped.map((m) => m.id))
           for (const loc of localThreats) {
             if (!cloudIds.has(loc.id)) {
@@ -156,17 +156,17 @@ export const pasakCloud = {
         }
       }
     } catch (err) {
-      console.warn("[PasakCloud] Could not fetch threats from remote API:", err)
+      console.warn("[PasaxCloud] Could not fetch threats from remote API:", err)
     }
 
-    return pasakStore.getThreats(limit)
+    return pasaxStore.getThreats(limit)
   },
 
   /**
-   * Fetch active global blocklist from Pasak Cloud API.
+   * Fetch active global blocklist from Pasax Cloud API.
    */
   async fetchBlocklist(): Promise<string[]> {
-    const apiUrl = getPasakApiUrl()
+    const apiUrl = getPasaxApiUrl()
     try {
       const res = await fetch(`${apiUrl}/api/v1/threats/global-blocklist`, {
         cache: "no-store",
@@ -177,24 +177,24 @@ export const pasakCloud = {
       if (res.ok) {
         const json = await res.json()
         if (Array.isArray(json.ips) && json.ips.length > 0) {
-          const merged = new Set([...json.ips, ...pasakStore.getBlocklist()])
+          const merged = new Set([...json.ips, ...pasaxStore.getBlocklist()])
           return Array.from(merged)
         }
       }
     } catch (err) {
-      console.warn("[PasakCloud] Could not fetch blocklist from remote API:", err)
+      console.warn("[PasaxCloud] Could not fetch blocklist from remote API:", err)
     }
 
-    return pasakStore.getBlocklist()
+    return pasaxStore.getBlocklist()
   },
 
   /**
-   * Relay a threat event to the Pasak Cloud API and record locally.
+   * Relay a threat event to the Pasax Cloud API and record locally.
    */
   async reportThreat(event: Omit<ThreatEvent, "id">): Promise<ThreatEvent> {
-    const localEvent = pasakStore.addThreat(event)
+    const localEvent = pasaxStore.addThreat(event)
 
-    const apiUrl = getPasakApiUrl()
+    const apiUrl = getPasaxApiUrl()
     try {
       await fetch(`${apiUrl}/api/v1/events/threat`, {
         method: "POST",
@@ -211,19 +211,19 @@ export const pasakCloud = {
         }),
       })
     } catch (err) {
-      console.warn("[PasakCloud] Failed to forward threat to remote API:", err)
+      console.warn("[PasaxCloud] Failed to forward threat to remote API:", err)
     }
 
     return localEvent
   },
 
   /**
-   * Relay Sentinel node telemetry to Pasak Cloud API and update locally.
+   * Relay Sentinel node telemetry to Pasax Cloud API and update locally.
    */
   async ingestTelemetry(payload: any): Promise<NodeTelemetry> {
-    const updated = pasakStore.upsertTelemetry(payload)
+    const updated = pasaxStore.upsertTelemetry(payload)
 
-    const apiUrl = getPasakApiUrl()
+    const apiUrl = getPasaxApiUrl()
     try {
       await fetch(`${apiUrl}/api/v1/nodes/telemetry`, {
         method: "POST",
@@ -231,7 +231,7 @@ export const pasakCloud = {
         body: JSON.stringify(payload),
       })
     } catch (err) {
-      console.warn("[PasakCloud] Failed to forward telemetry to remote API:", err)
+      console.warn("[PasaxCloud] Failed to forward telemetry to remote API:", err)
     }
 
     return updated

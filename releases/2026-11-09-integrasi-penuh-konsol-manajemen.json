@@ -2,22 +2,22 @@
   "date": "2026-11-09",
   "type": "deploy",
   "project": {
-    "name": "Pasak Cloud Dashboard",
-    "url": "https://pasak.is-a.dev"
+    "name": "Pasax Cloud Dashboard",
+    "url": "https://pasax.is-a.dev"
   },
   "title": {
-    "id": "Peluncuran Produksi Konsol Manajemen Pasak Cloud di Domain Resmi",
-    "en": "Production Deployment of Pasak Cloud Management Console to Official Domain"
+    "id": "Peluncuran Produksi Konsol Manajemen Pasax Cloud di Domain Resmi",
+    "en": "Production Deployment of Pasax Cloud Management Console to Official Domain"
   },
   "body": {
-    "id": "Konsol pusat pemantauan Pasak Cloud resmi disebarkan ke infrastruktur produksi global di pasak.is-a.dev dan terhubung langsung ke mesin koordinasi pasak-api. Memantau armada server, sertifikat SSL domain, peta ancaman serangan 3D waktu nyata, dan kebijakan pemblokiran kernel secara tersentralisasi.",
-    "en": "Pasak Cloud central management console officially deployed to global production infrastructure at pasak.is-a.dev and directly connected to the pasak-api coordination engine. Features fleet monitoring, domain SSL status, real-time 3D attack threat map, and centralized kernel blocklist policies."
+    "id": "Konsol pusat pemantauan Pasax Cloud resmi disebarkan ke infrastruktur produksi global di pasax.is-a.dev dan terhubung langsung ke mesin koordinasi pasax-api. Memantau armada server, sertifikat SSL domain, peta ancaman serangan 3D waktu nyata, dan kebijakan pemblokiran kernel secara tersentralisasi.",
+    "en": "Pasax Cloud central management console officially deployed to global production infrastructure at pasax.is-a.dev and directly connected to the pasax-api coordination engine. Features fleet monitoring, domain SSL status, real-time 3D attack threat map, and centralized kernel blocklist policies."
   },
   "items": [
     {
       "type": "deploy",
-      "id": "Penyebaran Produksi Global: Aplikasi aktif secara penuh di domain resmi pasak.is-a.dev dengan jaringan pengiriman tepi berkinerja tinggi.",
-      "en": "Global Production Deployment: Fully live on official domain pasak.is-a.dev with high-performance edge delivery network."
+      "id": "Penyebaran Produksi Global: Aplikasi aktif secara penuh di domain resmi pasax.is-a.dev dengan jaringan pengiriman tepi berkinerja tinggi.",
+      "en": "Global Production Deployment: Fully live on official domain pasax.is-a.dev with high-performance edge delivery network."
     },
     {
       "type": "feature",

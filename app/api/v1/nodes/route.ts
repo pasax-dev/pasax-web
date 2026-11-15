@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { pasakCloud } from "@/lib/pasak-cloud"
+import { pasaxCloud } from "@/lib/pasax-cloud"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const nodes = await pasakCloud.fetchNodes()
+  const nodes = await pasaxCloud.fetchNodes()
   return NextResponse.json(nodes)
 }

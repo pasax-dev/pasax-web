@@ -24,4 +24,4 @@ When a target file is modified, the watcher immediately:
 If a watched `.env` file is tampered with:
 - The daemon automatically executes `os.Chmod(path, 0600)`.
 - It resets ownership so that unauthorized web scripts cannot read database credentials or app secrets.
-- An urgent `CRITICAL` threat event is dispatched to Pasak Cloud.
+- An urgent `CRITICAL` threat event is dispatched to Pasax Cloud.

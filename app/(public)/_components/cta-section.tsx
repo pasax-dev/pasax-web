@@ -27,7 +27,7 @@ export function CtaSection() {
             <ArrowRight className="size-5" />
           </Link>
           <a
-            href="https://github.com/pasak-dev"
+            href="https://github.com/pasax-dev"
             target="_blank"
             rel="noreferrer"
             className={cn(

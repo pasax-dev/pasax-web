@@ -1,7 +1,7 @@
 # Chapter 03: Cloud Ingestion API Reference
 
 ## 1. Overview
-`pasak-dashboard` exposes high-throughput REST API route handlers under `/api/v1/` to communicate seamlessly with `pasak-sentinel` daemons, `pasak-dev/secure-monitor` (`Pasak\SecureMonitor`) Laravel instances, and external automation scripts.
+`pasax-web` exposes high-throughput REST API route handlers under `/api/v1/` to communicate seamlessly with `pasax-sentinel` daemons, `pasax-dev/secure-monitor` (`Pasax\SecureMonitor`) Laravel instances, and external automation scripts.
 
 ---
 
@@ -31,11 +31,11 @@
         "version": "1.24.0",
         "vhosts": [
           {
-            "domain": "app.pasak.is-a.dev",
+            "domain": "app.pasax.is-a.dev",
             "ssl_status": "valid",
             "ssl_expires_at": 1800272266,
             "upstream": "127.0.0.1:9000",
-            "root": "/var/www/pasak-app/public"
+            "root": "/var/www/pasax-app/public"
           }
         ]
       }
@@ -65,7 +65,7 @@
     "event_type": "FIM_MODIFICATION",
     "severity": "CRITICAL",
     "details": {
-      "file_path": "/var/www/pasak-app/.env",
+      "file_path": "/var/www/pasax-app/.env",
       "action": "FILE_MODIFIED",
       "hash_before": "e3b0...855",
       "hash_after": "c983...68b",
@@ -75,7 +75,7 @@
     "timestamp": 1773070425
   }
   ```
-- **Request Body (WAF Threat from `pasak-dev/secure-monitor`)**:
+- **Request Body (WAF Threat from `pasax-dev/secure-monitor`)**:
   ```json
   {
     "node_id": "nd_01HW8P9Y124XQW7V6B9R41ZX9A",
@@ -89,8 +89,8 @@
       "request_uri": "/api/users?id=1' UNION SELECT * FROM users--",
       "user_agent": "sqlmap/1.7#stable",
       "blocked_duration": 2592000,
-      "source_package": "pasak-dev/secure-monitor",
-      "namespace": "Pasak\\SecureMonitor"
+      "source_package": "pasax-dev/secure-monitor",
+      "namespace": "Pasax\\SecureMonitor"
     },
     "timestamp": 1773070430
   }

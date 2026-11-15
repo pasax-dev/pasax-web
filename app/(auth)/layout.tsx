@@ -17,7 +17,7 @@ export default function AuthLayout({
           <div className="flex size-9 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]">
             <Shield className="size-5 stroke-[2.5]" />
           </div>
-          <span className="text-xl">PASAK SUITE</span>
+          <span className="text-xl">PASAX SUITE</span>
         </Link>
 
         <Link
@@ -36,7 +36,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <footer className="text-center font-mono text-xs text-foreground/60 py-4">
-        &copy; {new Date().getFullYear()} Pasak Defense Suite &bull; SOC Platform & Bullwark Kernel Engine
+        &copy; {new Date().getFullYear()} Pasax Defense Suite &bull; SOC Platform & Bullwark Kernel Engine
       </footer>
     </div>
   )

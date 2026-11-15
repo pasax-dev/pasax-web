@@ -5,7 +5,7 @@ description: Best practices and rules for crafting UI components and layouts adh
 
 # `neobrutalism-ui` Skill
 
-Use this skill when building, styling, or refactoring user interfaces in `pasak-dashboard`.
+Use this skill when building, styling, or refactoring user interfaces in `pasax-web`.
 
 ## 1. Neobrutalism Styling Rules
 - **Borders**: Always apply `border-2 border-border`.

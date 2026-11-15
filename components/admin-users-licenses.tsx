@@ -362,7 +362,7 @@ export function AdminUsersLicenses({
                   Fitur Lisensi Universal (Multi-Node & Multi-App per Key)
                 </div>
                 <p className="text-emerald-800/80 dark:text-emerald-300/80 leading-relaxed">
-                  Satu License Key Pasak (<code className="bg-emerald-900/20 px-1 py-0.5 rounded font-bold">psk_live_...</code>) dapat dipasang secara bersamaan pada <strong>berbagai daemon Sentinel di VPS</strong> dan <strong>banyak aplikasi web Laravel berbeda</strong> (<code className="bg-emerald-900/20 px-1 py-0.5 rounded font-bold">PASAK_CLOUD_KEY</code> di .env). Semua aplikasi dan node akan otomatis melaporkan status kesehatan, heartbeat, dan ancaman ke dashboard ini.
+                  Satu License Key Pasax (<code className="bg-emerald-900/20 px-1 py-0.5 rounded font-bold">psk_live_...</code>) dapat dipasang secara bersamaan pada <strong>berbagai daemon Sentinel di VPS</strong> dan <strong>banyak aplikasi web Laravel berbeda</strong> (<code className="bg-emerald-900/20 px-1 py-0.5 rounded font-bold">PASAX_CLOUD_KEY</code> di .env). Semua aplikasi dan node akan otomatis melaporkan status kesehatan, heartbeat, dan ancaman ke dashboard ini.
                 </p>
               </div>
             </div>

@@ -47,7 +47,7 @@ import {
 } from "lucide-react"
 import { NodeTelemetry, ThreatEvent, VHostInfo } from "@/lib/store"
 
-export function PasakOperationsPanel({
+export function PasaxOperationsPanel({
   initialNodes = [],
   initialThreats = [],
   initialBlocklist = [],
@@ -90,7 +90,7 @@ export function PasakOperationsPanel({
       if (Array.isArray(resThreats)) setThreats(resThreats)
       if (Array.isArray(resBlocklist)) setBlocklist(resBlocklist)
     } catch (err) {
-      console.error("Failed to refresh Pasak telemetry:", err)
+      console.error("Failed to refresh Pasax telemetry:", err)
     } finally {
       setRefreshing(false)
     }
@@ -104,7 +104,7 @@ export function PasakOperationsPanel({
           event_type: "FIM_MODIFICATION",
           severity: "CRITICAL",
           details: {
-            file_path: "/var/www/pasak-app/.env",
+            file_path: "/var/www/pasax-app/.env",
             action: "TAMPER_DETECTED",
             trigger_user: "www-data",
             mitigation_action_taken: "PERMS_RESET_0600_AND_ALERTED",

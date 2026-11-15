@@ -13,7 +13,7 @@ export function VpsDeploySteps() {
       title: "Deploy Single Go Binary",
       description:
         "Execute our audited install script via SSH. It fetches a standalone static Linux binary compiled with zero external dependencies.",
-      code: "curl -sSL https://get.pasak.is-a.dev/install.sh | sudo bash",
+      code: "curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash",
       tag: "< 15s execution time",
     },
     {
@@ -30,7 +30,7 @@ export function VpsDeploySteps() {
       badge: "ZERO-TRUST SOC",
       title: "Instant Live Telemetry",
       description:
-        "Establishes an outbound TLS 1.3 mTLS tunnel to your Pasak Cloud SOC. No incoming ports are opened; Shodan port scanners see nothing.",
+        "Establishes an outbound TLS 1.3 mTLS tunnel to your Pasax Cloud SOC. No incoming ports are opened; Shodan port scanners see nothing.",
       code: "# mTLS Handshake: OK\n# Status: ARMORED & SYNCED",
       tag: "0 open inbound ports",
     },

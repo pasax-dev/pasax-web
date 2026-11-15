@@ -44,13 +44,13 @@ export function ForbiddenView() {
           <div className="relative flex size-8 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[2px_2px_0px_0px_var(--border)]">
             <Image
               src="/icon.png"
-              alt="Pasak Suite"
+              alt="Pasax Suite"
               width={32}
               height={32}
               className="size-full object-contain p-0.5"
             />
           </div>
-          <span>PASAK WAF SHIELD</span>
+          <span>PASAX WAF SHIELD</span>
         </Link>
         <Badge
           variant="outline"
@@ -79,8 +79,8 @@ export function ForbiddenView() {
           </div>
 
           <p className="text-sm leading-relaxed text-foreground/80">
-            Permintaan Anda dihentikan oleh modul WAF <strong>pasak-secure-monitor</strong>{" "}
-            atau daemon <strong>pasak-sentinel</strong> karena terdeteksi pola aktivitas
+            Permintaan Anda dihentikan oleh modul WAF <strong>pasax-secure-monitor</strong>{" "}
+            atau daemon <strong>pasax-sentinel</strong> karena terdeteksi pola aktivitas
             mencurigakan, IP dibatasi dalam daftar karantina, atau sesi tidak memiliki
             hak akses (RBAC) yang memadai.
           </p>
@@ -111,7 +111,7 @@ export function ForbiddenView() {
             </div>
             <div className="flex justify-between text-foreground/70">
               <span>SECURITY ENGINE:</span>
-              <span className="text-foreground">Pasak Trinity Defense L2/L3</span>
+              <span className="text-foreground">Pasax Trinity Defense L2/L3</span>
             </div>
             <div className="flex justify-between text-foreground/70">
               <span>ACTION CODE:</span>
@@ -174,7 +174,7 @@ export function ForbiddenView() {
             </Link>
 
             <Link
-              href="/docs/pasak-secure-monitor"
+              href="/docs/pasax-secure-monitor"
               className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-4 py-2 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5"
             >
               <Terminal className="size-4 text-main" />
@@ -186,7 +186,7 @@ export function ForbiddenView() {
 
       {/* Footer */}
       <footer className="text-center font-mono text-xs text-foreground/50 py-4">
-        Pasak Defense Suite &bull; WAF Ingress & Access Gate
+        Pasax Defense Suite &bull; WAF Ingress & Access Gate
       </footer>
     </div>
   )

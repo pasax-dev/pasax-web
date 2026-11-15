@@ -33,14 +33,14 @@ export function PublicFooter() {
               <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[2px_2px_0px_0px_var(--border)] transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5">
                 <Image
                   src="/icon.png"
-                  alt="Pasak Suite Icon"
+                  alt="Pasax Suite Icon"
                   width={36}
                   height={36}
                   className="size-full object-contain p-0.5"
                 />
               </div>
               <span className="font-heading text-xl font-black tracking-tight text-foreground">
-                PASAK<span className="text-main">.</span>
+                PASAX<span className="text-main">.</span>
               </span>
             </Link>
             <p className="max-w-md text-sm leading-relaxed font-base text-foreground/80">
@@ -79,18 +79,18 @@ export function PublicFooter() {
             <ul className="space-y-2 text-sm font-medium">
               <li>
                 <Link
-                  href="/docs/pasak-sentinel"
+                  href="/docs/pasax-sentinel"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
-                  pasak-sentinel (Go Daemon)
+                  pasax-sentinel (Go Daemon)
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/docs/pasak-secure-monitor"
+                  href="/docs/pasax-secure-monitor"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
-                  pasak/shield (Laravel WAF)
+                  pasax/shield (Laravel WAF)
                 </Link>
               </li>
               <li>
@@ -98,7 +98,7 @@ export function PublicFooter() {
                   href="/dashboard"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
-                  Pasak Cloud (Fleet SOC)
+                  Pasax Cloud (Fleet SOC)
                 </Link>
               </li>
               <li>
@@ -137,7 +137,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link
-                  href="/docs/pasak-sentinel"
+                  href="/docs/pasax-sentinel"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
                   Sentinel Kernel Setup
@@ -145,7 +145,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <Link
-                  href="/docs/pasak-secure-monitor"
+                  href="/docs/pasax-secure-monitor"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
                   Laravel WAF &amp; Honeypots
@@ -164,7 +164,7 @@ export function PublicFooter() {
                   href="/#vps-comparison"
                   className="text-foreground/80 hover:text-foreground hover:underline"
                 >
-                  Pasak vs Legacy SIEM
+                  Pasax vs Legacy SIEM
                 </a>
               </li>
               <li>
@@ -202,7 +202,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <a
-                  href="https://github.com/pasak-dev"
+                  href="https://github.com/pasax-dev"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground hover:underline"
@@ -213,7 +213,7 @@ export function PublicFooter() {
               </li>
               <li>
                 <a
-                  href="https://github.com/pasak-dev"
+                  href="https://github.com/pasax-dev"
                   target="_blank"
                   rel="noreferrer"
                   className="text-foreground/80 hover:text-foreground hover:underline"
@@ -234,7 +234,7 @@ export function PublicFooter() {
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t-2 border-border pt-6 sm:flex-row">
           <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-muted-foreground">
             <span>
-              &copy; {new Date().getFullYear()} Pasak Security Ecosystem.
+              &copy; {new Date().getFullYear()} Pasax Security Ecosystem.
             </span>
             <span className="hidden sm:inline">&bull;</span>
             <Link

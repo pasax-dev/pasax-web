@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { pasakStore } from "@/lib/store"
+import { pasaxStore } from "@/lib/store"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
-    const users = pasakStore.getUsers()
+    const users = pasaxStore.getUsers()
     return NextResponse.json({ status: "success", data: users })
   } catch (err: any) {
     return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const result = pasakStore.createUser({
+    const result = pasaxStore.createUser({
       name: body.name,
       email: body.email,
       role: body.role || "User",
@@ -49,7 +49,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ status: "error", message: "ID pengguna diperlukan." }, { status: 400 })
     }
 
-    const updated = pasakStore.updateUser(body.id, body.updates || {})
+    const updated = pasaxStore.updateUser(body.id, body.updates || {})
     if (!updated) {
       return NextResponse.json({ status: "error", message: "Pengguna tidak ditemukan." }, { status: 404 })
     }

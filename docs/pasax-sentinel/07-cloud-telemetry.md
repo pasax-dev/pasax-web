@@ -1,7 +1,7 @@
 # Chapter 07: Cloud Telemetry & Sync Client
 
 ## 1. Overview
-The cloud client (`internal/cloud/client.go`) manages bi-directional telemetry and threat exchange between the Sentinel host daemon and Pasak Cloud Central Console.
+The cloud client (`internal/cloud/client.go`) manages bi-directional telemetry and threat exchange between the Sentinel host daemon and Pasax Cloud Central Console.
 
 ## 2. Telemetry Ingestion Contract
 Every 60 seconds (configurable), Sentinel dispatches a heartbeat payload:
@@ -44,7 +44,7 @@ When a FIM violation or log exploit occurs:
 - Sentinel periodically pulls the global blocklist and adds any newly identified malicious IPs to the local `nftables` or `iptables` drop set.
 
 ## 5. Offline FIFO Queue Buffer
-If network connectivity to Pasak Cloud is lost:
+If network connectivity to Pasax Cloud is lost:
 1. Threat events are queued in a thread-safe in-memory FIFO ring buffer (max 500 events).
 2. Local enforcement (FIM locking, socket IPC, firewall drop) continues without interruption.
 3. Once the next telemetry heartbeat succeeds, the offline queue is automatically flushed to the cloud.

@@ -56,12 +56,12 @@ export function DocsSidebar({ className }: { className?: string }) {
 
   // Detect current product from pathname
   const detectedProduct = React.useMemo(() => {
-    if (pathname.includes("/docs/pasak-sentinel")) return "pasak-sentinel"
+    if (pathname.includes("/docs/pasax-sentinel")) return "pasax-sentinel"
     if (pathname.includes("/docs/core")) return "core"
-    if (pathname.includes("/docs/pasak-secure-monitor"))
-      return "pasak-secure-monitor"
+    if (pathname.includes("/docs/pasax-secure-monitor"))
+      return "pasax-secure-monitor"
     const doc = findDocBySlug(pathname)
-    return doc?.product || "pasak-secure-monitor"
+    return doc?.product || "pasax-secure-monitor"
   }, [pathname])
 
   const [activeProduct, setActiveProduct] =
@@ -79,7 +79,7 @@ export function DocsSidebar({ className }: { className?: string }) {
   }
 
   const activeConfig =
-    PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasak-secure-monitor"]
+    PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasax-secure-monitor"]
 
   // Filter items if search is active
   const filteredCategories = React.useMemo(() => {
@@ -110,14 +110,14 @@ export function DocsSidebar({ className }: { className?: string }) {
           </span>
           <div className="grid grid-cols-3 gap-1 rounded-base border-2 border-border bg-background p-1 shadow-[2px_2px_0px_0px_var(--border)]">
             <Link
-              href="/docs/pasak-secure-monitor"
+              href="/docs/pasax-secure-monitor"
               onClick={() => {
-                setActiveProduct("pasak-secure-monitor")
+                setActiveProduct("pasax-secure-monitor")
                 setMobileOpen(false)
               }}
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
-                activeProduct === "pasak-secure-monitor"
+                activeProduct === "pasax-secure-monitor"
                   ? "bg-main text-main-foreground shadow-sm"
                   : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
               )}
@@ -125,14 +125,14 @@ export function DocsSidebar({ className }: { className?: string }) {
               Monitor
             </Link>
             <Link
-              href="/docs/pasak-sentinel"
+              href="/docs/pasax-sentinel"
               onClick={() => {
-                setActiveProduct("pasak-sentinel")
+                setActiveProduct("pasax-sentinel")
                 setMobileOpen(false)
               }}
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
-                activeProduct === "pasak-sentinel"
+                activeProduct === "pasax-sentinel"
                   ? "bg-main text-main-foreground shadow-sm"
                   : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
               )}
@@ -260,8 +260,8 @@ export function DocsSidebar({ className }: { className?: string }) {
       <div className="border-t-2 border-border bg-secondary-background/60 p-3 text-[11px] text-foreground/70">
         <div className="flex items-center justify-between font-mono">
           <div className="flex items-center gap-1.5 font-bold">
-            <Image src="/icon.png" alt="Pasak Suite" width={16} height={16} className="size-4 rounded-sm object-contain" />
-            <span>Pasak Suite</span>
+            <Image src="/icon.png" alt="Pasax Suite" width={16} height={16} className="size-4 rounded-sm object-contain" />
+            <span>Pasax Suite</span>
           </div>
           <Link
             href="/docs"

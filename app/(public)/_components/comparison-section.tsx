@@ -15,7 +15,7 @@ export function ComparisonSection() {
             Why Teams Replace Legacy Agents
           </h2>
           <p className="mt-3 text-base font-base text-foreground/80 sm:text-lg">
-            Comparing Pasak against traditional SIEM agents, Cloudflare WAF,
+            Comparing Pasax against traditional SIEM agents, Cloudflare WAF,
             and Fail2ban.
           </p>
         </div>
@@ -26,7 +26,7 @@ export function ComparisonSection() {
               <tr>
                 <th className="p-4 sm:p-5 lg:p-6">Feature / Metric</th>
                 <th className="border-x-2 border-border bg-main/20 p-4 sm:p-5 lg:p-6 font-black text-main-foreground">
-                  PASAK SUITE
+                  PASAX SUITE
                 </th>
                 <th className="p-4 sm:p-5 lg:p-6">Traditional SIEM (Wazuh/Datadog)</th>
                 <th className="p-4 sm:p-5 lg:p-6">Cloudflare WAF</th>

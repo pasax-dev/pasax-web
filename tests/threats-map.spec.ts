@@ -25,7 +25,7 @@ test.describe("Threats Map & Marketing Animations", () => {
     const dropTab = page.getByRole("button", { name: /nftables drop/i })
     await expect(dropTab).toBeVisible()
     await dropTab.click()
-    await expect(page.getByText(/pasak_input_filter/i)).toBeVisible()
+    await expect(page.getByText(/pasax_input_filter/i)).toBeVisible()
 
     // 3. Triple Defense Flow Network
     const flowHeading = page.getByRole("heading", { name: /Triple-Defense Telemetry Dataflow/i })
@@ -95,7 +95,7 @@ test.describe("Threats Map & Marketing Animations", () => {
     await page.waitForTimeout(1000)
 
     // Capture visual verification screenshot
-    await page.screenshot({ path: "/tmp/pasak-threats-map-verified.png" })
+    await page.screenshot({ path: "/tmp/pasax-threats-map-verified.png" })
   })
 })
 

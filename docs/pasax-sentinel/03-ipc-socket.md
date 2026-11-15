@@ -4,7 +4,7 @@
 The IPC subsystem (`internal/ipc/socket.go`) provides an ultra-low latency (<0.2ms) communication channel between the PHP/Laravel application and the Go host daemon running as root.
 
 ## 2. Socket Specifications
-- **Socket Path**: `/run/pasak/agent.sock`
+- **Socket Path**: `/run/pasax/agent.sock`
 - **File Mode**: `0660` (`srw-rw----`)
 - **Group Ownership**: `www-data` (or Nginx/Apache worker group)
 - **Protocol**: Text-based line-delimited commands: `COMMAND [ARGUMENTS]\n`
@@ -19,7 +19,7 @@ The IPC subsystem (`internal/ipc/socket.go`) provides an ultra-low latency (<0.2
 | `CHECK_IP`| `<ip>` | Check if IP is currently banned | `OK: BANNED` or `OK: NOT_BANNED` |
 
 ## 4. Offloading Logic
-When Laravel WAF detects a high-severity threat (e.g. credential stuffing or SQLi canary), instead of continuing to burn PHP-FPM CPU cycles returning 403 pages, it opens `/run/pasak/agent.sock` and writes:
+When Laravel WAF detects a high-severity threat (e.g. credential stuffing or SQLi canary), instead of continuing to burn PHP-FPM CPU cycles returning 403 pages, it opens `/run/pasax/agent.sock` and writes:
 ```text
 BAN_IP 198.51.100.42 86400
 ```

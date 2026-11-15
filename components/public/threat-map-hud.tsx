@@ -69,7 +69,7 @@ export function ThreatMapHud({
               <ShieldCheck className="size-5 stroke-[2.5]" />
             </div>
             <span className="font-heading text-lg font-black tracking-tight text-foreground">
-              PASAK<span className="text-main">.</span>
+              PASAX<span className="text-main">.</span>
             </span>
           </Link>
 

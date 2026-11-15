@@ -9,9 +9,9 @@ export function TerminalInstall() {
   const [activeTab, setActiveTab] = React.useState<"curl" | "docker" | "go">("curl")
 
   const commands = {
-    curl: "curl -sSL https://get.pasak.is-a.dev/install.sh | sudo bash -s -- --token=psk_live_mesh",
-    docker: "docker run -d --name pasak-sentinel --net=host --cap-add=NET_ADMIN -v /:/host:ro pasak/sentinel:v1",
-    go: "go install github.com/pasak-suit/pasak-sentinel/cmd/sentinel@latest && sudo sentinel daemon --init",
+    curl: "curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash -s -- --token=psk_live_mesh",
+    docker: "docker run -d --name pasax-sentinel --net=host --cap-add=NET_ADMIN -v /:/host:ro pasax/sentinel:v1",
+    go: "go install github.com/pasax-suit/pasax-sentinel/cmd/sentinel@latest && sudo sentinel daemon --init",
   }
 
   const handleCopy = () => {

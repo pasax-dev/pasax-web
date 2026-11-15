@@ -1,11 +1,11 @@
 ---
 name: dashboard-release
-description: Standard release procedure for pasak-dashboard including CHANGELOG updating, TypeScript verification, and production build checks.
+description: Standard release procedure for pasax-web including CHANGELOG updating, TypeScript verification, and production build checks.
 ---
 
 # `dashboard-release` Skill
 
-Use this skill whenever tagging, bumping version, or deploying `pasak-dashboard`.
+Use this skill whenever tagging, bumping version, or deploying `pasax-web`.
 
 ## 1. Release Invariant: CHANGELOG First
 Before tagging or deploying:

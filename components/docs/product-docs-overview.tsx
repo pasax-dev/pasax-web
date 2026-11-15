@@ -14,24 +14,24 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-export type ProductType = "core" | "pasak-secure-monitor" | "pasak-sentinel"
+export type ProductType = "core" | "pasax-secure-monitor" | "pasax-sentinel"
 
 interface ProductDocsOverviewProps {
   product: ProductType
 }
 
 const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
-  "pasak-secure-monitor": {
+  "pasax-secure-monitor": {
     label: "Composer Require",
-    cmd: "composer require pasak-dev/secure-monitor",
+    cmd: "composer require pasax-dev/secure-monitor",
   },
-  "pasak-sentinel": {
+  "pasax-sentinel": {
     label: "Single Binary Download",
-    cmd: "curl -sSL https://get.pasak.is-a.dev/sentinel.sh | sudo bash",
+    cmd: "curl -sSL https://get.pasax.is-a.dev/sentinel.sh | sudo bash",
   },
   core: {
     label: "Full Stack Deployment",
-    cmd: "pnpm dlx pasak-cli init --with-sentinel",
+    cmd: "pnpm dlx pasax-cli init --with-sentinel",
   },
 }
 

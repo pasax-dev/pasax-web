@@ -21,7 +21,7 @@ export function InstallAgentDialog({
 }) {
   const [copied, setCopied] = React.useState(false)
   const token = "PSK_LIVE_8f9c2d14b"
-  const installCmd = `curl -sSL https://get.pasak.is-a.dev/install.sh | sudo bash -s -- --token=${token}`
+  const installCmd = `curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash -s -- --token=${token}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCmd)
@@ -50,7 +50,7 @@ export function InstallAgentDialog({
             </span>
           </div>
           <DialogTitle className="text-xl font-heading">
-            Deploy Pasak Sentinel to your Linux Host
+            Deploy Pasax Sentinel to your Linux Host
           </DialogTitle>
           <DialogDescription className="text-sm text-foreground/80">
             Run this single command on your Ubuntu, Debian, or RHEL server as root. The agent will auto-discover Nginx/Apache vhosts, mount the Unix Domain Socket, and start real-time FIM.

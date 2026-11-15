@@ -19,11 +19,11 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Pasak Security Ecosystem",
+  title: "Privacy Policy | Pasax Security Ecosystem",
   description:
-    "Learn how Pasak Security handles telemetry, Linux node metrics, and zero-knowledge data retention across Sentinel daemons, Shield WAF, and Cloud SOC.",
+    "Learn how Pasax Security handles telemetry, Linux node metrics, and zero-knowledge data retention across Sentinel daemons, Shield WAF, and Cloud SOC.",
   keywords: [
-    "Pasak Privacy Policy",
+    "Pasax Privacy Policy",
     "Security Telemetry Privacy",
     "Zero Knowledge Security",
     "Linux Node Privacy",
@@ -31,28 +31,28 @@ export const metadata: Metadata = {
     "GDPR Compliance Security",
   ],
   alternates: {
-    canonical: "https://pasak.is-a.dev/privacy",
+    canonical: "https://pasax.is-a.dev/privacy",
   },
   openGraph: {
-    title: "Privacy Policy | Pasak Security Ecosystem",
+    title: "Privacy Policy | Pasax Security Ecosystem",
     description:
-      "Transparent zero-knowledge security telemetry and minimal data retention across Sentinel daemons and Pasak Cloud.",
-    url: "https://pasak.is-a.dev/privacy",
-    siteName: "Pasak Security",
+      "Transparent zero-knowledge security telemetry and minimal data retention across Sentinel daemons and Pasax Cloud.",
+    url: "https://pasax.is-a.dev/privacy",
+    siteName: "Pasax Security",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Pasak Privacy Policy",
+        alt: "Pasax Privacy Policy",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy | Pasak Security Ecosystem",
+    title: "Privacy Policy | Pasax Security Ecosystem",
     description:
-      "Transparent zero-knowledge security telemetry across Pasak Sentinel and Cloud SOC.",
+      "Transparent zero-knowledge security telemetry across Pasax Sentinel and Cloud SOC.",
     images: ["/logo.png"],
   },
 }
@@ -94,7 +94,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
-            At <strong>Pasak Security</strong>, we believe security should never
+            At <strong>Pasax Security</strong>, we believe security should never
             come at the expense of user privacy. We design our architecture—from
             the raw Go kernel daemon to our central SOC dashboard—around a
             strict <strong>zero-knowledge and minimal data retention</strong>{" "}
@@ -152,28 +152,28 @@ export default function PrivacyPolicyPage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                This Privacy Policy applies to the Pasak Security ecosystem,
+                This Privacy Policy applies to the Pasax Security ecosystem,
                 which comprises:
               </p>
               <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
                 <li>
-                  <strong>pasak-sentinel:</strong> The open-source Go Linux
+                  <strong>pasax-sentinel:</strong> The open-source Go Linux
                   kernel background daemon deployed on user VPS instances.
                 </li>
                 <li>
-                  <strong>pasak/shield:</strong> The Spatie-compliant
+                  <strong>pasax/shield:</strong> The Spatie-compliant
                   PHP/Laravel Web Application Firewall (WAF) and honeypot
                   middleware.
                 </li>
                 <li>
-                  <strong>Pasak Cloud SOC Console:</strong> The central
+                  <strong>Pasax Cloud SOC Console:</strong> The central
                   web-based dashboard and fleet management API located at{" "}
-                  <code>https://pasak.is-a.dev</code>.
+                  <code>https://pasax.is-a.dev</code>.
                 </li>
               </ul>
               <p>
                 When you deploy the open-source components in a standalone,
-                self-hosted, or air-gapped environment without pairing to Pasak
+                self-hosted, or air-gapped environment without pairing to Pasax
                 Cloud, zero data is transmitted to external servers.
               </p>
             </div>
@@ -186,13 +186,13 @@ export default function PrivacyPolicyPage() {
                 2
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Telemetry Collected by Pasak Sentinel Daemon
+                Telemetry Collected by Pasax Sentinel Daemon
               </h2>
             </div>
             <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
               <p>
-                When a node is connected to Pasak Cloud,{" "}
-                <code>pasak-sentinel</code> emits strictly structured, defensive
+                When a node is connected to Pasax Cloud,{" "}
+                <code>pasax-sentinel</code> emits strictly structured, defensive
                 metadata:
               </p>
               <div className="overflow-x-auto rounded-base border-2 border-border bg-secondary-background">
@@ -262,7 +262,7 @@ export default function PrivacyPolicyPage() {
                   <span>Important Privacy Guarantee:</span>
                 </div>
                 <p className="mt-1">
-                  Pasak Sentinel never reads or transmits database values,
+                  Pasax Sentinel never reads or transmits database values,
                   customer personal data, PHP session data, or cleartext secret
                   keys from <code>.env</code> files. File Integrity Monitoring
                   hashes paths and checks Linux file permission octals (e.g.
@@ -283,7 +283,7 @@ export default function PrivacyPolicyPage() {
               </h2>
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
-              <p>When you create an account on Pasak Cloud SOC:</p>
+              <p>When you create an account on Pasax Cloud SOC:</p>
               <ul className="list-inside list-disc space-y-2 pl-2 font-medium">
                 <li>
                   <strong>Authentication Credentials:</strong> Your email
@@ -355,7 +355,7 @@ export default function PrivacyPolicyPage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                To provide collective fleet immunity, Pasak computes an
+                To provide collective fleet immunity, Pasax computes an
                 aggregated reputation score of malicious IP addresses (e.g.
                 repeated brute-force bots and known CVE exploit scanners).
               </p>
@@ -392,8 +392,8 @@ export default function PrivacyPolicyPage() {
                   histories.
                 </li>
                 <li>
-                  Audit the open-source codebase of <code>pasak-sentinel</code>{" "}
-                  and <code>pasak/shield</code> to verify our compliance claims
+                  Audit the open-source codebase of <code>pasax-sentinel</code>{" "}
+                  and <code>pasax/shield</code> to verify our compliance claims
                   independently.
                 </li>
               </ul>
@@ -418,16 +418,16 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs font-bold">
                 <a
-                  href="mailto:security@pasak.is-a.dev"
+                  href="mailto:security@pasax.is-a.dev"
                   className={cn(
                     buttonVariants({ variant: "neutral", size: "sm" }),
                     "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
                   )}
                 >
-                  <span>security@pasak.is-a.dev</span>
+                  <span>security@pasax.is-a.dev</span>
                 </a>
                 <a
-                  href="https://github.com/pasak-dev"
+                  href="https://github.com/pasax-dev"
                   target="_blank"
                   rel="noreferrer"
                   className={cn(

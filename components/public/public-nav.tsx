@@ -53,7 +53,7 @@ export function PublicNav() {
           <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[2px_2px_0px_0px_var(--border)] transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5">
             <Image
               src="/icon.png"
-              alt="Pasak Suite Icon"
+              alt="Pasax Suite Icon"
               width={36}
               height={36}
               className="size-full object-contain p-0.5"
@@ -62,7 +62,7 @@ export function PublicNav() {
           </div>
           <div className="flex items-center gap-2">
             <span className="font-heading text-lg font-black tracking-tight text-foreground">
-              PASAK<span className="text-main">.</span>
+              PASAX<span className="text-main">.</span>
             </span>
             <Badge
               variant="outline"
@@ -114,7 +114,7 @@ export function PublicNav() {
                     {/* Right Product Items */}
                     <div className="col-span-7 flex flex-col gap-1.5">
                       <NavigationMenuLink
-                        render={<Link href="/docs/pasak-sentinel" />}
+                        render={<Link href="/docs/pasax-sentinel" />}
                         className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
                       >
                         <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -123,7 +123,7 @@ export function PublicNav() {
                         <div className="space-y-0.5 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                              pasak-sentinel
+                              pasax-sentinel
                             </span>
                             <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
                               Go 1.24
@@ -136,7 +136,7 @@ export function PublicNav() {
                       </NavigationMenuLink>
 
                       <NavigationMenuLink
-                        render={<Link href="/docs/pasak-secure-monitor" />}
+                        render={<Link href="/docs/pasax-secure-monitor" />}
                         className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
                       >
                         <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -145,7 +145,7 @@ export function PublicNav() {
                         <div className="space-y-0.5 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                              pasak/shield
+                              pasax/shield
                             </span>
                             <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
                               Laravel Core
@@ -167,7 +167,7 @@ export function PublicNav() {
                         <div className="space-y-0.5 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                              Pasak Cloud SOC
+                              Pasax Cloud SOC
                             </span>
                             <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
                               Next.js 16
@@ -286,7 +286,7 @@ export function PublicNav() {
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
-                      render={<Link href="/docs/pasak-secure-monitor" />}
+                      render={<Link href="/docs/pasax-secure-monitor" />}
                       className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
                     >
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -294,7 +294,7 @@ export function PublicNav() {
                       </div>
                       <div className="space-y-1">
                         <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                          pasak-secure-monitor
+                          pasax-secure-monitor
                         </span>
                         <p className="text-[11px] text-foreground/75 leading-tight">
                           29 panduan Spatie-compliant Laravel WAF &amp; webshell scanner.
@@ -303,7 +303,7 @@ export function PublicNav() {
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
-                      render={<Link href="/docs/pasak-sentinel" />}
+                      render={<Link href="/docs/pasax-sentinel" />}
                       className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
                     >
                       <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
@@ -486,19 +486,19 @@ export function PublicNav() {
               {mobileSection === "platform" && (
                 <div className="space-y-2 border-t-2 border-border p-3 bg-secondary-background/50">
                   <Link
-                    href="/docs/pasak-sentinel"
+                    href="/docs/pasax-sentinel"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    <span>pasak-sentinel (Go Kernel Daemon)</span>
+                    <span>pasax-sentinel (Go Kernel Daemon)</span>
                     <Badge variant="outline" className="font-mono text-[9px]">Go 1.24</Badge>
                   </Link>
                   <Link
-                    href="/docs/pasak-secure-monitor"
+                    href="/docs/pasax-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    <span>pasak/shield (Laravel WAF &amp; Honeypot)</span>
+                    <span>pasax/shield (Laravel WAF &amp; Honeypot)</span>
                     <Badge variant="outline" className="font-mono text-[9px]">PHP</Badge>
                   </Link>
                   {/*<Link
@@ -506,7 +506,7 @@ export function PublicNav() {
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    <span>Pasak Cloud SOC Console</span>
+                    <span>Pasax Cloud SOC Console</span>
                     <Badge variant="outline" className="font-mono text-[9px]">Cloud</Badge>
                   </Link>*/}
                 </div>
@@ -593,18 +593,18 @@ export function PublicNav() {
                     Portal Dokumentasi Resmi
                   </Link>
                   <Link
-                    href="/docs/pasak-secure-monitor"
+                    href="/docs/pasax-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    Panduan pasak-secure-monitor
+                    Panduan pasax-secure-monitor
                   </Link>
                   <Link
-                    href="/docs/pasak-sentinel"
+                    href="/docs/pasax-sentinel"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block py-1 text-xs font-bold text-foreground hover:text-main"
                   >
-                    Panduan Daemon pasak-sentinel
+                    Panduan Daemon pasax-sentinel
                   </Link>
                   <Link
                     href="/#comparison"

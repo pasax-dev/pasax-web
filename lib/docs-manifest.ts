@@ -4,7 +4,7 @@ export interface DocItem {
   description: string
   category: string
   filePath: string
-  product: "core" | "pasak-secure-monitor" | "pasak-sentinel"
+  product: "core" | "pasax-secure-monitor" | "pasax-sentinel"
   order?: number
 }
 
@@ -16,7 +16,7 @@ export interface DocCategory {
 }
 
 export interface ProductConfig {
-  id: "core" | "pasak-secure-monitor" | "pasak-sentinel"
+  id: "core" | "pasax-secure-monitor" | "pasax-sentinel"
   name: string
   badge: string
   description: string
@@ -27,7 +27,7 @@ export interface ProductConfig {
 export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
   core: {
     id: "core",
-    name: "Pasak Suite Core",
+    name: "Pasax Suite Core",
     badge: "PLATFORM SUITE",
     description:
       "Arsitektur pertahanan terpadu berlapis tiga (Trinity Defense), konsol SOC, dan cloud control plane.",
@@ -40,7 +40,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
         items: [
           {
             slug: "overview",
-            title: "Pengenalan Pasak Suite (Trinity Defense)",
+            title: "Pengenalan Pasax Suite (Trinity Defense)",
             description:
               "Arsitektur keamanan siber berlapis tiga menggabungkan Laravel, daemon Go, dan cloud monitoring console.",
             category: "Platform Inti",
@@ -62,7 +62,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
             slug: "quickstart",
             title: "Panduan Memulai Cepat (Suite Quickstart)",
             description:
-              "Langkah-langkah cepat menghubungkan pasak-secure-monitor, pasak-sentinel, dan pasak-dashboard.",
+              "Langkah-langkah cepat menghubungkan pasax-secure-monitor, pasax-sentinel, dan pasax-web.",
             category: "Platform Inti",
             filePath: "quickstart.md",
             product: "core",
@@ -92,13 +92,13 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
       },
     ],
   },
-  "pasak-secure-monitor": {
-    id: "pasak-secure-monitor",
-    name: "pasak-secure-monitor",
+  "pasax-secure-monitor": {
+    id: "pasax-secure-monitor",
+    name: "pasax-secure-monitor",
     badge: "LARAVEL PACKAGE",
     description:
       "Web Application Firewall (WAF) 100% murni PHP untuk Laravel 10–13, karantina perangkat, dan stepped login.",
-    subDir: "pasak-secure-monitor/docs",
+    subDir: "pasax-secure-monitor/docs",
     categories: [
       {
         title: "Memulai",
@@ -112,27 +112,27 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Latar belakang, standar desain Spatie 100% Pure PHP tanpa dependensi NPM, dan integrasi core Laravel.",
             category: "Memulai",
             filePath: "getting-started/introduction.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
             slug: "getting-started/installation",
             title: "Panduan Instalasi & Migrasi",
             description:
-              "Instalasi Composer, wizard pasak:install, migrasi tabel database, dan pendaftaran middleware otomatis.",
+              "Instalasi Composer, wizard pasax:install, migrasi tabel database, dan pendaftaran middleware otomatis.",
             category: "Memulai",
             filePath: "getting-started/installation.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
             slug: "getting-started/configuration",
             title: "Konfigurasi Lengkap & Environment",
             description:
-              "Daftar lengkap variabel konfigurasi .env dan opsi config/pasak.php untuk lingkungan staging dan produksi.",
+              "Daftar lengkap variabel konfigurasi .env dan opsi config/pasax.php untuk lingkungan staging dan produksi.",
             category: "Memulai",
             filePath: "getting-started/configuration.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
         ],
@@ -149,7 +149,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Mekanisme inspeksi payload, regex ReDoS-safe, mitigasi serangan null-byte, traversal, SSTI, dan auto-lockdown.",
             category: "Arsitektur Inti",
             filePath: "core-architecture/threat-detection-engine.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -159,7 +159,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Penetapan IP nyata klien di balik Cloudflare, AWS ALB, Nginx, HAProxy, dan perlindungan IP header spoofing.",
             category: "Arsitektur Inti",
             filePath: "core-architecture/reverse-proxy-resolution.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
@@ -169,7 +169,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Isolasi perangkat penyerang pada jaringan Wi-Fi publik / NAT bersama tanpa merugikan pengguna lain di kantor.",
             category: "Arsitektur Inti",
             filePath: "core-architecture/device-quarantine.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
           {
@@ -179,7 +179,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Skema relasi database, decoupling model User, penanganan UUID/BigInt, dan koneksi database dedicated.",
             category: "Arsitektur Inti",
             filePath: "core-architecture/models-and-database.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 4,
           },
         ],
@@ -196,7 +196,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pembatasan percobaan login bertingkat eksponensial (1m, 5m, 15m, 1j, 24j) untuk menghadang botnet credential stuffing.",
             category: "Modul Keamanan",
             filePath: "security-modules/stepped-login-throttling.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -206,7 +206,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemindaian integritas berkas PHP, baseline SHA-256, deteksi webshell polyglot, dan karantina payload otomatis.",
             category: "Modul Keamanan",
             filePath: "security-modules/server-security-and-webshells.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
@@ -216,7 +216,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Alur pengajuan banding terisolasi bagi pengunjung yang terkena blokir otomatis untuk meminta pemulihan akses.",
             category: "Modul Keamanan",
             filePath: "security-modules/appeal-tickets-system.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
           {
@@ -226,7 +226,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Audit jejak login aktif, pencatatan IP, browser fingerprinting, dan penghentian sesi mencurigakan seketika.",
             category: "Modul Keamanan",
             filePath: "security-modules/session-and-activity-tracking.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 4,
           },
           {
@@ -236,7 +236,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemantauan log akses web server secara live streaming untuk identifikasi dini pemindaian kerentanan massal.",
             category: "Modul Keamanan",
             filePath: "security-modules/access-log-streaming.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 5,
           },
         ],
@@ -253,7 +253,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Standar respons JSON, autentikasi Bearer token, rate limiting, penanganan error, dan struktur payload.",
             category: "Referensi REST API",
             filePath: "api-reference/api-overview.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -263,7 +263,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "API pendaftaran tiket banding, pengecekan status karantina perangkat, dan verifikasi tantangan captcha.",
             category: "Referensi REST API",
             filePath: "api-reference/public-endpoints.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
@@ -273,7 +273,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemeriksaan riwayat login akun, manajemen perangkat terpercaya, dan terminasi sesi aktif mandiri.",
             category: "Referensi REST API",
             filePath: "api-reference/user-endpoints.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
           {
@@ -283,7 +283,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Manajemen daftar blokir IP, inspeksi log ancaman, persetujuan tiket banding, dan pemicu pemindaian server.",
             category: "Referensi REST API",
             filePath: "api-reference/admin-endpoints.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 4,
           },
         ],
@@ -297,10 +297,10 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
             slug: "cli-automation/artisan-commands",
             title: "Referensi Perintah Artisan CLI",
             description:
-              "Katalog perintah php artisan pasak:* untuk pemindaian manual, unblock IP, rotasi kunci, dan status keamanan.",
+              "Katalog perintah php artisan pasax:* untuk pemindaian manual, unblock IP, rotasi kunci, dan status keamanan.",
             category: "CLI & Otomasi",
             filePath: "cli-automation/artisan-commands.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -310,7 +310,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Penjadwalan otomatis pembersihan log usang, rotasi tiket banding kedaluwarsa, dan pemindaian berkas berkala.",
             category: "CLI & Otomasi",
             filePath: "cli-automation/scheduled-tasks.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
@@ -320,7 +320,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Prosedur pembaruan versi minor/major, migrasi skema database baru, dan penghapusan bersih paket.",
             category: "CLI & Otomasi",
             filePath: "cli-automation/upgrade-and-uninstall.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
         ],
@@ -337,7 +337,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Snippet konfigurasi nginx.conf siap pakai untuk memblokir bot buruk, eksploitasi URL tersembunyi, dan header jahat.",
             category: "Hardening Web Server",
             filePath: "webserver-hardening/nginx-hardened-waf.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -347,7 +347,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Aturan RewriteRule dan proteksi direktori sensitif Apache (.env, .git, vendor, uploads PHP execution).",
             category: "Hardening Web Server",
             filePath: "webserver-hardening/apache-htaccess-hardening.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
@@ -357,7 +357,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Daftar periksa komprehensif sebelum meluncurkan aplikasi ke lingkungan produksi publik enterprise.",
             category: "Hardening Web Server",
             filePath: "webserver-hardening/production-checklist.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
         ],
@@ -374,7 +374,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Cara menambahkan rule regex WAF spesifik aplikasi Anda dan mendaftarkan IP kantor / VPN internal.",
             category: "Panduan Integrasi",
             filePath: "integration-guides/custom-rules-and-whitelist.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -384,17 +384,17 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemasangan komponen Blade bawaan, notifikasi peringatan lockout, dan penanganan status 403 kustom.",
             category: "Panduan Integrasi",
             filePath: "integration-guides/frontend-blade-livewire.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
             slug: "integration-guides/frontend-react-inertia",
             title: "Integrasi Frontend React / Inertia",
             description:
-              "Mengonsumsi error response pasak pada aplikasi SPA Inertia.js dan rendering modal banding interaktif.",
+              "Mengonsumsi error response pasax pada aplikasi SPA Inertia.js dan rendering modal banding interaktif.",
             category: "Panduan Integrasi",
             filePath: "integration-guides/frontend-react-inertia.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
           {
@@ -405,7 +405,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
             category: "Panduan Integrasi",
             filePath:
               "integration-guides/custom-dashboard-dan-api-tanpa-ubah-vendor.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 4,
           },
         ],
@@ -422,7 +422,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Jawaban atas pertanyaan seputar kompatibilitas PHP 8.2-8.5, overhead performa, dan troubleshooting.",
             category: "Informasi Tambahan",
             filePath: "faq.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 1,
           },
           {
@@ -432,30 +432,30 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Catatan riwayat rilis, pembaruan keamanan, fitur baru, dan perbaikan bug dari versi ke versi.",
             category: "Informasi Tambahan",
             filePath: "changelog.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 2,
           },
           {
             slug: "keywords",
             title: "Indeks Topik & Kata Kunci",
             description:
-              "Daftar istilah keamanan siber, terminologi arsitektur, dan referensi cepat fitur pasak-secure-monitor.",
+              "Daftar istilah keamanan siber, terminologi arsitektur, dan referensi cepat fitur pasax-secure-monitor.",
             category: "Informasi Tambahan",
             filePath: "keywords.md",
-            product: "pasak-secure-monitor",
+            product: "pasax-secure-monitor",
             order: 3,
           },
         ],
       },
     ],
   },
-  "pasak-sentinel": {
-    id: "pasak-sentinel",
-    name: "pasak-sentinel",
+  "pasax-sentinel": {
+    id: "pasax-sentinel",
+    name: "pasax-sentinel",
     badge: "GO DAEMON",
     description:
       "Daemon Linux Host & Kernel Go 1.24, eBPF/nftables packet drops, inotify FIM, dan local socket IPC.",
-    subDir: "pasak-sentinel/docs",
+    subDir: "pasax-sentinel/docs",
     categories: [
       {
         title: "Host & Kernel Defense",
@@ -464,12 +464,12 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
         items: [
           {
             slug: "sentinel-overview",
-            title: "Ringkasan & Panduan Pasak Sentinel",
+            title: "Ringkasan & Panduan Pasax Sentinel",
             description:
               "Panduan lengkap instalasi, opsi CLI, konfigurasi sentinel.yaml, dan troubleshooting daemon.",
             category: "Host & Kernel Defense",
             filePath: "README.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 0,
           },
           {
@@ -479,7 +479,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Arsitektur single-binary Go 1.24, footprint RAM <25MB, komunikasi egress-only, dan systemd service.",
             category: "Host & Kernel Defense",
             filePath: "01-architecture.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 1,
           },
           {
@@ -489,27 +489,27 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemantauan integritas berkas otonom, deteksi webshell instan, dan auto-lockdown chmod 0600.",
             category: "Host & Kernel Defense",
             filePath: "02-fim-controller.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 2,
           },
           {
             slug: "03-ipc-socket",
             title: "IPC Unix Domain Socket Protocol",
             description:
-              "Protokol komunikasi IPC lokal antara Laravel WAF dan kernel daemon via /run/pasak/agent.sock.",
+              "Protokol komunikasi IPC lokal antara Laravel WAF dan kernel daemon via /run/pasax/agent.sock.",
             category: "Host & Kernel Defense",
             filePath: "03-ipc-socket.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 3,
           },
           {
             slug: "04-firewall-drivers",
             title: "Firewall Drivers (nftables & iptables)",
             description:
-              "Penurunan paket langsung di level kernel Linux, tabel pasak_filter, dan driver nftables atomik.",
+              "Penurunan paket langsung di level kernel Linux, tabel pasax_filter, dan driver nftables atomik.",
             category: "Host & Kernel Defense",
             filePath: "04-firewall-drivers.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 4,
           },
           {
@@ -519,7 +519,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Pemantauan log akses Nginx dan Apache secara streaming tanpa membaca seluruh berkas ke RAM.",
             category: "Host & Kernel Defense",
             filePath: "05-log-watcher.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 5,
           },
           {
@@ -529,27 +529,27 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Deteksi otomatis virtual host Nginx/Apache, konfigurasi root direktori, dan pelacak kedaluwarsa SSL.",
             category: "Host & Kernel Defense",
             filePath: "06-vhost-recon.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 6,
           },
           {
             slug: "07-cloud-telemetry",
             title: "Sinkronisasi Telemetri & Cloud Control Plane",
             description:
-              "Heartbeat berkala ke pasak-api, mTLS TLS 1.3, dan pengunduhan daftar blokir global.",
+              "Heartbeat berkala ke pasax-api, mTLS TLS 1.3, dan pengunduhan daftar blokir global.",
             category: "Host & Kernel Defense",
             filePath: "07-cloud-telemetry.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 7,
           },
           {
             slug: "08-ai-agent-vps-runbook",
             title: "AI Agent VPS Runbook & Prompting Guide",
             description:
-              "Panduan instruksi prompt mandiri bagi AI Agent di VPS Linux untuk audit, instalasi, dan penghubungan otomatis Pasak Suite.",
+              "Panduan instruksi prompt mandiri bagi AI Agent di VPS Linux untuk audit, instalasi, dan penghubungan otomatis Pasax Suite.",
             category: "Host & Kernel Defense",
             filePath: "08-ai-agent-vps-runbook.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 8,
           },
           {
@@ -559,7 +559,7 @@ export const PRODUCTS_CONFIG: Record<string, ProductConfig> = {
               "Langkah-langkah instalasi cepat satu baris (one-line installer), manual systemd, konfigurasi sentinel.yaml, dan integrasi Laravel WAF.",
             category: "Host & Kernel Defense",
             filePath: "09-installation-guide.md",
-            product: "pasak-sentinel",
+            product: "pasax-sentinel",
             order: 9,
           },
         ],
@@ -573,13 +573,13 @@ export const ALL_DOCS: DocItem[] = Object.values(PRODUCTS_CONFIG).flatMap((p) =>
 )
 
 export const DOCS_MANIFEST: DocCategory[] =
-  PRODUCTS_CONFIG["pasak-secure-monitor"].categories
+  PRODUCTS_CONFIG["pasax-secure-monitor"].categories
 
 export function getProductConfig(productId?: string): ProductConfig {
   if (productId && PRODUCTS_CONFIG[productId]) {
     return PRODUCTS_CONFIG[productId]
   }
-  return PRODUCTS_CONFIG["pasak-secure-monitor"]
+  return PRODUCTS_CONFIG["pasax-secure-monitor"]
 }
 
 export function findDocBySlug(slug: string): DocItem | undefined {
@@ -589,7 +589,7 @@ export function findDocBySlug(slug: string): DocItem | undefined {
   const directMatch = ALL_DOCS.find((d) => d.slug === normalized)
   if (directMatch) return directMatch
 
-  // Check product-prefixed slug e.g. pasak-secure-monitor/getting-started/introduction
+  // Check product-prefixed slug e.g. pasax-secure-monitor/getting-started/introduction
   for (const [prodKey, prod] of Object.entries(PRODUCTS_CONFIG)) {
     if (normalized.startsWith(prodKey + "/")) {
       const subSlug = normalized.slice(prodKey.length + 1)

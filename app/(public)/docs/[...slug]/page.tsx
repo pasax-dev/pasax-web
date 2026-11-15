@@ -26,12 +26,12 @@ interface PageProps {
 export async function generateStaticParams() {
   const paths: { slug: string[] }[] = []
 
-  // 1. Dedicated product roots: /docs/pasak-secure-monitor, /docs/pasak-sentinel, /docs/core
+  // 1. Dedicated product roots: /docs/pasax-secure-monitor, /docs/pasax-sentinel, /docs/core
   for (const prodKey of Object.keys(PRODUCTS_CONFIG)) {
     paths.push({ slug: [prodKey] })
   }
 
-  // 2. Product-scoped doc pages: /docs/pasak-secure-monitor/getting-started/introduction, etc.
+  // 2. Product-scoped doc pages: /docs/pasax-secure-monitor/getting-started/introduction, etc.
   for (const doc of ALL_DOCS) {
     paths.push({ slug: [doc.product, ...doc.slug.split("/")] })
     // Direct slug for backward compatibility
@@ -50,7 +50,7 @@ export async function generateMetadata({
   if (isProductSlug(slugStr)) {
     const prod = PRODUCTS_CONFIG[slugStr]
     return {
-      title: `Dokumentasi Resmi ${prod.name} — Pasak Suite`,
+      title: `Dokumentasi Resmi ${prod.name} — Pasax Suite`,
       description: prod.description,
     }
   }
@@ -58,11 +58,11 @@ export async function generateMetadata({
   const doc = findDocBySlug(slugStr)
   if (!doc) {
     return {
-      title: "Halaman Tidak Ditemukan — Pasak Dokumentasi",
+      title: "Halaman Tidak Ditemukan — Pasax Dokumentasi",
     }
   }
 
-  const prodName = PRODUCTS_CONFIG[doc.product]?.name || "Pasak"
+  const prodName = PRODUCTS_CONFIG[doc.product]?.name || "Pasax"
   return {
     title: `${doc.title} — ${prodName} Dokumentasi`,
     description: doc.description,
@@ -73,7 +73,7 @@ export default async function DocDynamicPage({ params }: PageProps) {
   const resolvedParams = await params
   const slugStr = resolvedParams.slug.join("/")
 
-  // Case 1: Product Dedicated Overview (/docs/pasak-secure-monitor, /docs/pasak-sentinel, /docs/core)
+  // Case 1: Product Dedicated Overview (/docs/pasax-secure-monitor, /docs/pasax-sentinel, /docs/core)
   if (isProductSlug(slugStr)) {
     const product = PRODUCTS_CONFIG[slugStr]
     return <ProductDocsOverview product={product.id as ProductType} />

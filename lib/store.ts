@@ -1,4 +1,4 @@
-// Pasak In-Memory and Local File Store for Telemetry, Threats, License Keys & Business Tiers
+// Pasax In-Memory and Local File Store for Telemetry, Threats, License Keys & Business Tiers
 import fs from "fs"
 import path from "path"
 
@@ -185,7 +185,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionTier[] = [
 ]
 
 // Global in-memory cache shared across API routes in Next.js server instance
-interface GlobalPasakStore {
+interface GlobalPasaxStore {
   nodes: Map<string, NodeTelemetry>
   threats: ThreatEvent[]
   globalBlocklist: Set<string>
@@ -195,7 +195,7 @@ interface GlobalPasakStore {
   initialized: boolean
 }
 
-const globalStore: GlobalPasakStore = (globalThis as any).__PASAK_STORE__ || {
+const globalStore: GlobalPasaxStore = (globalThis as any).__PASAX_STORE__ || {
   nodes: new Map(),
   threats: [],
   globalBlocklist: new Set([
@@ -211,8 +211,8 @@ const globalStore: GlobalPasakStore = (globalThis as any).__PASAK_STORE__ || {
   initialized: false,
 }
 
-if (!(globalThis as any).__PASAK_STORE__) {
-  (globalThis as any).__PASAK_STORE__ = globalStore
+if (!(globalThis as any).__PASAX_STORE__) {
+  (globalThis as any).__PASAX_STORE__ = globalStore
 }
 
 // Initial seed data so the dashboard is immediately vivid and interactive
@@ -225,29 +225,29 @@ function ensureInitialized() {
   const user1: ManagedUser = {
     id: "usr_superadmin",
     name: "Roby Kartis (Chief SOC)",
-    email: "superadmin@pasak.id",
+    email: "superadmin@pasax.id",
     role: "Superadmin",
     plan: "enterprise",
     serverQuota: 100,
     isActive: true,
     createdAt: now - 90 * 86400,
-    organization: "Pasak Cyber Defense Group",
+    organization: "Pasax Cyber Defense Group",
   }
   const user2: ManagedUser = {
     id: "usr_admin",
     name: "Fleet SecOps Admin",
-    email: "admin@pasak.id",
+    email: "admin@pasax.id",
     role: "Admin",
     plan: "pro",
     serverQuota: 10,
     isActive: true,
     createdAt: now - 60 * 86400,
-    organization: "Pasak SOC Operations",
+    organization: "Pasax SOC Operations",
   }
   const user3: ManagedUser = {
     id: "usr_client_kominfo",
     name: "Pengelola Layanan Publik",
-    email: "user@pasak.id",
+    email: "user@pasax.id",
     role: "User",
     plan: "pro",
     serverQuota: 10,
@@ -339,8 +339,8 @@ function ensureInitialized() {
     id: "app_master_portal",
     userId: user1.id,
     licenseKey: keyAdmin.key,
-    appName: "Pasak SOC Master Portal",
-    appUrl: "https://pasak.is-a.dev",
+    appName: "Pasax SOC Master Portal",
+    appUrl: "https://pasax.is-a.dev",
     nodeId: "nd_02JK9A1B234YTR8C7D0S52ZY0B",
     ip: "198.51.100.77",
     environment: "production",
@@ -373,11 +373,11 @@ function ensureInitialized() {
         version: "1.24.0",
         vhosts: [
           {
-            domain: "app.pasak.is-a.dev",
+            domain: "app.pasax.is-a.dev",
             ssl_status: "valid",
             ssl_expires_at: now + 72 * 86400,
             upstream: "127.0.0.1:9000",
-            root: "/var/www/pasak-app/public",
+            root: "/var/www/pasax-app/public",
           },
           {
             domain: "layanan.kominfo.go.id",
@@ -464,7 +464,7 @@ function ensureInitialized() {
       event_type: "FIM_MODIFICATION",
       severity: "CRITICAL",
       details: {
-        file_path: "/var/www/pasak-app/.env",
+        file_path: "/var/www/pasax-app/.env",
         action: "FILE_MODIFIED",
         hash_before: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
         hash_after: "c983a453fb082163b8d5a1b3beab3d27443198031d279e8c0e66b447881c668b",
@@ -509,8 +509,8 @@ function ensureInitialized() {
       severity: "WARNING",
       details: {
         attacker_ip: "185.196.220.14",
-        attack_pattern: "Decoy Admin Login Probe (/pasak-secret-admin)",
-        url: "/pasak-secret-admin/login.php",
+        attack_pattern: "Decoy Admin Login Probe (/pasax-secret-admin)",
+        url: "/pasax-secret-admin/login.php",
         mitigation_action_taken: "DECOY_CAPTURED_IP_FLAGGED",
       },
       timestamp: now - 3600,
@@ -520,7 +520,7 @@ function ensureInitialized() {
   globalStore.initialized = true
 }
 
-export const pasakStore = {
+export const pasaxStore = {
   // --- NODES ---
   getNodes(): NodeTelemetry[] {
     ensureInitialized()

@@ -1,6 +1,6 @@
 ---
 version: "1.0.0"
-name: "pasak-suite-cyber-neobrutalism"
+name: "pasax-suite-cyber-neobrutalism"
 description: "A high-precision Cyber Tactical Neobrutalism design system fusing neobrutalism.dev geometric boldness with ThreatsEye live threat intelligence aesthetics. Characterized by thick solid borders (2px), zero-blur hard drop shadows (4px 4px 0px 0px), electric chromatic accents (#0099ff, #facc00, #05e17a, #ff4d50), and dark tactical canvas surfaces (#050811 / #0a0f1d). Pairs Bricolage Grotesque for punchy headlines with Liberation Mono for real-time kernel telemetry, radar compass ticks, and IP readouts."
 reference:
   neobrutalism: "https://www.neobrutalism.dev/"

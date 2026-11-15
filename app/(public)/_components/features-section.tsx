@@ -65,8 +65,8 @@ export function FeaturesSection() {
               Egress-Only Zero-Trust mTLS
             </h3>
             <p className="mt-2 text-sm leading-relaxed font-base text-foreground/80">
-              Pasak Sentinel never binds to a listening TCP port on your
-              server. It communicates outbound to the Pasak Cloud API via TLS
+              Pasax Sentinel never binds to a listening TCP port on your
+              server. It communicates outbound to the Pasax Cloud API via TLS
               1.3 mTLS, making your servers invisible to Shodan and port
               scanners.
             </p>

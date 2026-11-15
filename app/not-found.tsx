@@ -14,7 +14,7 @@ export default function NotFound() {
           <div className="flex size-8 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]">
             <ShieldAlert className="size-4 stroke-[2.5]" />
           </div>
-          <span>PASAK DEFENSE</span>
+          <span>PASAX DEFENSE</span>
         </Link>
         <Badge variant="outline" className="font-mono text-xs font-bold border-2 border-border bg-secondary-background">
           ERR_HTTP_404
@@ -40,7 +40,7 @@ export default function NotFound() {
             </div>
 
             <p className="text-sm leading-relaxed text-foreground/80">
-              Alamat URL yang Anda tuju tidak terdaftar pada routing Pasak Cloud Dashboard
+              Alamat URL yang Anda tuju tidak terdaftar pada routing Pasax Cloud Dashboard
               maupun katalog dokumentasi resmi. Kemungkinan rute telah dipindahkan,
               dihapus, atau salah penulisan slug.
             </p>
@@ -53,7 +53,7 @@ export default function NotFound() {
               </div>
               <div className="flex justify-between text-foreground/60">
                 <span>SYSTEM:</span>
-                <span className="text-foreground">PASAK_EDGE_ROUTER</span>
+                <span className="text-foreground">PASAX_EDGE_ROUTER</span>
               </div>
               <div className="flex justify-between text-foreground/60">
                 <span>ACTION:</span>
@@ -92,7 +92,7 @@ export default function NotFound() {
 
       {/* Footer */}
       <footer className="text-center font-mono text-xs text-foreground/50 py-4">
-        Pasak Suite Defense &bull; HTTP Gateway Error Handler
+        Pasax Suite Defense &bull; HTTP Gateway Error Handler
       </footer>
     </div>
   )

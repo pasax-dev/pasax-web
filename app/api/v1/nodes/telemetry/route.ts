@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { pasakCloud } from "@/lib/pasak-cloud"
+import { pasaxCloud } from "@/lib/pasax-cloud"
 
 export const dynamic = "force-dynamic"
 
@@ -13,11 +13,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const updatedNode = await pasakCloud.ingestTelemetry(body)
+    const updatedNode = await pasaxCloud.ingestTelemetry(body)
 
     return NextResponse.json({
       status: "success",
-      message: "Telemetry ingested and synced to Pasak Cloud",
+      message: "Telemetry ingested and synced to Pasax Cloud",
       node_id: updatedNode.node_id,
       timestamp: Math.floor(Date.now() / 1000),
     })
@@ -30,6 +30,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const nodes = await pasakCloud.fetchNodes()
+  const nodes = await pasaxCloud.fetchNodes()
   return NextResponse.json(nodes)
 }

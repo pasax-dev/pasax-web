@@ -20,11 +20,11 @@ import { TerminalIcon, AudioLinesIcon, SearchIcon, SparklesIcon, HomeIcon, Inbox
 const data = {
   teams: [
     {
-      name: "Pasak Fleet",
+      name: "Pasax Fleet",
       logo: (
         <Image
           src="/icon.png"
-          alt="Pasak Fleet"
+          alt="Pasax Fleet"
           width={18}
           height={18}
           className="size-4 rounded-sm object-contain"

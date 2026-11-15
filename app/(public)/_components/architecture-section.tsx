@@ -23,7 +23,7 @@ export function ArchitectureSection() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 xl:gap-10">
-          {/* Layer 1: pasak/shield */}
+          {/* Layer 1: pasax/shield */}
           <div className="flex flex-col justify-between rounded-base border-2 border-border bg-secondary-background p-6 lg:p-8 xl:p-9 shadow-shadow transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
             <div>
               <div className="mb-4 flex items-center justify-between">
@@ -39,7 +39,7 @@ export function ArchitectureSection() {
               </div>
 
               <h3 className="font-heading text-xl font-bold text-foreground">
-                pasak/shield
+                pasax/shield
               </h3>
               <p className="mt-1 font-mono text-xs font-semibold text-muted-foreground">
                 PHP 8.2+ · Laravel Application Core
@@ -75,7 +75,7 @@ export function ArchitectureSection() {
             </div>
           </div>
 
-          {/* Layer 2: pasak-sentinel */}
+          {/* Layer 2: pasax-sentinel */}
           <div className="flex flex-col justify-between rounded-base border-2 border-border bg-main p-6 lg:p-8 xl:p-9 text-main-foreground shadow-shadow transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
             <div>
               <div className="mb-4 flex items-center justify-between">
@@ -91,7 +91,7 @@ export function ArchitectureSection() {
               </div>
 
               <h3 className="font-heading text-xl font-black text-foreground">
-                pasak-sentinel
+                pasax-sentinel
               </h3>
               <p className="mt-1 font-mono text-xs font-bold text-foreground/80">
                 Go 1.24 · Kernel & Host Daemon
@@ -127,7 +127,7 @@ export function ArchitectureSection() {
             </div>
           </div>
 
-          {/* Layer 3: Pasak Cloud */}
+          {/* Layer 3: Pasax Cloud */}
           <div className="flex flex-col justify-between rounded-base border-2 border-border bg-secondary-background p-6 lg:p-8 xl:p-9 shadow-shadow transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
             <div>
               <div className="mb-4 flex items-center justify-between">
@@ -143,7 +143,7 @@ export function ArchitectureSection() {
               </div>
 
               <h3 className="font-heading text-xl font-bold text-foreground">
-                Pasak Cloud
+                Pasax Cloud
               </h3>
               <p className="mt-1 font-mono text-xs font-semibold text-muted-foreground">
                 Next.js 16 · Central Fleet Intelligence

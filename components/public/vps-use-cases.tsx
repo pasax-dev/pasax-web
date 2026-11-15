@@ -22,7 +22,7 @@ export function VpsUseCases() {
       icon: Code2,
       iconBg: "bg-red-400 text-black",
       title: "Laravel & PHP Production Apps",
-      subtitle: "Full Stack Protection via pasak/shield",
+      subtitle: "Full Stack Protection via pasax/shield",
       description:
         "Stops stepped brute-force attacks on login routes, traps automated bots with fake .git & phpmyadmin honeypots, and prevents webshell execution inside PHP-FPM workers.",
       features: [
@@ -40,7 +40,7 @@ export function VpsUseCases() {
       title: "WordPress & WooCommerce VPS",
       subtitle: "Kernel-Level Plugin Exploit Barrier",
       description:
-        "WordPress sites hosted on unmanaged VPS are constantly attacked via xmlrpc.php and vulnerable plugins. Pasak drops exploit traffic at the kernel before PHP consumes server CPU.",
+        "WordPress sites hosted on unmanaged VPS are constantly attacked via xmlrpc.php and vulnerable plugins. Pasax drops exploit traffic at the kernel before PHP consumes server CPU.",
       features: [
         "Instant wp-config.php permission lock",
         "Neutralizes CVE-2024 exploit probes",

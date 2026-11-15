@@ -67,7 +67,7 @@ const STAGES: StageDetail[] = [
   },
   {
     id: "l3",
-    title: "Layer 3: Pasak Cloud SOC",
+    title: "Layer 3: Pasax Cloud SOC",
     subtitle: "Decentralized Mesh & Reputation",
     icon: Cloud,
     tag: "GLOBAL MESH",

@@ -23,7 +23,7 @@ export function VpsBeforeAfter() {
         badge: "FATAL OOM CRASH",
         text: "Traditional SIEMs (Wazuh, OSSEC, Java agents) consume 800MB–2GB RAM, triggering Linux OOM-killer and crashing your MySQL database or web workers.",
       },
-      withPasak: {
+      withPasax: {
         badge: "< 18 MB RAM",
         text: "Compiled Go daemon runs silently in kernel-space with < 0.2% CPU overhead. Your apps get 98%+ of your VPS resources undisturbed.",
       },
@@ -34,7 +34,7 @@ export function VpsBeforeAfter() {
         badge: "15–45s DELAY",
         text: "Fail2ban and regex log-parsers wait for access logs to flush to disk before banning. By then, automated scanners have already executed hundreds of exploit payloads.",
       },
-      withPasak: {
+      withPasax: {
         badge: "< 0.15ms KERNEL DROP",
         text: "Direct integration with Linux netfilter (nftables). Drops malicious packets at OSI Layer 3/4 before packets ever reach Nginx, Apache, or PHP-FPM.",
       },
@@ -45,7 +45,7 @@ export function VpsBeforeAfter() {
         badge: "PERMANENT LEAK",
         text: "A webshell or arbitrary file write overwrites .env or config files, extracting your DB_PASSWORD and AWS_SECRET_KEY within seconds.",
       },
-      withPasak: {
+      withPasax: {
         badge: "11ms AUTO-HEALING",
         text: "Inotify kernel hooks detect unauthorized file writes in real time, instantly snapshots the tamper diff, and forces file permissions to 0600.",
       },
@@ -56,7 +56,7 @@ export function VpsBeforeAfter() {
         badge: "EXPOSED TO SHODAN",
         text: "Agents require opening inbound listening ports (e.g. 1514, 514, 8080) on your VPS, making your server discoverable on Shodan and Censys.",
       },
-      withPasak: {
+      withPasax: {
         badge: "ZERO OPEN INBOUND PORTS",
         text: "Operates 100% on egress-only TLS 1.3 mTLS tunnels. Your VPS firewall rejects all unsolicited incoming connections completely.",
       },
@@ -88,7 +88,7 @@ export function VpsBeforeAfter() {
               </div>
               <div>
                 <h3 className="font-heading text-lg font-black text-foreground">
-                  Your VPS Without Pasak
+                  Your VPS Without Pasax
                 </h3>
                 <p className="font-mono text-xs text-muted-foreground">
                   Vulnerable, bloated &amp; brittle
@@ -129,7 +129,7 @@ export function VpsBeforeAfter() {
           </div>
         </div>
 
-        {/* Right: The Pasak Sentinel Advantage */}
+        {/* Right: The Pasax Sentinel Advantage */}
         <div className="flex flex-col rounded-base border-2 border-border bg-secondary-background p-6 sm:p-8 xl:p-10 shadow-[4px_4px_0px_0px_var(--border)] ring-2 ring-main">
           <div className="flex items-center justify-between border-b-2 border-border pb-4 mb-6">
             <div className="flex items-center gap-2.5">
@@ -138,7 +138,7 @@ export function VpsBeforeAfter() {
               </div>
               <div>
                 <h3 className="font-heading text-lg font-black text-foreground">
-                  Your VPS With Pasak Sentinel
+                  Your VPS With Pasax Sentinel
                 </h3>
                 <p className="font-mono text-xs text-muted-foreground">
                   Sub-millisecond kernel immunity
@@ -161,11 +161,11 @@ export function VpsBeforeAfter() {
                     {item.title}
                   </h4>
                   <span className="font-mono text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">
-                    {item.withPasak.badge}
+                    {item.withPasax.badge}
                   </span>
                 </div>
                 <p className="text-xs text-foreground/80 leading-relaxed font-base">
-                  {item.withPasak.text}
+                  {item.withPasax.text}
                 </p>
               </div>
             ))}

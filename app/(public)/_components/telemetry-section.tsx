@@ -21,7 +21,7 @@ export function TelemetrySection() {
               Autonomous Threat Interception In Real Time
             </h2>
             <p className="mt-2 max-w-3xl text-sm sm:text-base lg:text-lg font-base text-foreground/80 leading-relaxed">
-              See how Pasak Sentinel neutralizes exploits at the kernel level
+              See how Pasax Sentinel neutralizes exploits at the kernel level
               and instantly isolates tampered configuration files before
               attackers can establish persistence.
             </p>
@@ -59,7 +59,7 @@ export function TelemetrySection() {
                 </span>
               </div>
               <h3 className="font-heading text-xl font-black text-foreground">
-                Explore Pasak Global Live Threat Map
+                Explore Pasax Global Live Threat Map
               </h3>
               <p className="mt-1 text-sm text-foreground/80">
                 Track 3D ballistic cyber trajectories, active kernel drops, and honeypot entrapments in real time across the global mesh.

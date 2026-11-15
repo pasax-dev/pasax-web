@@ -20,11 +20,11 @@ import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Pasak Security Ecosystem",
+  title: "Terms of Service | Pasax Security Ecosystem",
   description:
-    "Review the terms, conditions, acceptable use policies, and open-source licensing governing Pasak Sentinel daemons, Shield WAF, and Cloud SOC console.",
+    "Review the terms, conditions, acceptable use policies, and open-source licensing governing Pasax Sentinel daemons, Shield WAF, and Cloud SOC console.",
   keywords: [
-    "Pasak Terms of Service",
+    "Pasax Terms of Service",
     "Security Software Terms",
     "Acceptable Use Policy",
     "MIT Open Source License",
@@ -32,27 +32,27 @@ export const metadata: Metadata = {
     "Kernel Daemon Terms",
   ],
   alternates: {
-    canonical: "https://pasak.is-a.dev/terms",
+    canonical: "https://pasax.is-a.dev/terms",
   },
   openGraph: {
-    title: "Terms of Service | Pasak Security Ecosystem",
+    title: "Terms of Service | Pasax Security Ecosystem",
     description:
-      "Transparent terms and responsible security use guidelines for Pasak Sentinel, Shield WAF, and Cloud SOC.",
-    url: "https://pasak.is-a.dev/terms",
-    siteName: "Pasak Security",
+      "Transparent terms and responsible security use guidelines for Pasax Sentinel, Shield WAF, and Cloud SOC.",
+    url: "https://pasax.is-a.dev/terms",
+    siteName: "Pasax Security",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Pasak Terms of Service",
+        alt: "Pasax Terms of Service",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Terms of Service | Pasak Security Ecosystem",
-    description: "Terms, conditions, and responsible use policies for Pasak Security Suite.",
+    title: "Terms of Service | Pasax Security Ecosystem",
+    description: "Terms, conditions, and responsible use policies for Pasax Security Suite.",
     images: ["/logo.png"],
   },
 }
@@ -95,8 +95,8 @@ export default function TermsOfServicePage() {
             Terms of Service
           </h1>
           <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
-            Please read these Terms of Service carefully before installing <strong>pasak-sentinel</strong>,
-            incorporating <strong>pasak/shield</strong>, or using the <strong>Pasak Cloud SOC</strong> dashboard.
+            Please read these Terms of Service carefully before installing <strong>pasax-sentinel</strong>,
+            incorporating <strong>pasax/shield</strong>, or using the <strong>Pasax Cloud SOC</strong> dashboard.
             By accessing or operating any part of our ecosystem, you agree to be bound by these terms.
           </p>
 
@@ -108,7 +108,7 @@ export default function TermsOfServicePage() {
                 <span>Defensive Intent Only</span>
               </div>
               <p className="mt-2 text-xs text-foreground/75 leading-relaxed">
-                Pasak is strictly designed for defensive threat mitigation, server hardening, and authorized audit environments.
+                Pasax is strictly designed for defensive threat mitigation, server hardening, and authorized audit environments.
               </p>
             </div>
 
@@ -148,7 +148,7 @@ export default function TermsOfServicePage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                By creating an account on <code>https://pasak.is-a.dev</code>, obtaining an API token, or installing the <code>pasak-sentinel</code> daemon onto any virtual private server (VPS) or bare-metal host, you represent that:
+                By creating an account on <code>https://pasax.is-a.dev</code>, obtaining an API token, or installing the <code>pasax-sentinel</code> daemon onto any virtual private server (VPS) or bare-metal host, you represent that:
               </p>
               <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
                 <li>You have legal authority to administer and deploy security monitoring on the target machines.</li>
@@ -170,7 +170,7 @@ export default function TermsOfServicePage() {
             </div>
             <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
               <p>
-                Pasak Security provides high-speed packet inspection (nftables), honeypot instrumentation, and inotify File Integrity Monitoring. You agree <strong>NOT</strong> to:
+                Pasax Security provides high-speed packet inspection (nftables), honeypot instrumentation, and inotify File Integrity Monitoring. You agree <strong>NOT</strong> to:
               </p>
               <div className="space-y-2 rounded-base border-2 border-rose-500/50 bg-rose-500/10 p-4 text-xs">
                 <div className="flex items-center gap-2 font-bold text-rose-700 dark:text-rose-400">
@@ -178,10 +178,10 @@ export default function TermsOfServicePage() {
                   <span>Prohibited Activities:</span>
                 </div>
                 <ul className="list-inside list-disc space-y-1 pl-1 text-foreground/90">
-                  <li>Deploying Pasak on hosts, cloud instances, or networks for which you do not possess verified ownership or express written authorization.</li>
-                  <li>Using Pasak telemetry endpoints to launch denial-of-service (DDoS) attacks, flood reputation feeds, or poison global threat blocklists.</li>
+                  <li>Deploying Pasax on hosts, cloud instances, or networks for which you do not possess verified ownership or express written authorization.</li>
+                  <li>Using Pasax telemetry endpoints to launch denial-of-service (DDoS) attacks, flood reputation feeds, or poison global threat blocklists.</li>
                   <li>Attempting to spoof node identity tokens or intercept mTLS telemetry from neighboring nodes.</li>
-                  <li>Circumventing security controls, rate-limiting thresholds, or abuse protections implemented by the Pasak Cloud API.</li>
+                  <li>Circumventing security controls, rate-limiting thresholds, or abuse protections implemented by the Pasax Cloud API.</li>
                 </ul>
               </div>
             </div>
@@ -199,14 +199,14 @@ export default function TermsOfServicePage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                Because <code>pasak-sentinel</code> interacts with raw Linux kernel subsystems (specifically <code>nftables</code> packet filtering and <code>inotify</code> file system hooks), it operates as a privileged <code>systemd</code> service.
+                Because <code>pasax-sentinel</code> interacts with raw Linux kernel subsystems (specifically <code>nftables</code> packet filtering and <code>inotify</code> file system hooks), it operates as a privileged <code>systemd</code> service.
               </p>
               <p>
                 You acknowledge and agree that:
               </p>
               <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
                 <li>You are solely responsible for reviewing firewall rule definitions before enabling automated drop thresholds.</li>
-                <li>Pasak provides automated safeguards (such as automatic SSH port exemption and whitelist fallbacks) to prevent administrative lockouts, but you remain responsible for maintaining console or out-of-band access to your VPS.</li>
+                <li>Pasax provides automated safeguards (such as automatic SSH port exemption and whitelist fallbacks) to prevent administrative lockouts, but you remain responsible for maintaining console or out-of-band access to your VPS.</li>
               </ul>
             </div>
           </section>
@@ -223,7 +223,7 @@ export default function TermsOfServicePage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                The Pasak software ecosystem consists of two distinct tiers:
+                The Pasax software ecosystem consists of two distinct tiers:
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="rounded-base border-2 border-border bg-secondary-background p-4">
@@ -234,7 +234,7 @@ export default function TermsOfServicePage() {
                     Sentinel &amp; Shield Packages
                   </h4>
                   <p className="mt-1 text-xs text-foreground/75 leading-relaxed">
-                    The source code of <code>pasak-sentinel</code> and <code>pasak/shield</code> is freely available under the MIT License. You may modify, fork, and distribute it in compliance with the MIT copyright notice.
+                    The source code of <code>pasax-sentinel</code> and <code>pasax/shield</code> is freely available under the MIT License. You may modify, fork, and distribute it in compliance with the MIT copyright notice.
                   </p>
                 </div>
 
@@ -243,7 +243,7 @@ export default function TermsOfServicePage() {
                     Community Control Plane
                   </Badge>
                   <h4 className="mt-2 font-heading text-sm font-black text-foreground">
-                    Pasak Cloud SOC Platform
+                    Pasax Cloud SOC Platform
                   </h4>
                   <p className="mt-1 text-xs text-foreground/75 leading-relaxed">
                     The hosted community cloud dashboard, 3D threat map visualization, and real-time mesh routing infrastructure are provided to the developer community under fair-use quotas.
@@ -268,10 +268,10 @@ export default function TermsOfServicePage() {
                 PROVIDED &quot;AS IS&quot; WITHOUT WARRANTY
               </p>
               <p>
-                To the maximum extent permitted by applicable law, the Pasak software suite and Cloud SOC platform are provided on an <strong>&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;</strong> basis, without warranties of any kind, either express or implied, including but not limited to merchantability, fitness for a particular purpose, non-infringement, or error-free operation.
+                To the maximum extent permitted by applicable law, the Pasax software suite and Cloud SOC platform are provided on an <strong>&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;</strong> basis, without warranties of any kind, either express or implied, including but not limited to merchantability, fitness for a particular purpose, non-infringement, or error-free operation.
               </p>
               <p>
-                While Pasak implements autonomous sub-0.2ms drops and instant FIM file locks, <strong>no security solution can guarantee 100% immunity</strong> against novel zero-day exploits, physical host breaches, or upstream ISP disruptions.
+                While Pasax implements autonomous sub-0.2ms drops and instant FIM file locks, <strong>no security solution can guarantee 100% immunity</strong> against novel zero-day exploits, physical host breaches, or upstream ISP disruptions.
               </p>
             </div>
           </section>
@@ -288,7 +288,7 @@ export default function TermsOfServicePage() {
             </div>
             <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
               <p>
-                In no event shall the authors, maintainers, or Pasak Security team be held liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including loss of profits, data corruption, business interruption, or server downtime) arising in any way out of the use or inability to use this software.
+                In no event shall the authors, maintainers, or Pasax Security team be held liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including loss of profits, data corruption, business interruption, or server downtime) arising in any way out of the use or inability to use this software.
               </p>
             </div>
           </section>
@@ -309,13 +309,13 @@ export default function TermsOfServicePage() {
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs font-bold">
                 <a
-                  href="mailto:legal@pasak.is-a.dev"
+                  href="mailto:legal@pasax.is-a.dev"
                   className={cn(
                     buttonVariants({ variant: "neutral", size: "sm" }),
                     "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
                   )}
                 >
-                  <span>legal@pasak.is-a.dev</span>
+                  <span>legal@pasax.is-a.dev</span>
                 </a>
                 <Link
                   href="/privacy"

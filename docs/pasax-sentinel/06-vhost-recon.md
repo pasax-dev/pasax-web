@@ -21,4 +21,4 @@ For every discovered SSL certificate file:
    - `valid`: More than 14 days remaining.
    - `expiring_soon`: Between 0 and 14 days remaining.
    - `expired`: Current timestamp is past `NotAfter`.
-4. Transmits discovered metadata in the next telemetry payload so Pasak Cloud can alert administrators before certificates expire.
+4. Transmits discovered metadata in the next telemetry payload so Pasax Cloud can alert administrators before certificates expire.

@@ -19,9 +19,9 @@ import { PRODUCTS_CONFIG, DOCS_MANIFEST } from "@/lib/docs-manifest"
 import { Badge } from "@/components/ui/badge"
 
 export const metadata = {
-  title: "Dokumentasi Resmi — pasak-secure-monitor & Pasak Suite",
+  title: "Dokumentasi Resmi — pasax-secure-monitor & Pasax Suite",
   description:
-    "Portal dokumentasi resmi ekosistem Pasak Suite: pasak-secure-monitor (Laravel WAF), pasak-sentinel (Go daemon), dan cloud control plane.",
+    "Portal dokumentasi resmi ekosistem Pasax Suite: pasax-secure-monitor (Laravel WAF), pasax-sentinel (Go daemon), dan cloud control plane.",
 }
 
 const iconMap: Record<string, React.ElementType> = {
@@ -47,7 +47,7 @@ export default function DocsHomePage() {
               variant="outline"
               className="border-2 border-border bg-main font-mono text-xs font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
             >
-              pasak-secure-monitor
+              pasax-secure-monitor
             </Badge>
             <Badge
               variant="outline"
@@ -66,7 +66,7 @@ export default function DocsHomePage() {
           <h1 className="font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
             Portal Dokumentasi Resmi <br className="hidden sm:inline" />
             <span className="text-main underline decoration-4 underline-offset-8">
-              pasak-secure-monitor
+              pasax-secure-monitor
             </span>
           </h1>
 
@@ -79,14 +79,14 @@ export default function DocsHomePage() {
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Link
-              href="/docs/pasak-secure-monitor"
+              href="/docs/pasax-secure-monitor"
               className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-main px-4 py-2 font-heading text-sm font-black text-main-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_var(--border)]"
             >
               <span>Mulai: Security Monitor</span>
               <ArrowRight className="size-4" />
             </Link>
             <Link
-              href="/docs/pasak-sentinel"
+              href="/docs/pasax-sentinel"
               className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-4 py-2 font-heading text-sm font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_var(--border)]"
             >
               <Terminal className="size-4 text-main" />
@@ -116,7 +116,7 @@ export default function DocsHomePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {/* Card 1: pasak-secure-monitor */}
+          {/* Card 1: pasax-secure-monitor */}
           <div className="flex flex-col justify-between space-y-3 rounded-base border-2 border-border bg-background p-5 shadow-[3px_3px_0px_0px_var(--border)]">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -131,7 +131,7 @@ export default function DocsHomePage() {
                 </span>
               </div>
               <h3 className="font-heading text-base font-black text-foreground">
-                pasak-secure-monitor
+                pasax-secure-monitor
               </h3>
               <p className="text-xs leading-relaxed text-foreground/75">
                 WAF mandiri 100% PHP murni untuk Laravel 10–13, karantina
@@ -140,7 +140,7 @@ export default function DocsHomePage() {
               </p>
             </div>
             <Link
-              href="/docs/pasak-secure-monitor"
+              href="/docs/pasax-secure-monitor"
               className="inline-flex w-full items-center justify-between border-t border-border/40 pt-3 font-mono text-xs font-bold text-main hover:underline"
             >
               <span>Buka Dokumentasi WAF</span>
@@ -148,7 +148,7 @@ export default function DocsHomePage() {
             </Link>
           </div>
 
-          {/* Card 2: pasak-sentinel */}
+          {/* Card 2: pasax-sentinel */}
           <div className="flex flex-col justify-between space-y-3 rounded-base border-2 border-border bg-background p-5 shadow-[3px_3px_0px_0px_var(--border)]">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -163,7 +163,7 @@ export default function DocsHomePage() {
                 </span>
               </div>
               <h3 className="font-heading text-base font-black text-foreground">
-                pasak-sentinel
+                pasax-sentinel
               </h3>
               <p className="text-xs leading-relaxed text-foreground/75">
                 Daemon host Linux single-binary (&lt;25MB RAM). Penurunan paket
@@ -172,7 +172,7 @@ export default function DocsHomePage() {
               </p>
             </div>
             <Link
-              href="/docs/pasak-sentinel"
+              href="/docs/pasax-sentinel"
               className="inline-flex w-full items-center justify-between border-t border-border/40 pt-3 font-mono text-xs font-bold text-main hover:underline"
             >
               <span>Buka Dokumentasi Daemon</span>
@@ -180,7 +180,7 @@ export default function DocsHomePage() {
             </Link>
           </div>
 
-          {/* Card 3: Pasak Suite Core */}
+          {/* Card 3: Pasax Suite Core */}
           <div className="flex flex-col justify-between space-y-3 rounded-base border-2 border-border bg-background p-5 shadow-[3px_3px_0px_0px_var(--border)]">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -195,7 +195,7 @@ export default function DocsHomePage() {
                 </span>
               </div>
               <h3 className="font-heading text-base font-black text-foreground">
-                Pasak Suite Core
+                Pasax Suite Core
               </h3>
               <p className="text-xs leading-relaxed text-foreground/75">
                 Arsitektur pertahanan berlapis tiga terintegrasi (Trinity
@@ -219,7 +219,7 @@ export default function DocsHomePage() {
         <div className="flex items-center gap-2">
           <Rocket className="size-5 stroke-[2.5] text-main" />
           <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-            Instalasi Cepat pasak-secure-monitor
+            Instalasi Cepat pasax-secure-monitor
           </h2>
         </div>
 
@@ -238,7 +238,7 @@ export default function DocsHomePage() {
               Unduh paket resmi dari Packagist ke aplikasi Laravel Anda.
             </p>
             <pre className="overflow-x-auto rounded-sm border border-border bg-secondary-background p-2.5 font-mono text-[11px] text-foreground">
-              composer require pasak-dev/secure-monitor
+              composer require pasax-dev/secure-monitor
             </pre>
           </div>
 
@@ -250,14 +250,14 @@ export default function DocsHomePage() {
               <CheckCircle2 className="size-4 text-emerald-500" />
             </div>
             <h3 className="font-heading text-sm font-black text-foreground">
-              Jalankan Wizard Pasak
+              Jalankan Wizard Pasax
             </h3>
             <p className="text-xs text-foreground/70">
               Publikasikan konfigurasi, template server, dan auto-hook
               middleware.
             </p>
             <pre className="overflow-x-auto rounded-sm border border-border bg-secondary-background p-2.5 font-mono text-[11px] text-foreground">
-              php artisan pasak:install
+              php artisan pasax:install
             </pre>
           </div>
 
@@ -281,11 +281,11 @@ export default function DocsHomePage() {
         </div>
       </section>
 
-      {/* Directory of All Document Categories for pasak-secure-monitor */}
+      {/* Directory of All Document Categories for pasax-secure-monitor */}
       <section className="space-y-6 pt-4">
         <div>
           <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-            Katalog Modul pasak-secure-monitor
+            Katalog Modul pasax-secure-monitor
           </h2>
           <p className="text-xs font-medium text-foreground/70 sm:text-sm">
             Jelajahi panduan teknis mendalam untuk setiap modul pertahanan
@@ -319,7 +319,7 @@ export default function DocsHomePage() {
                   {cat.items.map((item) => (
                     <li key={item.slug}>
                       <Link
-                        href={`/docs/pasak-secure-monitor/${item.slug}`}
+                        href={`/docs/pasax-secure-monitor/${item.slug}`}
                         className="group flex items-center justify-between py-1 text-xs text-foreground/80 hover:text-foreground"
                       >
                         <span className="line-clamp-1 font-medium underline-offset-2 group-hover:text-main group-hover:underline">

@@ -23,7 +23,7 @@ export function HeroSection() {
             <span className="flex size-2 shrink-0 animate-ping rounded-full bg-main" />
             <span className="font-heading tracking-wide uppercase truncate sm:overflow-visible">
               <span className="inline sm:hidden">v1.7.0 RELEASE</span>
-              <span className="hidden sm:inline">PASAK-SENTINEL v1.7.0</span>
+              <span className="hidden sm:inline">PASAX-SENTINEL v1.7.0</span>
             </span>
             <span className="text-muted-foreground">&bull;</span>
             <span className="font-bold text-main flex items-center gap-1 shrink-0">
@@ -88,7 +88,7 @@ export function HeroSection() {
                 "flex items-center gap-2 border-2 border-border bg-secondary-background font-heading text-base font-bold shadow-shadow hover:bg-background"
               )}
             >
-              <span>Why VPS Needs Pasak</span>
+              <span>Why VPS Needs Pasax</span>
             </a>
           </div>
 

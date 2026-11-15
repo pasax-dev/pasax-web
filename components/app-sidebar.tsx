@@ -36,7 +36,7 @@ import {
 
 const defaultAdminUser = {
   name: "Roby Kartis (Chief SOC)",
-  email: "superadmin@pasak.id",
+  email: "superadmin@pasax.id",
   avatar: "/avatars/admin.jpg",
   role: "Superadmin",
 }
@@ -145,12 +145,12 @@ const navSecondary = [
   },
   {
     title: "Documentation",
-    url: "https://pasak.is-a.dev",
+    url: "https://pasax.is-a.dev",
     icon: <CircleHelpIcon />,
   },
   {
     title: "CLI Installer",
-    url: "https://get.pasak.is-a.dev",
+    url: "https://get.pasax.is-a.dev",
     icon: <Terminal />,
   },
 ]
@@ -181,7 +181,7 @@ export function AppSidebar({
               </div>
               <div className="flex flex-col text-left">
                 <span className="font-heading text-sm leading-none font-black tracking-tight">
-                  PASAK CLOUD
+                  PASAX CLOUD
                 </span>
                 <span className="font-mono text-[10px] leading-tight font-semibold text-black/80">
                   {isUserRole ? "Customer Defense Portal" : "SOC Sovereign Console"}

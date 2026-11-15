@@ -2,15 +2,15 @@
   "date": "2026-11-15",
   "type": "update",
   "project": {
-    "name": "Pasak Cloud Dashboard",
-    "url": "https://pasak-web.vercel.app"
+    "name": "Pasax Cloud Dashboard",
+    "url": "https://pasax-web.vercel.app"
   },
   "title": {
     "id": "Peluncuran Portal Produksi Publik, Pemantauan Simpul Server Langsung, dan Akses Cepat Agen",
     "en": "Public Production Portal Launch, Live Server Fleet Monitoring, and Quick Agent Deployment"
   },
   "body": {
-    "id": "Meluncurkan portal operasional keamanan dan pusat edukasi Pasak ke lingkungan produksi publik berkinerja tinggi. Menyajikan visualisasi status server yang terlindungi secara langsung dari layanan cloud, peta ancaman siber interaktif, dokumentasi teknis lengkap, serta fasilitas penyebaran agen keamanan ke server Linux hanya dengan satu baris perintah.",
+    "id": "Meluncurkan portal operasional keamanan dan pusat edukasi Pasax ke lingkungan produksi publik berkinerja tinggi. Menyajikan visualisasi status server yang terlindungi secara langsung dari layanan cloud, peta ancaman siber interaktif, dokumentasi teknis lengkap, serta fasilitas penyebaran agen keamanan ke server Linux hanya dengan satu baris perintah.",
     "en": "Launched the public production operations portal and security education center. Delivers real-time server fleet health visualizations connected to live cloud services, interactive cyber threat radar, comprehensive technical documentation, and one-command agent deployment for Linux servers."
   },
   "items": [

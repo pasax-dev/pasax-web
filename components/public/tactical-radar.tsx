@@ -48,7 +48,7 @@ const RADAR_TARGETS: ThreatTarget[] = [
     status: "DROPPED",
     severity: "critical",
     originCountry: "Russia (St. Petersburg)",
-    kernelAction: "nft add element inet filter pasak_blocklist { 194.26.29.112 timeout 24h }",
+    kernelAction: "nft add element inet filter pasax_blocklist { 194.26.29.112 timeout 24h }",
     latencyMs: 0.12,
   },
   {
@@ -104,7 +104,7 @@ const RADAR_TARGETS: ThreatTarget[] = [
     status: "TRAPPED",
     severity: "high",
     originCountry: "Bulgaria (Sofia)",
-    kernelAction: "pasak-sentinel isolate-port --port 6379 --attacker 89.248.163.78",
+    kernelAction: "pasax-sentinel isolate-port --port 6379 --attacker 89.248.163.78",
     latencyMs: 0.14,
   },
 ]
@@ -599,7 +599,7 @@ export function TacticalRadar() {
                   Go Sentinel compiles atomic rules into Linux kernel netfilter tables. Dropping happens directly at layer 3/4 with zero CPU overhead.
                 </p>
                 <div className="mt-1 font-mono text-[10px] text-foreground bg-card p-1.5 rounded border border-border">
-                  &gt; Chain: <strong>pasak_input_filter</strong> | Rule: <strong>ip saddr @malicious_set drop</strong>
+                  &gt; Chain: <strong>pasax_input_filter</strong> | Rule: <strong>ip saddr @malicious_set drop</strong>
                 </div>
               </div>
             )}

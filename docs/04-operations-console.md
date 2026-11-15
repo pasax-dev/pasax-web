@@ -1,7 +1,7 @@
 # Chapter 04: Security Operations Matrix
 
 ## 1. Overview
-The Security Operations Matrix ([`PasakOperationsPanel`](../components/pasak-operations-panel.tsx)) is the main interactive control surface of the dashboard. It unifies four critical operational views into a tabbed layout:
+The Security Operations Matrix ([`PasaxOperationsPanel`](../components/pasax-operations-panel.tsx)) is the main interactive control surface of the dashboard. It unifies four critical operational views into a tabbed layout:
 
 ---
 
@@ -26,5 +26,5 @@ The Security Operations Matrix ([`PasakOperationsPanel`](../components/pasak-ope
 - Monitors X.509 SSL certificate expiration countdowns, highlighting certificates needing renewal within 14 days.
 
 ### 2.4 Crowd Defense Blocklist
-- Manages the network effect of the Pasak ecosystem: when an attacker targets Node A with an exploit, their IP is flagged here and automatically blocked at the kernel layer across Node B, Node C, and Node D before any request reaches their servers.
+- Manages the network effect of the Pasax ecosystem: when an attacker targets Node A with an exploit, their IP is flagged here and automatically blocked at the kernel layer across Node B, Node C, and Node D before any request reaches their servers.
 - Operators can manually ban or unban IPs directly from the UI.

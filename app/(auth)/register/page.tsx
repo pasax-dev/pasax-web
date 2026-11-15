@@ -130,7 +130,7 @@ export default function RegisterPage() {
             Registrasi Akun Baru
           </h1>
           <p className="text-xs text-foreground/75">
-            Daftarkan instansi atau operator Anda untuk memonitor kluster server Pasak.
+            Daftarkan instansi atau operator Anda untuk memonitor kluster server Pasax.
           </p>
         </div>
 

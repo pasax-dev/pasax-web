@@ -16,10 +16,10 @@ export interface ParsedDoc {
   rawContent: string
 }
 
-const PASAK_API_URL =
-  process.env.NEXT_PUBLIC_PASAK_API_URL ||
-  process.env.PASAK_API_URL ||
-  "https://pasak-service.vercel.app"
+const PASAX_API_URL =
+  process.env.NEXT_PUBLIC_PASAX_API_URL ||
+  process.env.PASAX_API_URL ||
+  "https://pasax-service.vercel.app"
 
 function slugify(text: string): string {
   return text
@@ -38,10 +38,10 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
   let description = item.description
   let markdownBody = ""
 
-  // Fetch from Pasak Cloud API (Neon Serverless PostgreSQL Database)
+  // Fetch from Pasax Cloud API (Neon Serverless PostgreSQL Database)
   try {
     const res = await fetch(
-      `${PASAK_API_URL}/api/v1/docs/${item.product}/${item.slug}`,
+      `${PASAX_API_URL}/api/v1/docs/${item.product}/${item.slug}`,
       {
         next: { revalidate: 60 },
         headers: { Accept: "application/json" },

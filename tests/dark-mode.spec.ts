@@ -5,7 +5,7 @@ test.describe('Neobrutalism Dark Mode & SOC Navigation', () => {
     await page.goto('/');
 
     // Page title and branding should be visible
-    await expect(page.locator('text=PASAK').first()).toBeVisible();
+    await expect(page.locator('text=PASAX').first()).toBeVisible();
 
     // Initial state: html should not have dark class by default if light
     const html = page.locator('html');
@@ -31,7 +31,7 @@ test.describe('Neobrutalism Dark Mode & SOC Navigation', () => {
     await page.goto('/dashboard');
 
     // Header brand and Sentinel Mesh status
-    await expect(page.locator('text=PASAK').first()).toBeVisible();
+    await expect(page.locator('text=PASAX').first()).toBeVisible();
     await expect(page.locator('text=Sentinel Mesh Online')).toBeVisible();
 
     // Section cards

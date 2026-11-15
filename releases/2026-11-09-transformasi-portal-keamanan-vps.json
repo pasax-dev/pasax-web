@@ -2,16 +2,16 @@
   "date": "2026-11-09",
   "type": "feature",
   "project": {
-    "name": "Pasak Cloud Dashboard",
-    "url": "https://pasak.is-a.dev"
+    "name": "Pasax Cloud Dashboard",
+    "url": "https://pasax.is-a.dev"
   },
   "title": {
     "id": "Pembaruan Antarmuka Portal dan Solusi Perlindungan Khusus Server Web Mandiri",
     "en": "Portal Interface Redesign and Dedicated Linux Server Protection Suite"
   },
   "body": {
-    "id": "Penyegaran menyeluruh pada beranda utama Pasak untuk menyajikan solusi perlindungan keamanan server mandiri (VPS) bagi pengelola web dan aplikasi. Menampilkan panduan komparasi sistem perlindungan ringan tanpa membebani memori, kompatibilitas lintas penyedia komputasi awan, simulasi beban kerja aplikasi web populer, serta alur aktivasi perlindungan instan dalam 60 detik.",
-    "en": "Comprehensive visual and content redesign of Pasak's front portal tailored specifically for developers and sysadmins running independent Linux web servers. Highlights ultra-lightweight zero-overhead defense comparisons, broad cloud provider compatibility, protection scenarios for popular web workloads, and a 60-second instant onboarding workflow."
+    "id": "Penyegaran menyeluruh pada beranda utama Pasax untuk menyajikan solusi perlindungan keamanan server mandiri (VPS) bagi pengelola web dan aplikasi. Menampilkan panduan komparasi sistem perlindungan ringan tanpa membebani memori, kompatibilitas lintas penyedia komputasi awan, simulasi beban kerja aplikasi web populer, serta alur aktivasi perlindungan instan dalam 60 detik.",
+    "en": "Comprehensive visual and content redesign of Pasax's front portal tailored specifically for developers and sysadmins running independent Linux web servers. Highlights ultra-lightweight zero-overhead defense comparisons, broad cloud provider compatibility, protection scenarios for popular web workloads, and a 60-second instant onboarding workflow."
   },
   "items": [
     {
