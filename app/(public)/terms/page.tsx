@@ -14,7 +14,10 @@ import {
   ExternalLink,
   Code2,
   Lock,
+  HelpCircle,
+  BookOpen,
 } from "lucide-react"
+import { LegalNav } from "@/components/public/legal-nav"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -22,7 +25,7 @@ import { cn } from "@/lib/utils"
 export const metadata: Metadata = {
   title: "Terms of Service | Pasax Security Ecosystem",
   description:
-    "Review the terms, conditions, acceptable use policies, and open-source licensing governing Pasax Sentinel daemons, Shield WAF, and Cloud SOC console.",
+    "Ketentuan layanan, kebijakan penggunaan wajar (AUP), lisensi open-source MIT, dan tanggung jawab hak akses root untuk ekosistem keamanan Pasax.",
   keywords: [
     "Pasax Terms of Service",
     "Security Software Terms",
@@ -58,13 +61,13 @@ export const metadata: Metadata = {
 }
 
 export default function TermsOfServicePage() {
-  const lastUpdated = "November 10, 2026"
-  const version = "1.7.0"
+  const lastUpdated = "18 November 2026"
+  const version = "1.8.0"
 
   return (
     <div className="w-full max-w-full py-12 md:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb / Top Tag */}
+        {/* Breadcrumb */}
         <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
           <Link
             href="/"
@@ -78,6 +81,9 @@ export default function TermsOfServicePage() {
           <span className="text-main">Terms of Service</span>
         </div>
 
+        {/* Legal Navigation Bar */}
+        <LegalNav />
+
         {/* Header Block */}
         <div className="rounded-base border-2 border-border bg-card p-6 md:p-10 shadow-[6px_6px_0px_0px_var(--border)]">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -87,49 +93,52 @@ export default function TermsOfServicePage() {
             </div>
             <div className="inline-flex items-center gap-2 font-mono text-xs text-muted-foreground">
               <Clock className="size-3.5" />
-              <span>Last updated: {lastUpdated}</span>
+              <span>Terakhir diperbarui: {lastUpdated}</span>
             </div>
           </div>
 
           <h1 className="mt-4 font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
             Terms of Service
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
-            Please read these Terms of Service carefully before installing <strong>pasax-sentinel</strong>,
-            incorporating <strong>pasax/shield</strong>, or using the <strong>Pasax Cloud SOC</strong> dashboard.
-            By accessing or operating any part of our ecosystem, you agree to be bound by these terms.
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80 sm:text-lg text-pretty">
+            Harap baca Ketentuan Layanan ini dengan saksama sebelum memasang <strong>pasax-sentinel</strong>, mengintegrasikan <strong>pasax/secure-monitor</strong>, atau menggunakan dashboard <strong>Pasax Cloud SOC</strong>. Dengan mengunduh, mengonfigurasi, atau mengoperasikan komponen dari ekosistem Pasax, Anda menyatakan setuju untuk terikat oleh ketentuan di bawah ini.
           </p>
 
-          {/* Quick Pillars */}
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <ShieldAlert className="size-4 text-rose-600 dark:text-rose-400" />
-                <span>Defensive Intent Only</span>
+          {/* Ringkasan Eksekutif (TL;DR Bilingual Cards) */}
+          <div className="mt-8 rounded-base border-2 border-border bg-secondary-background/80 p-5">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              RINGKASAN EKSEKUTIF (TL;DR)
+            </span>
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <ShieldAlert className="size-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                  <span>Hanya Tujuan Defensif</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Pasax hanya boleh digunakan untuk perlindungan server sah, penolakan serangan siber, dan audit keamanan yang memiliki izin resmi.
+                </p>
               </div>
-              <p className="mt-2 text-xs text-foreground/75 leading-relaxed">
-                Pasax is strictly designed for defensive threat mitigation, server hardening, and authorized audit environments.
-              </p>
-            </div>
 
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <Code2 className="size-4 text-blue-600 dark:text-blue-400" />
-                <span>MIT Licensed Core</span>
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <Code2 className="size-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <span>Kode Terbuka MIT</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Paket Sentinel dan WAF 100% open source di bawah lisensi MIT. Anda bebas mengaudit, memodifikasi, dan menggunakannya untuk kebutuhan komersial.
+                </p>
               </div>
-              <p className="mt-2 text-xs text-foreground/75 leading-relaxed">
-                Core daemons and WAF libraries are 100% open source and verifiable on GitHub under the permissive MIT license.
-              </p>
-            </div>
 
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <Terminal className="size-4 text-amber-600 dark:text-amber-400" />
-                <span>User Root Responsibility</span>
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <Terminal className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>Kedaulatan Root Linux</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Operasi kernel nftables dan penguncian berkas berada sepenuhnya di bawah kendali administratif pemilik VPS host Anda.
+                </p>
               </div>
-              <p className="mt-2 text-xs text-foreground/75 leading-relaxed">
-                Deploying kernel-level daemon tools requires elevated Linux permissions under your own administrative control.
-              </p>
             </div>
           </div>
         </div>
@@ -143,17 +152,17 @@ export default function TermsOfServicePage() {
                 1
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Agreement &amp; Acceptance
+                Persetujuan &amp; Kewenangan Operasional
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                By creating an account on <code>https://pasax.is-a.dev</code>, obtaining an API token, or installing the <code>pasax-sentinel</code> daemon onto any virtual private server (VPS) or bare-metal host, you represent that:
+                Dengan membuat akun pada portal <code>https://pasax.is-a.dev</code>, membuat token node telemetri, atau mengunduh dan mengeksekusi biner <code>pasax-sentinel</code> pada virtual private server (VPS) maupun bare-metal host, Anda menyatakan bahwa:
               </p>
               <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
-                <li>You have legal authority to administer and deploy security monitoring on the target machines.</li>
-                <li>You are at least 18 years of age or possess legal capacity in your jurisdiction.</li>
-                <li>You will use the suite strictly in accordance with these Terms and all applicable cybercrime, privacy, and data security laws.</li>
+                <li>Anda memiliki wewenang hukum penuh untuk mengelola, memasang firewall, dan memantau lalu lintas jaringan pada mesin target.</li>
+                <li>Anda berusia sekurang-kurangnya 18 tahun atau memiliki kecakapan hukum di wilayah yurisdiksi Anda.</li>
+                <li>Anda akan menggunakan seluruh komponen keamanan Pasax selaras dengan ketentuan hukum siber, privasi data, dan undang-undang ITE yang berlaku.</li>
               </ul>
             </div>
           </section>
@@ -165,23 +174,23 @@ export default function TermsOfServicePage() {
                 2
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Acceptable Use Policy (AUP)
+                Kebijakan Penggunaan yang Diizinkan (AUP)
               </h2>
             </div>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                Pasax Security provides high-speed packet inspection (nftables), honeypot instrumentation, and inotify File Integrity Monitoring. You agree <strong>NOT</strong> to:
+                Pasax Security menyediakan inspeksi paket berkecepatan tinggi via nftables, instrumentasi honeypot, dan pemantauan integritas berkas kernel via inotify. Pengguna <strong>DILARANG KERAS</strong> untuk:
               </p>
               <div className="space-y-2 rounded-base border-2 border-rose-500/50 bg-rose-500/10 p-4 text-xs">
                 <div className="flex items-center gap-2 font-bold text-rose-700 dark:text-rose-400">
                   <AlertTriangle className="size-4 shrink-0" />
-                  <span>Prohibited Activities:</span>
+                  <span>Aktivitas yang Dilarang (Prohibited Activities):</span>
                 </div>
-                <ul className="list-inside list-disc space-y-1 pl-1 text-foreground/90">
-                  <li>Deploying Pasax on hosts, cloud instances, or networks for which you do not possess verified ownership or express written authorization.</li>
-                  <li>Using Pasax telemetry endpoints to launch denial-of-service (DDoS) attacks, flood reputation feeds, or poison global threat blocklists.</li>
-                  <li>Attempting to spoof node identity tokens or intercept mTLS telemetry from neighboring nodes.</li>
-                  <li>Circumventing security controls, rate-limiting thresholds, or abuse protections implemented by the Pasax Cloud API.</li>
+                <ul className="list-inside list-disc space-y-1.5 pl-1 text-foreground/90">
+                  <li>Memasang Pasax pada host, server cloud, atau jaringan pihak ketiga tanpa izin kepemilikan tertulis yang sah.</li>
+                  <li>Memanfaatkan endpoint telemetri Pasax untuk meluncurkan serangan Distributed Denial of Service (DDoS) atau memalsukan reputasi blocklist ancaman global.</li>
+                  <li>Melakukan pemalsuan (spoofing) token sertifikat identitas mTLS node untuk menyadap telemetri server lain.</li>
+                  <li>Melakukan reverse proxy bypass atau eksploitasi yang bertujuan melumpuhkan mekanisme rate-limiting Pasax Cloud API.</li>
                 </ul>
               </div>
             </div>
@@ -194,19 +203,19 @@ export default function TermsOfServicePage() {
                 3
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Root &amp; Kernel-Level Privileges
+                Hak Akses Root &amp; Subsistem Kernel Linux
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                Because <code>pasax-sentinel</code> interacts with raw Linux kernel subsystems (specifically <code>nftables</code> packet filtering and <code>inotify</code> file system hooks), it operates as a privileged <code>systemd</code> service.
+                Karena <code>pasax-sentinel</code> berinteraksi langsung dengan subsistem kernel Linux (tabel paket <code>nftables</code> dan hook filesystem <code>inotify</code>), daemon beroperasi sebagai layanan <code>systemd</code> dengan kapabilitas sistem istimewa.
               </p>
               <p>
-                You acknowledge and agree that:
+                Anda memahami dan menyepakati bahwa:
               </p>
               <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
-                <li>You are solely responsible for reviewing firewall rule definitions before enabling automated drop thresholds.</li>
-                <li>Pasax provides automated safeguards (such as automatic SSH port exemption and whitelist fallbacks) to prevent administrative lockouts, but you remain responsible for maintaining console or out-of-band access to your VPS.</li>
+                <li>Anda bertanggung jawab penuh untuk meninjau definisi aturan firewall (<code>pasax-rules.yml</code>) sebelum mengaktifkan mode pemblokiran otomatis.</li>
+                <li>Meskipun Pasax menyediakan safeguard otomatis (seperti pengecualian port SSH otomatis dan fallback whitelist), Anda tetap berkewajiban mempertahankan akses konsol out-of-band ke VPS Anda untuk mencegah risiko lockout yang tidak disengaja.</li>
               </ul>
             </div>
           </section>
@@ -218,35 +227,35 @@ export default function TermsOfServicePage() {
                 4
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Open Source Licensing vs. Cloud Services
+                Lisensi Open Source MIT vs. Cloud SOC Platform
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                The Pasax software ecosystem consists of two distinct tiers:
+                Ekosistem software Pasax terdiri dari dua pilar:
               </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-base border-2 border-border bg-secondary-background p-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-base border-2 border-border bg-secondary-background p-4 shadow-[2px_2px_0px_0px_var(--border)]">
                   <Badge variant="outline" className="font-mono text-[10px] font-bold">
                     MIT Open Source License
                   </Badge>
                   <h4 className="mt-2 font-heading text-sm font-black text-foreground">
-                    Sentinel &amp; Shield Packages
+                    Sentinel &amp; Secure Monitor Packages
                   </h4>
-                  <p className="mt-1 text-xs text-foreground/75 leading-relaxed">
-                    The source code of <code>pasax-sentinel</code> and <code>pasax/shield</code> is freely available under the MIT License. You may modify, fork, and distribute it in compliance with the MIT copyright notice.
+                  <p className="mt-1 text-xs text-foreground/75 leading-relaxed text-pretty">
+                    Kode sumber <code>pasax-sentinel</code> dan <code>pasax/secure-monitor</code> bebas diakses, dimodifikasi, dan didistribusikan ulang sesuai izin lisensi MIT.
                   </p>
                 </div>
 
-                <div className="rounded-base border-2 border-border bg-secondary-background p-4">
+                <div className="rounded-base border-2 border-border bg-secondary-background p-4 shadow-[2px_2px_0px_0px_var(--border)]">
                   <Badge variant="outline" className="font-mono text-[10px] font-bold">
                     Community Control Plane
                   </Badge>
                   <h4 className="mt-2 font-heading text-sm font-black text-foreground">
                     Pasax Cloud SOC Platform
                   </h4>
-                  <p className="mt-1 text-xs text-foreground/75 leading-relaxed">
-                    The hosted community cloud dashboard, 3D threat map visualization, and real-time mesh routing infrastructure are provided to the developer community under fair-use quotas.
+                  <p className="mt-1 text-xs text-foreground/75 leading-relaxed text-pretty">
+                    Dashboard cloud terpusat, Threat Map 3D, dan agregasi data blocklist global disediakan untuk komunitas developer berdasarkan kuota penggunaan wajar (*fair-use*).
                   </p>
                 </div>
               </div>
@@ -260,52 +269,35 @@ export default function TermsOfServicePage() {
                 5
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Disclaimer of Warranties
+                Batasan Tanggung Jawab &amp; Jaminan (Disclaimer)
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p className="font-mono text-xs uppercase text-muted-foreground">
-                PROVIDED &quot;AS IS&quot; WITHOUT WARRANTY
+                DISEDIAKAN &quot;SEBAGAIMANA ADANYA&quot; (AS IS) TANPA JAMINAN MUTLAK
               </p>
               <p>
-                To the maximum extent permitted by applicable law, the Pasax software suite and Cloud SOC platform are provided on an <strong>&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;</strong> basis, without warranties of any kind, either express or implied, including but not limited to merchantability, fitness for a particular purpose, non-infringement, or error-free operation.
+                Sejauh diizinkan oleh hukum yang berlaku, perangkat lunak Pasax dan platform Cloud SOC disediakan atas dasar <strong>&quot;AS IS&quot; dan &quot;AS AVAILABLE&quot;</strong>, tanpa jaminan tersirat atas kelayakan dagang, kecocokan untuk tujuan tertentu, atau bebas dari galat teknis.
               </p>
               <p>
-                While Pasax implements autonomous sub-0.2ms drops and instant FIM file locks, <strong>no security solution can guarantee 100% immunity</strong> against novel zero-day exploits, physical host breaches, or upstream ISP disruptions.
+                Meskipun Pasax menerapkan intersepsi paket di bawah 0.2ms dan penguncian berkas otonom, <strong>tidak ada sistem keamanan di dunia yang dapat menjamin kekebalan 100%</strong> terhadap eksploitasi zero-day baru yang belum teridentifikasi, pembobolan fisik server, atau kegagalan upstream ISP.
               </p>
             </div>
           </section>
 
           {/* Section 6 */}
-          <section className="rounded-base border-2 border-border bg-background p-6 md:p-8 shadow-[4px_4px_0px_0px_var(--border)]">
+          <section className="rounded-base border-2 border-border bg-card p-6 md:p-8 shadow-[4px_4px_0px_0px_var(--border)]">
             <div className="flex items-center gap-3">
               <span className="flex size-7 items-center justify-center rounded-base border-2 border-border bg-main font-mono text-sm font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
                 6
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Limitation of Liability
+                Pembaruan Ketentuan &amp; Kontak Legal
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                In no event shall the authors, maintainers, or Pasax Security team be held liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including loss of profits, data corruption, business interruption, or server downtime) arising in any way out of the use or inability to use this software.
-              </p>
-            </div>
-          </section>
-
-          {/* Section 7 */}
-          <section className="rounded-base border-2 border-border bg-card p-6 md:p-8 shadow-[4px_4px_0px_0px_var(--border)]">
-            <div className="flex items-center gap-3">
-              <span className="flex size-7 items-center justify-center rounded-base border-2 border-border bg-main font-mono text-sm font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
-                7
-              </span>
-              <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Modifications &amp; Contact
-              </h2>
-            </div>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
-              <p>
-                We reserve the right to modify these Terms of Service at any time. When updates are published, the &quot;Last updated&quot; date at the top of this document will be amended. Your continued use of the platform constitutes acceptance of the revised terms.
+                Kami berhak memperbarui Ketentuan Layanan ini sewaktu-waktu untuk menyesuaikan perkembangan regulasi siber dan penambahan modul sistem. Tanggal pembaruan terakhir akan selalu dicantumkan di bagian atas halaman ini.
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs font-bold">
                 <a
@@ -324,27 +316,36 @@ export default function TermsOfServicePage() {
                     "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
                   )}
                 >
-                  <span>View Privacy Policy</span>
+                  <span>Lihat Kebijakan Privasi</span>
+                </Link>
+                <Link
+                  href="/faq"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
+                  )}
+                >
+                  <span>Baca FAQ</span>
                 </Link>
               </div>
             </div>
           </section>
         </div>
 
-        {/* Bottom Navigation */}
+        {/* Bottom Cross Navigation */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t-2 border-border pt-6 font-heading text-sm font-bold">
           <Link
             href="/privacy"
             className="inline-flex items-center gap-1.5 text-foreground hover:text-main hover:underline"
           >
-            <span>Review Privacy Policy</span>
+            <span>Baca Kebijakan Privasi &amp; Zero-Knowledge</span>
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href="/docs"
+            href="/changelog"
             className="inline-flex items-center gap-1.5 text-foreground hover:text-main hover:underline"
           >
-            <span>Explore Documentation</span>
+            <span>Lihat Catatan Rilis &amp; Changelog</span>
             <ArrowRight className="size-4" />
           </Link>
         </div>

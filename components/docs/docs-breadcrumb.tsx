@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ChevronRight, Home, BookOpen } from "lucide-react"
+import { ChevronRight, Home } from "lucide-react"
 import { PRODUCTS_CONFIG } from "@/lib/docs-manifest"
 
 export function DocsBreadcrumb({
@@ -14,39 +14,39 @@ export function DocsBreadcrumb({
   const prodConfig = product ? PRODUCTS_CONFIG[product] : null
 
   return (
-    <nav className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs text-foreground">
+    <nav
+      aria-label="Breadcrumbs"
+      className="mb-6 flex flex-wrap items-center gap-1.5 font-mono text-xs text-lp-ink/60"
+    >
       <Link
         href="/"
-        className="flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+        className="flex items-center gap-1 hover:text-lp-ink transition-colors"
+        title="Beranda"
       >
         <Home className="size-3.5" />
-        <span>Beranda</span>
       </Link>
-      <ChevronRight className="size-3 text-foreground/70" />
+      <ChevronRight className="size-3 text-lp-ink/30 shrink-0" />
       <Link
         href="/docs"
-        className="flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+        className="hover:text-lp-ink transition-colors"
       >
-        <BookOpen className="size-3.5" />
-        <span>Dokumentasi</span>
+        Dokumentasi
       </Link>
       {prodConfig && (
         <>
-          <ChevronRight className="size-3 text-foreground/70" />
+          <ChevronRight className="size-3 text-lp-ink/30 shrink-0" />
           <Link
             href={`/docs/${prodConfig.id}`}
-            className="rounded-base border-2 border-border bg-amber-300 px-2.5 py-1 font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+            className="hover:text-lp-ink transition-colors"
           >
             {prodConfig.name}
           </Link>
         </>
       )}
-      <ChevronRight className="size-3 text-foreground/70" />
-      <span className="rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)]">
-        {category}
-      </span>
-      <ChevronRight className="size-3 text-foreground/70" />
-      <span className="rounded-base border-2 border-border bg-main px-2.5 py-1 font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)]">
+      <ChevronRight className="size-3 text-lp-ink/30 shrink-0" />
+      <span className="text-lp-ink/75">{category}</span>
+      <ChevronRight className="size-3 text-lp-ink/30 shrink-0" />
+      <span className="font-medium text-lp-ink truncate max-w-[200px] sm:max-w-xs">
         {title}
       </span>
     </nav>

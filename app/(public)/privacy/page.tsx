@@ -13,7 +13,11 @@ import {
   AlertTriangle,
   ArrowRight,
   ExternalLink,
+  Scale,
+  HelpCircle,
+  BookOpen,
 } from "lucide-react"
+import { LegalNav } from "@/components/public/legal-nav"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -21,7 +25,7 @@ import { cn } from "@/lib/utils"
 export const metadata: Metadata = {
   title: "Privacy Policy | Pasax Security Ecosystem",
   description:
-    "Learn how Pasax Security handles telemetry, Linux node metrics, and zero-knowledge data retention across Sentinel daemons, Shield WAF, and Cloud SOC.",
+    "Pelajari komitmen privasi Pasax Security: inspeksi Zero-Knowledge lokal, telemetri keluar terenkripsi mTLS 1.3, dan ketiadaan pelacak pihak ketiga.",
   keywords: [
     "Pasax Privacy Policy",
     "Security Telemetry Privacy",
@@ -58,12 +62,12 @@ export const metadata: Metadata = {
 }
 
 export default function PrivacyPolicyPage() {
-  const lastUpdated = "November 10, 2026"
+  const lastUpdated = "18 November 2026"
 
   return (
     <div className="w-full max-w-full py-12 md:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb / Top Tag */}
+        {/* Breadcrumb */}
         <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
           <Link
             href="/"
@@ -77,63 +81,64 @@ export default function PrivacyPolicyPage() {
           <span className="text-main">Privacy Policy</span>
         </div>
 
+        {/* Legal Navigation Bar */}
+        <LegalNav />
+
         {/* Header Block */}
         <div className="rounded-base border-2 border-border bg-card p-6 shadow-[6px_6px_0px_0px_var(--border)] md:p-10">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-secondary-background px-3 py-1 font-mono text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)]">
               <ShieldCheck className="size-4 text-main" />
-              <span>DATA PROTECTION COMMITMENT</span>
+              <span>KOMITMEN PERLINDUNGAN PRIVASI DATA</span>
             </div>
             <div className="inline-flex items-center gap-2 font-mono text-xs text-muted-foreground">
               <Clock className="size-3.5" />
-              <span>Last updated: {lastUpdated}</span>
+              <span>Terakhir diperbarui: {lastUpdated}</span>
             </div>
           </div>
 
           <h1 className="mt-4 font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
-            Privacy Policy
+            Kebijakan Privasi (Privacy Policy)
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-foreground/80 sm:text-lg">
-            At <strong>Pasax Security</strong>, we believe security should never
-            come at the expense of user privacy. We design our architecture—from
-            the raw Go kernel daemon to our central SOC dashboard—around a
-            strict <strong>zero-knowledge and minimal data retention</strong>{" "}
-            philosophy.
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80 sm:text-lg text-pretty">
+            Di <strong>Pasax Security</strong>, kami meyakini bahwa perlindungan keamanan tingkat tinggi tidak boleh mengorbankan privasi data Anda. Kami merancang arsitektur Pasax—mulai dari daemon Go kernel tingkat rendah hingga portal SOC—berdasarkan prinsip dasar <strong>Zero-Knowledge dan retensi data minimal</strong>.
           </p>
 
-          {/* Quick Highlight Cards */}
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <Lock className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Zero Payload Peeking</span>
+          {/* Quick Highlight Cards (TL;DR) */}
+          <div className="mt-8 rounded-base border-2 border-border bg-secondary-background/80 p-5">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              RINGKASAN EKSEKUTIF (TL;DR)
+            </span>
+            <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <Lock className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <span>Nol Inspeksi Payload (Zero-Payload)</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Kami tidak pernah membaca, menyimpan, atau mentransmisikan kredensial database, API key, maupun isi request HTTP aplikasi web Anda.
+                </p>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-foreground/75">
-                We never inspect, store, or transmit your database credentials,
-                API secrets, or customer application payloads.
-              </p>
-            </div>
 
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <Server className="size-4 text-blue-600 dark:text-blue-400" />
-                <span>Egress-Only mTLS</span>
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <Server className="size-4 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <span>Egress-Only mTLS 1.3</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Telemetri hanya keluar (outbound) lewat koneksi terenkripsi mTLS 1.3. Server VPS Anda tidak membuka port listening inbound tambahan.
+                </p>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-foreground/75">
-                Telemetry flows outbound only over mutual TLS 1.3. Your Linux
-                nodes keep zero open inbound listening ports.
-              </p>
-            </div>
 
-            <div className="rounded-base border-2 border-border bg-secondary-background/60 p-4">
-              <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-                <EyeOff className="size-4 text-amber-600 dark:text-amber-400" />
-                <span>No Ad Trackers</span>
+              <div className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]">
+                <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+                  <EyeOff className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>Tanpa Pelacak Iklan (No Trackers)</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-foreground/75 text-pretty">
+                  Bebas dari pixel analitik pihak ketiga, tanpa profiling perilaku personal, dan nol telemetri periklanan lintas situs.
+                </p>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-foreground/75">
-                No third-party analytics pixels, no behavioral profiling, and
-                zero cross-site advertising telemetry.
-              </p>
             </div>
           </div>
         </div>
@@ -147,34 +152,15 @@ export default function PrivacyPolicyPage() {
                 1
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Scope &amp; Identity
+                Cakupan &amp; Identitas Pengelola Data
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                This Privacy Policy applies to the Pasax Security ecosystem,
-                which comprises:
+                Kebijakan Privasi ini berlaku untuk seluruh interaksi dengan perangkat lunak open-source Pasax, daemon <code>pasax-sentinel</code>, paket WAF <code>pasax/secure-monitor</code>, serta antarmuka web yang dihosting di <code>https://pasax.is-a.dev</code>.
               </p>
-              <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
-                <li>
-                  <strong>pasax-sentinel:</strong> The open-source Go Linux
-                  kernel background daemon deployed on user VPS instances.
-                </li>
-                <li>
-                  <strong>pasax/shield:</strong> The Spatie-compliant
-                  PHP/Laravel Web Application Firewall (WAF) and honeypot
-                  middleware.
-                </li>
-                <li>
-                  <strong>Pasax Cloud SOC Console:</strong> The central
-                  web-based dashboard and fleet management API located at{" "}
-                  <code>https://pasax.is-a.dev</code>.
-                </li>
-              </ul>
               <p>
-                When you deploy the open-source components in a standalone,
-                self-hosted, or air-gapped environment without pairing to Pasax
-                Cloud, zero data is transmitted to external servers.
+                Data telemetry node dikelola oleh Pasax Security Core Team untuk keperluan agregasi daftar blokir ancaman global (Global Threat Blocklist) yang didistribusikan kembali secara gratis demi melindungi seluruh komunitas node.
               </p>
             </div>
           </section>
@@ -186,88 +172,39 @@ export default function PrivacyPolicyPage() {
                 2
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Telemetry Collected by Pasax Sentinel Daemon
+                Data yang Dikumpulkan vs. Data yang TIDAK PERNAH Dikumpulkan
               </h2>
             </div>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                When a node is connected to Pasax Cloud,{" "}
-                <code>pasax-sentinel</code> emits strictly structured, defensive
-                metadata:
+                Kami memegang teguh transparansi radikal atas data apa saja yang diproses oleh sistem:
               </p>
-              <div className="overflow-x-auto rounded-base border-2 border-border bg-secondary-background">
-                <table className="w-full text-left text-xs">
-                  <thead className="border-b-2 border-border bg-card font-heading font-black text-foreground uppercase">
-                    <tr>
-                      <th className="p-3">Data Field</th>
-                      <th className="p-3">Purpose</th>
-                      <th className="p-3">Transmission</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y-2 divide-border font-mono text-[11px]">
-                    <tr>
-                      <td className="p-3 font-bold text-foreground">
-                        Attacker Source IP &amp; Port
-                      </td>
-                      <td className="p-3 text-foreground/80">
-                        Triggering nftables sub-0.2ms packet drops and sharing
-                        global reputation.
-                      </td>
-                      <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">
-                        Encrypted mTLS
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-foreground">
-                        Attack Signature (e.g. SQLi/LFI)
-                      </td>
-                      <td className="p-3 text-foreground/80">
-                        Categorizing malicious HTTP requests intercepted by
-                        WAF/honeypot.
-                      </td>
-                      <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">
-                        Encrypted mTLS
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-foreground">
-                        FIM File Hash &amp; Permissions
-                      </td>
-                      <td className="p-3 text-foreground/80">
-                        Detecting unauthorized <code>.env</code> file permission
-                        drift or webshell creation.
-                      </td>
-                      <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">
-                        Hash Only (No Content)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 font-bold text-foreground">
-                        Node Health (CPU, RAM, Disk)
-                      </td>
-                      <td className="p-3 text-foreground/80">
-                        Monitoring node responsiveness and alerting on daemon
-                        crashes or OOM.
-                      </td>
-                      <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">
-                        Encrypted mTLS
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="rounded-base border-2 border-emerald-500/50 bg-emerald-500/10 p-3.5 text-xs text-foreground/90">
-                <div className="flex items-center gap-2 font-bold text-emerald-700 dark:text-emerald-400">
-                  <CheckCircle2 className="size-4 shrink-0" />
-                  <span>Important Privacy Guarantee:</span>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="rounded-base border-2 border-emerald-500/50 bg-emerald-500/10 p-4">
+                  <h4 className="flex items-center gap-2 font-heading text-xs font-black text-emerald-800 dark:text-emerald-300 uppercase">
+                    <CheckCircle2 className="size-4 shrink-0" />
+                    <span>Data yang Diproses (Hanya Metadata):</span>
+                  </h4>
+                  <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-foreground/85 leading-relaxed">
+                    <li>Alamat IP penyerang yang terdeteksi melakukan brute force / exploit injection.</li>
+                    <li>Klasifikasi insiden (misal: <code>SQLI_BLOCKED</code>, <code>SSH_BRUTE_FORCE</code>).</li>
+                    <li>Timestamp waktu kejadian dan durasi pemblokiran nftables.</li>
+                    <li>ID Node acak (UUID v4) dan versi daemon untuk keperluan sinkronisasi ruleset.</li>
+                  </ul>
                 </div>
-                <p className="mt-1">
-                  Pasax Sentinel never reads or transmits database values,
-                  customer personal data, PHP session data, or cleartext secret
-                  keys from <code>.env</code> files. File Integrity Monitoring
-                  hashes paths and checks Linux file permission octals (e.g.
-                  enforcing <code>0600</code>) without dumping file contents.
-                </p>
+
+                <div className="rounded-base border-2 border-rose-500/50 bg-rose-500/10 p-4">
+                  <h4 className="flex items-center gap-2 font-heading text-xs font-black text-rose-800 dark:text-rose-300 uppercase">
+                    <AlertTriangle className="size-4 shrink-0" />
+                    <span>Data yang TIDAK PERNAH Disentuh:</span>
+                  </h4>
+                  <ul className="mt-2 list-inside list-disc space-y-1 text-xs text-foreground/85 leading-relaxed">
+                    <li>Isi database, tabel MySQL/PostgreSQL, atau baris data pelanggan.</li>
+                    <li>Kredensial login pengguna sah, token sesi cookie, atau auth header.</li>
+                    <li>Body request HTTP yang valid milik pengunjung sah situs Anda.</li>
+                    <li>Kunci privat SSH, file sertifikat SSL internal, atau environment variables (<code>.env</code>).</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </section>
@@ -279,27 +216,16 @@ export default function PrivacyPolicyPage() {
                 3
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Account &amp; Dashboard Data
+                Arsitektur Zero-Knowledge &amp; Kriptografi mTLS 1.3
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
-              <p>When you create an account on Pasax Cloud SOC:</p>
-              <ul className="list-inside list-disc space-y-2 pl-2 font-medium">
-                <li>
-                  <strong>Authentication Credentials:</strong> Your email
-                  address and cryptographically salted password hash
-                  (Argon2id/bcrypt). We never store cleartext passwords.
-                </li>
-                <li>
-                  <strong>API Tokens:</strong> Node pairing tokens and secret
-                  bearer keys are stored in encrypted form using AES-256-GCM.
-                </li>
-                <li>
-                  <strong>Session Cookies:</strong> Strictly necessary HTTP-only
-                  authentication cookies to maintain your login session. We do
-                  not use third-party tracking cookies or advertising cookies.
-                </li>
-              </ul>
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
+              <p>
+                Seluruh inspeksi regular expression, parsing Abstract Syntax Tree (AST) webshell, dan verifikasi hash inotify berjalan lokal 100% pada CPU server Anda. Tidak ada data yang dikirimkan ke cloud pihak ketiga untuk diproses atau di-inferensikan.
+              </p>
+              <p>
+                Koneksi antara VPS node dan pusat agregasi ancaman Pasax diamankan dengan Mutual Transport Layer Security (mTLS) berbasis cipher suites modern TLS 1.3 (<code>TLS_AES_256_GCM_SHA384</code>) dengan autentikasi sertifikat dua arah untuk mencegah serangan Man-in-the-Middle (MitM).
+              </p>
             </div>
           </section>
 
@@ -310,153 +236,82 @@ export default function PrivacyPolicyPage() {
                 4
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Data Retention &amp; Deletion
+                Kebijakan Retensi &amp; Penghapusan Data
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-3 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                Security telemetry is inherently ephemeral. We apply automated
-                rolling retention windows:
+                Kami menerapkan retensi otomatis yang ketat:
               </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                  <span className="font-mono text-xs font-black text-foreground uppercase">
-                    Real-time Threat Events
-                  </span>
-                  <p className="mt-1 text-xs text-foreground/75">
-                    Dropped packet counters and attack logs are retained on a
-                    rolling <strong>30 to 90 days</strong> schedule, after which
-                    they are permanently purged.
-                  </p>
-                </div>
-                <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                  <span className="font-mono text-xs font-black text-foreground uppercase">
-                    Node Metadata &amp; Account
-                  </span>
-                  <p className="mt-1 text-xs text-foreground/75">
-                    De-registering a node permanently removes its pairing token
-                    and associated heartbeat logs within{" "}
-                    <strong>24 hours</strong>.
-                  </p>
-                </div>
-              </div>
+              <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
+                <li>Log insiden IP penyerang pada telemetry broker secara otomatis kedaluwarsa dan dihapus permanen dalam waktu <strong>30 hari</strong>.</li>
+                <li>Daftar IP ban aktif di level nftables node lokal memiliki masa karantina yang dapat Anda sesuaikan sendiri di file konfigurasi (default: 3600 detik).</li>
+                <li>Jika Anda menghapus instalasi <code>pasax-sentinel</code> atau menonaktifkan API token di konsol web, seluruh histori telemetri node terkait akan langsung di-purge dari sistem kami.</li>
+              </ul>
             </div>
           </section>
 
           {/* Section 5 */}
-          <section className="rounded-base border-2 border-border bg-background p-6 shadow-[4px_4px_0px_0px_var(--border)] md:p-8">
+          <section className="rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)] md:p-8">
             <div className="flex items-center gap-3">
               <span className="flex size-7 items-center justify-center rounded-base border-2 border-border bg-main font-mono text-sm font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
                 5
               </span>
               <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Global Threat Intelligence Sharing
+                Kepatuhan Regulasi &amp; Kontak Data Protection Officer
               </h2>
             </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
+            <div className="mt-4 max-w-3xl space-y-4 text-sm leading-relaxed text-foreground/85 text-pretty">
               <p>
-                To provide collective fleet immunity, Pasax computes an
-                aggregated reputation score of malicious IP addresses (e.g.
-                repeated brute-force bots and known CVE exploit scanners).
-              </p>
-              <p>
-                Shared threat indicators are strictly anonymized: no information
-                identifying your company, server domain name, or origin internal
-                network is ever disclosed to other nodes or third parties.
-              </p>
-            </div>
-          </section>
-
-          {/* Section 6 */}
-          <section className="rounded-base border-2 border-border bg-background p-6 shadow-[4px_4px_0px_0px_var(--border)] md:p-8">
-            <div className="flex items-center gap-3">
-              <span className="flex size-7 items-center justify-center rounded-base border-2 border-border bg-main font-mono text-sm font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
-                6
-              </span>
-              <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Your Rights (GDPR &amp; Global Regulations)
-              </h2>
-            </div>
-            <div className="mt-4 space-y-3 text-sm leading-relaxed text-foreground/85">
-              <p>
-                Under applicable privacy laws (including GDPR and CCPA), you
-                have the right to:
-              </p>
-              <ul className="list-inside list-disc space-y-1.5 pl-2 font-medium">
-                <li>
-                  Request an export of all telemetry associated with your
-                  account.
-                </li>
-                <li>
-                  Request immediate deletion of your account and paired node
-                  histories.
-                </li>
-                <li>
-                  Audit the open-source codebase of <code>pasax-sentinel</code>{" "}
-                  and <code>pasax/shield</code> to verify our compliance claims
-                  independently.
-                </li>
-              </ul>
-            </div>
-          </section>
-
-          {/* Section 7 */}
-          <section className="rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)] md:p-8">
-            <div className="flex items-center gap-3">
-              <span className="flex size-7 items-center justify-center rounded-base border-2 border-border bg-main font-mono text-sm font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
-                7
-              </span>
-              <h2 className="font-heading text-xl font-black text-foreground sm:text-2xl">
-                Contact &amp; Vulnerability Disclosure
-              </h2>
-            </div>
-            <div className="mt-4 space-y-4 text-sm leading-relaxed text-foreground/85">
-              <p>
-                If you have questions regarding this Privacy Policy, wish to
-                exercise data subject rights, or need to disclose a security
-                vulnerability responsibly, please contact our security team:
+                Jika Anda memiliki pertanyaan spesifik terkait pemrosesan telemetri, permintaan penghapusan data (right to erasure), atau audit kepatuhan regulasi data pribadi, silakan hubungi tim keamanan kami:
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs font-bold">
                 <a
-                  href="mailto:security@pasax.is-a.dev"
+                  href="mailto:privacy@pasax.is-a.dev"
                   className={cn(
                     buttonVariants({ variant: "neutral", size: "sm" }),
                     "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
                   )}
                 >
-                  <span>security@pasax.is-a.dev</span>
+                  <span>privacy@pasax.is-a.dev</span>
                 </a>
-                <a
-                  href="https://github.com/pasax-dev"
-                  target="_blank"
-                  rel="noreferrer"
+                <Link
+                  href="/terms"
                   className={cn(
                     buttonVariants({ variant: "outline", size: "sm" }),
-                    "flex items-center gap-1.5 border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
+                    "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
                   )}
                 >
-                  <span>GitHub Security Advisory</span>
-                  <ExternalLink className="size-3" />
-                </a>
+                  <span>Lihat Terms of Service</span>
+                </Link>
+                <Link
+                  href="/faq"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    "border-2 border-border shadow-[2px_2px_0px_0px_var(--border)]"
+                  )}
+                >
+                  <span>Buka FAQ</span>
+                </Link>
               </div>
             </div>
           </section>
         </div>
 
-        {/* Bottom Navigation */}
+        {/* Bottom Cross Navigation */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t-2 border-border pt-6 font-heading text-sm font-bold">
           <Link
             href="/terms"
             className="inline-flex items-center gap-1.5 text-foreground hover:text-main hover:underline"
           >
-            <span>Review Terms of Service</span>
+            <span>Baca Ketentuan Layanan (Terms of Service)</span>
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href="/docs"
+            href="/faq"
             className="inline-flex items-center gap-1.5 text-foreground hover:text-main hover:underline"
           >
-            <span>Read Security Documentation</span>
+            <span>Lihat Jawaban Pertanyaan Umum (FAQ)</span>
             <ArrowRight className="size-4" />
           </Link>
         </div>

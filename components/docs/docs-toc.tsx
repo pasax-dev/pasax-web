@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { DocHeading } from "@/lib/docs-service"
-import { List, ArrowUp } from "lucide-react"
+import { AlignLeft, ArrowUp, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function DocsToc({
@@ -39,16 +39,16 @@ export function DocsToc({
   return (
     <aside
       className={cn(
-        "sticky top-16 hidden h-[calc(100vh-4rem)] w-64 shrink-0 overflow-y-auto border-l-2 border-border bg-background/50 p-5 text-xs xl:block",
+        "sticky top-12 hidden h-[calc(100vh-3rem)] w-64 shrink-0 overflow-y-auto border-s border-lp-line bg-lp-paper/60 p-6 text-xs xl:block",
         className
       )}
     >
-      <div className="mb-4 flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-3 py-1.5 font-heading text-xs font-black tracking-wider text-foreground uppercase shadow-[2px_2px_0px_0px_var(--border)]">
-        <List className="size-3.5 stroke-[2.5] text-foreground" />
-        <span>Daftar Isi</span>
+      <div className="mb-3.5 flex items-center gap-2 font-mono text-[11px] font-semibold tracking-wider text-lp-ink/70 uppercase">
+        <AlignLeft className="size-3.5 text-lp-ink/50" />
+        <span>Di Halaman Ini</span>
       </div>
 
-      <nav className="space-y-1 border-l-2 border-border/40 pl-2">
+      <nav className="space-y-1 border-s border-lp-line ps-3">
         {headings.map((h) => {
           const isActive = activeId === h.id
           return (
@@ -56,11 +56,11 @@ export function DocsToc({
               key={h.id}
               href={`#${h.id}`}
               className={cn(
-                "line-clamp-1 block rounded-base px-2 py-1 text-xs transition-all",
-                h.level === 3 ? "pl-3 text-[11px]" : "",
+                "line-clamp-1 block py-1 text-xs transition-colors",
+                h.level === 3 ? "ps-2.5 text-[11px]" : "",
                 isActive
-                  ? "border border-border bg-main font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)]"
-                  : "font-bold text-foreground/85 hover:bg-secondary-background hover:text-foreground"
+                  ? "-ms-[13px] ps-[11px] border-s-2 border-lp-orange dark:border-lp-yellow font-medium text-lp-orange dark:text-lp-yellow"
+                  : "text-lp-ink/65 hover:text-lp-ink"
               )}
             >
               {h.text}
@@ -69,12 +69,23 @@ export function DocsToc({
         })}
       </nav>
 
-      <div className="mt-8 border-t-2 border-border pt-4">
+      {/* Fumadocs-style TOC footer widget */}
+      <div className="mt-8 space-y-3 border-t border-lp-line pt-4">
+        <div className="rounded-lg border border-lp-line bg-lp-paper-2/50 p-2.5">
+          <div className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-lp-orange dark:text-lp-yellow uppercase">
+            <Sparkles className="size-3" />
+            <span>Pasax Trinity Defense</span>
+          </div>
+          <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/70">
+            WAF PHP, Linux Kernel nftables, dan Cloud Console tersinkronisasi.
+          </p>
+        </div>
+
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex cursor-pointer items-center gap-1.5 font-mono text-[11px] font-bold text-foreground hover:underline"
+          className="flex cursor-pointer items-center gap-1.5 font-mono text-[11px] text-lp-ink/60 hover:text-lp-ink transition-colors"
         >
-          <ArrowUp className="size-3.5 stroke-[2.5]" />
+          <ArrowUp className="size-3.5" />
           <span>Kembali ke atas</span>
         </button>
       </div>

@@ -26,12 +26,12 @@ export function SearchTrigger({
         aria-label="Cari dokumentasi (⌘K)"
         title="Cari dokumentasi & fitur (⌘K)"
         className={cn(
-          "flex size-9 items-center justify-center rounded-base border-2 border-border bg-secondary-background text-foreground shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none",
+          "flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink hover:bg-lp-paper-2 transition-colors cursor-pointer",
           className
         )}
         {...props}
       >
-        <Search className="size-4" />
+        <Search className="size-3.5 text-lp-ink/70" />
       </button>
     )
   }
@@ -42,16 +42,16 @@ export function SearchTrigger({
         type="button"
         onClick={openSearch}
         className={cn(
-          "group flex h-9 w-full items-center justify-between rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none",
+          "group flex h-9 w-full items-center justify-between rounded-lg border border-lp-line bg-lp-paper-2/40 px-3 font-mono text-xs text-lp-ink/75 hover:bg-lp-paper-2 hover:text-lp-ink transition-colors cursor-pointer",
           className
         )}
         {...props}
       >
-        <span className="flex items-center gap-2 truncate text-foreground/80 group-hover:text-foreground">
-          <Search className="size-3.5 shrink-0 text-foreground" />
+        <span className="flex items-center gap-2 truncate">
+          <Search className="size-3.5 shrink-0 text-lp-ink/50 group-hover:text-lp-ink" />
           <span className="truncate">{placeholder}</span>
         </span>
-        <kbd className="shrink-0 rounded border border-border bg-secondary-background px-1.5 py-0.5 font-mono text-[10px] font-bold text-foreground shadow-[1px_1px_0px_0px_var(--border)]">
+        <kbd className="shrink-0 rounded border border-lp-line bg-lp-paper px-1.5 py-0.5 font-mono text-[10px] text-lp-ink/60">
           ⌘K
         </kbd>
       </button>
@@ -64,15 +64,15 @@ export function SearchTrigger({
       type="button"
       onClick={openSearch}
       className={cn(
-        "group inline-flex items-center gap-2 rounded-base border-2 border-border bg-secondary-background px-3 py-1.5 font-mono text-xs font-bold text-foreground shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none",
+        "group inline-flex items-center gap-2 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs text-lp-ink/80 hover:bg-lp-paper-2 hover:text-lp-ink transition-colors cursor-pointer",
         className
       )}
       title="Cari dokumentasi & fitur (⌘K)"
       {...props}
     >
-      <Search className="size-3.5 text-foreground transition-transform group-hover:scale-110" />
-      <span className="hidden md:inline">Cari...</span>
-      <kbd className="hidden rounded border border-border bg-background px-1 py-0.5 font-mono text-[9px] font-bold text-foreground shadow-[1px_1px_0px_0px_var(--border)] sm:inline-flex">
+      <Search className="size-3.5 text-lp-ink/60 transition-transform group-hover:scale-105" />
+      <span className="hidden sm:inline">{placeholder || "Cari..."}</span>
+      <kbd className="hidden rounded border border-lp-line bg-lp-paper px-1.5 py-0.5 font-mono text-[9px] text-lp-ink/60 sm:inline-flex">
         ⌘K
       </kbd>
     </button>

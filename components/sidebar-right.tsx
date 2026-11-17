@@ -21,8 +21,8 @@ import { PlusIcon } from "lucide-react"
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Roby Firmansyah",
+    email: "admin@pasax.dev",
     avatar: "/avatars/shadcn.jpg",
   },
   calendars: [

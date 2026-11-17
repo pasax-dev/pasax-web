@@ -141,35 +141,35 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
     headings.push({ id, text, level })
   }
 
-  // Parse GitHub Callout blockquotes
+  // Parse GitHub Callout blockquotes into Fumadocs Callout structure
   markdownBody = markdownBody
     .replace(
       />\s*\[!NOTE\]\s*\n((?:>.*(?:\n|$))*)/g,
-      '<div class="callout callout-note"><div class="callout-title">ℹ️ Catatan Penting</div><div class="callout-body">\n$1\n</div></div>'
+      '<div class="callout callout-note"><div class="callout-title"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Catatan Penting</span></div><div class="callout-body">\n$1\n</div></div>'
     )
     .replace(
       />\s*\[!TIP\]\s*\n((?:>.*(?:\n|$))*)/g,
-      '<div class="callout callout-tip"><div class="callout-title">💡 Tips Keamanan</div><div class="callout-body">\n$1\n</div></div>'
+      '<div class="callout callout-tip"><div class="callout-title"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><span>Tips Keamanan</span></div><div class="callout-body">\n$1\n</div></div>'
     )
     .replace(
       />\s*\[!IMPORTANT\]\s*\n((?:>.*(?:\n|$))*)/g,
-      '<div class="callout callout-important"><div class="callout-title">⚡ Perhatian Khusus</div><div class="callout-body">\n$1\n</div></div>'
+      '<div class="callout callout-important"><div class="callout-title"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span>Perhatian Khusus</span></div><div class="callout-body">\n$1\n</div></div>'
     )
     .replace(
       />\s*\[!WARNING\]\s*\n((?:>.*(?:\n|$))*)/g,
-      '<div class="callout callout-warning"><div class="callout-title">⚠️ Peringatan</div><div class="callout-body">\n$1\n</div></div>'
+      '<div class="callout callout-warning"><div class="callout-title"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>Peringatan</span></div><div class="callout-body">\n$1\n</div></div>'
     )
     .replace(
       />\s*\[!CAUTION\]\s*\n((?:>.*(?:\n|$))*)/g,
-      '<div class="callout callout-caution"><div class="callout-title">🛑 Risiko Keamanan Tinggi</div><div class="callout-body">\n$1\n</div></div>'
+      '<div class="callout callout-caution"><div class="callout-title"><svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Risiko Keamanan Tinggi</span></div><div class="callout-body">\n$1\n</div></div>'
     )
 
-  // Configure marked renderer for headings with IDs
+  // Configure marked renderer for headings with IDs and hover anchor links
   const renderer = new marked.Renderer()
   renderer.heading = ({ text, depth }: { text: string; depth: number }) => {
     const cleanText = text.replace(/<[^>]+>/g, "").trim()
     const id = slugify(cleanText)
-    return `<h${depth} id="${id}" class="group flex items-center scroll-mt-24"><a href="#${id}" class="no-underline text-inherit hover:underline">${text}</a><span class="ml-2 opacity-0 group-hover:opacity-100 text-foreground/50 font-mono text-sm">#</span></h${depth}>`
+    return `<h${depth} id="${id}" class="group flex items-center scroll-mt-20"><a href="#${id}" class="no-underline text-inherit hover:underline">${text}</a><a href="#${id}" class="ms-2 opacity-0 group-hover:opacity-100 text-lp-ink/40 hover:text-lp-ink font-mono text-sm transition-opacity" aria-label="Tautan ke bagian ${cleanText}">#</a></h${depth}>`
   }
 
   // Convert markdown to HTML
