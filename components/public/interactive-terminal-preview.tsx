@@ -1,19 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  ShieldAlert,
-  Flame,
-  CheckCircle2,
-  Terminal,
-  Activity,
-  Cpu,
-  Lock,
-  ArrowUpRight,
-  ShieldCheck,
-  AlertTriangle,
-} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Flame, Activity, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface ThreatEvent {
@@ -34,7 +22,8 @@ const INITIAL_EVENTS: ThreatEvent[] = [
     type: "FIM",
     ip: "192.168.1.104",
     target: "/var/www/html/.env",
-    action: "Unauthorized write attempt detected -> Auto-remediated permissions to 0600",
+    action:
+      "Unauthorized write attempt detected -> Auto-remediated permissions to 0600",
     latency: "11ms",
     status: "locked",
   },
@@ -54,17 +43,18 @@ const INITIAL_EVENTS: ThreatEvent[] = [
     type: "HONEYPOT",
     ip: "45.154.255.8",
     target: "/.git/config",
-    action: "Honeypot hit by automated scanner -> Global fleet blacklist broadcasted",
+    action:
+      "Honeypot hit by automated scanner -> Global fleet blacklist broadcasted",
     latency: "1.2ms",
     status: "mitigated",
   },
   {
     id: "evt-4",
-    time: "19:14:52",
+    time: "19:15:01",
     type: "KERNEL",
-    ip: "91.240.118.232",
-    target: "Port 80 [TCP SYN Flood]",
-    action: "Rate-limit violated (1,400 req/s) -> Dropped at OSI Layer 3",
+    ip: "103.145.13.22",
+    target: "SYN Flood [120k pps]",
+    action: "Volumetric SYN flood mitigated -> Wire-speed drop in kernel-space",
     latency: "0.08ms",
     status: "blocked",
   },
@@ -72,31 +62,28 @@ const INITIAL_EVENTS: ThreatEvent[] = [
 
 export function InteractiveTerminalPreview() {
   const [events, setEvents] = React.useState<ThreatEvent[]>(INITIAL_EVENTS)
+  const [totalBlocked, setTotalBlocked] = React.useState(18429)
   const [simulating, setSimulating] = React.useState(false)
-  const [totalBlocked, setTotalBlocked] = React.useState(42910)
 
   const handleSimulate = () => {
     if (simulating) return
     setSimulating(true)
 
-    const randomIps = [
-      "194.26.29.112",
-      "103.145.12.89",
-      "185.191.171.4",
-      "77.247.110.15",
-    ]
-    const randomIp = randomIps[Math.floor(Math.random() * randomIps.length)]
-
     setTimeout(() => {
+      const randomIP = `${Math.floor(Math.random() * 200 + 20)}.${Math.floor(
+        Math.random() * 250
+      )}.${Math.floor(Math.random() * 250)}.${Math.floor(Math.random() * 250)}`
+
       const now = new Date()
       const timeStr = now.toTimeString().split(" ")[0]
+
       const newEvent: ThreatEvent = {
-        id: "evt-" + Date.now(),
+        id: `evt-${Date.now()}`,
         time: timeStr,
         type: "KERNEL",
-        ip: randomIp,
-        target: "POST /admin/webshell.php",
-        action: "Signature 'b374k' detected -> nftables kernel drop + node quarantined",
+        ip: randomIP,
+        target: "Port 443 [POST /api/v1/auth]",
+        action: "Stepped login threshold exceeded -> Dynamic nftables drop",
         latency: "0.14ms",
         status: "blocked",
       }
@@ -108,22 +95,22 @@ export function InteractiveTerminalPreview() {
   }
 
   return (
-    <div className="w-full rounded-base border-2 border-border bg-secondary-background shadow-shadow overflow-hidden">
+    <div className="w-full overflow-hidden rounded-2xl border border-border/50 bg-card/40 shadow-xl backdrop-blur-md">
       {/* Console Top Header */}
-      <div className="flex flex-wrap items-center justify-between border-b-2 border-border bg-background px-4 py-3 gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/40 bg-muted/20 px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <div className="size-3 rounded-full border border-border bg-red-400" />
-            <div className="size-3 rounded-full border border-border bg-amber-400" />
-            <div className="size-3 rounded-full border border-border bg-green-400" />
+            <div className="size-3 rounded-full bg-red-500/80" />
+            <div className="size-3 rounded-full bg-amber-500/80" />
+            <div className="size-3 rounded-full bg-emerald-500/80" />
           </div>
-          <div className="h-4 w-px bg-border hidden sm:block" />
+          <div className="hidden h-4 w-px bg-border/40 sm:block" />
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold text-foreground">
+            <span className="font-mono text-xs font-semibold text-foreground">
               node-sgp-01.mesh.pasax
             </span>
-            <span className="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 font-mono text-[10px] font-bold text-green-600 dark:text-green-400 border border-green-500/30">
-              <span className="size-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-500">
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
               ARMORED
             </span>
           </div>
@@ -132,25 +119,24 @@ export function InteractiveTerminalPreview() {
         <div className="flex items-center gap-2">
           <Button
             size="xs"
-            variant="default"
             onClick={handleSimulate}
             disabled={simulating}
-            className="font-mono font-bold text-xs"
+            className="rounded-full bg-foreground font-mono text-xs font-medium text-background transition-all hover:bg-foreground/90"
           >
-            <Flame className="size-3 text-red-600 animate-bounce" />
+            <Flame className="size-3 animate-pulse text-rose-500" />
             {simulating ? "Injecting Attack..." : "Simulate Live Attack"}
           </Button>
         </div>
       </div>
 
       {/* Grid Content: Left Live Stream, Right Node Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-border">
+      <div className="grid grid-cols-1 divide-y divide-border/40 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
         {/* Left Side: Live Intercept Stream */}
-        <div className="lg:col-span-2 p-4 sm:p-5">
+        <div className="p-4 sm:p-5 lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="size-4 text-main" />
-              <h3 className="font-heading text-sm font-bold uppercase tracking-wider text-foreground">
+              <Activity className="size-4 text-sky-500" />
+              <h3 className="font-sans text-xs font-semibold tracking-wider text-muted-foreground uppercase">
                 Autonomous Defense Activity Stream
               </h3>
             </div>
@@ -163,40 +149,44 @@ export function InteractiveTerminalPreview() {
             {events.map((evt) => (
               <div
                 key={evt.id}
-                className="rounded-base border-2 border-border bg-background p-3 transition-all hover:translate-x-0.5"
+                className="rounded-xl border border-border/40 bg-muted/20 p-3 transition-colors hover:border-border hover:bg-muted/30"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2 font-mono text-xs">
                     <span className="text-muted-foreground">{evt.time}</span>
                     <span
-                      className={`font-bold px-1.5 py-0.2 rounded border text-[10px] ${
+                      className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${
                         evt.type === "FIM"
-                          ? "bg-purple-100 text-purple-800 border-purple-400 dark:bg-purple-950 dark:text-purple-300"
+                          ? "border-purple-500/30 bg-purple-500/10 text-purple-500"
                           : evt.type === "KERNEL"
-                          ? "bg-red-100 text-red-800 border-red-400 dark:bg-red-950 dark:text-red-300"
-                          : "bg-amber-100 text-amber-800 border-amber-400 dark:bg-amber-950 dark:text-amber-300"
+                            ? "border-rose-500/30 bg-rose-500/10 text-rose-500"
+                            : "border-amber-500/30 bg-amber-500/10 text-amber-500"
                       }`}
                     >
                       {evt.type}
                     </span>
-                    <span className="font-bold text-foreground">{evt.ip}</span>
+                    <span className="font-semibold text-foreground">
+                      {evt.ip}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <span className="font-mono text-[11px] text-muted-foreground">
                       Remediated in:
                     </span>
-                    <span className="font-mono text-xs font-bold text-green-600 dark:text-green-400">
+                    <span className="font-mono text-xs font-bold text-emerald-500">
                       {evt.latency}
                     </span>
                   </div>
                 </div>
 
                 <div className="mt-1.5 font-mono text-xs text-foreground/90">
-                  <span className="text-muted-foreground font-semibold">Target: </span>
-                  <code className="text-foreground font-bold">{evt.target}</code>
+                  <span className="text-muted-foreground">Target: </span>
+                  <code className="font-medium text-foreground">
+                    {evt.target}
+                  </code>
                 </div>
 
-                <div className="mt-1 text-xs font-medium text-muted-foreground">
+                <div className="mt-1 text-xs text-muted-foreground">
                   {evt.action}
                 </div>
               </div>
@@ -205,36 +195,48 @@ export function InteractiveTerminalPreview() {
         </div>
 
         {/* Right Side: Telemetry Gauges */}
-        <div className="p-4 sm:p-5 bg-background/50 flex flex-col justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 bg-muted/10 p-4 sm:p-5">
           <div>
-            <h4 className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">
+            <h4 className="mb-3 font-sans text-xs font-semibold tracking-wider text-muted-foreground uppercase">
               Host Telemetry
             </h4>
 
             <div className="grid grid-cols-2 gap-2.5">
-              <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                <div className="text-[11px] font-mono text-muted-foreground">Sentinel RAM</div>
-                <div className="mt-1 font-mono text-xl font-black text-foreground">
-                  18.2 <span className="text-xs font-normal text-muted-foreground">MB</span>
+              <div className="rounded-xl border border-border/40 bg-card/60 p-3">
+                <div className="font-mono text-[11px] text-muted-foreground">
+                  Sentinel RAM
                 </div>
-                <div className="mt-1 text-[10px] text-green-600 dark:text-green-400 font-bold">
+                <div className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
+                  18.2{" "}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    MB
+                  </span>
+                </div>
+                <div className="mt-1 text-[10px] font-medium text-emerald-500">
                   &lt; 0.2% total memory
                 </div>
               </div>
 
-              <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                <div className="text-[11px] font-mono text-muted-foreground">Filter Latency</div>
-                <div className="mt-1 font-mono text-xl font-black text-foreground">
-                  0.18 <span className="text-xs font-normal text-muted-foreground">ms</span>
+              <div className="rounded-xl border border-border/40 bg-card/60 p-3">
+                <div className="font-mono text-[11px] text-muted-foreground">
+                  Filter Latency
                 </div>
-                <div className="mt-1 text-[10px] text-green-600 dark:text-green-400 font-bold">
+                <div className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
+                  0.18{" "}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    ms
+                  </span>
+                </div>
+                <div className="mt-1 text-[10px] font-medium text-emerald-500">
                   Kernel-space drop
                 </div>
               </div>
 
-              <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                <div className="text-[11px] font-mono text-muted-foreground">Active Drops</div>
-                <div className="mt-1 font-mono text-xl font-black text-emerald-600 dark:text-emerald-400">
+              <div className="rounded-xl border border-border/40 bg-card/60 p-3">
+                <div className="font-mono text-[11px] text-muted-foreground">
+                  Active Drops
+                </div>
+                <div className="mt-1 font-mono text-xl font-bold text-emerald-500 tabular-nums">
                   {totalBlocked.toLocaleString()}
                 </div>
                 <div className="mt-1 text-[10px] text-muted-foreground">
@@ -242,27 +244,30 @@ export function InteractiveTerminalPreview() {
                 </div>
               </div>
 
-              <div className="rounded-base border-2 border-border bg-secondary-background p-3">
-                <div className="text-[11px] font-mono text-muted-foreground">Watched Files</div>
-                <div className="mt-1 font-mono text-xl font-black text-foreground">
+              <div className="rounded-xl border border-border/40 bg-card/60 p-3">
+                <div className="font-mono text-[11px] text-muted-foreground">
+                  Watched Files
+                </div>
+                <div className="mt-1 font-mono text-xl font-bold text-foreground tabular-nums">
                   14,280
                 </div>
-                <div className="mt-1 text-[10px] text-green-600 dark:text-green-400 font-bold">
+                <div className="mt-1 text-[10px] font-medium text-emerald-500">
                   inotify active
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="rounded-base border-2 border-border bg-main/20 p-3">
+          <div className="rounded-xl border border-sky-500/20 bg-sky-500/10 p-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="size-4 text-main shrink-0" />
-              <span className="font-heading text-xs font-bold text-foreground">
+              <ShieldCheck className="size-4 shrink-0 text-sky-500" />
+              <span className="font-sans text-xs font-semibold text-foreground">
                 Zero Open Ports Active
               </span>
             </div>
-            <p className="mt-1 text-xs text-foreground/80 leading-relaxed font-base">
-              Daemon connects via outbound TLS 1.3 mTLS tunnels. No inbound ports are opened on your server firewall.
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+              Daemon connects via outbound TLS 1.3 mTLS tunnels. No inbound
+              ports are opened on your server firewall.
             </p>
           </div>
         </div>

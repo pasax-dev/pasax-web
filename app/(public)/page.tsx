@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { siteConfig } from "@/config/site"
-import { LiveTelemetryTicker } from "@/components/public/live-telemetry-ticker"
+import { Figure } from "@/components/fumadocs/figure"
 import {
   HeroSection,
   TelemetrySection,
@@ -14,6 +14,7 @@ import {
   FaqSection,
   CtaSection,
 } from "./_components"
+import { LiveTelemetryTicker } from "@/components/public/live-telemetry-ticker"
 
 export const metadata: Metadata = {
   title: siteConfig.tagline,
@@ -52,42 +53,62 @@ export const metadata: Metadata = {
 
 export default function PublicLandingPage() {
   return (
-    <div className="flex flex-col gap-24 pb-20 w-full max-w-full">
-      {/* 1. Hero Section */}
+    <div className="flex w-full max-w-full flex-col">
+      {/* 1. Hero Section (Fumadocs 2-column grid + Glitch + Command + Stage) */}
       <HeroSection />
 
       {/* Live Telemetry Status Ticker */}
       <LiveTelemetryTicker />
 
       {/* 2. Interactive Telemetry & Threat Radar Demo */}
-      <TelemetrySection />
+      <Figure id="telemetry" status="02: interactive telemetry & radar active">
+        <TelemetrySection />
+      </Figure>
 
-      {/* 2.5. VPS Reality Check (Before vs After) */}
-      <VpsComparisonSection />
+      {/* 3. VPS Reality Check (Before vs After) */}
+      <Figure id="vps-comparison" status="03: unmanaged vs armored vps">
+        <VpsComparisonSection />
+      </Figure>
 
-      {/* 3. Triple Defense Architecture */}
-      <ArchitectureSection />
+      {/* 4. Triple Defense Architecture */}
+      <Figure id="architecture" status="04: 3 defense layers active">
+        <ArchitectureSection />
+      </Figure>
 
-      {/* 3.5. Production Workloads & Use Cases */}
-      <WorkloadsSection />
+      {/* 5. Production Workloads & Use Cases */}
+      <Figure id="workloads" status="05: production workloads">
+        <WorkloadsSection />
+      </Figure>
 
-      {/* 4. Core Capabilities & Features Grid */}
-      <FeaturesSection />
+      {/* 6. Core Capabilities & Bento Grid powered by Illos */}
+      <Figure id="features" status="06: six defense vectors armed">
+        <FeaturesSection />
+      </Figure>
 
-      {/* 4.5. 60-Second Onboarding & VPS Deploy Steps */}
-      <DeploySection />
+      {/* 7. 60-Second Onboarding & VPS Deploy Steps */}
+      <Figure id="deploy" status="07: 60-second deploy">
+        <DeploySection />
+      </Figure>
 
-      {/* 5. Benchmark & Legacy Comparison Matrix */}
-      <ComparisonSection />
+      {/* 8. Benchmark & Legacy Comparison Matrix */}
+      <Figure id="comparison" status="08: benchmark matrix">
+        <ComparisonSection />
+      </Figure>
 
-      {/* 6. Official Documentation Portal */}
-      <DocsSection />
+      {/* 9. Official Documentation Portal */}
+      <Figure id="docs" status="09: documentation index">
+        <DocsSection />
+      </Figure>
 
-      {/* 7. Frequently Asked Questions (Accordion) */}
-      <FaqSection />
+      {/* 10. Frequently Asked Questions */}
+      <Figure id="faq" status="10: technical faq">
+        <FaqSection />
+      </Figure>
 
-      {/* 8. Bottom High-Energy CTA Banner */}
-      <CtaSection />
+      {/* 11. Bottom High-Energy CTA Banner */}
+      <Figure id="cta" status="11: get started with sentinel">
+        <CtaSection />
+      </Figure>
     </div>
   )
 }

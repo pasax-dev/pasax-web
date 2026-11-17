@@ -22,7 +22,7 @@ import {
   Sparkles,
   ChevronRight,
 } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import {
@@ -35,7 +35,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
-
+import { SearchTrigger } from "@/components/search/search-trigger"
 
 export function PublicNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
@@ -46,64 +46,62 @@ export function PublicNav() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b-2 border-border bg-background/85 backdrop-blur-md transition-colors">
-      <div className="mx-auto flex h-16 max-w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl transition-colors">
+      <div className="mx-auto flex h-14 max-w-full items-center justify-between px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         {/* Left: Brand Logo & Identifier */}
-        <Link href="/" className="group flex items-center gap-2 sm:gap-2.5">
-          <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[2px_2px_0px_0px_var(--border)] transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-card/60 backdrop-blur-sm transition-transform group-hover:scale-105">
             <Image
               src="/icon.png"
               alt="Pasax Suite Icon"
-              width={36}
-              height={36}
+              width={32}
+              height={32}
               className="size-full object-contain p-0.5"
               priority
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-heading text-lg font-black tracking-tight text-foreground">
-              PASAX<span className="text-main">.</span>
+            <span className="font-heading text-base font-bold tracking-tight text-foreground">
+              PASAX<span className="text-sky-500">.</span>
             </span>
-            <Badge
-              variant="outline"
-              className="hidden border-border bg-secondary-background/80 font-mono text-[10px] font-bold tracking-wider sm:inline-flex"
-            >
-              DEFENSE SHIELD
-            </Badge>
+            <span className="hidden items-center rounded-full border border-sky-500/30 bg-sky-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-sky-500 sm:inline-flex dark:text-sky-400">
+              FRAMEWORK
+            </span>
           </div>
         </Link>
 
-        {/* Center: ThreatEye-Inspired Rich NavigationMenu (Desktop) */}
+        {/* Center: Fumadocs Refined NavigationMenu (Desktop) */}
         <nav className="hidden items-center lg:flex">
           <NavigationMenu className="border-0 bg-transparent p-0">
             <NavigationMenuList className="gap-1">
               {/* 1. PLATFORM / PRODUCTS DROPDOWN */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-heading text-xs font-bold uppercase tracking-wider">
+                <NavigationMenuTrigger className="font-sans text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Platform
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[620px] grid-cols-12 gap-3 p-3">
+                  <div className="grid w-[600px] grid-cols-12 gap-3 rounded-2xl border border-border/50 bg-popover/95 p-3 shadow-xl backdrop-blur-xl">
                     {/* Left Featured Card */}
-                    <div className="col-span-5 flex flex-col justify-between rounded-base border-2 border-border bg-main p-4 text-main-foreground shadow-[3px_3px_0px_0px_var(--border)]">
+                    <div className="col-span-5 flex flex-col justify-between rounded-xl border border-sky-500/20 bg-gradient-to-br from-sky-500/10 via-sky-500/5 to-transparent p-4 text-foreground">
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 font-mono text-[10px] font-black uppercase tracking-wider text-foreground">
-                          <Sparkles className="size-3.5 text-foreground" />
+                        <div className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-sky-500 uppercase">
+                          <Sparkles className="size-3 text-sky-500" />
                           <span>TRINITY MESH</span>
                         </div>
-                        <h4 className="font-heading text-lg font-black text-foreground">
+                        <h4 className="font-heading text-base font-bold text-foreground">
                           Triple-Layer Defense
                         </h4>
-                        <p className="text-xs font-base text-foreground/85 leading-relaxed">
+                        <p className="text-xs leading-relaxed text-muted-foreground">
                           Synchronized immunity connecting in-app Laravel WAF,
-                          raw Go kernel packet drops, and cloud fleet SOC telemetry.
+                          raw Go kernel packet drops, and cloud fleet SOC
+                          telemetry.
                         </p>
                       </div>
 
-                      <div className="mt-4 pt-3 border-t border-border/60">
+                      <div className="mt-4 border-t border-border/40 pt-3">
                         <NavigationMenuLink
                           render={<Link href="/#architecture" />}
-                          className="inline-flex items-center gap-1.5 font-heading text-xs font-black text-foreground hover:underline p-0"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-sky-500 hover:text-sky-400"
                         >
                           <span>Explore Architecture</span>
                           <ArrowRight className="size-3.5" />
@@ -115,66 +113,76 @@ export function PublicNav() {
                     <div className="col-span-7 flex flex-col gap-1.5">
                       <NavigationMenuLink
                         render={<Link href="/docs/pasax-sentinel" />}
-                        className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
+                        className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                       >
-                        <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                          <Terminal className="size-4 text-main" />
+                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-sky-500">
+                          <Terminal className="size-4" />
                         </div>
-                        <div className="space-y-0.5 min-w-0">
+                        <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                            <span className="font-sans text-xs font-semibold text-foreground group-hover:text-sky-500">
                               pasax-sentinel
                             </span>
-                            <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
+                            <Badge
+                              variant="outline"
+                              className="h-4 border-sky-500/30 px-1 font-mono text-[9px] text-sky-500"
+                            >
                               Go 1.24
                             </Badge>
                           </div>
-                          <p className="line-clamp-2 text-[11px] text-foreground/75 leading-tight">
-                            Linux daemon for sub-0.2ms nftables drops & microsecond FIM auto-lock.
+                          <p className="text-[11px] leading-tight text-muted-foreground">
+                            Sub-0.2ms kernel packet drop &amp; FIM auto-lock.
                           </p>
                         </div>
                       </NavigationMenuLink>
 
                       <NavigationMenuLink
                         render={<Link href="/docs/pasax-secure-monitor" />}
-                        className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
+                        className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                       >
-                        <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                          <Server className="size-4 text-amber-500" />
+                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-amber-500">
+                          <Server className="size-4" />
                         </div>
-                        <div className="space-y-0.5 min-w-0">
+                        <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                            <span className="font-sans text-xs font-semibold text-foreground group-hover:text-amber-500">
                               pasax/shield
                             </span>
-                            <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
-                              Laravel Core
+                            <Badge
+                              variant="outline"
+                              className="h-4 border-amber-500/30 px-1 font-mono text-[9px] text-amber-500"
+                            >
+                              PHP WAF
                             </Badge>
                           </div>
-                          <p className="line-clamp-2 text-[11px] text-foreground/75 leading-tight">
-                            Zero-dependency PHP WAF, honeypots, and in-app webshell integrity scan.
+                          <p className="text-[11px] leading-tight text-muted-foreground">
+                            Zero-dependency Laravel application firewall.
                           </p>
                         </div>
                       </NavigationMenuLink>
 
                       <NavigationMenuLink
                         render={<Link href="/dashboard" />}
-                        className="group flex items-start gap-2.5 rounded-base border-2 border-transparent p-2.5 transition-colors hover:border-border hover:bg-secondary-background"
+                        className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                       >
-                        <div className="flex size-8 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                          <CloudCog className="size-4 text-cyan-500" />
+                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-purple-500">
+                          <CloudCog className="size-4" />
                         </div>
-                        <div className="space-y-0.5 min-w-0">
+                        <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                              Pasax Cloud SOC
+                            <span className="font-sans text-xs font-semibold text-foreground group-hover:text-purple-500">
+                              Fleet SOC Cloud
                             </span>
-                            <Badge variant="outline" className="border-border text-[9px] font-mono py-0 px-1 font-bold">
-                              Next.js 16
+                            <Badge
+                              variant="outline"
+                              className="h-4 border-purple-500/30 px-1 font-mono text-[9px] text-purple-500"
+                            >
+                              Cloud
                             </Badge>
                           </div>
-                          <p className="line-clamp-2 text-[11px] text-foreground/75 leading-tight">
-                            Fleet telemetry aggregation, collective blocklist sync, and SSL audits.
+                          <p className="text-[11px] leading-tight text-muted-foreground">
+                            Centralized telemetry, attack radar &amp; fleet
+                            rules.
                           </p>
                         </div>
                       </NavigationMenuLink>
@@ -185,75 +193,77 @@ export function PublicNav() {
 
               {/* 2. SOLUTIONS DROPDOWN */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-heading text-xs font-bold uppercase tracking-wider">
+                <NavigationMenuTrigger className="font-sans text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Solutions
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[580px] grid-cols-2 gap-2 p-3">
+                  <div className="grid w-[540px] grid-cols-2 gap-2 rounded-2xl border border-border/50 bg-popover/95 p-3 shadow-xl backdrop-blur-xl">
                     <NavigationMenuLink
                       render={<Link href="/#vps-comparison" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/20 text-main shadow-[1px_1px_0px_0px_var(--border)]">
-                        <Zap className="size-4.5" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-sky-500">
+                        <Zap className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-sky-500">
                           Linux VPS Immunity
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Sub-0.2ms kernel drops &lt;20MB RAM for any 1GB droplet.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Sub-0.2ms drops &lt;20MB RAM for any 1GB VPS.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/#features" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-purple-500/20 text-purple-600 dark:text-purple-400 shadow-[1px_1px_0px_0px_var(--border)]">
-                        <FileSearch className="size-4.5" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-purple-500">
+                        <FileSearch className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-purple-500">
                           FIM Auto-Healing
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Microsecond .env tamper detection & auto-lock to 0600.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Microsecond .env tamper detection &amp; auto-lock to
+                          0600.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/#workloads" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-border/40 p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-blue-500/20 text-blue-600 dark:text-blue-400 shadow-[1px_1px_0px_0px_var(--border)]">
-                        <Layers className="size-4.5" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-amber-500">
+                        <Layers className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-amber-500">
                           Production Web Stacks
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Hardened profiles for Nginx, Caddy, Apache & Docker hosts.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Hardened profiles for Nginx, Caddy, Apache &amp;
+                          Docker.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/#features" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-border/40 p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shadow-[1px_1px_0px_0px_var(--border)]">
-                        <Lock className="size-4.5" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-emerald-500">
+                        <Lock className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
-                          Egress Zero-Trust mTLS
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-emerald-500">
+                          Zero-Trust mTLS
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          0 open inbound ports. Completely invisible to port scanners.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          0 open inbound ports. Invisible to port scanners.
                         </p>
                       </div>
                     </NavigationMenuLink>
@@ -263,75 +273,76 @@ export function PublicNav() {
 
               {/* 3. DOCUMENTATION DROPDOWN */}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-heading text-xs font-bold uppercase tracking-wider">
+                <NavigationMenuTrigger className="font-sans text-xs font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Docs
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="grid w-[560px] grid-cols-2 gap-2 p-3">
+                  <div className="grid w-[540px] grid-cols-2 gap-2 rounded-2xl border border-border/50 bg-popover/95 p-3 shadow-xl backdrop-blur-xl">
                     <NavigationMenuLink
                       render={<Link href="/docs" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
-                        <BookOpen className="size-4.5" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-sky-500">
+                        <BookOpen className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-sky-500">
                           Docs Portal
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Handbook arsitektur keamanan, panduan instalasi &amp; referensi.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Arsitektur keamanan, panduan instalasi &amp;
+                          referensi.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/docs/pasax-secure-monitor" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                        <ShieldCheck className="size-4.5 text-main" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-amber-500">
+                        <ShieldCheck className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-amber-500">
                           pasax-secure-monitor
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          29 panduan Spatie-compliant Laravel WAF &amp; webshell scanner.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          29 panduan Spatie-compliant Laravel WAF &amp; scanner.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/docs/pasax-sentinel" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                        <Terminal className="size-4.5 text-main" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-sky-500">
+                        <Terminal className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-sky-500">
                           Sentinel Daemon
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Setup kernel nftables, service systemd &amp; konfigurasi FIM.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Setup kernel nftables, systemd &amp; FIM config.
                         </p>
                       </div>
                     </NavigationMenuLink>
 
                     <NavigationMenuLink
                       render={<Link href="/docs/api-reference/api-overview" />}
-                      className="group flex items-start gap-3 rounded-base border-2 border-transparent p-3 transition-colors hover:border-border hover:bg-secondary-background"
+                      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-muted/60"
                     >
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-card shadow-[1px_1px_0px_0px_var(--border)]">
-                        <Code2 className="size-4.5 text-main" />
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-muted/40 text-emerald-500">
+                        <Code2 className="size-4" />
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-heading text-xs font-black text-foreground group-hover:text-main">
+                      <div className="space-y-0.5">
+                        <span className="font-sans text-xs font-semibold text-foreground group-hover:text-emerald-500">
                           REST API Reference
                         </span>
-                        <p className="text-[11px] text-foreground/75 leading-tight">
-                          Headless API endpoints untuk integrasi SPA dan bot reporting.
+                        <p className="text-[11px] leading-tight text-muted-foreground">
+                          Headless API endpoints untuk integrasi SPA dan bot.
                         </p>
                       </div>
                     </NavigationMenuLink>
@@ -345,7 +356,7 @@ export function PublicNav() {
                   render={<Link href="/#comparison" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "font-heading text-xs font-bold uppercase tracking-wider"
+                    "font-sans text-xs font-medium text-muted-foreground hover:text-foreground"
                   )}
                 >
                   Benchmark
@@ -358,7 +369,7 @@ export function PublicNav() {
                   render={<Link href="/#faq" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "font-heading text-xs font-bold uppercase tracking-wider"
+                    "font-sans text-xs font-medium text-muted-foreground hover:text-foreground"
                   )}
                 >
                   FAQ
@@ -368,67 +379,53 @@ export function PublicNav() {
           </NavigationMenu>
         </nav>
 
-        {/* Right: Actions (Threat Map replaces GitHub, Theme, Sign In, Console CTA) */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5">
-          {/* Prominent Threat Map Link replacing GitHub button */}
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2">
+          {/* Global Fumadocs Search */}
+          <SearchTrigger variant="navbar" className="hidden sm:inline-flex" />
+          <SearchTrigger variant="icon" className="sm:hidden" />
+
+          {/* Prominent Threat Map Link */}
           <Link
             href="/threats-map"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "group relative hidden items-center gap-2 border-2 border-border bg-secondary-background font-heading text-xs font-black shadow-[2px_2px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5 sm:inline-flex"
-            )}
+            className="group relative hidden items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-sans text-xs font-medium text-rose-500 transition-all hover:scale-[1.02] hover:bg-rose-500/20 sm:inline-flex dark:text-rose-400"
           >
             <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-rose-600" />
-            </span>
-            <Globe2 className="size-3.5 text-rose-600 dark:text-rose-400" />
-            <span className="text-foreground">Threat Map</span>
-            <Badge
-              variant="outline"
-              className="border-rose-500/50 bg-rose-500/15 px-1 py-0 font-mono text-[9px] font-black text-rose-600 dark:text-rose-400"
-            >
-              3D LIVE
-            </Badge>
-          </Link>
-
-          {/* Compact Threat Map Icon Button for Mobile screens */}
-          <Link
-            href="/threats-map"
-            className="relative flex size-9 items-center justify-center rounded-base border-2 border-border bg-secondary-background shadow-[2px_2px_0px_0px_var(--border)] sm:hidden"
-            aria-label="Launch 3D Threat Map"
-          >
-            <Globe2 className="size-4 text-rose-600 dark:text-rose-400" />
-            <span className="absolute -top-1 -right-1 flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-400 opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
             </span>
+            <Globe2 className="size-3.5" />
+            <span>Threat Map</span>
+          </Link>
+
+          {/* Compact Threat Map Icon Button for Mobile */}
+          <Link
+            href="/threats-map"
+            className="relative flex size-8 items-center justify-center rounded-full border border-rose-500/30 bg-rose-500/10 text-rose-500 sm:hidden"
+            aria-label="Launch 3D Threat Map"
+          >
+            <Globe2 className="size-4" />
           </Link>
 
           {/* Theme Toggle */}
           <ThemeToggle size="icon-sm" />
 
-          {/* Sign In (hidden on small screens, visible on md+) */}
+          {/* Sign In */}
           <Link
             href="/login"
-            className={cn(
-              buttonVariants({ variant: "outline", size: "sm" }),
-              "hidden items-center gap-1.5 border-2 border-border bg-background font-heading font-bold shadow-[2px_2px_0px_0px_var(--border)] md:inline-flex"
-            )}
+            className="hidden items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 px-3.5 py-1 text-xs font-medium text-foreground backdrop-blur-md transition-all hover:border-border hover:bg-muted/80 md:inline-flex"
           >
             <LogIn className="size-3.5" />
             <span>Sign In</span>
           </Link>
 
-
-
-          {/* Mobile Menu Hamburger Trigger (visible on lg:hidden) */}
+          {/* Mobile Menu Hamburger Trigger */}
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon-sm"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
-            className="border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] lg:hidden"
+            className="rounded-full lg:hidden"
           >
             {mobileMenuOpen ? (
               <X className="size-4" />
@@ -441,84 +438,87 @@ export function PublicNav() {
 
       {/* Mobile Drawer Navigation (Responsive) */}
       {mobileMenuOpen && (
-        <div className="border-b-2 border-border bg-secondary-background/95 p-4 backdrop-blur-md lg:hidden">
+        <div className="border-b border-border/40 bg-background/95 p-4 backdrop-blur-xl lg:hidden">
           <div className="flex flex-col gap-2">
-            {/* Live 3D Threat Map Banner (Top in mobile drawer) */}
+            {/* Fumadocs Search in Mobile Drawer */}
+            <SearchTrigger
+              variant="sidebar"
+              placeholder="Cari dokumentasi & fitur..."
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Live 3D Threat Map Banner */}
             <Link
               href="/threats-map"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-between rounded-base border-2 border-rose-500/40 bg-rose-500/10 p-3 font-heading text-sm font-black text-rose-600 dark:text-rose-400 shadow-[2px_2px_0px_0px_var(--border)]"
+              className="flex items-center justify-between rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs font-medium text-rose-500 dark:text-rose-400"
             >
               <div className="flex items-center gap-2">
-                <span className="relative flex size-2.5">
+                <span className="relative flex size-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-500 opacity-75" />
-                  <span className="relative inline-flex size-2.5 rounded-full bg-rose-600" />
+                  <span className="relative inline-flex size-2 rounded-full bg-rose-500" />
                 </span>
                 <Globe2 className="size-4" />
                 <span>Global Live Threat Map</span>
               </div>
               <Badge
                 variant="outline"
-                className="border-rose-500/50 bg-rose-500/20 font-mono text-[9px] font-black text-rose-600 dark:text-rose-400"
+                className="border-rose-500/40 text-[9px] text-rose-500"
               >
                 3D LIVE
               </Badge>
             </Link>
 
             {/* Accordion 1: Platform */}
-            <div className="rounded-base border-2 border-border bg-background shadow-[2px_2px_0px_0px_var(--border)]">
+            <div className="rounded-xl border border-border/50 bg-card/40">
               <button
                 type="button"
                 onClick={() => toggleMobileSection("platform")}
-                className="flex w-full items-center justify-between p-3 font-heading text-xs font-black uppercase tracking-wider text-foreground"
+                className="flex w-full items-center justify-between p-3 text-xs font-semibold text-foreground"
               >
                 <div className="flex items-center gap-2">
-                  <Terminal className="size-3.5 text-main" />
+                  <Terminal className="size-3.5 text-sky-500" />
                   <span>Platform Trinity</span>
                 </div>
                 <ChevronRight
                   className={cn(
-                    "size-4 transition-transform",
+                    "size-4 text-muted-foreground transition-transform",
                     mobileSection === "platform" && "rotate-90"
                   )}
                 />
               </button>
               {mobileSection === "platform" && (
-                <div className="space-y-2 border-t-2 border-border p-3 bg-secondary-background/50">
+                <div className="space-y-2 border-t border-border/40 p-3">
                   <Link
                     href="/docs/pasax-sentinel"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="flex items-center justify-between py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     <span>pasax-sentinel (Go Kernel Daemon)</span>
-                    <Badge variant="outline" className="font-mono text-[9px]">Go 1.24</Badge>
+                    <Badge variant="outline" className="font-mono text-[9px]">
+                      Go 1.24
+                    </Badge>
                   </Link>
                   <Link
                     href="/docs/pasax-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="flex items-center justify-between py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     <span>pasax/shield (Laravel WAF &amp; Honeypot)</span>
-                    <Badge variant="outline" className="font-mono text-[9px]">PHP</Badge>
+                    <Badge variant="outline" className="font-mono text-[9px]">
+                      PHP
+                    </Badge>
                   </Link>
-                  {/*<Link
-                    href="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between py-1 text-xs font-bold text-foreground hover:text-main"
-                  >
-                    <span>Pasax Cloud SOC Console</span>
-                    <Badge variant="outline" className="font-mono text-[9px]">Cloud</Badge>
-                  </Link>*/}
                 </div>
               )}
             </div>
 
             {/* Accordion 2: Solutions */}
-            <div className="rounded-base border-2 border-border bg-background shadow-[2px_2px_0px_0px_var(--border)]">
+            <div className="rounded-xl border border-border/50 bg-card/40">
               <button
                 type="button"
                 onClick={() => toggleMobileSection("solutions")}
-                className="flex w-full items-center justify-between p-3 font-heading text-xs font-black uppercase tracking-wider text-foreground"
+                className="flex w-full items-center justify-between p-3 text-xs font-semibold text-foreground"
               >
                 <div className="flex items-center gap-2">
                   <Zap className="size-3.5 text-amber-500" />
@@ -526,38 +526,38 @@ export function PublicNav() {
                 </div>
                 <ChevronRight
                   className={cn(
-                    "size-4 transition-transform",
+                    "size-4 text-muted-foreground transition-transform",
                     mobileSection === "solutions" && "rotate-90"
                   )}
                 />
               </button>
               {mobileSection === "solutions" && (
-                <div className="space-y-2 border-t-2 border-border p-3 bg-secondary-background/50">
+                <div className="space-y-2 border-t border-border/40 p-3">
                   <Link
                     href="/#vps-comparison"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Linux VPS Immunity (&lt;20MB RAM)
                   </Link>
                   <Link
                     href="/#features"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     FIM Auto-Healing (.env 0600 Auto-Lock)
                   </Link>
                   <Link
                     href="/#workloads"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Web Server Hardening (Nginx, Caddy)
                   </Link>
                   <Link
                     href="/#features"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Egress-Only Zero-Trust mTLS
                   </Link>
@@ -566,50 +566,50 @@ export function PublicNav() {
             </div>
 
             {/* Accordion 3: Docs */}
-            <div className="rounded-base border-2 border-border bg-background shadow-[2px_2px_0px_0px_var(--border)]">
+            <div className="rounded-xl border border-border/50 bg-card/40">
               <button
                 type="button"
                 onClick={() => toggleMobileSection("docs")}
-                className="flex w-full items-center justify-between p-3 font-heading text-xs font-black uppercase tracking-wider text-foreground"
+                className="flex w-full items-center justify-between p-3 text-xs font-semibold text-foreground"
               >
                 <div className="flex items-center gap-2">
-                  <BookOpen className="size-3.5 text-main" />
+                  <BookOpen className="size-3.5 text-sky-500" />
                   <span>Documentation</span>
                 </div>
                 <ChevronRight
                   className={cn(
-                    "size-4 transition-transform",
+                    "size-4 text-muted-foreground transition-transform",
                     mobileSection === "docs" && "rotate-90"
                   )}
                 />
               </button>
               {mobileSection === "docs" && (
-                <div className="space-y-2 border-t-2 border-border p-3 bg-secondary-background/50">
+                <div className="space-y-2 border-t border-border/40 p-3">
                   <Link
                     href="/docs"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Portal Dokumentasi Resmi
                   </Link>
                   <Link
                     href="/docs/pasax-secure-monitor"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Panduan pasax-secure-monitor
                   </Link>
                   <Link
                     href="/docs/pasax-sentinel"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Panduan Daemon pasax-sentinel
                   </Link>
                   <Link
                     href="/#comparison"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block py-1 text-xs font-bold text-foreground hover:text-main"
+                    className="block py-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     Benchmark vs Fail2ban &amp; SIEM
                   </Link>
@@ -622,29 +622,26 @@ export function PublicNav() {
               <Link
                 href="/#comparison"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-base border-2 border-border bg-background p-2.5 text-center font-heading text-xs font-black uppercase tracking-wider text-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main hover:text-main-foreground"
+                className="rounded-xl border border-border/50 bg-card/40 p-2.5 text-center text-xs font-medium text-foreground transition-colors hover:bg-muted/60"
               >
                 Benchmark
               </Link>
               <Link
                 href="/#faq"
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-base border-2 border-border bg-background p-2.5 text-center font-heading text-xs font-black uppercase tracking-wider text-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main hover:text-main-foreground"
+                className="rounded-xl border border-border/50 bg-card/40 p-2.5 text-center text-xs font-medium text-foreground transition-colors hover:bg-muted/60"
               >
                 FAQ
               </Link>
             </div>
 
-            {/* Mobile Auth & SOC CTAs */}
-            <div className="my-2 flex flex-col gap-2 border-t-2 border-border pt-3">
+            {/* Mobile Auth & Threat Map CTAs */}
+            <div className="my-2 flex flex-col gap-2 border-t border-border/40 pt-3">
               <div className="grid grid-cols-2 gap-2">
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "default" }),
-                    "flex items-center justify-center gap-1.5 border-2 border-border font-heading font-bold shadow-[2px_2px_0px_0px_var(--border)]"
-                  )}
+                  className="flex items-center justify-center gap-1.5 rounded-full border border-border/60 bg-muted/40 p-2 text-xs font-medium text-foreground"
                 >
                   <LogIn className="size-4" />
                   <span>Sign In</span>
@@ -652,26 +649,12 @@ export function PublicNav() {
                 <Link
                   href="/threats-map"
                   onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    buttonVariants({ variant: "outline", size: "default" }),
-                    "flex items-center justify-center gap-1.5 border-2 border-border bg-secondary-background font-heading font-bold shadow-[2px_2px_0px_0px_var(--border)] text-rose-600 dark:text-rose-400"
-                  )}
+                  className="flex items-center justify-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 p-2 text-xs font-medium text-rose-500"
                 >
                   <Globe2 className="size-4" />
                   <span>Threat Map</span>
                 </Link>
               </div>
-              {/*<Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  buttonVariants({ variant: "default", size: "default" }),
-                  "flex w-full items-center justify-center gap-1.5 font-heading font-black shadow-shadow"
-                )}
-              >
-                <span>Launch SOC Console</span>
-                <ArrowRight className="size-4" />
-              </Link>*/}
             </div>
           </div>
         </div>

@@ -3,15 +3,12 @@
 import * as React from "react"
 import {
   Code2,
-  FileCode2,
   Globe,
   Server,
   Layers,
   ArrowRight,
-  ShieldCheck,
-  Zap,
-  Lock,
   Workflow,
+  CheckCircle2,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -19,8 +16,9 @@ export function VpsUseCases() {
   const useCases = [
     {
       badge: "PHP & LARAVEL FLEETS",
+      badgeColor: "border-rose-500/30 bg-rose-500/10 text-rose-500",
       icon: Code2,
-      iconBg: "bg-red-400 text-black",
+      iconColor: "text-rose-500",
       title: "Laravel & PHP Production Apps",
       subtitle: "Full Stack Protection via pasax/shield",
       description:
@@ -35,8 +33,9 @@ export function VpsUseCases() {
     },
     {
       badge: "CMS & WORDPRESS VPS",
+      badgeColor: "border-sky-500/30 bg-sky-500/10 text-sky-500",
       icon: Globe,
-      iconBg: "bg-sky-400 text-black",
+      iconColor: "text-sky-500",
       title: "WordPress & WooCommerce VPS",
       subtitle: "Kernel-Level Plugin Exploit Barrier",
       description:
@@ -51,8 +50,9 @@ export function VpsUseCases() {
     },
     {
       badge: "MODERN APIS & DOCKER",
+      badgeColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-500",
       icon: Server,
-      iconBg: "bg-emerald-400 text-black",
+      iconColor: "text-emerald-500",
       title: "Node.js, Go & Docker Containers",
       subtitle: "Layer 3/4 Wire-Speed Rate Limiting",
       description:
@@ -67,8 +67,9 @@ export function VpsUseCases() {
     },
     {
       badge: "HOSTING & AGENCIES",
+      badgeColor: "border-purple-500/30 bg-purple-500/10 text-purple-500",
       icon: Workflow,
-      iconBg: "bg-amber-300 text-black",
+      iconColor: "text-purple-500",
       title: "Agencies & Multi-Server Fleets",
       subtitle: "Central SOC Mesh Intelligence",
       description:
@@ -84,65 +85,71 @@ export function VpsUseCases() {
   ]
 
   return (
-    <div className="w-full max-w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <div className="mx-auto w-full max-w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
       <div className="mx-auto mb-12 max-w-4xl text-center">
-        <div className="mb-3 inline-flex items-center gap-1.5 rounded-base border border-border bg-secondary-background px-2.5 py-0.5 font-mono text-xs font-bold text-foreground">
-          <Layers className="size-3.5 text-main" />
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3.5 py-1 text-xs text-muted-foreground backdrop-blur-md">
+          <Layers className="size-3.5 text-sky-500" />
           <span>PRODUCTION WORKLOADS</span>
         </div>
-        <h2 className="font-heading text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+        <h2 className="bg-gradient-to-b from-foreground via-foreground to-foreground/70 bg-clip-text font-heading text-3xl font-bold tracking-tight text-balance text-transparent sm:text-5xl">
           Built for What You Actually Run on VPS
         </h2>
-        <p className="mt-3 text-base font-base text-foreground/80 sm:text-lg">
-          Whether you host a single Laravel SaaS, a fleet of client WordPress sites, or high-throughput API microservices.
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
+          Whether you host a single Laravel SaaS, a fleet of client WordPress
+          sites, or high-throughput API microservices.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:gap-8">
         {useCases.map((uc, i) => {
           const Icon = uc.icon
           return (
             <div
               key={i}
-              className="flex flex-col justify-between rounded-base border-2 border-border bg-secondary-background p-6 xl:p-7 shadow-shadow hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_var(--border)] transition-all"
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 backdrop-blur-md transition-all hover:border-sky-500/30 hover:bg-card/70 xl:p-7"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="mb-4 flex items-center justify-between">
                   <div
-                    className={`flex size-10 items-center justify-center rounded-base border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] ${uc.iconBg}`}
+                    className={`flex size-10 items-center justify-center rounded-xl border border-border/40 bg-muted/30 ${uc.iconColor}`}
                   >
-                    <Icon className="size-5 stroke-[2.5]" />
+                    <Icon className="size-5" />
                   </div>
-                  <span className="font-mono text-[9px] font-black uppercase text-foreground/80 border border-border bg-background px-1.5 py-0.5 rounded">
+                  <span
+                    className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase ${uc.badgeColor}`}
+                  >
                     {uc.badge}
                   </span>
                 </div>
 
-                <h3 className="font-heading text-base font-black text-foreground">
+                <h3 className="font-heading text-base font-bold text-foreground">
                   {uc.title}
                 </h3>
-                <p className="font-mono text-[11px] font-bold text-main mt-0.5">
+                <p className="mt-0.5 font-sans text-xs text-sky-500">
                   {uc.subtitle}
                 </p>
 
-                <p className="mt-3 text-xs text-foreground/80 leading-relaxed font-base">
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                   {uc.description}
                 </p>
 
-                <div className="mt-4 pt-3 border-t border-border/60 space-y-1.5">
-                  {uc.features.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-center gap-2 text-xs font-mono text-foreground">
-                      <ShieldCheck className="size-3 text-emerald-500 shrink-0" />
-                      <span className="truncate">{feat}</span>
+                <div className="mt-4 space-y-1.5 border-t border-border/40 pt-3">
+                  {uc.features.map((feat, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center gap-1.5 text-xs text-foreground/85"
+                    >
+                      <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                      <span>{feat}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-6 pt-3 border-t-2 border-border">
+              <div className="mt-6 border-t border-border/40 pt-4">
                 <Link
                   href={uc.href}
-                  className="inline-flex items-center gap-1.5 font-heading text-xs font-bold text-foreground hover:text-main transition-colors"
+                  className="inline-flex items-center gap-1 font-sans text-xs font-semibold text-sky-500 transition-transform group-hover:translate-x-0.5 hover:text-sky-400"
                 >
                   <span>{uc.linkText}</span>
                   <ArrowRight className="size-3.5" />

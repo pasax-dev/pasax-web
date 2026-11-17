@@ -1,173 +1,120 @@
 ---
-version: "1.0.0"
-name: "pasax-suite-cyber-neobrutalism"
-description: "A high-precision Cyber Tactical Neobrutalism design system fusing neobrutalism.dev geometric boldness with ThreatsEye live threat intelligence aesthetics. Characterized by thick solid borders (2px), zero-blur hard drop shadows (4px 4px 0px 0px), electric chromatic accents (#0099ff, #facc00, #05e17a, #ff4d50), and dark tactical canvas surfaces (#050811 / #0a0f1d). Pairs Bricolage Grotesque for punchy headlines with Liberation Mono for real-time kernel telemetry, radar compass ticks, and IP readouts."
+
+version: "2.0.0"
+name: "pasax-fumadocs-framework"
+description: "A hyper-refined, modern developer platform design system inspired directly by Fumadocs (https://www.fumadocs.dev/) and powered by Illos.dev free animated SVG illustrations (https://illos.dev/library/free). Emphasizes clean dark-mode-first glassmorphic gradients, hairline 1px borders with subtle alpha channels, ambient radial glow lighting, interactive bento showcase cards with code-to-preview tabs, and smooth micro-interactions."
 reference:
-  neobrutalism: "https://www.neobrutalism.dev/"
-  threatseye: "https://threatseye.io/ and https://threatseye.io/threats-map"
-  format_standard: "https://github.com/VoltAgent/awesome-design-md"
+fumadocs: "https://www.fumadocs.dev/"
+illos-library: "https://illos.dev/library/free"
+format_standard: "https://github.com/VoltAgent/awesome-design-md"
 
 colors:
-  canvas:
-    dark: "#050811"
-    dark-surface-1: "#0a0f1d"
-    dark-surface-2: "#0f172a"
-    dark-surface-card: "#131b2e"
-    light: "#f0f7ff"
-    light-surface-1: "#ffffff"
-    light-surface-2: "#e0f2fe"
-  brand:
-    primary: "#0099ff"
-    primary-hover: "#0080ff"
-    primary-foreground: "#000000"
-    accent-amber: "#facc00"
-    accent-green: "#05e17a"
-    accent-rose: "#ff4d50"
-    accent-sky: "#38bdf8"
-    accent-purple: "#a78bfa"
-  borders:
-    strong: "oklch(0% 0 0)"
-    dark-strong: "oklch(0.88 0 0)"
-    tactical-grid: "rgba(56, 189, 248, 0.12)"
-    tactical-grid-subtle: "rgba(56, 189, 248, 0.06)"
-  threat-levels:
-    critical: "#ff4d50"
-    high: "#facc00"
-    medium: "#0099ff"
-    low: "#05e17a"
-  shadows:
-    hard-sm: "2px 2px 0px 0px var(--border)"
-    hard-md: "4px 4px 0px 0px var(--border)"
-    hard-lg: "6px 6px 0px 0px var(--border)"
-    hard-reverse: "-4px -4px 0px 0px var(--border)"
+canvas:
+dark: "#030712"
+dark-surface-1: "#080e1e"
+dark-surface-2: "#0f172a"
+dark-surface-card: "rgba(15, 23, 42, 0.65)"
+light: "#f8fafc"
+light-surface-1: "#ffffff"
+light-surface-2: "#f1f5f9"
+light-surface-card: "rgba(255, 255, 255, 0.85)"
+brand:
+primary: "#38bdf8"
+primary-hover: "#0284c7"
+primary-foreground: "#000000"
+accent-cyan: "#00d8ff"
+accent-purple: "#a855f7"
+accent-emerald: "#10b981"
+accent-amber: "#f59e0b"
+accent-rose: "#f43f5e"
+borders:
+subtle: "rgba(255, 255, 255, 0.08)"
+default: "var(--border)"
+hover-glow: "rgba(56, 189, 248, 0.4)"
+focus-ring: "#38bdf8"
+glows:
+radial-top: "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.15), transparent 70%)"
+radial-accent: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(168, 85, 247, 0.12), transparent 75%)"
 
 typography:
-  headings:
-    fontFamily: "Bricolage Grotesque, sans-serif"
-    weights: [700, 800, 900]
-    letterSpacing: "-0.03em"
-    style: "Expressive, mechanical, high-impact neo-grotesque"
-  monospaced:
-    fontFamily: "'Liberation Mono', var(--font-geist-mono), 'SFMono-Regular', Menlo, Monaco, Consolas, monospace"
-    weights: [500, 600, 700]
-    letterSpacing: "0.02em"
-    style: "Precision Linux kernel console & radar coordinate readout"
-  body:
-    fontFamily: "Inter, -apple-system, BlinkMacSystemFont, sans-serif"
-    weights: [400, 500, 600]
-    lineHeight: "1.6"
+headings:
+fontFamily: "var(--font-heading), 'Inter', 'Space Grotesk', -apple-system, sans-serif"
+weights: [600, 700, 800]
+letterSpacing: "-0.03em"
+style: "Refined modern gradient headline (bg-gradient-to-b from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent)"
+monospaced:
+fontFamily: "var(--font-mono), 'Geist Mono', 'JetBrains Mono', 'Liberation Mono', monospace"
+weights: [400, 500, 600]
+letterSpacing: "-0.01em"
+style: "Clean developer console, terminal snippets, tabular latency metrics, and API paths"
+body:
+fontFamily: "var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+weights: [400, 500]
+lineHeight: "1.65"
+style: "Balanced reading ergonomics with text-pretty and text-balance"
 
 spacing-and-geometry:
-  border-width: "2px"
-  border-radius:
-    base: "5px"
-    sm: "3px"
-    lg: "8px"
-    full: "9999px"
-  box-shadow: "4px 4px 0px 0px var(--border)"
-  shadow-transition: "all 0.15s cubic-bezier(0.16, 1, 0.3, 1)"
-  button-active-translate: "translate(2px, 2px)"
-
-motion-and-physics:
-  radar-sweep:
-    duration: "4.0s"
-    timingFunction: "linear"
-    loop: "infinite"
-    angleRange: "0deg to 360deg"
-    beamWedgeArc: "76.5deg (Math.PI / 2.35)"
-    leadingEdgeGlow: "shadowBlur 16px, white neon core"
-  globe-rotation:
-    idleSpeed: "0.00065 rad/frame (~2.2 deg/sec)"
-    hoverSpeed: "0.00008 rad/frame (ultra-slow inspection crawl)"
-    inertiaDamping: "0.965 (luxury glide on drag release)"
-    interpolation: "smooth exponential lerp"
-  laser-scan:
-    duration: "6.0s to 7.0s"
-    timingFunction: "ease-in-out"
-    loop: "infinite"
-  hud-bracket-breathe:
-    duration: "3.0s"
-    timingFunction: "ease-in-out"
-    loop: "infinite"
-    scaleRange: "1.0 to 1.03"
-  rocket-ballistics:
-    curvatureBulge: "Math.max(26, Math.min(68, distance * 0.46))"
-    burstProjectiles: 3
-    burstStaggerOffset: "[-0.08, -0.16]"
-    impactWaves: 3
-    impactRingMaxAge: "40 to 64 frames"
+border-width: "1px"
+border-radius:
+pill: "9999px"
+sm: "8px"
+base: "12px"
+lg: "16px"
+xl: "20px"
+2xl: "24px"
+backdrop-blur: "backdrop-blur-md"
+shadows:
+diffuse-sm: "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+diffuse-md: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)"
+diffuse-lg: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)"
+glow-cyan: "0 0 25px -5px rgba(56, 189, 248, 0.25)"
+glow-purple: "0 0 25px -5px rgba(168, 85, 247, 0.25)"
 
 components:
-  buttons:
-    primary:
-      border: "2px solid var(--border)"
-      background: "var(--main)"
-      color: "var(--main-foreground)"
-      shadow: "4px 4px 0px 0px var(--border)"
-      hover: "translate(2px, 2px) shadow-[2px_2px_0px_0px_var(--border)]"
-      active: "translate(4px, 4px) shadow-none"
-    outline:
-      border: "2px solid var(--border)"
-      background: "var(--secondary-background)"
-      color: "var(--foreground)"
-      shadow: "4px 4px 0px 0px var(--border)"
-  cards:
-    tactical:
-      border: "2px solid var(--border)"
-      background: "var(--card)"
-      shadow: "4px 4px 0px 0px var(--border)"
-      cornerAccents: "top-2 left-2 size-4 border-t-2 border-l-2 border-main/80"
-  badges:
-    neobrutal:
-      border: "2px solid var(--border)"
-      background: "var(--secondary-background)"
-      shadow: "2px 2px 0px 0px var(--border)"
-      font: "Liberation Mono, text-xs, font-bold"
-  stickers:
-    floating:
-      border: "2px solid var(--border)"
-      shadow: "3px 3px 0px 0px var(--border)"
-      rotation: "varying from -6deg to +8deg"
-      animation: "gentle floating bounce (4.5s to 6.0s)"
+announcement-badge:
+layout: "inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3.5 py-1 text-xs text-muted-foreground backdrop-blur-md transition-colors hover:border-foreground/20 hover:text-foreground"
+indicator: "size-2 rounded-full bg-primary animate-pulse"
+buttons:
+primary:
+layout: "rounded-full bg-foreground px-6 py-2.5 font-sans text-sm font-medium text-background transition-all hover:bg-foreground/90 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+secondary:
+layout: "rounded-full border border-border/60 bg-background/50 px-6 py-2.5 font-sans text-sm font-medium text-foreground backdrop-blur-md transition-all hover:bg-muted/80 hover:border-border hover:scale-[1.02] active:scale-[0.98]"
+code-pill:
+layout: "rounded-full border border-border/60 bg-muted/30 px-4 py-2 font-mono text-xs text-foreground backdrop-blur-md transition-all hover:border-foreground/20 flex items-center gap-2.5"
+cards:
+bento-feature:
+layout: "relative overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 backdrop-blur-md transition-all hover:border-border hover:bg-card/70 group"
+ambient-hover: "absolute -inset-px rounded-2xl bg-gradient-to-r from-sky-500/10 via-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+hero-showcase:
+layout: "w-full max-w-5xl rounded-2xl border border-border/60 bg-card/60 shadow-2xl backdrop-blur-xl overflow-hidden"
+tab-bar: "flex items-center justify-between border-b border-border/40 px-4 py-3 bg-muted/20"
+search-modal:
+trigger: "inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur hover:border-border transition-colors"
+dialog: "fumadocs-core search dialog with category filters and keyboard navigation (⌘K)"
 
-sections-background-matrix:
-  hero:
-    component: "HeroCyberBackground"
-    layers:
-      - "Neobrutalism Dot Grid Matrix (radial-gradient 24px x 24px)"
-      - "Concentric Heavy Dashed Orbit Rings (760px / 630px / 490px)"
-      - "Cardinal Square Markers with hard 2px shadows"
-      - "Sweeping Laser Scanning Beam"
-      - "Interactive Node Constellation Canvas (60fps with mouse repulsion)"
-      - "Floating Neobrutalist Badges & Stickers (eBPF, 0.12ms Latency, Zero Open Ports)"
-      - "Rotating Neobrutalist Asterisk (✱) and Star (✦) accents"
-  telemetry:
-    variant: "grid"
-    details: "Technical 3.5rem blueprint grid with a vertical laser scan beam highlighting the live radar"
-  architecture:
-    variant: "circuit"
-    details: "Packet bus circuitry lines with floating neobrutalism stamps (✦, ✱) emphasizing the triple defense layers"
-  features:
-    variant: "dots"
-    details: "Crisp 24px dot matrix paper texture with corner brackets framing the feature cards"
-  comparison:
-    variant: "grid"
-    details: "High-contrast technical inspection grid framing the comparative benchmarks table"
-  pricing:
-    variant: "stripes"
-    details: "45-degree geometric diagonal hatch stripes with floating security badges"
-  faq:
-    variant: "dots"
-    details: "Technical schematic blueprint matrix with animated corner brackets"
-  cta-banner:
-    variant: "high-energy"
-    details: "Solid primary yellow/blue background with hard box shadows and rotating corner star stamps"
+illos-animations-guide:
+directory: "components/illos/"
+components: - name: "IllosThreatDetection"
+file: "components/illos/threat-detection.tsx"
+theme: "HUD threat radar & telemetry scanner" - name: "IllosFirewall"
+file: "components/illos/firewall.tsx"
+theme: "Isometric packet firewall & netfilter inspection" - name: "IllosServerHealth"
+file: "components/illos/server-health.tsx"
+theme: "Autonomous kernel health & memory telemetry" - name: "IllosLogStream"
+file: "components/illos/log-stream.tsx"
+theme: "Real-time log watcher with colorized stream lines" - name: "IllosMonitoring"
+file: "components/illos/monitoring.tsx"
+theme: "Multi-cluster node fleet monitoring" - name: "IllosEncryption"
+file: "components/illos/encryption.tsx"
+theme: "TLS 1.3 mTLS cryptographic channel" - name: "IllosAlerts"
+file: "components/illos/alerts.tsx"
+theme: "Zero-tolerance security anomaly badge & alert pulse"
 
 guidelines-for-ai-agents:
-  rule-1: "ALWAYS use 2px solid borders (border-2 border-border) on interactive containers and cards."
-  rule-2: "NEVER use blurred fuzzy drop shadows. ALWAYS use hard-edge shadows (e.g. shadow-[4px_4px_0px_0px_var(--border)])."
-  rule-3: "Use 'font-heading' (Bricolage Grotesque) for titles, section headers, card titles, and high-energy CTAs."
-  rule-4: "Use 'font-mono' (Liberation Mono) for all telemetry readings, timestamps, IP addresses, port numbers, lat/lng, and code snippets."
-  rule-5: "All sections MUST maintain a subtle tactical background texture or ambient animation from SectionBackground to prevent flat or barren layouts."
-  rule-6: "Interactive hover states MUST physically press down by translating (translate-x-0.5 translate-y-0.5) while reducing shadow distance."
-  rule-7: "On 3D Three.js components, ensure rotation remains slow and cinematic (<= 0.00065 rad/frame) and raycasts accurately against spherical geometry."
+rule-1: "ALWAYS use delicate 1px borders (border border-border/50 or border-border/60). NEVER use thick 2px/3px borders or cartoonish offset shadows."
+rule-2: "Use 'rounded-xl', 'rounded-2xl', or 'rounded-full' for pill buttons, inputs, and container cards."
+rule-3: "Use vertical gradient text clipping on major section headings: 'bg-gradient-to-b from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent'."
+rule-4: "Emphasize glassmorphism with 'backdrop-blur-md bg-card/40' or 'bg-background/80' to maintain Fumadocs aesthetic."
+rule-5: "Place Illos.dev animated SVGs from 'components/illos/' inside hero showcase tabs, feature bento cards, and interactive walkthroughs."
+rule-6: "All interactive elements must feature subtle micro-interactions: smooth scale ([1.02]), border glow, and refined transition-all."
+rule-7: "Ensure full accessibility and high contrast in both dark and light modes."

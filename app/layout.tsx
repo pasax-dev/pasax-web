@@ -1,5 +1,11 @@
 import type { Metadata } from "next"
-import { Bricolage_Grotesque, Geist_Mono, Inter } from "next/font/google"
+import {
+  Syne,
+  Space_Grotesk,
+  Space_Mono,
+  Geist_Mono,
+  Inter,
+} from "next/font/google"
 import localFont from "next/font/local"
 
 import "./globals.css"
@@ -7,17 +13,31 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { SessionProvider } from "@/components/auth/session-provider"
+import { SearchProvider } from "@/components/search/search-provider"
 import { siteConfig } from "@/config/site"
 
-const bricolage = Bricolage_Grotesque({
+const syne = Syne({
   subsets: ["latin"],
   variable: "--font-heading",
+  display: "swap",
+})
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
   display: "swap",
 })
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+})
+
+const spaceMono = Space_Mono({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-space-mono",
   display: "swap",
 })
 
@@ -109,9 +129,11 @@ export default function RootLayout({
     <html lang="id" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased text-foreground selection:bg-main selection:text-main-foreground",
-          bricolage.variable,
+          "min-h-screen bg-background font-sans text-foreground antialiased selection:bg-main selection:text-main-foreground",
+          syne.variable,
+          spaceGrotesk.variable,
           inter.variable,
+          spaceMono.variable,
           fontMono.variable,
           departureMono.variable
         )}
@@ -123,7 +145,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider>
-            <TooltipProvider>{children}</TooltipProvider>
+            <TooltipProvider>
+              <SearchProvider>{children}</SearchProvider>
+            </TooltipProvider>
           </SessionProvider>
         </ThemeProvider>
       </body>

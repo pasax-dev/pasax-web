@@ -14,37 +14,39 @@ export function DocsBreadcrumb({
   const prodConfig = product ? PRODUCTS_CONFIG[product] : null
 
   return (
-    <nav className="mb-6 flex flex-wrap items-center gap-1.5 font-mono text-xs text-foreground/70">
+    <nav className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs text-foreground">
       <Link
         href="/"
-        className="flex items-center gap-1 transition-colors hover:text-foreground"
+        className="flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
       >
-        <Home className="size-3" />
+        <Home className="size-3.5" />
         <span>Beranda</span>
       </Link>
-      <ChevronRight className="size-3 text-foreground/40" />
+      <ChevronRight className="size-3 text-foreground/70" />
       <Link
         href="/docs"
-        className="flex items-center gap-1 transition-colors hover:text-foreground"
+        className="flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
       >
-        <BookOpen className="size-3" />
+        <BookOpen className="size-3.5" />
         <span>Dokumentasi</span>
       </Link>
       {prodConfig && (
         <>
-          <ChevronRight className="size-3 text-foreground/40" />
+          <ChevronRight className="size-3 text-foreground/70" />
           <Link
             href={`/docs/${prodConfig.id}`}
-            className="font-bold text-foreground/90 transition-colors hover:text-main"
+            className="rounded-base border-2 border-border bg-amber-300 px-2.5 py-1 font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
           >
             {prodConfig.name}
           </Link>
         </>
       )}
-      <ChevronRight className="size-3 text-foreground/40" />
-      <span className="font-bold text-foreground/80">{category}</span>
-      <ChevronRight className="size-3 text-foreground/40" />
-      <span className="font-black text-main underline decoration-2 underline-offset-4">
+      <ChevronRight className="size-3 text-foreground/70" />
+      <span className="rounded-base border-2 border-border bg-secondary-background px-2.5 py-1 font-bold text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)]">
+        {category}
+      </span>
+      <ChevronRight className="size-3 text-foreground/70" />
+      <span className="rounded-base border-2 border-border bg-main px-2.5 py-1 font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)]">
         {title}
       </span>
     </nav>

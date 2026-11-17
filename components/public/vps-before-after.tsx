@@ -6,14 +6,9 @@ import {
   CheckCircle2,
   AlertTriangle,
   ShieldCheck,
-  Cpu,
-  Flame,
-  Zap,
-  Lock,
   ArrowRight,
-  Server,
-  FileCode,
 } from "lucide-react"
+import Link from "next/link"
 
 export function VpsBeforeAfter() {
   const comparisons = [
@@ -64,119 +59,127 @@ export function VpsBeforeAfter() {
   ]
 
   return (
-    <div className="w-full max-w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+    <div className="mx-auto w-full max-w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
       <div className="mx-auto mb-12 max-w-4xl text-center">
-        <div className="mb-3 inline-flex items-center gap-1.5 rounded-base border border-border bg-secondary-background px-2.5 py-0.5 font-mono text-xs font-bold text-foreground">
-          <ShieldCheck className="size-3.5 text-main" />
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3.5 py-1 text-xs text-muted-foreground backdrop-blur-md">
+          <ShieldCheck className="size-3.5 text-sky-500" />
           <span>THE VPS REALITY CHECK</span>
         </div>
-        <h2 className="font-heading text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+        <h2 className="bg-gradient-to-b from-foreground via-foreground to-foreground/70 bg-clip-text font-heading text-3xl font-bold tracking-tight text-balance text-transparent sm:text-5xl">
           Why Traditional Security Fails on Linux VPS
         </h2>
-        <p className="mt-3 text-base font-base text-foreground/80 sm:text-lg">
-          Most security tools were built for multi-gigabyte corporate servers, not cost-effective production VPS instances.
+        <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
+          Most security tools were built for multi-gigabyte corporate servers,
+          not cost-effective production VPS instances.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10 items-stretch">
+      <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2 lg:gap-8 xl:gap-10">
         {/* Left: The Legacy VPS Nightmare */}
-        <div className="flex flex-col rounded-base border-2 border-border bg-card p-6 sm:p-8 xl:p-10 shadow-[4px_4px_0px_0px_var(--border)]">
-          <div className="flex items-center justify-between border-b-2 border-border pb-4 mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-base border-2 border-border bg-rose-500/15 text-rose-600 dark:text-rose-400">
-                <XCircle className="size-5 stroke-[2.5]" />
+        <div className="flex flex-col rounded-2xl border border-rose-500/20 bg-card/40 p-6 backdrop-blur-md transition-all hover:border-rose-500/30 sm:p-8 xl:p-10">
+          <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 items-center justify-center rounded-xl border border-rose-500/30 bg-rose-500/10 text-rose-500">
+                <XCircle className="size-5" />
               </div>
               <div>
-                <h3 className="font-heading text-lg font-black text-foreground">
+                <h3 className="font-heading text-base font-bold text-foreground">
                   Your VPS Without Pasax
                 </h3>
-                <p className="font-mono text-xs text-muted-foreground">
+                <p className="font-sans text-xs text-muted-foreground">
                   Vulnerable, bloated &amp; brittle
                 </p>
               </div>
             </div>
-            <span className="rounded bg-rose-500/10 px-2 py-0.5 font-mono text-xs font-black text-rose-600 dark:text-rose-400 border border-rose-500/30">
-              HIGH RISK
+            <span className="rounded-full border border-rose-500/30 bg-rose-500/10 px-2.5 py-0.5 font-sans text-xs font-medium text-rose-500">
+              High Risk
             </span>
           </div>
 
-          <div className="space-y-5 flex-1">
-            {comparisons.map((item, idx) => (
+          <div className="flex flex-1 flex-col gap-4">
+            {comparisons.map((c, i) => (
               <div
-                key={idx}
-                className="rounded-base border border-border/80 bg-secondary-background p-4"
+                key={i}
+                className="flex flex-col gap-1.5 rounded-xl border border-border/40 bg-muted/20 p-4 transition-colors"
               >
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <h4 className="font-heading text-xs font-bold text-foreground">
-                    {item.title}
-                  </h4>
-                  <span className="font-mono text-[10px] font-black uppercase text-rose-600 dark:text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded border border-rose-500/20">
-                    {item.without.badge}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-sans text-sm font-semibold text-foreground">
+                    {c.title}
+                  </span>
+                  <span className="shrink-0 rounded-full border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-rose-500">
+                    {c.without.badge}
                   </span>
                 </div>
-                <p className="text-xs text-foreground/70 leading-relaxed font-base">
-                  {item.without.text}
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {c.without.text}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between font-mono text-xs text-muted-foreground">
-            <span>Resulting Status:</span>
-            <span className="font-bold text-rose-600 dark:text-rose-400">
-              Unstable server, constant bot noise
+          <div className="mt-6 flex items-center gap-2 border-t border-border/40 pt-4 font-mono text-xs text-rose-500">
+            <AlertTriangle className="size-4 shrink-0" />
+            <span>
+              Average time to rootkit compromise on unmonitored VPS: &lt; 4
+              hours
             </span>
           </div>
         </div>
 
-        {/* Right: The Pasax Sentinel Advantage */}
-        <div className="flex flex-col rounded-base border-2 border-border bg-secondary-background p-6 sm:p-8 xl:p-10 shadow-[4px_4px_0px_0px_var(--border)] ring-2 ring-main">
-          <div className="flex items-center justify-between border-b-2 border-border pb-4 mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-base border-2 border-border bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]">
-                <CheckCircle2 className="size-5 stroke-[2.5]" />
+        {/* Right: The Pasax Fortified Reality */}
+        <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-card/40 p-6 backdrop-blur-md transition-all hover:border-emerald-500/30 sm:p-8 xl:p-10">
+          <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-10 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-500">
+                <CheckCircle2 className="size-5" />
               </div>
               <div>
-                <h3 className="font-heading text-lg font-black text-foreground">
-                  Your VPS With Pasax Sentinel
+                <h3 className="font-heading text-base font-bold text-foreground">
+                  Your VPS Armored by Pasax
                 </h3>
-                <p className="font-mono text-xs text-muted-foreground">
-                  Sub-millisecond kernel immunity
+                <p className="font-sans text-xs text-emerald-500">
+                  Zero memory drain, sub-millisecond drops
                 </p>
               </div>
             </div>
-            <span className="rounded bg-emerald-500/15 px-2 py-0.5 font-mono text-xs font-black text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-              ARMORED
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-sans text-xs font-medium text-emerald-500">
+              Armored
             </span>
           </div>
 
-          <div className="space-y-5 flex-1">
-            {comparisons.map((item, idx) => (
+          <div className="flex flex-1 flex-col gap-4">
+            {comparisons.map((c, i) => (
               <div
-                key={idx}
-                className="rounded-base border-2 border-border bg-card p-4 shadow-[2px_2px_0px_0px_var(--border)]"
+                key={i}
+                className="flex flex-col gap-1.5 rounded-xl border border-border/40 bg-muted/20 p-4 transition-colors"
               >
-                <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <h4 className="font-heading text-xs font-black text-foreground">
-                    {item.title}
-                  </h4>
-                  <span className="font-mono text-[10px] font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">
-                    {item.withPasax.badge}
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-sans text-sm font-semibold text-foreground">
+                    {c.title}
+                  </span>
+                  <span className="shrink-0 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-500">
+                    {c.withPasax.badge}
                   </span>
                 </div>
-                <p className="text-xs text-foreground/80 leading-relaxed font-base">
-                  {item.withPasax.text}
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {c.withPasax.text}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-6 pt-4 border-t border-border flex items-center justify-between font-mono text-xs">
-            <span className="text-muted-foreground">Resulting Status:</span>
-            <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Full kernel immunity with 0.14ms latency</span>
+          <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4 font-sans text-xs font-medium text-emerald-500">
+            <span className="flex items-center gap-1.5">
+              <ShieldCheck className="size-4 shrink-0" />
+              <span>Full kernel protection ready in &lt; 60 seconds</span>
             </span>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-1 font-semibold text-sky-500 hover:text-sky-400"
+            >
+              <span>Test Sentinel</span>
+              <ArrowRight className="size-3.5" />
+            </Link>
           </div>
         </div>
       </div>

@@ -90,7 +90,7 @@ export default async function DocDynamicPage({ params }: PageProps) {
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-1 justify-between">
-      <div className="w-full max-w-full min-w-0 flex-1 px-4 py-6 sm:px-8 lg:px-10">
+      <div className="w-full max-w-4xl min-w-0 flex-1 px-4 py-8 sm:px-8 lg:px-12 xl:max-w-5xl 2xl:max-w-6xl">
         <DocsBreadcrumb
           category={parsed.item.category}
           title={parsed.title}

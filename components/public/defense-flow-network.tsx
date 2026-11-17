@@ -1,17 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  Shield,
-  Cpu,
-  Cloud,
-  CheckCircle2,
-  XCircle,
-  ArrowRight,
-  Zap,
-  Radio,
-  Lock,
-} from "lucide-react"
+import { Shield, Cpu, Cloud, CheckCircle2, Zap } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 interface StageDetail {
@@ -87,31 +77,34 @@ const STAGES: StageDetail[] = [
 ]
 
 export function DefenseFlowNetwork() {
-  const [selectedStage, setSelectedStage] = React.useState<"l1" | "l2" | "l3">("l2")
+  const [selectedStage, setSelectedStage] = React.useState<"l1" | "l2" | "l3">(
+    "l2"
+  )
   const current = STAGES.find((s) => s.id === selectedStage) || STAGES[1]
 
   return (
-    <div className="overflow-hidden rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)]">
+    <div className="overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 backdrop-blur-md">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="relative flex size-2.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-main opacity-75" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-main" />
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-sky-500" />
             </span>
-            <h3 className="font-heading text-lg font-black tracking-tight text-foreground">
+            <h3 className="font-heading text-base font-bold tracking-tight text-foreground">
               Triple-Defense Telemetry Dataflow
             </h3>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Synchronized packet flow from application middleware down to Linux kernel wire-speed drops
+          <p className="mt-0.5 font-sans text-xs text-muted-foreground">
+            Synchronized packet flow from application middleware down to Linux
+            kernel wire-speed drops
           </p>
         </div>
 
         <Badge
           variant="outline"
-          className="border-2 border-border bg-secondary-background font-mono text-xs font-bold text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+          className="rounded-full border-sky-500/30 bg-sky-500/10 font-mono text-xs font-semibold text-sky-500"
         >
           ARCHITECTURE TRINITY
         </Badge>
@@ -127,44 +120,43 @@ export function DefenseFlowNetwork() {
             <div
               key={stage.id}
               onClick={() => setSelectedStage(stage.id)}
-              className={`group relative cursor-pointer rounded-base border-2 p-4 transition-all ${
+              className={`group relative cursor-pointer rounded-xl border p-4 transition-all ${
                 isSelected
-                  ? "border-main bg-main/10 shadow-[3px_3px_0px_0px_var(--border)] translate-x-0.5 translate-y-0.5"
-                  : "border-border bg-secondary-background hover:border-main/60 hover:shadow-[2px_2px_0px_0px_var(--border)]"
+                  ? "border-sky-500/50 bg-sky-500/10 shadow-lg"
+                  : "border-border/40 bg-muted/20 hover:border-border hover:bg-muted/40"
               }`}
             >
               {/* Top Row: Icon & Tag */}
               <div className="flex items-center justify-between">
                 <div
-                  className={`flex size-10 items-center justify-center rounded-base border-2 border-border ${
-                    isSelected ? "bg-main text-main-foreground" : "bg-card text-foreground"
+                  className={`flex size-9 items-center justify-center rounded-lg border ${
+                    isSelected
+                      ? "border-sky-500/40 bg-sky-500/20 text-sky-500"
+                      : "border-border/40 bg-muted/40 text-muted-foreground"
                   }`}
                 >
-                  <Icon className="size-5" />
+                  <Icon className="size-4" />
                 </div>
-                <Badge
-                  variant="outline"
-                  className="font-mono text-[10px] font-black tracking-wider uppercase border border-border"
-                >
+                <span className="rounded-full border border-border/40 px-2 py-0.5 font-mono text-[9px] font-semibold text-muted-foreground uppercase">
                   {stage.tag}
-                </Badge>
+                </span>
               </div>
 
               {/* Title & Subtitle */}
               <div className="mt-3">
-                <h4 className="font-heading text-sm font-black text-foreground">
+                <h4 className="font-heading text-sm font-bold text-foreground">
                   {stage.title}
                 </h4>
-                <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+                <p className="mt-0.5 font-sans text-xs text-muted-foreground">
                   {stage.subtitle}
                 </p>
               </div>
 
               {/* Stage Step Number */}
-              <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-muted-foreground border-t border-border/40 pt-2">
+              <div className="mt-4 flex items-center justify-between border-t border-border/40 pt-2 font-mono text-[11px] text-muted-foreground">
                 <span>STAGE 0{idx + 1} OF 03</span>
-                <span className="font-bold text-main group-hover:underline">
-                  {isSelected ? "INSPECTING" : "CLICK TO VIEW"} &rarr;
+                <span className="font-sans font-semibold text-sky-500 group-hover:underline">
+                  {isSelected ? "INSPECTING" : "VIEW"} &rarr;
                 </span>
               </div>
             </div>
@@ -174,23 +166,22 @@ export function DefenseFlowNetwork() {
 
       {/* Animated Beam Connection Visualizer */}
       <div className="relative my-4 hidden h-6 items-center justify-center md:flex">
-        <div className="h-0.5 w-full bg-border" />
-        <div className="absolute inset-x-12 h-1 bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-400 opacity-60" />
-        {/* Animated Light Packet */}
-        <div className="absolute size-3 -translate-y-1/2 rounded-full bg-white shadow-[0_0_10px_#ffffff] animate-[packet-flow_3s_linear_infinite]" />
+        <div className="h-px w-full bg-border/40" />
+        <div className="absolute inset-x-12 h-0.5 bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-400 opacity-40" />
+        <div className="absolute size-2.5 -translate-y-1/2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
       </div>
 
       {/* Deep Inspection Panel for Selected Stage */}
-      <div className="mt-4 rounded-base border-2 border-border bg-secondary-background p-6 sm:p-7 shadow-[3px_3px_0px_0px_var(--border)]">
+      <div className="mt-4 rounded-xl border border-border/40 bg-muted/20 p-5 sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-3xl xl:max-w-4xl">
             <div className="flex items-center gap-2">
-              <Zap className="size-4 text-main" />
-              <h4 className="font-heading text-base font-black text-foreground">
+              <Zap className="size-4 text-sky-500" />
+              <h4 className="font-heading text-sm font-bold text-foreground">
                 {current.title} Deep Inspection
               </h4>
             </div>
-            <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {current.desc}
             </p>
           </div>
@@ -200,12 +191,12 @@ export function DefenseFlowNetwork() {
             {current.metrics.map((m, i) => (
               <div
                 key={i}
-                className="rounded border border-border bg-card px-2.5 py-1.5 text-center shadow-sm"
+                className="rounded-lg border border-border/40 bg-card/60 px-3 py-1.5 text-center shadow-xs"
               >
-                <span className="block font-mono text-[9px] uppercase text-muted-foreground font-bold">
+                <span className="block font-mono text-[9px] font-medium text-muted-foreground uppercase">
                   {m.label}
                 </span>
-                <span className="font-mono text-xs font-black text-foreground">
+                <span className="font-mono text-xs font-bold text-foreground">
                   {m.value}
                 </span>
               </div>
@@ -214,18 +205,18 @@ export function DefenseFlowNetwork() {
         </div>
 
         {/* Security Primitives Checklist */}
-        <div className="mt-4 border-t border-border pt-3">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+        <div className="mt-4 border-t border-border/40 pt-3">
+          <span className="font-mono text-[10px] font-semibold tracking-wider text-muted-foreground uppercase">
             ACTIVE ENFORCEMENT PRIMITIVES
           </span>
           <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
             {current.rules.map((rule, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-2 rounded border border-border/50 bg-card p-2 text-xs font-mono"
+                className="flex items-center gap-2 rounded-lg border border-border/30 bg-card/40 p-2 font-sans text-xs text-foreground/90"
               >
-                <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
-                <span className="truncate text-foreground/90">{rule}</span>
+                <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                <span className="truncate">{rule}</span>
               </div>
             ))}
           </div>
@@ -234,4 +225,3 @@ export function DefenseFlowNetwork() {
     </div>
   )
 }
-

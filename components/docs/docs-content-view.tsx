@@ -1,8 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Copy, Check, Clock, ExternalLink } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Clock, ExternalLink } from "lucide-react"
 
 function GithubIcon(props: React.ComponentProps<"svg">) {
   return (
@@ -48,18 +47,18 @@ export function DocsContentView({
       // Add copy button
       const copyBtn = document.createElement("button")
       copyBtn.className =
-        "absolute right-3 top-3 hidden group-hover:flex items-center gap-1 text-[11px] font-mono font-bold bg-background border-2 border-border px-2 py-1 rounded-sm shadow-[2px_2px_0px_0px_var(--border)] text-foreground hover:bg-main hover:text-main-foreground transition-all"
+        "absolute right-3 top-3 hidden group-hover:flex items-center gap-1 text-[11px] font-mono font-black bg-black text-white border-2 border-border px-2.5 py-1 rounded-base shadow-[2px_2px_0px_0px_var(--border)] transition-all cursor-pointer hover:bg-main hover:text-black"
       copyBtn.innerHTML = `<span>Salin</span>`
-      copyBtn.title = "Salin ke clipboard"
+      copyBtn.title = "Salin kode ke clipboard"
 
       copyBtn.addEventListener("click", () => {
         const codeText = pre.querySelector("code")?.innerText || pre.innerText
         navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = `<span>Tersalin!</span>`
-          copyBtn.classList.add("bg-emerald-500", "text-white")
+          copyBtn.innerHTML = `<span>✓ Tersalin!</span>`
+          copyBtn.classList.add("bg-emerald-400", "text-black")
           setTimeout(() => {
             copyBtn.innerHTML = `<span>Salin</span>`
-            copyBtn.classList.remove("bg-emerald-500", "text-white")
+            copyBtn.classList.remove("bg-emerald-400", "text-black")
           }, 2000)
         })
       })
@@ -73,31 +72,25 @@ export function DocsContentView({
       {/* Article Header */}
       <header className="mb-8 border-b-2 border-border pb-6">
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <Badge
-            variant="outline"
-            className="border-2 border-border bg-main font-mono text-[11px] font-bold text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
-          >
+          <span className="-rotate-1 rounded-base border-2 border-border bg-amber-300 px-2.5 py-0.5 font-mono text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)]">
             pasax-secure-monitor
-          </Badge>
-          <Badge
-            variant="outline"
-            className="font-mono text-[11px] font-semibold"
-          >
+          </span>
+          <span className="rounded-base border-2 border-border bg-secondary-background px-2.5 py-0.5 font-mono text-xs font-black text-foreground shadow-[1.5px_1.5px_0px_0px_var(--border)]">
             {category}
-          </Badge>
+          </span>
           <span className="font-mono text-xs text-foreground/50">·</span>
-          <span className="flex items-center gap-1 font-mono text-xs text-foreground/60">
-            <Clock className="size-3" />
+          <span className="flex items-center gap-1 font-mono text-xs font-bold text-foreground">
+            <Clock className="size-3 text-foreground" />
             <span>5 min baca</span>
           </span>
         </div>
 
-        <h1 className="mb-3 font-heading text-2xl font-black tracking-tight text-foreground sm:text-4xl">
+        <h1 className="mb-3 font-heading text-3xl font-black tracking-tight text-foreground sm:text-4xl lg:text-5xl">
           {title}
         </h1>
 
         {description && (
-          <p className="text-sm leading-relaxed font-normal text-foreground/80 sm:text-base">
+          <p className="text-base leading-relaxed font-medium text-foreground sm:text-lg">
             {description}
           </p>
         )}
@@ -111,20 +104,24 @@ export function DocsContentView({
       />
 
       {/* Article Footer Feedback */}
-      <footer className="mt-12 flex flex-col items-center justify-between gap-4 border-t-2 border-border pt-6 font-mono text-xs text-foreground/70 sm:flex-row">
+      <footer className="mt-14 flex flex-col items-center justify-between gap-4 border-t-2 border-border pt-6 font-mono text-xs text-foreground sm:flex-row">
         <div className="flex items-center gap-2">
           <span>
-            Produk: <strong>pasax-secure-monitor</strong>
+            Produk:{" "}
+            <strong className="text-foreground">pasax-secure-monitor</strong>
           </span>
           <span>·</span>
-          <span>Lisensi: MIT Open Source</span>
+          <span>
+            Lisensi:{" "}
+            <strong className="text-foreground">MIT Open Source</strong>
+          </span>
         </div>
         <div className="flex items-center gap-3">
           <a
             href="https://github.com/pasax-dev/pasax-secure-monitor-laravel"
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1 font-bold text-foreground hover:text-main"
+            className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-3 py-1.5 font-mono text-xs font-black text-foreground shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none"
           >
             <GithubIcon className="size-3.5" />
             <span>GitHub Repository</span>

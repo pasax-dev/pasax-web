@@ -1,119 +1,97 @@
 import Link from "next/link"
 import { BookOpen, ArrowRight } from "lucide-react"
-import { buttonVariants } from "@/components/ui/button"
 import { SectionBackground } from "@/components/public/section-background"
-import { cn } from "@/lib/utils"
 
 export function DocsSection() {
+  const docCards = [
+    {
+      href: "/docs/getting-started/introduction",
+      tag: "MEMULAI CEPAT",
+      tagColor: "border-sky-500/30 bg-sky-500/10 text-sky-500",
+      title: "Pengenalan & Instalasi",
+      desc: "Standar Spatie zero NPM dependency, instalasi Composer, dan integrasi Laravel core hooks.",
+      guides: "3 Panduan",
+    },
+    {
+      href: "/docs/core-architecture/threat-detection-engine",
+      tag: "ARSITEKTUR INTI",
+      tagColor: "border-purple-500/30 bg-purple-500/10 text-purple-500",
+      title: "WAF & Karantina Perangkat",
+      desc: "Zero-Tolerance payload inspection, isolasi penyerang pada NAT/Wi-Fi publik, dan proxy IP resolution.",
+      guides: "4 Panduan",
+    },
+    {
+      href: "/docs/security-modules/stepped-login-throttling",
+      tag: "MODUL PERTAHANAN",
+      tagColor: "border-amber-500/30 bg-amber-500/10 text-amber-500",
+      title: "Login Lockout & Webshell",
+      desc: "Stepped brute-force defense (1m-24j), SHA-256 integrity baseline, dan sistem tiket banding.",
+      guides: "5 Panduan",
+    },
+    {
+      href: "/docs/api-reference/api-overview",
+      tag: "DEVELOPER API",
+      tagColor: "border-emerald-500/30 bg-emerald-500/10 text-emerald-500",
+      title: "REST API & Web Hardening",
+      desc: "Headless JSON endpoints untuk SPA/Mobile, aturan Nginx WAF siap pakai, dan Artisan CLI.",
+      guides: "17 Panduan",
+    },
+  ]
+
   return (
-    <section id="docs" className="relative overflow-hidden scroll-mt-20 py-6">
+    <div className="relative overflow-hidden py-12">
       <SectionBackground variant="dots" />
       <div className="relative z-10 mx-auto max-w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="mb-12 text-center">
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-secondary-background px-3 py-1 font-mono text-xs font-bold text-foreground shadow-[2px_2px_0px_0px_var(--border)]">
-            <BookOpen className="size-3.5 text-main" />
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-muted/40 px-3.5 py-1 text-xs text-muted-foreground backdrop-blur-md">
+            <BookOpen className="size-3.5 text-sky-500" />
             <span>OFFICIAL DOCUMENTATION PORTAL</span>
           </div>
-          <h2 className="font-heading text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl">
-            Dokumentasi Lengkap <span className="text-main">pasax-secure-monitor</span>
+          <h2 className="bg-gradient-to-b from-foreground via-foreground to-foreground/70 bg-clip-text font-heading text-3xl font-bold tracking-tight text-balance text-transparent sm:text-5xl">
+            Dokumentasi Lengkap{" "}
+            <span className="text-sky-500">pasax-secure-monitor</span>
           </h2>
-          <p className="mt-4 max-w-3xl mx-auto text-sm sm:text-base text-foreground/80 font-base leading-relaxed">
-            Panduan arsitektur keamanan, instalasi Laravel Spatie-compliant 100% Pure PHP,
-            konfigurasi hardening web server Nginx/Apache, hingga spesifikasi REST API headless lengkap.
+          <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-pretty text-muted-foreground sm:text-base">
+            Panduan arsitektur keamanan, instalasi Laravel Spatie-compliant 100%
+            Pure PHP, konfigurasi hardening web server Nginx/Apache, hingga
+            spesifikasi REST API headless lengkap.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
-          <Link
-            href="/docs/getting-started/introduction"
-            className="group rounded-base border-2 border-border bg-background p-6 lg:p-7 shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_var(--border)] flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <span className="font-mono text-[10px] font-black text-main">MEMULAI CEPAT</span>
-              <h3 className="font-heading text-base font-black text-foreground group-hover:text-main">
-                Pengenalan & Instalasi
-              </h3>
-              <p className="text-xs text-foreground/70 leading-relaxed">
-                Standar Spatie zero NPM dependency, instalasi Composer, dan integrasi Laravel core hooks.
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs font-mono font-bold text-foreground/80 group-hover:text-main">
-              <span>3 Panduan</span>
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:gap-8">
+          {docCards.map((card, i) => (
+            <Link
+              key={i}
+              href={card.href}
+              className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 backdrop-blur-md transition-all hover:border-sky-500/30 hover:bg-card/70 lg:p-7"
+            >
+              <div className="space-y-3">
+                <span
+                  className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase ${card.tagColor}`}
+                >
+                  {card.tag}
+                </span>
+                <h3 className="font-heading text-base font-bold text-foreground transition-colors group-hover:text-sky-500">
+                  {card.title}
+                </h3>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  {card.desc}
+                </p>
+              </div>
 
-          <Link
-            href="/docs/core-architecture/threat-detection-engine"
-            className="group rounded-base border-2 border-border bg-background p-6 lg:p-7 shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_var(--border)] flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <span className="font-mono text-[10px] font-black text-main">ARSITEKTUR INTI</span>
-              <h3 className="font-heading text-base font-black text-foreground group-hover:text-main">
-                WAF & Karantina Perangkat
-              </h3>
-              <p className="text-xs text-foreground/70 leading-relaxed">
-                Zero-Tolerance payload inspection, isolasi penyerang pada NAT/Wi-Fi publik, dan proxy IP resolution.
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs font-mono font-bold text-foreground/80 group-hover:text-main">
-              <span>4 Panduan</span>
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-
-          <Link
-            href="/docs/security-modules/stepped-login-throttling"
-            className="group rounded-base border-2 border-border bg-background p-6 lg:p-7 shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_var(--border)] flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <span className="font-mono text-[10px] font-black text-main">MODUL PERTAHANAN</span>
-              <h3 className="font-heading text-base font-black text-foreground group-hover:text-main">
-                Login Lockout & Webshell
-              </h3>
-              <p className="text-xs text-foreground/70 leading-relaxed">
-                Stepped brute-force defense (1m-24j), SHA-256 integrity baseline, dan sistem tiket banding.
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs font-mono font-bold text-foreground/80 group-hover:text-main">
-              <span>5 Panduan</span>
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-
-          <Link
-            href="/docs/api-reference/api-overview"
-            className="group rounded-base border-2 border-border bg-background p-6 lg:p-7 shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_var(--border)] flex flex-col justify-between"
-          >
-            <div className="space-y-2">
-              <span className="font-mono text-[10px] font-black text-main">DEVELOPER API</span>
-              <h3 className="font-heading text-base font-black text-foreground group-hover:text-main">
-                REST API & Web Hardening
-              </h3>
-              <p className="text-xs text-foreground/70 leading-relaxed">
-                Headless JSON endpoints untuk SPA/Mobile, aturan Nginx WAF siap pakai, dan Artisan CLI.
-              </p>
-            </div>
-            <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs font-mono font-bold text-foreground/80 group-hover:text-main">
-              <span>17 Panduan</span>
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-            </div>
-          </Link>
-        </div>
-
-        <div className="mt-8 text-center">
-          <Link
-            href="/docs"
-            className={cn(
-              buttonVariants({ variant: "default", size: "lg" }),
-              "inline-flex items-center gap-2 font-heading font-black shadow-shadow"
-            )}
-          >
-            <span>Jelajahi Seluruh 29 Dokumen pasax-secure-monitor</span>
-            <ArrowRight className="size-5" />
-          </Link>
+              <div className="mt-6 flex items-center justify-between border-t border-border/40 pt-4 font-sans text-xs">
+                <span className="font-mono text-muted-foreground">
+                  {card.guides}
+                </span>
+                <span className="flex items-center gap-1 font-medium text-sky-500 transition-transform group-hover:translate-x-1">
+                  <span>Baca</span>
+                  <ArrowRight className="size-3.5" />
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
-    </section>
+    </div>
   )
 }

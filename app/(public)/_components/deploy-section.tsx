@@ -3,9 +3,9 @@ import { VpsDeploySteps } from "@/components/public/vps-deploy-steps"
 
 export function DeploySection() {
   return (
-    <section id="deploy" className="relative overflow-hidden scroll-mt-20 py-6">
+    <div className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
       <SectionBackground variant="circuit" />
       <VpsDeploySteps />
-    </section>
+    </div>
   )
 }

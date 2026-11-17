@@ -318,37 +318,31 @@ export function TacticalRadar() {
   const radarRadius = radarSize / 2 - 38
 
   return (
-    <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)]">
-      {/* ThreatsEye HUD Corner Brackets */}
-      <div className="pointer-events-none absolute top-2 left-2 size-4 border-t-2 border-l-2 border-main/80 animate-[hud-bracket-breathe_3s_ease-in-out_infinite] hidden sm:block" />
-      <div className="pointer-events-none absolute top-2 right-2 size-4 border-t-2 border-r-2 border-main/80 animate-[hud-bracket-breathe_3s_ease-in-out_infinite] hidden sm:block" />
-      <div className="pointer-events-none absolute bottom-2 left-2 size-4 border-b-2 border-l-2 border-main/80 animate-[hud-bracket-breathe_3s_ease-in-out_infinite] hidden sm:block" />
-      <div className="pointer-events-none absolute bottom-2 right-2 size-4 border-b-2 border-r-2 border-main/80 animate-[hud-bracket-breathe_3s_ease-in-out_infinite] hidden sm:block" />
-
+    <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/40 p-6 backdrop-blur-md shadow-xl">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/40 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="relative flex size-2.5">
+            <span className="relative flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+              <span className="relative inline-flex size-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
             </span>
-            <h3 className="font-heading text-lg font-black tracking-tight text-foreground">
+            <h3 className="font-heading text-base font-bold tracking-tight text-foreground">
               360° Tactical Perimeter Radar
             </h3>
-            <span className="rounded bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-500">
               HD SWEEP 60FPS
             </span>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            ThreatsEye-grade precision telemetry, socket-level entrapment & automated honeypots
+          <p className="mt-1 font-sans text-xs text-muted-foreground">
+            Precision telemetry, socket-level entrapment & automated honeypots
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Badge
             variant="outline"
-            className="border-2 border-border bg-secondary-background font-mono text-xs font-bold text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+            className="rounded-full border-border/50 bg-muted/40 font-mono text-xs font-medium text-muted-foreground"
           >
             DETECTED: {visibleTargets.length} ACTIVE
           </Badge>

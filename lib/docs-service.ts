@@ -67,19 +67,19 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
   // Local filesystem fallback
   if (!markdownBody && typeof window === "undefined") {
     try {
-      const fs = require("fs");
-      const path = require("path");
+      const fs = require("fs")
+      const path = require("path")
       const candidates = [
         path.join(process.cwd(), "docs", item.product, item.filePath),
         path.join(process.cwd(), "docs", item.filePath),
         path.join(process.cwd(), "docs", item.product, `${item.slug}.md`),
         path.join(process.cwd(), "docs", `${item.slug}.md`),
-      ];
+      ]
       for (const p of candidates) {
         if (fs.existsSync(/*turbopackIgnore: true*/ p)) {
-          const raw = fs.readFileSync(/*turbopackIgnore: true*/ p, "utf-8");
-          markdownBody = raw.replace(/^---[\s\S]*?---\s*/, "");
-          break;
+          const raw = fs.readFileSync(/*turbopackIgnore: true*/ p, "utf-8")
+          markdownBody = raw.replace(/^---[\s\S]*?---\s*/, "")
+          break
         }
       }
     } catch (e) {
@@ -88,7 +88,7 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
   }
 
   if (!markdownBody) {
-    return null;
+    return null
   }
 
   // Transform Astro Starlight component syntax if present
@@ -114,14 +114,14 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
   ALL_DOCS.forEach((d) => {
     const slugWithoutPrefix = d.slug
     const regex1 = new RegExp(
-      `\\]\\((\\.\\.\/)*${slugWithoutPrefix}\\/?\\)`,
+      `\\]\\((\\.\\.\\/)*${slugWithoutPrefix}\\/?[\\)]`,
       "g"
     )
     markdownBody = markdownBody.replace(regex1, `](/docs/${slugWithoutPrefix})`)
 
     const slugLastPart = d.slug.split("/").pop()
     if (slugLastPart) {
-      const regex2 = new RegExp(`\\]\\(${slugLastPart}\\/\\)`, "g")
+      const regex2 = new RegExp(`\\]\\(${slugLastPart}\\/?[\\)]`, "g")
       markdownBody = markdownBody.replace(
         regex2,
         `](/docs/${slugWithoutPrefix})`
@@ -169,7 +169,7 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
   renderer.heading = ({ text, depth }: { text: string; depth: number }) => {
     const cleanText = text.replace(/<[^>]+>/g, "").trim()
     const id = slugify(cleanText)
-    return `<h${depth} id="${id}" class="group flex items-center scroll-mt-24"><a href="#${id}" class="no-underline text-inherit hover:underline">${text}</a><span class="ml-2 opacity-0 group-hover:opacity-100 text-main font-mono text-sm">#</span></h${depth}>`
+    return `<h${depth} id="${id}" class="group flex items-center scroll-mt-24"><a href="#${id}" class="no-underline text-inherit hover:underline">${text}</a><span class="ml-2 opacity-0 group-hover:opacity-100 text-foreground/50 font-mono text-sm">#</span></h${depth}>`
   }
 
   // Convert markdown to HTML

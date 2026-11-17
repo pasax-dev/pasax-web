@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-17",
+  "type": "update",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak-market.vercel.app"
+  },
+  "title": {
+    "id": "Pembaruan Menyeluruh Antarmuka Publik Berdaya Presisi Tinggi dan Animasi Pemantauan Interaktif",
+    "en": "Comprehensive High-Precision Public Interface Overhaul with Interactive Monitoring Animations"
+  },
+  "body": {
+    "id": "Menghadirkan pembaruan besar pada antarmuka publik portal operasional keamanan Pasax. Tampilan kini mengadopsi struktur visual presisi tinggi dengan palet warna lembut yang nyaman di mata, tipografi judul yang dinamis, ilustrasi pertahanan siber bergerak, lembar pembatas teknis antarseksi, serta bilah status operasional langsung di bagian bawah layar untuk pengalaman pemantauan yang lebih jelas dan informatif.",
+    "en": "Rolled out a major visual and interactive overhaul to the public security operations portal. The experience now adopts a high-precision layout with comfortable soft paper palettes, dynamic animated typography, live cyber defense vector animations, technical section framing, and a persistent bottom status bar delivering real-time operational clarity."
+  },
+  "items": [
+    {
+      "type": "feature",
+      "id": "Antarmuka Beranda Berdaya Presisi Tinggi: Penataan ulang beranda dengan tipografi judul adaptif, efek teks kinetik, dan penyajian perintah instalasi instan yang rapi dan mudah disalin.",
+      "en": "High-Precision Landing Experience: Redesigned headline hierarchy with kinetic visual typography, streamlined command installation snippets, and instant copy feedback."
+    },
+    {
+      "type": "feature",
+      "id": "Animasi Pemantauan Pertahanan Interaktif: Penyematan ilustrasi gerak vektor langsung untuk deteksi ancaman siber, kesehatan server, dan enkripsi data tanpa memperberat performa peramban.",
+      "en": "Interactive Defense Visualizations: Integrated smooth vector animations showcasing live threat interception, server health telemetry, and data encryption with zero performance overhead."
+    },
+    {
+      "type": "feature",
+      "id": "Bilah Status Operasional Waktu-Nyata: Bilah navigasi tetap di bagian bawah layar yang secara dinamis menampilkan status sistem pertahanan aktif dan memudahkan lompatan antarseksi.",
+      "en": "Persistent Live Telemetry Status Bar: Bottom status strip providing continuous system health readouts and quick navigational jumps across operational sections."
+    },
+    {
+      "type": "improvement",
+      "id": "Penyempurnaan Halaman Masuk dan Dokumentasi: Tampilan formulir otentikasi dan pusat dokumentasi yang lebih terstruktur dengan dukungan penuh pencarian instan dan navigasi yang bersih.",
+      "en": "Refined Authentication and Documentation Portal: Modernized split-layout sign-in views and technical documentation hub with instant search and clean navigation."
+    }
+  ]
+}

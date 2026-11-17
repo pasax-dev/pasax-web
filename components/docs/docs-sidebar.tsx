@@ -19,20 +19,12 @@ import {
   BookOpen,
   Menu,
   X,
-  ShieldAlert,
   Layers,
 } from "lucide-react"
-import {
-  PRODUCTS_CONFIG,
-  ProductConfig,
-  findDocBySlug,
-  DocCategory,
-  DocItem,
-} from "@/lib/docs-manifest"
+import { PRODUCTS_CONFIG, findDocBySlug } from "@/lib/docs-manifest"
 import { cn } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { SearchTrigger } from "@/components/search/search-trigger"
 
 const iconMap: Record<string, React.ElementType> = {
   Rocket,
@@ -102,10 +94,10 @@ export function DocsSidebar({ className }: { className?: string }) {
   const content = (
     <div className="flex h-full flex-col">
       {/* Product & Docs Header */}
-      <div className="space-y-3 border-b-2 border-border bg-secondary-background p-4">
+      <div className="space-y-3.5 border-b-2 border-border bg-secondary-background p-4">
         {/* Product Selector Tabs */}
         <div>
-          <span className="mb-1.5 block font-mono text-[10px] font-bold tracking-wider text-foreground/60 uppercase">
+          <span className="mb-1.5 block font-mono text-[10px] font-black tracking-wider text-foreground uppercase">
             Pilih Modul Dokumentasi
           </span>
           <div className="grid grid-cols-3 gap-1 rounded-base border-2 border-border bg-background p-1 shadow-[2px_2px_0px_0px_var(--border)]">
@@ -118,8 +110,8 @@ export function DocsSidebar({ className }: { className?: string }) {
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
                 activeProduct === "pasax-secure-monitor"
-                  ? "bg-main text-main-foreground shadow-sm"
-                  : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
+                  ? "border border-border bg-main text-black shadow-[1px_1px_0px_0px_var(--border)]"
+                  : "text-foreground hover:bg-secondary-background"
               )}
             >
               Monitor
@@ -133,8 +125,8 @@ export function DocsSidebar({ className }: { className?: string }) {
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
                 activeProduct === "pasax-sentinel"
-                  ? "bg-main text-main-foreground shadow-sm"
-                  : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
+                  ? "border border-border bg-main text-black shadow-[1px_1px_0px_0px_var(--border)]"
+                  : "text-foreground hover:bg-secondary-background"
               )}
             >
               Sentinel
@@ -148,11 +140,11 @@ export function DocsSidebar({ className }: { className?: string }) {
               className={cn(
                 "rounded-sm px-1.5 py-1 text-center font-heading text-[11px] font-black transition-all",
                 activeProduct === "core"
-                  ? "bg-main text-main-foreground shadow-sm"
-                  : "text-foreground/70 hover:bg-secondary-background hover:text-foreground"
+                  ? "border border-border bg-main text-black shadow-[1px_1px_0px_0px_var(--border)]"
+                  : "text-foreground hover:bg-secondary-background"
               )}
             >
-              Core Suite
+              Core
             </Link>
           </div>
         </div>
@@ -163,40 +155,24 @@ export function DocsSidebar({ className }: { className?: string }) {
             <span className="font-heading text-sm font-black text-foreground">
               {activeConfig.name}
             </span>
-            <Badge
-              variant="outline"
-              className="border-2 border-border bg-main font-mono text-[10px] font-bold text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]"
-            >
+            <span className="rounded-base border-2 border-border bg-amber-300 px-2 py-0.5 font-mono text-[9px] font-black text-black shadow-[1.5px_1.5px_0px_0px_var(--border)]">
               {activeConfig.badge}
-            </Badge>
+            </span>
           </div>
-          <p className="line-clamp-2 text-[11px] leading-tight text-foreground/70">
+          <p className="line-clamp-2 text-[11px] leading-tight font-medium text-foreground">
             {activeConfig.description}
           </p>
         </div>
 
-        {/* Search Input */}
-        <div className="relative">
-          <Search className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-foreground/50" />
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder={`Cari dokumen ${activeConfig.name}...`}
-            className="h-8 pl-8 text-xs"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute top-1/2 right-2 -translate-y-1/2 text-xs font-bold text-foreground/50 hover:text-foreground"
-            >
-              ✕
-            </button>
-          )}
-        </div>
+        {/* Fumadocs Search Trigger */}
+        <SearchTrigger
+          variant="sidebar"
+          placeholder={`Cari di ${activeConfig.name}...`}
+        />
       </div>
 
       {/* Navigation Tree */}
-      <div className="flex-1 space-y-6 overflow-y-auto p-4">
+      <div className="flex-1 space-y-5 overflow-y-auto p-4">
         {filteredCategories.map((cat) => {
           const Icon = iconMap[cat.icon] || BookOpen
           const isCollapsed = collapsedCategories[cat.slug] && !searchQuery
@@ -205,23 +181,23 @@ export function DocsSidebar({ className }: { className?: string }) {
             <div key={cat.slug} className="space-y-1.5">
               <button
                 onClick={() => toggleCategory(cat.slug)}
-                className="group flex w-full items-center justify-between py-1 text-left font-heading text-xs font-black tracking-wider text-foreground/80 uppercase transition-colors hover:text-foreground"
+                className="group flex w-full items-center justify-between py-1 text-left font-heading text-xs font-black tracking-wider text-foreground uppercase transition-colors hover:underline"
               >
                 <span className="flex items-center gap-2">
-                  <Icon className="size-3.5 text-main" />
+                  <Icon className="size-3.5 stroke-[2.5] text-foreground" />
                   <span>{cat.title}</span>
                 </span>
-                <span className="text-foreground/50 group-hover:text-foreground">
+                <span className="text-foreground group-hover:text-foreground">
                   {isCollapsed ? (
-                    <ChevronRight className="size-3" />
+                    <ChevronRight className="size-3 stroke-[2.5]" />
                   ) : (
-                    <ChevronDown className="size-3" />
+                    <ChevronDown className="size-3 stroke-[2.5]" />
                   )}
                 </span>
               </button>
 
               {!isCollapsed && (
-                <div className="ml-2 space-y-1 border-l-2 border-border/40 pl-3">
+                <div className="ml-2 space-y-1 border-l-2 border-border/40 pl-2.5">
                   {cat.items.map((item) => {
                     const href = `/docs/${item.product}/${item.slug}`
                     const isActive =
@@ -235,8 +211,8 @@ export function DocsSidebar({ className }: { className?: string }) {
                         className={cn(
                           "block rounded-base px-2.5 py-1.5 text-xs transition-all",
                           isActive
-                            ? "translate-x-1 border-2 border-border bg-main font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
-                            : "font-medium text-foreground/80 hover:border-2 hover:border-border hover:bg-secondary-background hover:text-foreground hover:shadow-[2px_2px_0px_0px_var(--border)]"
+                            ? "translate-x-1 border-2 border-border bg-main font-black text-black shadow-[2px_2px_0px_0px_var(--border)]"
+                            : "font-semibold text-foreground hover:border-2 hover:border-border hover:bg-secondary-background hover:text-foreground hover:shadow-[2px_2px_0px_0px_var(--border)]"
                         )}
                       >
                         {item.title}
@@ -250,22 +226,28 @@ export function DocsSidebar({ className }: { className?: string }) {
         })}
 
         {filteredCategories.length === 0 && (
-          <div className="py-8 text-center text-xs text-foreground/60">
+          <div className="py-8 text-center font-mono text-xs font-semibold text-foreground">
             <p>Tidak ada hasil untuk &quot;{searchQuery}&quot;</p>
           </div>
         )}
       </div>
 
       {/* Footer Info */}
-      <div className="border-t-2 border-border bg-secondary-background/60 p-3 text-[11px] text-foreground/70">
+      <div className="border-t-2 border-border bg-secondary-background/80 p-3 text-[11px] text-foreground">
         <div className="flex items-center justify-between font-mono">
           <div className="flex items-center gap-1.5 font-bold">
-            <Image src="/icon.png" alt="Pasax Suite" width={16} height={16} className="size-4 rounded-sm object-contain" />
-            <span>Pasax Suite</span>
+            <Image
+              src="/icon.png"
+              alt="Pasax Suite"
+              width={16}
+              height={16}
+              className="size-4 rounded-sm object-contain"
+            />
+            <span>Pasax Docs</span>
           </div>
           <Link
             href="/docs"
-            className="flex items-center gap-1 font-bold text-main hover:underline"
+            className="flex items-center gap-1 font-black text-foreground hover:underline"
           >
             Semua Produk &rarr;
           </Link>
@@ -291,9 +273,9 @@ export function DocsSidebar({ className }: { className?: string }) {
         <Button
           onClick={() => setMobileOpen(true)}
           size="icon-lg"
-          className="rounded-full shadow-[4px_4px_0px_0px_var(--border)]"
+          className="rounded-base border-2 border-border bg-main font-black text-black shadow-[3px_3px_0px_0px_var(--border)] hover:translate-x-0.5 hover:translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none"
         >
-          <Menu className="size-5" />
+          <Menu className="size-5 stroke-[2.5]" />
           <span className="sr-only">Buka Navigasi Dokumen</span>
         </Button>
       </div>
@@ -305,10 +287,10 @@ export function DocsSidebar({ className }: { className?: string }) {
             className="fixed inset-0 bg-black/60 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative flex w-80 max-w-[85vw] flex-1 flex-col border-r-2 border-border bg-background shadow-2xl">
+          <div className="relative flex w-80 max-w-[85vw] flex-1 flex-col border-r-2 border-border bg-background shadow-[8px_0px_0px_0px_var(--border)]">
             <div className="flex items-center justify-between border-b-2 border-border bg-secondary-background p-4">
               <div className="flex items-center gap-2">
-                <BookOpen className="size-4 text-main" />
+                <BookOpen className="size-4 stroke-[2.5] text-foreground" />
                 <span className="font-heading text-sm font-black text-foreground">
                   Daftar Isi Dokumentasi
                 </span>

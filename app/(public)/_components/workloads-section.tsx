@@ -3,9 +3,9 @@ import { VpsUseCases } from "@/components/public/vps-use-cases"
 
 export function WorkloadsSection() {
   return (
-    <section id="workloads" className="relative overflow-hidden scroll-mt-20 py-6">
-      <SectionBackground variant="stripes" />
+    <div className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
+      <SectionBackground variant="grid" />
       <VpsUseCases />
-    </section>
+    </div>
   )
 }

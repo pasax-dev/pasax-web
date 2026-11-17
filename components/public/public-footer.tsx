@@ -1,14 +1,7 @@
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import {
-  Lock,
-  Globe2,
-  ShieldCheck,
-  Terminal,
-  ExternalLink,
-  Sparkles,
-} from "lucide-react"
+import { Lock, Globe2, Terminal } from "lucide-react"
 
 function GithubIcon(props: React.ComponentProps<"svg">) {
   return (
@@ -24,26 +17,26 @@ function GithubIcon(props: React.ComponentProps<"svg">) {
 
 export function PublicFooter() {
   return (
-    <footer className="border-t-2 border-border bg-secondary-background">
+    <footer className="border-t border-border/40 bg-background/80 transition-colors">
       <div className="mx-auto max-w-full px-4 py-12 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
           {/* Col 1: Brand Info & Status (Span 2 on lg) */}
           <div className="space-y-4 lg:col-span-2">
             <Link href="/" className="group inline-flex items-center gap-2.5">
-              <div className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-base border-2 border-border bg-card shadow-[2px_2px_0px_0px_var(--border)] transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5">
+              <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-muted/40 transition-transform group-hover:scale-105">
                 <Image
                   src="/icon.png"
                   alt="Pasax Suite Icon"
-                  width={36}
-                  height={36}
+                  width={32}
+                  height={32}
                   className="size-full object-contain p-0.5"
                 />
               </div>
-              <span className="font-heading text-xl font-black tracking-tight text-foreground">
-                PASAX<span className="text-main">.</span>
+              <span className="font-heading text-lg font-bold tracking-tight text-foreground">
+                PASAX<span className="text-sky-500">.</span>
               </span>
             </Link>
-            <p className="max-w-md text-sm leading-relaxed font-base text-foreground/80">
+            <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
               Autonomous, zero-overhead Linux VPS and web fleet immunity.
               Combines kernel-level <strong>sub-0.2ms nftables drops</strong>,
               instant <strong>11ms FIM auto-lock</strong>, and centralized fleet
@@ -51,19 +44,17 @@ export function PublicFooter() {
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
-              <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-background px-3 py-1 font-mono text-xs shadow-[2px_2px_0px_0px_var(--border)]">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-500">
                 <span className="relative flex size-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
                 </span>
-                <span className="font-bold text-foreground">
-                  Sentinel Mesh: Operational
-                </span>
+                <span className="font-medium">Sentinel Mesh: Operational</span>
               </div>
 
               <Link
                 href="/threats-map"
-                className="inline-flex items-center gap-1.5 rounded-base border-2 border-rose-500/50 bg-rose-500/10 px-3 py-1 font-mono text-xs font-bold text-rose-600 shadow-[2px_2px_0px_0px_var(--border)] transition-transform hover:-translate-y-0.5 dark:text-rose-400"
+                className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-mono text-xs font-medium text-rose-500 transition-all hover:bg-rose-500/20"
               >
                 <Globe2 className="size-3.5" />
                 <span>Global Threat Map</span>
@@ -73,14 +64,14 @@ export function PublicFooter() {
 
           {/* Col 2: The Ecosystem */}
           <div className="space-y-3">
-            <h4 className="font-heading text-xs font-black tracking-wider text-foreground uppercase">
+            <h4 className="font-sans text-xs font-semibold tracking-wider text-foreground uppercase">
               Triple Defense
             </h4>
-            <ul className="space-y-2 text-sm font-medium">
+            <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/docs/pasax-sentinel"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   pasax-sentinel (Go Daemon)
                 </Link>
@@ -88,7 +79,7 @@ export function PublicFooter() {
               <li>
                 <Link
                   href="/docs/pasax-secure-monitor"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   pasax/shield (Laravel WAF)
                 </Link>
@@ -96,116 +87,75 @@ export function PublicFooter() {
               <li>
                 <Link
                   href="/dashboard"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Pasax Cloud (Fleet SOC)
+                  Fleet SOC Cloud Console
                 </Link>
               </li>
               <li>
                 <Link
                   href="/threats-map"
-                  className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <span>3D Live Threat Map</span>
-                  <span className="flex size-1.5 animate-pulse rounded-full bg-rose-500" />
+                  3D Interactive Threat Map
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="/#telemetry"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
-                >
-                  Real-time Telemetry Feed
-                </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Documentation & Guides */}
+          {/* Col 3: Documentation */}
           <div className="space-y-3">
-            <h4 className="font-heading text-xs font-black tracking-wider text-foreground uppercase">
+            <h4 className="font-sans text-xs font-semibold tracking-wider text-foreground uppercase">
               Documentation
             </h4>
-            <ul className="space-y-2 text-sm font-medium">
+            <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/docs"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Documentation Portal
+                  Documentation Overview
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/docs/pasax-sentinel"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  href="/docs/getting-started/introduction"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Sentinel Kernel Setup
+                  Quick Start &amp; Installation
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/docs/pasax-secure-monitor"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  href="/docs/core-architecture/threat-detection-engine"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Laravel WAF &amp; Honeypots
+                  Zero-Tolerance WAF Engine
                 </Link>
               </li>
               <li>
                 <Link
                   href="/docs/api-reference/api-overview"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  REST API Reference
+                  Headless REST API
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="/#vps-comparison"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
-                >
-                  Pasax vs Legacy SIEM
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/#faq"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
-                >
-                  Frequently Asked Questions
-                </a>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Trust & Legal */}
+          {/* Col 4: Community & Open Source */}
           <div className="space-y-3">
-            <h4 className="font-heading text-xs font-black tracking-wider text-foreground uppercase">
-              Trust &amp; Legal
+            <h4 className="font-sans text-xs font-semibold tracking-wider text-foreground uppercase">
+              Open Source
             </h4>
-            <ul className="space-y-2 text-sm font-medium">
-              <li>
-                <Link
-                  href="/privacy"
-                  className="font-bold text-foreground hover:text-main hover:underline"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="font-bold text-foreground hover:text-main hover:underline"
-                >
-                  Terms of Service
-                </Link>
-              </li>
+            <ul className="space-y-2 text-sm">
               <li>
                 <a
                   href="https://github.com/pasax-dev"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 text-foreground/80 hover:text-foreground hover:underline"
+                  className="flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <GithubIcon className="size-3.5" />
                   <span>GitHub Repository</span>
@@ -216,7 +166,7 @@ export function PublicFooter() {
                   href="https://github.com/pasax-dev"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-foreground/80 hover:text-foreground hover:underline"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Report Vulnerability
                 </a>
@@ -231,7 +181,7 @@ export function PublicFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t-2 border-border pt-6 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 sm:flex-row">
           <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-muted-foreground">
             <span>
               &copy; {new Date().getFullYear()} Pasax Security Ecosystem.
@@ -239,22 +189,22 @@ export function PublicFooter() {
             <span className="hidden sm:inline">&bull;</span>
             <Link
               href="/privacy"
-              className="text-foreground/75 hover:text-foreground hover:underline"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Privacy Policy
             </Link>
             <span>&bull;</span>
             <Link
               href="/terms"
-              className="text-foreground/75 hover:text-foreground hover:underline"
+              className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Terms of Service
             </Link>
           </div>
 
           <div className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1">
-              <Lock className="size-3.5 text-emerald-500" />
+            <span className="inline-flex items-center gap-1 font-medium text-emerald-500">
+              <Lock className="size-3.5" />
               <span>TLS 1.3 mTLS Encrypted</span>
             </span>
             <span>&bull;</span>
