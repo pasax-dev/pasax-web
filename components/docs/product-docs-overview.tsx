@@ -14,8 +14,12 @@ import {
   Shield,
   Layers,
   GitBranch,
+  Download,
 } from "lucide-react"
 import { PRODUCTS_CONFIG, getDocSectionsForProduct } from "@/lib/docs-manifest"
+import { cn } from "@/lib/utils"
+import { type PackagistData } from "@/lib/packagist"
+import { usePackagistData } from "@/lib/use-packagist"
 import { DocsBreadcrumb } from "./docs-breadcrumb"
 import { DocsToc } from "./docs-toc"
 import { DocsPager } from "./docs-pager"
@@ -24,6 +28,7 @@ export type ProductType = "core" | "pasax-secure-monitor" | "pasax-sentinel"
 
 interface ProductDocsOverviewProps {
   product: ProductType
+  initialPackagist?: PackagistData
 }
 
 const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
@@ -57,52 +62,65 @@ function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
+export function ProductDocsOverview({
+  product,
+  initialPackagist,
+}: ProductDocsOverviewProps) {
   const info = PRODUCTS_CONFIG[product]
   const sections = getDocSectionsForProduct(product)
   const snippet = quickSnippets[product]
   const [copied, setCopied] = React.useState(false)
-
-  // First available document link
-  const firstDocItem =
-    sections.length > 0 && sections[0].items.length > 0
-      ? sections[0].items[0]
-      : null
-
-  const firstDocHref = firstDocItem
-    ? `/docs/${product}/${firstDocItem.slug}`
-    : `/docs/${product}`
+  const { data: packagistData } = usePackagistData(initialPackagist)
 
   const copySnippet = () => {
     if (!snippet) return
-    navigator.clipboard.writeText(snippet.cmd).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
+    navigator.clipboard.writeText(snippet.cmd)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
-  const tocHeadings = [
-    ...(product === "pasax-secure-monitor"
-      ? [
-          {
-            id: "packagist-info",
-            text: "Informasi Packagist & Versi",
-            level: 2,
-          },
-        ]
-      : []),
-    { id: "instalasi-perintah", text: "Perintah Cepat", level: 2 },
-    { id: "daftar-bab", text: "Daftar Bab & Panduan", level: 2 },
-  ]
+  // Find first readable article href
+  const firstDocItem = sections[0]?.items[0]
+  const firstDocHref = firstDocItem
+    ? `/docs/${product}/${firstDocItem.slug}`
+    : "#"
+
+  // Build Table of Contents dynamically
+  const tocHeadings = React.useMemo(() => {
+    const list = []
+    if (product === "pasax-secure-monitor") {
+      list.push({
+        id: "packagist-info",
+        text: "Informasi Paket Packagist & Versi Rilis",
+        level: 2,
+      })
+    }
+    if (snippet) {
+      list.push({
+        id: "instalasi-perintah",
+        text: "Perintah Instalasi Cepat",
+        level: 2,
+      })
+    }
+    list.push({
+      id: "daftar-bab",
+      text: `Daftar Bab & Panduan — ${info.name}`,
+      level: 2,
+    })
+    return list
+  }, [product, snippet, info.name])
 
   const repoUrl =
     product === "pasax-sentinel"
       ? "https://github.com/pasax-dev/pasax-sentinel"
       : product === "core"
         ? "https://github.com/pasax-dev/pasax-suit"
-        : "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
+        : packagistData.repository ||
+          "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
 
-  const packagistUrl = "https://packagist.org/packages/pasax/secure-monitor"
+  const packagistUrl =
+    packagistData.packagistUrl ||
+    "https://packagist.org/packages/pasax/secure-monitor"
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-1 justify-between">
@@ -132,7 +150,7 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
               <>
                 <span className="font-mono text-xs text-lp-ink/40">·</span>
                 <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                  v1.0.2 STABLE
+                  v{packagistData.latestVersion} STABLE
                 </span>
               </>
             )}
@@ -163,7 +181,7 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
                 className="inline-flex items-center gap-1.5 rounded-lg border border-[#F28D1A]/30 bg-[#F28D1A]/10 px-3.5 py-2 font-mono text-xs font-medium text-[#F28D1A] transition-colors hover:bg-[#F28D1A]/20"
               >
                 <PackagistIcon className="size-3.5" />
-                <span>Packagist v1.0.2</span>
+                <span>Packagist v{packagistData.latestVersion}</span>
                 <ExternalLink className="size-3 opacity-60" />
               </a>
             )}
@@ -204,8 +222,8 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
             <p>
               Paket <code>pasax/secure-monitor</code> didistribusikan secara
               resmi melalui repositori Composer publik di{" "}
-              <strong>Packagist</strong> dengan integrasi penuh standar Spatie,
-              100% PHP murni tanpa memerlukan dependensi Node.js / NPM.
+              <strong>Packagist</strong> dengan integrasi penuh standar Laravel
+              package, 100% PHP murni tanpa memerlukan dependensi Node.js / NPM.
             </p>
 
             {/* Quick Metadata Matrix Grid */}
@@ -233,7 +251,7 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
-                    v1.0.2
+                    v{packagistData.latestVersion}
                   </span>
                   <span className="py-0.2 rounded-full bg-emerald-500/10 px-1.5 font-mono text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
                     STABLE
@@ -253,108 +271,109 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
 
               <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
                 <div className="mb-1 flex items-center gap-2 font-mono text-xs text-lp-ink/60">
-                  <Shield className="size-3.5 text-lp-orange" />
-                  <span>Framework Laravel</span>
+                  <Download className="size-3.5 text-purple-500" />
+                  <span>Total Unduhan</span>
                 </div>
-                <div className="font-mono text-xs font-bold text-lp-ink">
-                  10.x · 11.x · 12.x · 13.x
+                <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-lp-ink">
+                  <span>{packagistData.downloadsTotal} Unduhan</span>
+                  <span className="text-[10px] font-normal text-lp-ink/60">
+                    (Packagist)
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Version History Table */}
+            {/* Version History Table (Dynamic from Packagist API) */}
             <div className="not-prose my-6 rounded-xl border border-lp-line bg-lp-paper-2/30 p-4">
-              <h4 className="mb-3 flex items-center gap-2 font-heading text-xs font-semibold text-lp-ink">
-                <Clock className="size-3.5 text-lp-orange" />
-                <span>Riwayat Versi Packagist &amp; Catatan Perubahan</span>
-              </h4>
+              <div className="mb-3 flex items-center justify-between">
+                <h4 className="flex items-center gap-2 font-heading text-xs font-semibold text-lp-ink">
+                  <Clock className="size-3.5 text-lp-orange" />
+                  <span>
+                    Riwayat Versi Packagist &amp; Catatan Perubahan (Live)
+                  </span>
+                </h4>
+                <a
+                  href={packagistUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 font-mono text-[10px] text-lp-orange hover:underline"
+                >
+                  <span>packagist.org</span>
+                  <ExternalLink className="size-2.5" />
+                </a>
+              </div>
+
               <div className="space-y-2 text-xs">
-                {/* v1.0.2 */}
-                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper p-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                        v1.0.2
-                      </span>
-                      <span className="py-0.2 rounded-full bg-emerald-500/10 px-1.5 font-mono text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        LATEST STABLE
-                      </span>
-                      <span className="font-mono text-[11px] text-lp-ink/60">
-                        15 November 2026
-                      </span>
-                    </div>
-                    <a
-                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.2"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-orange hover:underline"
-                    >
-                      <span>Release notes</span>
-                      <ExternalLink className="size-2.5" />
-                    </a>
-                  </div>
-                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/80">
-                    Menambahkan autoload berkas <code>src/compat.php</code>,
-                    penyelarasan dependency constraint untuk Laravel 12 &amp;
-                    13, perbaikan auto-service provider discovery, dan penguatan
-                    mitigasi ReDoS.
-                  </p>
-                </div>
+                {packagistData.versions.map((ver, idx) => {
+                  const detail = packagistData.versionDetails[ver]
+                  const isLatest = idx === 0
+                  const releaseDate = detail?.time
+                    ? new Date(detail.time).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : "16 November 2026"
 
-                {/* v1.0.1 */}
-                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper/60 p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-medium text-lp-ink">
-                        v1.0.1
-                      </span>
-                      <span className="font-mono text-[11px] text-lp-ink/60">
-                        15 November 2026
-                      </span>
-                    </div>
-                    <a
-                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.1"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-ink/70 hover:underline"
+                  return (
+                    <div
+                      key={ver}
+                      className={cn(
+                        "flex flex-col gap-1 rounded-lg border p-3 transition-colors",
+                        isLatest
+                          ? "border-emerald-500/30 bg-lp-paper shadow-xs"
+                          : "border-lp-line bg-lp-paper/60 hover:bg-lp-paper"
+                      )}
                     >
-                      <span>Release notes</span>
-                      <ExternalLink className="size-2.5" />
-                    </a>
-                  </div>
-                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/70">
-                    Pendaftaran Facade alias otomatis (<code>Pasax</code> dan{" "}
-                    <code>SecurityMonitor</code>) serta integrasi webhook stream
-                    telemetri awan.
-                  </p>
-                </div>
-
-                {/* v1.0.0 */}
-                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper/60 p-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-medium text-lp-ink">
-                        v1.0.0
-                      </span>
-                      <span className="font-mono text-[11px] text-lp-ink/60">
-                        15 November 2026
-                      </span>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={cn(
+                              "font-mono font-bold",
+                              isLatest
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : "text-lp-ink"
+                            )}
+                          >
+                            v{ver}
+                          </span>
+                          {isLatest && (
+                            <span className="py-0.2 rounded-full bg-emerald-500/10 px-1.5 font-mono text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                              LATEST STABLE
+                            </span>
+                          )}
+                          <span className="font-mono text-[11px] text-lp-ink/60">
+                            {releaseDate}
+                          </span>
+                        </div>
+                        <a
+                          href={
+                            detail?.releaseNotesUrl ||
+                            `https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v${ver}`
+                          }
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-orange hover:underline"
+                        >
+                          <span>Release notes</span>
+                          <ExternalLink className="size-2.5" />
+                        </a>
+                      </div>
+                      <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/80">
+                        {detail?.summary ||
+                          `Pembaruan rilis paket resmi pasax/secure-monitor v${ver}.`}
+                      </p>
+                      <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-[10px] text-lp-ink/60">
+                        <span className="rounded border border-lp-line bg-lp-paper-2 px-1.5 py-0.5">
+                          PHP: {detail?.php || "^8.2 | ^8.3 | ^8.4 | ^8.5"}
+                        </span>
+                        <span className="rounded border border-lp-line bg-lp-paper-2 px-1.5 py-0.5">
+                          Laravel: {detail?.laravel || "10.x - 13.x"}
+                        </span>
+                      </div>
                     </div>
-                    <a
-                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.0"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-ink/70 hover:underline"
-                    >
-                      <span>Release notes</span>
-                      <ExternalLink className="size-2.5" />
-                    </a>
-                  </div>
-                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/70">
-                    Rilis publik perdana WAF headless, mesin deteksi ancaman
-                    zero-tolerance, FIM scanner, dan sistem tiket banding.
-                  </p>
-                </div>
+                  )
+                })}
               </div>
             </div>
 

@@ -13,7 +13,7 @@ test.describe("Docs Sidebar - Version & Module Switcher", () => {
       .filter({ hasText: /Pasax Secure Monitor/i })
       .first()
     await expect(switcherButton).toBeVisible()
-    await expect(switcherButton).toContainText("v1.0.2")
+    await expect(switcherButton).toContainText(/v1\.0\.\d+/)
 
     // Wait until interactive & click
     await expect(switcherButton).toBeEnabled()
@@ -31,11 +31,11 @@ test.describe("Docs Sidebar - Version & Module Switcher", () => {
     // Verify module switcher items
     await expect(page.getByText("Pasax Sentinel")).toBeVisible()
     await expect(page.getByText("Pasax Core Engine")).toBeVisible()
-    await expect(page.getByText("Versi Packagist")).toBeVisible()
-    await expect(page.getByText("v1.0.1")).toBeVisible()
+    await expect(page.getByText("Versi Packagist (Live)")).toBeVisible()
+    await expect(page.getByRole("menuitem").getByText("v1.0.1")).toBeVisible()
 
     // Select version v1.0.1
-    await page.getByText("v1.0.1").click()
+    await page.getByRole("menuitem").getByText("v1.0.1").click()
 
     // Dropdown closes and button shows updated version
     await expect(switcherButton).toContainText("v1.0.1")

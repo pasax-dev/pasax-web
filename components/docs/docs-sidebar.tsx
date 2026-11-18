@@ -27,7 +27,8 @@ import { cn } from "@/lib/utils"
 import { SearchTrigger } from "@/components/search/search-trigger"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { VersionSwitcher } from "@/components/docs/version-switcher"
-import { getEcosystemProduct } from "@/lib/packagist"
+import { type PackagistData, getEcosystemProduct } from "@/lib/packagist"
+import { usePackagistData } from "@/lib/use-packagist"
 
 const iconMap: Record<string, React.ElementType> = {
   Rocket,
@@ -41,13 +42,20 @@ const iconMap: Record<string, React.ElementType> = {
   Layers,
 }
 
-export function DocsSidebar({ className }: { className?: string }) {
+export function DocsSidebar({
+  className,
+  initialPackagist,
+}: {
+  className?: string
+  initialPackagist?: PackagistData
+}) {
   const pathname = usePathname()
   const [searchQuery, setSearchQuery] = React.useState("")
   const [collapsedCategories, setCollapsedCategories] = React.useState<
     Record<string, boolean>
   >({})
   const [mobileOpen, setMobileOpen] = React.useState(false)
+  const { data: livePackagist } = usePackagistData(initialPackagist)
 
   // Detect current product from pathname
   const detectedProduct = React.useMemo(() => {
@@ -75,7 +83,7 @@ export function DocsSidebar({ className }: { className?: string }) {
 
   const activeConfig =
     PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasax-secure-monitor"]
-  const activeEcosystem = getEcosystemProduct(activeProduct)
+  const activeEcosystem = getEcosystemProduct(activeProduct, livePackagist)
 
   // Filter items if search is active
   const filteredCategories = React.useMemo(() => {
@@ -118,7 +126,10 @@ export function DocsSidebar({ className }: { className?: string }) {
 
       {/* 2. Module & Version Switcher, and Search */}
       <div className="shrink-0 space-y-2.5 border-b border-lp-line p-3">
-        <VersionSwitcher activeProduct={activeProduct} />
+        <VersionSwitcher
+          activeProduct={activeProduct}
+          packagistData={livePackagist}
+        />
 
         {/* Fumadocs Search Box with ⌘K */}
         <SearchTrigger
@@ -139,39 +150,45 @@ export function DocsSidebar({ className }: { className?: string }) {
                 onClick={() => toggleCategory(cat.slug)}
                 className="group flex w-full cursor-pointer items-center justify-between px-2 py-1.5 text-left font-mono text-[11px] font-semibold tracking-wider text-lp-ink/60 uppercase transition-colors hover:text-lp-ink"
               >
-                <span className="flex items-center gap-2">
-                  <Icon className="size-3.5 text-lp-ink/50 group-hover:text-lp-ink/80" />
+                <div className="flex items-center gap-2">
+                  <Icon className="size-3.5 text-lp-orange" />
                   <span>{cat.title}</span>
-                </span>
-                <span className="text-lp-ink/40 group-hover:text-lp-ink/80">
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-[10px] text-lp-ink/40">
+                    {cat.items.length}
+                  </span>
                   {isCollapsed ? (
-                    <ChevronRight className="size-3" />
+                    <ChevronRight className="size-3 text-lp-ink/40 transition-transform group-hover:text-lp-ink" />
                   ) : (
-                    <ChevronDown className="size-3" />
+                    <ChevronDown className="size-3 text-lp-ink/40 transition-transform group-hover:text-lp-ink" />
                   )}
-                </span>
+                </div>
               </button>
 
               {!isCollapsed && (
-                <div className="ms-2.5 space-y-0.5 border-s border-lp-line ps-2">
+                <div className="ml-2 space-y-0.5 border-l border-lp-line pl-2">
                   {cat.items.map((item) => {
-                    const href = `/docs/${item.product}/${item.slug}`
+                    const fullHref = `/docs/${item.product}/${item.slug}`
                     const isActive =
-                      pathname === href || pathname === `/docs/${item.slug}`
+                      pathname === fullHref ||
+                      (item.slug === "getting-started" &&
+                        pathname === `/docs/${item.product}`)
 
                     return (
                       <Link
                         key={item.slug}
-                        href={href}
+                        href={fullHref}
                         onClick={() => setMobileOpen(false)}
                         className={cn(
-                          "block rounded-md px-2.5 py-1.5 text-xs transition-colors",
+                          "group flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors",
                           isActive
-                            ? "-ms-[9px] border-s-2 border-lp-orange bg-lp-orange/10 ps-[7px] font-medium text-lp-orange dark:border-lp-yellow dark:bg-lp-yellow/10 dark:text-lp-yellow"
-                            : "text-lp-ink/75 hover:bg-lp-paper-2/60 hover:text-lp-ink"
+                            ? "bg-lp-ink font-medium text-lp-paper dark:bg-lp-yellow dark:text-lp-on-yellow"
+                            : "text-lp-ink/80 hover:bg-lp-paper-2 hover:text-lp-ink"
                         )}
                       >
-                        {item.title}
+                        <span className="line-clamp-1">{item.title}</span>
+
                       </Link>
                     )
                   })}
@@ -182,21 +199,25 @@ export function DocsSidebar({ className }: { className?: string }) {
         })}
 
         {filteredCategories.length === 0 && (
-          <div className="py-8 text-center font-mono text-xs text-lp-ink/60">
-            <p>Tidak ada hasil untuk &quot;{searchQuery}&quot;</p>
+          <div className="p-4 text-center font-mono text-xs text-lp-ink/50">
+            Tidak ada dokumen yang cocok dengan &quot;{searchQuery}&quot;
           </div>
         )}
       </div>
 
-      {/* 4. Sidebar Bottom Footer */}
-      <div className="shrink-0 border-t border-lp-line bg-lp-paper-2/40 p-3 text-xs text-lp-ink/70">
-        <div className="flex items-center justify-between font-mono text-[11px]">
+      {/* 4. Footer Ecosystem Links (matching Fumadocs Sidebar footer) */}
+      <div className="shrink-0 space-y-2 border-t border-lp-line p-3 font-mono text-xs">
+        <div className="flex items-center justify-between text-lp-ink/60">
+          <span className="text-[11px]">Modul Aktif</span>
+          <span className="font-semibold text-lp-ink">{activeConfig.name}</span>
+        </div>
+        <div className="flex items-center justify-between pt-1 text-[11px]">
           <Link
-            href="/docs"
-            className="flex items-center gap-1 text-lp-ink/70 hover:text-lp-ink hover:underline"
+            href="/changelog"
+            className="flex items-center gap-1 text-lp-orange hover:underline dark:text-lp-yellow"
           >
-            <BookOpen className="size-3.5" />
-            <span>Katalog Dokumen</span>
+            <span>Changelog Rilis</span>
+            <ExternalLink className="size-2.5" />
           </Link>
 
           <Link

@@ -27,10 +27,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {
-  ECOSYSTEM_PRODUCTS,
+  type PackagistData,
   getEcosystemProduct,
   PACKAGIST_URL,
 } from "@/lib/packagist"
+import { usePackagistData } from "@/lib/use-packagist"
 
 const MODULES = [
   {
@@ -61,13 +62,16 @@ const MODULES = [
 
 export function VersionSwitcher({
   activeProduct: propProduct,
+  packagistData: propPackagist,
 }: {
   activeProduct?: string
+  packagistData?: PackagistData
   versions?: string[]
   defaultVersion?: string
 }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { data: livePackagist } = usePackagistData(propPackagist)
 
   // Detect current active product from pathname or prop
   const currentModuleId = React.useMemo(() => {
@@ -79,12 +83,15 @@ export function VersionSwitcher({
     return "pasax-secure-monitor"
   }, [pathname, propProduct])
 
-  const productMeta = getEcosystemProduct(currentModuleId)
+  const productMeta = React.useMemo(() => {
+    return getEcosystemProduct(currentModuleId, livePackagist)
+  }, [currentModuleId, livePackagist])
+
   const [selectedVersion, setSelectedVersion] = React.useState(
     productMeta.latestVersion
   )
 
-  // Keep selected version in sync when switching between modules
+  // Keep selected version in sync when switching between modules or when live data loads
   React.useEffect(() => {
     setSelectedVersion(productMeta.latestVersion)
   }, [productMeta.id, productMeta.latestVersion])
@@ -134,7 +141,7 @@ export function VersionSwitcher({
               {MODULES.map((mod) => {
                 const Icon = mod.icon
                 const isSelected = mod.id === currentModule.id
-                const modMeta = getEcosystemProduct(mod.id)
+                const modMeta = getEcosystemProduct(mod.id, livePackagist)
                 return (
                   <DropdownMenuItem
                     key={mod.id}
@@ -172,7 +179,7 @@ export function VersionSwitcher({
               <div className="flex items-center justify-between px-2 py-1">
                 <DropdownMenuLabel className="p-0 font-mono text-[10px] tracking-wider text-lp-ink-2 uppercase">
                   {productMeta.id === "pasax-secure-monitor"
-                    ? "Versi Packagist"
+                    ? "Versi Packagist (Live)"
                     : "Versi Rilis"}
                 </DropdownMenuLabel>
                 {productMeta.id === "pasax-secure-monitor" && (

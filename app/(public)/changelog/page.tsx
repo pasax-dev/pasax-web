@@ -47,10 +47,123 @@ interface Release {
 
 const RELEASES: Release[] = [
   {
+    version: "v1.0.6",
+    codename: "Packagist v1.0.6 — Smart Backups & CI Test Suite Stabilization",
+    date: "16 November 2026",
+    isLatest: true,
+    summary:
+      "Rilis pemeliharaan resmi paket Packagist pasax/secure-monitor v1.0.6. Mengintegrasikan mekanisme pencadangan cerdas berkas host (hanya membuat backup jika konten berkas target berbeda dari template stub), pembersihan penamaan paket pasax/secure-monitor, perbaikan format Pint di src/compat.php, dan stabilitas 100% matrix testing Pest di seluruh versi PHP (8.2, 8.3, 8.4, 8.5) serta Laravel (10, 11, 12, 13).",
+    tags: [
+      "Packagist v1.0.6",
+      "Smart Backups",
+      "CI Test Suite",
+      "Pint Styling",
+      "Laravel 10-13",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.6",
+    packagistUrl: PACKAGIST_URL,
+    changes: [
+      {
+        type: "fix",
+        scope: "Monitor WAF",
+        title: "Smart Host Backups Tanpa Redundansi Berkas",
+        description:
+          "Perintah artisan pasax:upgrade kini membandingkan isi berkas secara cerdas sebelum mencadangkan. Berkas cadangan hanya dibuat jika berkas konfigurasi, rute, atau tampilan host benar-benar berbeda dari stub bawaan paket.",
+      },
+      {
+        type: "fix",
+        scope: "Monitor WAF",
+        title: "Penyelarasan Ekspektasi Banner PASAX di Seluruh Matrix CI",
+        description:
+          "Memperbarui seluruh ekspektasi konsol pada pengujian otomatis menjadi 'PASAX SECURITY UPGRADE' dan merapikan standar penulisan kode di src/compat.php sesuai kaidah Laravel Pint.",
+      },
+      {
+        type: "perf",
+        scope: "Monitor WAF",
+        title: "Validasi 100% Lulus di 12 Kombinasi PHP & Laravel",
+        description:
+          "Menjamin kompatibilitas runtime penuh untuk PHP 8.2 hingga 8.5 dan Laravel 10 hingga 13 LTS tanpa regresi arsitektur.",
+      },
+    ],
+  },
+  {
+    version: "v1.0.5",
+    codename: "Packagist v1.0.5 — Non-redundant File Backup Engine",
+    date: "16 November 2026",
+    summary:
+      "Optimasi logika penyimpanan berkas cadangan (*.backup-*) pada direktori routes, views, dan config agar tidak menumpuk saat perintah upgrade dijalankan secara berkala.",
+    tags: [
+      "Packagist v1.0.5",
+      "Backup Engine",
+      "File Integrity",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.5",
+    packagistUrl: PACKAGIST_URL,
+    changes: [
+      {
+        type: "fix",
+        scope: "Monitor WAF",
+        title: "Isolasi File Backup Host",
+        description:
+          "Menghindari penumpukan duplikasi file cadangan lama saat proses sinkronisasi rute dan tampilan dashboard dijalankan berulang kali.",
+      },
+    ],
+  },
+  {
+    version: "v1.0.4",
+    codename: "Packagist v1.0.4 — Dynamic Package Detection",
+    date: "16 November 2026",
+    summary:
+      "Deteksi dinamis nama package Composer yang terpasang pada perintah artisan pasax:upgrade dan pasax:uninstall untuk kompatibilitas multi-nama package composer.",
+    tags: [
+      "Packagist v1.0.4",
+      "Dynamic Detection",
+      "CLI Upgrade",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.4",
+    packagistUrl: PACKAGIST_URL,
+    changes: [
+      {
+        type: "feat",
+        scope: "Monitor WAF",
+        title: "Resolusi Nama Paket Komposer Dinamis",
+        description:
+          "Command upgrade kini membaca nama paket yang terdaftar di vendor/installed.json secara dinamis alih-alih hardcoded string.",
+      },
+    ],
+  },
+  {
+    version: "v1.0.3",
+    codename: "Packagist v1.0.3 — Safe Class Alias & Collision Guard",
+    date: "16 November 2026",
+    summary:
+      "Menambahkan helper pasax_safe_class_alias untuk mencegah collision error jika alias kelas service provider, facade, atau service telah dideklarasikan sebelumnya di aplikasi host.",
+    tags: [
+      "Packagist v1.0.3",
+      "Compatibility Guard",
+      "Class Alias",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.3",
+    packagistUrl: PACKAGIST_URL,
+    changes: [
+      {
+        type: "fix",
+        scope: "Monitor WAF",
+        title: "Safeguard Class Alias Autoloading",
+        description:
+          "Pemeriksaan class_exists, interface_exists, dan trait_exists sebelum mendefinisikan alias backward-compatibility untuk mencegah runtime fatal exception.",
+      },
+    ],
+  },
+  {
     version: "v1.0.2",
     codename: "Packagist v1.0.2 — Laravel 10–13 & ReDoS Mitigations",
     date: "15 November 2026",
-    isLatest: true,
+    isLatest: false,
     summary:
       "Rilis resmi paket Packagist pasax/secure-monitor v1.0.2. Memperkenalkan autoload berkas src/compat.php, penyelarasan dependency constraint untuk Laravel 10, 11, 12, dan 13, perbaikan auto-service provider discovery, penguatan regex ReDoS mitigasi, serta komponen VersionSwitcher berbasis modul ekosistem.",
     tags: [
@@ -313,7 +426,7 @@ export default function ChangelogPage() {
                 PACKAGIST STABLE
               </span>
               <div className="mt-1 font-mono text-xl font-bold text-emerald-600 tabular-nums dark:text-emerald-400">
-                v1.0.2
+                v1.0.6
               </div>
             </div>
             <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">

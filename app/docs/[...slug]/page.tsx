@@ -6,6 +6,7 @@ import {
   isProductSlug,
 } from "@/lib/docs-manifest"
 import { source } from "@/lib/source"
+import { fetchPackagistData } from "@/lib/packagist"
 import { DocsBreadcrumb } from "@/components/docs/docs-breadcrumb"
 import { DocsContentView } from "@/components/docs/docs-content-view"
 import { DocsPager } from "@/components/docs/docs-pager"
@@ -56,11 +57,17 @@ export async function generateMetadata({
 export default async function DocDynamicPage({ params }: PageProps) {
   const resolvedParams = await params
   const slugStr = resolvedParams.slug.join("/")
+  const packagistData = await fetchPackagistData()
 
   // Case 1: Product Dedicated Overview (/docs/pasax-secure-monitor, /docs/pasax-sentinel, /docs/core)
   if (isProductSlug(slugStr)) {
     const product = PRODUCTS_CONFIG[slugStr]
-    return <ProductDocsOverview product={product.id as ProductType} />
+    return (
+      <ProductDocsOverview
+        product={product.id as ProductType}
+        initialPackagist={packagistData}
+      />
+    )
   }
 
   // Case 2: Document Article Page via source loader
@@ -87,6 +94,7 @@ export default async function DocDynamicPage({ params }: PageProps) {
           category={page.data.category}
           html={page.data.html}
           slug={page.url.replace(/^\/docs\//, "")}
+          initialPackagist={packagistData}
         />
 
         <DocsPager prev={prev} next={next} />

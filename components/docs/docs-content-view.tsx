@@ -10,6 +10,8 @@ import {
   ThumbsDown,
   FileText,
 } from "lucide-react"
+import { type PackagistData } from "@/lib/packagist"
+import { usePackagistData } from "@/lib/use-packagist"
 
 export function DocsContentView({
   title,
@@ -17,16 +19,19 @@ export function DocsContentView({
   category,
   html,
   slug,
+  initialPackagist,
 }: {
   title: string
   description: string
   category: string
   html: string
   slug: string
+  initialPackagist?: PackagistData
 }) {
   const contentRef = React.useRef<HTMLDivElement>(null)
   const [copiedDoc, setCopiedDoc] = React.useState(false)
   const [feedback, setFeedback] = React.useState<"yes" | "no" | null>(null)
+  const { data: packagistData } = usePackagistData(initialPackagist)
 
   // Attach Fumadocs-style code header & copy button to all <pre> code blocks
   React.useEffect(() => {
@@ -39,53 +44,51 @@ export function DocsContentView({
       const codeEl = pre.querySelector("code")
       const classList = codeEl ? Array.from(codeEl.classList) : []
       const langClass = classList.find((c) => c.startsWith("language-"))
-      const lang = langClass ? langClass.replace("language-", "") : ""
+      const lang = langClass ? langClass.replace("language-", "") : "code"
 
       const wrapper = document.createElement("div")
       wrapper.className =
-        "code-block-wrapper relative group my-6 overflow-hidden rounded-xl border border-lp-line bg-[#121210]"
-      pre.parentNode?.insertBefore(wrapper, pre)
+        "code-block-wrapper not-prose my-5 overflow-hidden rounded-xl border border-lp-line bg-[#121210] shadow-sm"
 
-      // Top bar for codeblock with language badge and copy button
-      const topBar = document.createElement("div")
-      topBar.className =
-        "flex items-center justify-between border-b border-[rgba(236,234,226,0.1)] bg-[#181816] px-3.5 py-1.5"
+      const header = document.createElement("div")
+      header.className =
+        "flex items-center justify-between border-b border-[rgba(236,234,226,0.08)] bg-[#181816] px-4 py-2 text-xs font-mono text-[#eceae2]/70"
 
-      const langBadge = document.createElement("div")
-      langBadge.className =
-        "flex items-center gap-1.5 font-mono text-[11px] font-medium text-[#eceae2]/70 uppercase tracking-wider"
-      langBadge.innerHTML = `<span>${lang || "code"}</span>`
-      topBar.appendChild(langBadge)
+      const langSpan = document.createElement("span")
+      langSpan.className =
+        "font-medium uppercase tracking-wider text-[11px] text-[#eceae2]/60"
+      langSpan.textContent = lang
 
       const copyBtn = document.createElement("button")
+      copyBtn.type = "button"
       copyBtn.className =
-        "flex items-center gap-1 text-[11px] font-mono font-medium text-[#eceae2]/70 hover:text-white px-2 py-0.5 rounded transition-colors cursor-pointer"
-      copyBtn.innerHTML = `<span>Salin</span>`
-      copyBtn.title = "Salin kode ke papan klip"
+        "cursor-pointer rounded px-2 py-0.5 text-[11px] transition-colors hover:bg-[rgba(236,234,226,0.1)] hover:text-white"
+      copyBtn.textContent = "Copy"
 
       copyBtn.addEventListener("click", () => {
-        const codeText = codeEl?.innerText || pre.innerText
-        navigator.clipboard.writeText(codeText).then(() => {
-          copyBtn.innerHTML = `<span class="text-emerald-400">✓ Tersalin</span>`
+        const textToCopy = pre.innerText || ""
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          copyBtn.textContent = "Copied!"
           setTimeout(() => {
-            copyBtn.innerHTML = `<span>Salin</span>`
+            copyBtn.textContent = "Copy"
           }, 2000)
         })
       })
 
-      topBar.appendChild(copyBtn)
-      wrapper.appendChild(topBar)
+      header.appendChild(langSpan)
+      header.appendChild(copyBtn)
+
+      pre.parentNode?.insertBefore(wrapper, pre)
+      wrapper.appendChild(header)
       wrapper.appendChild(pre)
     })
   }, [html])
 
   const copyPageMarkdown = () => {
-    if (typeof window === "undefined") return
-    const text = `# ${title}\n\n${description}\n\nURL: ${window.location.href}`
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedDoc(true)
-      setTimeout(() => setCopiedDoc(false), 2000)
-    })
+    const text = `# ${title}\n\n${description}\n\nURL: ${typeof window !== "undefined" ? window.location.href : ""}`
+    navigator.clipboard.writeText(text)
+    setCopiedDoc(true)
+    setTimeout(() => setCopiedDoc(false), 2000)
   }
 
   // Derive repo URL and version badge based on category or slug
@@ -96,13 +99,14 @@ export function DocsContentView({
     ? "https://github.com/pasax-dev/pasax-sentinel"
     : isCore
       ? "https://github.com/pasax-dev/pasax-suit"
-      : "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
+      : packagistData.repository ||
+        "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
 
   const versionBadge = isSentinel
     ? "v1.0.0 Sentinel"
     : isCore
       ? "v1.0.0 Platform"
-      : "Packagist v1.0.2"
+      : `Packagist v${packagistData.latestVersion}`
 
   return (
     <article className="w-full max-w-full min-w-0 flex-1">
@@ -163,73 +167,67 @@ export function DocsContentView({
             <span>GitHub Repositori</span>
             <ExternalLink className="size-3 text-lp-ink/50" />
           </a>
+
+          {!isSentinel && !isCore && (
+            <a
+              href={
+                packagistData.packagistUrl ||
+                "https://packagist.org/packages/pasax/secure-monitor"
+              }
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#F28D1A]/30 bg-[#F28D1A]/10 px-3 py-1.5 font-mono text-xs font-medium text-[#F28D1A] transition-colors hover:bg-[#F28D1A]/20"
+            >
+              <span>Packagist v{packagistData.latestVersion}</span>
+              <ExternalLink className="size-3 opacity-60" />
+            </a>
+          )}
         </div>
       </header>
 
-      {/* Main Prose Content */}
+      {/* Article Rendered Body */}
       <div
         ref={contentRef}
         className="docs-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
 
-      {/* Article Feedback & Footer */}
-      <footer className="mt-16 border-t border-lp-line pt-8">
-        <div className="mb-8 flex flex-col gap-4 rounded-xl border border-lp-line bg-lp-paper-2/40 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h4 className="font-heading text-sm font-semibold text-lp-ink">
-              Apakah dokumentasi ini bermanfaat?
-            </h4>
-            <p className="text-xs text-lp-ink/65">
-              Bantu kami menyempurnakan dokumentasi ekosistem Pasax.
-            </p>
-          </div>
+      {/* Article Feedback Card */}
+      <div className="mt-12 border-t border-lp-line pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-lp-line bg-lp-paper-2/40 p-4">
           <div className="flex items-center gap-2">
-            {feedback === null ? (
-              <>
-                <button
-                  onClick={() => setFeedback("yes")}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink transition-colors hover:border-emerald-500/50 hover:bg-lp-paper-2"
-                >
-                  <ThumbsUp className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-                  <span>Ya, membantu</span>
-                </button>
-                <button
-                  onClick={() => setFeedback("no")}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink transition-colors hover:border-rose-500/50 hover:bg-lp-paper-2"
-                >
-                  <ThumbsDown className="size-3.5 text-rose-500" />
-                  <span>Kurang lengkap</span>
-                </button>
-              </>
-            ) : (
-              <span className="font-mono text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                ✓ Terima kasih atas tanggapan Anda!
-              </span>
-            )}
+            <FileText className="size-4 text-lp-orange" />
+            <span className="font-heading text-xs font-medium text-lp-ink">
+              Apakah artikel panduan ini membantu Anda?
+            </span>
           </div>
-        </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 font-mono text-xs text-lp-ink/65 sm:flex-row">
           <div className="flex items-center gap-2">
-            <span>Lisensi: MIT Open Source</span>
-            <span>·</span>
-            <span>Pasax Ecosystem</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href={`${repoUrl}/issues`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 transition-colors hover:text-lp-ink hover:underline"
+            <button
+              onClick={() => setFeedback("yes")}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs transition-colors ${
+                feedback === "yes"
+                  ? "border-emerald-500/40 bg-emerald-500/10 font-bold text-emerald-600 dark:text-emerald-400"
+                  : "cursor-pointer border-lp-line bg-lp-paper text-lp-ink hover:bg-lp-paper-2"
+              }`}
             >
-              <FileText className="size-3.5" />
-              <span>Laporkan masalah dokumentasi</span>
-              <ExternalLink className="size-2.5" />
-            </a>
+              <ThumbsUp className="size-3" />
+              <span>Ya, sangat membantu</span>
+            </button>
+            <button
+              onClick={() => setFeedback("no")}
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1 font-mono text-xs transition-colors ${
+                feedback === "no"
+                  ? "border-rose-500/40 bg-rose-500/10 font-bold text-rose-600 dark:text-rose-400"
+                  : "cursor-pointer border-lp-line bg-lp-paper text-lp-ink hover:bg-lp-paper-2"
+              }`}
+            >
+              <ThumbsDown className="size-3" />
+              <span>Perlu ditingkatkan</span>
+            </button>
           </div>
         </div>
-      </footer>
+      </div>
     </article>
   )
 }

@@ -3,16 +3,19 @@ import { DocsSidebar } from "@/components/docs/docs-sidebar"
 import Link from "next/link"
 import { ExternalLink, LayoutTemplate } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { fetchPackagistData } from "@/lib/packagist"
 
-export default function DocsLayout({
+export default async function DocsLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const packagistData = await fetchPackagistData()
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-lp-paper font-sans text-lp-ink antialiased selection:bg-lp-yellow selection:text-lp-on-yellow lg:flex-row">
       {/* 1. Left Sidebar (desktop full-height + mobile drawer) */}
-      <DocsSidebar />
+      <DocsSidebar initialPackagist={packagistData} />
 
       {/* 2. Main Documentation Container */}
       <div className="flex w-full min-w-0 flex-1 flex-col">
