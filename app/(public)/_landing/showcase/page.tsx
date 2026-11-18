@@ -1,39 +1,46 @@
-import type { Metadata } from 'next';
-import { asMarkdown } from 'fumadocs-core/server';
-import { ArrowUpRight } from 'lucide-react';
-import { createMetadata } from '@/lib/metadata';
-import { blogs, showcases, vercel } from '@/lib/showcases';
-import { plain } from '../content';
-import { block, heading } from '../markdown';
-import { Figure, FigureHeader, Terms } from '../ui/figure';
-import { address } from '../ui/site-tile';
-import { arrange, copy, kinds, suggest } from './data';
-import { DeckBack, DeckFront } from './deck';
-import { Projector } from './projector';
-import { Blogs, Wall } from './wall';
+import type { Metadata } from "next"
+import { asMarkdown } from "fumadocs-core/server"
+import { ArrowUpRight } from "lucide-react"
+import { createMetadata } from "@/lib/metadata"
+import { blogs, showcases, vercel } from "@/lib/showcases"
+import { plain } from "../content"
+import { block, heading } from "../markdown"
+import { Figure, FigureHeader, Terms } from "../ui/figure"
+import { address } from "../ui/site-tile"
+import { arrange, copy, kinds, suggest } from "./data"
+import { DeckBack, DeckFront } from "./deck"
+import { Projector } from "./projector"
+import { Blogs, Wall } from "./wall"
 
 export const metadata: Metadata = createMetadata({
-  title: 'Showcase - Secured Nodes',
+  title: "Showcase - Secured Nodes",
   description: copy.header.summary,
   openGraph: {
-    url: 'https://pasax.dev/showcase',
+    url: "https://pasax.dev/showcase",
   },
   alternates: {
-    types: { 'text/markdown': '/showcase.md' },
+    types: { "text/markdown": "/showcase.md" },
   },
-});
+})
 
-const figure = 'flex flex-col gap-12 px-(--lp-gutter) py-16 md:gap-16 md:py-20';
+const figure = "flex flex-col gap-12 px-(--lp-gutter) py-16 md:gap-16 md:py-20"
 
 export default function Page() {
   if (asMarkdown()) {
-    // the wall's order: the featured with their own words, Vercel's SDKs, then every other site
-    const { featured, shots, blank } = arrange(showcases);
-    const sites: string[] = [];
-    for (const site of featured) sites.push(`- [${site.name}](${site.url}): ${kinds[site.url]}`);
-    sites.push(`- Vercel: ${copy.vercel}`);
-    for (const site of vercel) sites.push(`  - [${site.name}](${site.url}): ${kinds[site.url]}`);
-    for (const site of [...shots, ...blank]) sites.push(`- [${site.name}](${site.url})`);
+    // the wall's order: the featured security nodes, core bastions, then every other node
+    const { featured, shots, blank } = arrange(showcases)
+    const sites: string[] = []
+    for (const site of featured)
+      sites.push(
+        `- [${site.name}](${site.url}): ${kinds[site.url] || "security node"}`
+      )
+    sites.push(`- Core Bastions: ${copy.bastion}`)
+    for (const site of vercel)
+      sites.push(
+        `  - [${site.name}](${site.url}): ${kinds[site.url] || "core relay"}`
+      )
+    for (const site of [...shots, ...blank])
+      sites.push(`- [${site.name}](${site.url})`)
     return block`
       # Showcase - Secured Nodes
 
@@ -45,16 +52,16 @@ export default function Page() {
 
       ## Protected Nodes
 
-      ${sites.join('\n')}
+      ${sites.join("\n")}
 
       ${heading(copy.blogs)}
 
-      ${blogs.map((site) => `- [${site.name}](${site.url})`).join('\n')}
-    `;
+      ${blogs.map((site) => `- [${site.name}](${site.url})`).join("\n")}
+    `
   }
 
-  const { featured, shots } = arrange(showcases);
-  const reel = [...featured, ...shots];
+  const { featured, shots } = arrange(showcases)
+  const reel = [...featured, ...shots]
 
   return (
     <>
@@ -75,19 +82,33 @@ export default function Page() {
             rel="noreferrer noopener"
             className="mt-4 inline-flex h-11 w-fit items-center gap-1.5 border border-lp-line-strong bg-lp-yellow px-5 font-medium text-lp-on-yellow transition-none hover:bg-lp-ink hover:text-lp-paper focus-visible:bg-lp-ink focus-visible:text-lp-paper focus-visible:outline-none max-sm:w-full max-sm:justify-center"
           >
-            Suggest node
+            Deploy node
             <ArrowUpRight aria-hidden className="size-4" />
           </a>
         </div>
-        <Projector sites={reel} back={<DeckBack count={reel.length} />} front={<DeckFront />} />
+        <Projector
+          sites={reel}
+          back={<DeckBack count={reel.length} />}
+          front={<DeckFront />}
+        />
       </Figure>
-      <Figure id="sites" aria-label="Nodes" status="showing all protected nodes" className={figure}>
+      <Figure
+        id="sites"
+        aria-label="Nodes"
+        status="showing all protected nodes"
+        className={figure}
+      >
         <Wall sites={showcases} />
       </Figure>
-      <Figure id="blogs" aria-label="Deployments" status="showing fleet clusters" className={figure}>
+      <Figure
+        id="blogs"
+        aria-label="Deployments"
+        status="showing fleet clusters"
+        className={figure}
+      >
         <FigureHeader title={copy.blogs.title} />
         <Blogs sites={blogs} />
       </Figure>
     </>
-  );
+  )
 }

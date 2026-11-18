@@ -201,7 +201,7 @@ export function Stage({ file, source, outputs }: StageProps) {
       in the highlight's ink over the code's own colours, with none of its own transitions */}
       <div
         ref={mount}
-        className="relative flex flex-col gap-y-14 pb-5 md:grid md:max-lg:grid-cols-2 md:max-lg:items-start md:max-lg:gap-x-[max(4%,40px)] **:data-mark:relative **:data-mark:isolate **:data-mark:transition-none **:data-mark:**:transition-none **:data-[mark=on]:text-lp-on-yellow! **:data-[mark=on]:**:text-lp-on-yellow!"
+        className="relative flex flex-col gap-y-14 pb-5 md:grid md:max-lg:grid-cols-2 md:max-lg:items-start md:max-lg:gap-x-[max(4%,40px)] lg:grid lg:grid-cols-1 lg:grid-rows-1 **:data-mark:relative **:data-mark:isolate **:data-mark:transition-none **:data-mark:**:transition-none **:data-[mark=on]:text-lp-on-yellow! **:data-[mark=on]:**:text-lp-on-yellow!"
       >
         {/* under every window: a cable into each output, drawn as it's routed, the same cable with
         its core lit, the bead and the pops' dots */}

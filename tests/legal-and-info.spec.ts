@@ -9,7 +9,7 @@ test.describe("Public Information & Legal Pages", () => {
 
     // Check Header & Version Badge
     await expect(page.getByRole("heading", { name: /Changelog & Catatan Rilis/i })).toBeVisible()
-    await expect(page.getByText("v1.4.0").first()).toBeVisible()
+    await expect(page.getByText("v1.0.2").first()).toBeVisible()
     await expect(page.getByText("LATEST STABLE").first()).toBeVisible()
 
     // Check LegalNav tabs
@@ -51,7 +51,7 @@ test.describe("Public Information & Legal Pages", () => {
     await expect(subMsBtn).toBeVisible()
     await subMsBtn.click()
     await expect(
-      page.getByText(/Pasax Sentinel berkomunikasi langsung dengan API Netlink subsistem nftables/i)
+      page.getByText(/Ketika WAF aplikasi mendeteksi payload berbahaya/i)
     ).toBeVisible()
   })
 

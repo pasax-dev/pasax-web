@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-18",
+  "type": "update",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak-market.vercel.app"
+  },
+  "title": {
+    "id": "Penyempurnaan Otomatisasi Pertahanan Terpadu dan Sinkronisasi Versi Ekosistem",
+    "en": "Unified Defense Automation Enhancement and Ecosystem Version Synchronization"
+  },
+  "body": {
+    "id": "Memperbarui seksi otomatisasi pertahanan agar seluruh simulasi alur konfigurasi tersinkronisasi rapi dan presisi di layar desktop, menghadirkan pemilih versi rilis publik yang akurat pada modul keamanan, serta menyelaraskan tampilan pusat bantuan, ketentuan layanan, dan catatan pembaruan dengan standar antarmuka modern yang nyaman dibaca.",
+    "en": "Enhanced the defense automation section with precise multi-column synchronization across desktop displays, introduced accurate public release versioning on security modules, and refined the help center, service terms, and release notes with a clean modern reading layout."
+  },
+  "items": [
+    {
+      "type": "improvement",
+      "id": "Sinkronisasi Otomatisasi Pertahanan Terpadu: Penataan ulang simulasi alur keamanan antarmuka dengan tata letak multi-kolom yang presisi, visualisasi kode konfigurasi yang terstruktur, dan penanda pembaruan otomatis yang jelas.",
+      "en": "Unified Defense Automation Flow: Refined security configuration workflow simulations with precision multi-column layouts, clean structured code previews, and clear automatic update indicators."
+    },
+    {
+      "type": "feature",
+      "id": "Pemilih Versi Rilis Resmi Ekosistem: Penyajian informasi rilis modul keamanan server yang terhubung langsung dengan catatan versi publik yang akurat pada pusat dokumentasi.",
+      "en": "Official Ecosystem Release Switcher: Real-time synchronization of server security module releases tied directly to public version records across the documentation hub."
+    },
+    {
+      "type": "improvement",
+      "id": "Standardisasi Desain Halaman Informasi & Bantuan: Pembaruan tata letak halaman tanya-jawab, kebijakan privasi, ketentuan layanan, dan riwayat pembaruan agar seragam dan nyaman dinavigasi.",
+      "en": "Standardized Information & Help Experience: Modernized layouts for FAQ, privacy policy, terms of service, and changelog records with comfortable, consistent reading aesthetics."
+    },
+    {
+      "type": "fix",
+      "id": "Penyempurnaan Navigasi dan Tampilan Portofolio: Optimalisasi menu dokumentasi di bilah atas agar terbuka seketika dan penyesuaian seluruh visual portofolio bertema pertahanan siber terpercaya.",
+      "en": "Navigation & Showcase Visual Polish: Enhanced the top documentation menu for instant responsiveness and aligned all showcase cards with authentic enterprise cyber defense themes."
+    }
+  ]
+}

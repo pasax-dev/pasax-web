@@ -2,7 +2,19 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { BookOpen, ArrowRight, Copy, Check, Terminal, ExternalLink, Clock } from "lucide-react"
+import {
+  BookOpen,
+  ArrowRight,
+  Copy,
+  Check,
+  Terminal,
+  ExternalLink,
+  Clock,
+  Package,
+  Shield,
+  Layers,
+  GitBranch,
+} from "lucide-react"
 import { PRODUCTS_CONFIG, getDocSectionsForProduct } from "@/lib/docs-manifest"
 import { DocsBreadcrumb } from "./docs-breadcrumb"
 import { DocsToc } from "./docs-toc"
@@ -27,6 +39,22 @@ const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
     label: "Full Stack Deployment",
     cmd: "pnpm dlx pasax-cli init --with-sentinel",
   },
+}
+
+function PackagistIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 32 32" fill="currentColor" {...props}>
+      <path d="M16 2.5L2.8 9.5V22.5L16 29.5L29.2 22.5V9.5L16 2.5ZM16 5.6L25.8 10.8L21.5 13.1L11.7 7.9L16 5.6ZM5.4 11L14.7 16V26.1L5.4 21.1V11ZM17.3 26.1V16L21.6 13.7V18.7L24.2 17.3V12.3L26.6 11V21.1L17.3 26.1Z" />
+    </svg>
+  )
+}
+
+function GitHubIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  )
 }
 
 export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
@@ -54,6 +82,15 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
   }
 
   const tocHeadings = [
+    ...(product === "pasax-secure-monitor"
+      ? [
+          {
+            id: "packagist-info",
+            text: "Informasi Packagist & Versi",
+            level: 2,
+          },
+        ]
+      : []),
     { id: "instalasi-perintah", text: "Perintah Cepat", level: 2 },
     { id: "daftar-bab", text: "Daftar Bab & Panduan", level: 2 },
   ]
@@ -64,6 +101,8 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
       : product === "core"
         ? "https://github.com/pasax-dev/pasax-suit"
         : "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
+
+  const packagistUrl = "https://packagist.org/packages/pasax/secure-monitor"
 
   return (
     <div className="flex w-full max-w-full min-w-0 flex-1 justify-between">
@@ -77,7 +116,7 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
         {/* Product Hero Header */}
         <header className="mb-10 border-b border-lp-line pb-8">
           <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-lp-orange/20 dark:border-lp-yellow/20 bg-lp-orange/10 dark:bg-lp-yellow/10 px-2.5 py-0.5 font-mono text-xs font-medium text-lp-orange dark:text-lp-yellow">
+            <span className="rounded-full border border-lp-orange/20 bg-lp-orange/10 px-2.5 py-0.5 font-mono text-xs font-medium text-lp-orange dark:border-lp-yellow/20 dark:bg-lp-yellow/10 dark:text-lp-yellow">
               MODUL RESMI
             </span>
             <span className="font-mono text-xs text-lp-ink/40">·</span>
@@ -89,50 +128,288 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
             <span className="rounded-full border border-lp-line bg-lp-paper-2 px-2.5 py-0.5 font-mono text-[10px] font-medium text-lp-ink">
               {info.badge}
             </span>
+            {product === "pasax-secure-monitor" && (
+              <>
+                <span className="font-mono text-xs text-lp-ink/40">·</span>
+                <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                  v1.0.2 STABLE
+                </span>
+              </>
+            )}
           </div>
 
           <h1 className="mb-4 font-heading text-3xl font-semibold tracking-tight text-lp-ink sm:text-4xl lg:text-5xl">
             {info.name}
           </h1>
 
-          <p className="text-base leading-relaxed text-lp-ink/75 sm:text-lg max-w-3xl">
+          <p className="max-w-3xl text-base leading-relaxed text-lp-ink/75 sm:text-lg">
             {info.description}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-2.5 pt-2">
             <Link
               href={firstDocHref}
-              className="inline-flex items-center gap-2 rounded-lg bg-lp-ink text-lp-paper px-4 py-2 font-mono text-xs font-medium hover:opacity-90 active:scale-98 transition-all"
+              className="inline-flex items-center gap-2 rounded-lg bg-lp-ink px-4 py-2 font-mono text-xs font-medium text-lp-paper transition-all hover:opacity-90 active:scale-98"
             >
               <span>Mulai Membaca Panduan</span>
               <ArrowRight className="size-3.5" />
             </Link>
+
+            {product === "pasax-secure-monitor" && (
+              <a
+                href={packagistUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#F28D1A]/30 bg-[#F28D1A]/10 px-3.5 py-2 font-mono text-xs font-medium text-[#F28D1A] transition-colors hover:bg-[#F28D1A]/20"
+              >
+                <PackagistIcon className="size-3.5" />
+                <span>Packagist v1.0.2</span>
+                <ExternalLink className="size-3 opacity-60" />
+              </a>
+            )}
+
             <a
               href={repoUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3.5 py-2 font-mono text-xs font-medium text-lp-ink hover:bg-lp-paper-2 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3.5 py-2 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
             >
+              <GitHubIcon className="size-3.5" />
               <span>Lihat di GitHub</span>
               <ExternalLink className="size-3 text-lp-ink/50" />
             </a>
           </div>
         </header>
 
+        {/* Section Packagist Distribution & Version Matrix (Specifically for pasax-secure-monitor) */}
+        {product === "pasax-secure-monitor" && (
+          <section className="docs-content mb-10">
+            <h2
+              id="packagist-info"
+              className="group flex scroll-mt-20 items-center"
+            >
+              <a
+                href="#packagist-info"
+                className="text-inherit no-underline hover:underline"
+              >
+                Informasi Paket Packagist &amp; Versi Rilis
+              </a>
+              <a
+                href="#packagist-info"
+                className="ms-2 font-mono text-sm text-lp-ink/40 opacity-0 transition-opacity group-hover:opacity-100 hover:text-lp-ink"
+              >
+                #
+              </a>
+            </h2>
+            <p>
+              Paket <code>pasax/secure-monitor</code> didistribusikan secara
+              resmi melalui repositori Composer publik di{" "}
+              <strong>Packagist</strong> dengan integrasi penuh standar Spatie,
+              100% PHP murni tanpa memerlukan dependensi Node.js / NPM.
+            </p>
+
+            {/* Quick Metadata Matrix Grid */}
+            <div className="not-prose my-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+                <div className="mb-1 flex items-center gap-2 font-mono text-xs text-lp-ink/60">
+                  <Package className="size-3.5 text-lp-orange" />
+                  <span>Nama Paket</span>
+                </div>
+                <a
+                  href={packagistUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 font-mono text-xs font-bold text-lp-ink hover:underline"
+                >
+                  <span>pasax/secure-monitor</span>
+                  <ExternalLink className="size-3 opacity-60" />
+                </a>
+              </div>
+
+              <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+                <div className="mb-1 flex items-center gap-2 font-mono text-xs text-lp-ink/60">
+                  <GitBranch className="size-3.5 text-emerald-500" />
+                  <span>Versi Rilis</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    v1.0.2
+                  </span>
+                  <span className="py-0.2 rounded-full bg-emerald-500/10 px-1.5 font-mono text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    STABLE
+                  </span>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+                <div className="mb-1 flex items-center gap-2 font-mono text-xs text-lp-ink/60">
+                  <Layers className="size-3.5 text-sky-500" />
+                  <span>Kompatibilitas PHP</span>
+                </div>
+                <div className="font-mono text-xs font-bold text-lp-ink">
+                  ^8.2 | ^8.3 | ^8.4 | ^8.5
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+                <div className="mb-1 flex items-center gap-2 font-mono text-xs text-lp-ink/60">
+                  <Shield className="size-3.5 text-lp-orange" />
+                  <span>Framework Laravel</span>
+                </div>
+                <div className="font-mono text-xs font-bold text-lp-ink">
+                  10.x · 11.x · 12.x · 13.x
+                </div>
+              </div>
+            </div>
+
+            {/* Version History Table */}
+            <div className="not-prose my-6 rounded-xl border border-lp-line bg-lp-paper-2/30 p-4">
+              <h4 className="mb-3 flex items-center gap-2 font-heading text-xs font-semibold text-lp-ink">
+                <Clock className="size-3.5 text-lp-orange" />
+                <span>Riwayat Versi Packagist &amp; Catatan Perubahan</span>
+              </h4>
+              <div className="space-y-2 text-xs">
+                {/* v1.0.2 */}
+                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper p-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        v1.0.2
+                      </span>
+                      <span className="py-0.2 rounded-full bg-emerald-500/10 px-1.5 font-mono text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        LATEST STABLE
+                      </span>
+                      <span className="font-mono text-[11px] text-lp-ink/60">
+                        15 November 2026
+                      </span>
+                    </div>
+                    <a
+                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.2"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-orange hover:underline"
+                    >
+                      <span>Release notes</span>
+                      <ExternalLink className="size-2.5" />
+                    </a>
+                  </div>
+                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/80">
+                    Menambahkan autoload berkas <code>src/compat.php</code>,
+                    penyelarasan dependency constraint untuk Laravel 12 &amp;
+                    13, perbaikan auto-service provider discovery, dan penguatan
+                    mitigasi ReDoS.
+                  </p>
+                </div>
+
+                {/* v1.0.1 */}
+                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper/60 p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-medium text-lp-ink">
+                        v1.0.1
+                      </span>
+                      <span className="font-mono text-[11px] text-lp-ink/60">
+                        15 November 2026
+                      </span>
+                    </div>
+                    <a
+                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.1"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-ink/70 hover:underline"
+                    >
+                      <span>Release notes</span>
+                      <ExternalLink className="size-2.5" />
+                    </a>
+                  </div>
+                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/70">
+                    Pendaftaran Facade alias otomatis (<code>Pasax</code> dan{" "}
+                    <code>SecurityMonitor</code>) serta integrasi webhook stream
+                    telemetri awan.
+                  </p>
+                </div>
+
+                {/* v1.0.0 */}
+                <div className="flex flex-col gap-1 rounded-lg border border-lp-line bg-lp-paper/60 p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-medium text-lp-ink">
+                        v1.0.0
+                      </span>
+                      <span className="font-mono text-[11px] text-lp-ink/60">
+                        15 November 2026
+                      </span>
+                    </div>
+                    <a
+                      href="https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.0"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 font-mono text-[11px] text-lp-ink/70 hover:underline"
+                    >
+                      <span>Release notes</span>
+                      <ExternalLink className="size-2.5" />
+                    </a>
+                  </div>
+                  <p className="mt-1 text-[11px] leading-relaxed text-lp-ink/70">
+                    Rilis publik perdana WAF headless, mesin deteksi ancaman
+                    zero-tolerance, FIM scanner, dan sistem tiket banding.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Laravel Integration Details */}
+            <div className="not-prose my-6 rounded-xl border border-lp-line bg-lp-paper-2/40 p-4">
+              <h4 className="mb-2 font-heading text-xs font-semibold text-lp-ink">
+                Titik Integrasi Framework Laravel
+              </h4>
+              <div className="grid grid-cols-1 gap-3 font-mono text-xs md:grid-cols-2">
+                <div className="rounded-lg border border-lp-line bg-lp-paper p-3">
+                  <span className="mb-1 block font-sans text-[10px] font-medium text-lp-ink/60">
+                    SERVICE PROVIDER:
+                  </span>
+                  <code className="text-[11px] text-lp-orange select-all">
+                    Pasax\SecureMonitor\PasaxServiceProvider
+                  </code>
+                </div>
+                <div className="rounded-lg border border-lp-line bg-lp-paper p-3">
+                  <span className="mb-1 block font-sans text-[10px] font-medium text-lp-ink/60">
+                    FACADE / ALIAS:
+                  </span>
+                  <code className="text-[11px] text-lp-orange select-all">
+                    Pasax\SecureMonitor\Facades\Pasax
+                  </code>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Section 1: Quick Command */}
         {snippet && (
           <section className="docs-content mb-10">
-            <h2 id="instalasi-perintah" className="group flex items-center scroll-mt-20">
-              <a href="#instalasi-perintah" className="no-underline text-inherit hover:underline">
+            <h2
+              id="instalasi-perintah"
+              className="group flex scroll-mt-20 items-center"
+            >
+              <a
+                href="#instalasi-perintah"
+                className="text-inherit no-underline hover:underline"
+              >
                 Perintah Instalasi Cepat
               </a>
-              <a href="#instalasi-perintah" className="ms-2 opacity-0 group-hover:opacity-100 text-lp-ink/40 hover:text-lp-ink font-mono text-sm transition-opacity">#</a>
+              <a
+                href="#instalasi-perintah"
+                className="ms-2 font-mono text-sm text-lp-ink/40 opacity-0 transition-opacity group-hover:opacity-100 hover:text-lp-ink"
+              >
+                #
+              </a>
             </h2>
-            <div className="my-4 rounded-xl border border-lp-line bg-[#121210] p-4 font-mono text-xs text-[#eceae2] flex items-center justify-between overflow-x-auto not-prose">
+            <div className="not-prose my-4 flex items-center justify-between overflow-x-auto rounded-xl border border-lp-line bg-[#121210] p-4 font-mono text-xs text-[#eceae2]">
               <code>{snippet.cmd}</code>
               <button
                 onClick={copySnippet}
-                className="ms-4 shrink-0 flex items-center gap-1 text-[11px] text-[#eceae2]/70 hover:text-white px-2 py-1 rounded bg-[#181816] border border-[rgba(236,234,226,0.1)] transition-colors cursor-pointer"
+                className="ms-4 flex shrink-0 cursor-pointer items-center gap-1 rounded border border-[rgba(236,234,226,0.1)] bg-[#181816] px-2 py-1 text-[11px] text-[#eceae2]/70 transition-colors hover:text-white"
               >
                 {copied ? (
                   <>
@@ -147,29 +424,53 @@ export function ProductDocsOverview({ product }: ProductDocsOverviewProps) {
                 )}
               </button>
             </div>
+
+            {product === "pasax-secure-monitor" && (
+              <div className="not-prose my-3 space-y-1.5 rounded-lg border border-lp-line bg-lp-paper-2/30 p-3 font-mono text-xs">
+                <p className="font-sans text-[11px] font-medium text-lp-ink/70">
+                  Setelah memasang paket melalui Composer, jalankan setup wizard
+                  dan migrasi database:
+                </p>
+                <div className="space-y-1 rounded bg-[#121210] p-2.5 text-[11px] text-[#eceae2]">
+                  <div>php artisan pasax:install</div>
+                  <div>php artisan migrate</div>
+                </div>
+              </div>
+            )}
           </section>
         )}
 
         {/* Section 2: Chapters & Guides */}
         <section className="docs-content mb-12">
-          <h2 id="daftar-bab" className="group flex items-center scroll-mt-20">
-            <a href="#daftar-bab" className="no-underline text-inherit hover:underline">
+          <h2 id="daftar-bab" className="group flex scroll-mt-20 items-center">
+            <a
+              href="#daftar-bab"
+              className="text-inherit no-underline hover:underline"
+            >
               Daftar Bab &amp; Panduan — {info.name}
             </a>
-            <a href="#daftar-bab" className="ms-2 opacity-0 group-hover:opacity-100 text-lp-ink/40 hover:text-lp-ink font-mono text-sm transition-opacity">#</a>
+            <a
+              href="#daftar-bab"
+              className="ms-2 font-mono text-sm text-lp-ink/40 opacity-0 transition-opacity group-hover:opacity-100 hover:text-lp-ink"
+            >
+              #
+            </a>
           </h2>
           <p>
-            Pilih topik untuk membuka referensi teknis mendalam dengan penjelasan arsitektur dan blok konfigurasi:
+            Pilih topik untuk membuka referensi teknis mendalam dengan
+            penjelasan arsitektur dan blok konfigurasi:
           </p>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 my-6 not-prose">
+          <div className="not-prose my-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             {sections.map((sec) => (
               <div
                 key={sec.slug}
                 className="space-y-3 rounded-xl border border-lp-line bg-lp-paper-2/30 p-4 transition-all hover:bg-lp-paper-2/50"
               >
                 <div className="flex items-center justify-between border-b border-lp-line pb-2">
-                  <h4 className="font-heading text-xs font-semibold text-lp-ink">{sec.title}</h4>
+                  <h4 className="font-heading text-xs font-semibold text-lp-ink">
+                    {sec.title}
+                  </h4>
                   <span className="rounded-full border border-lp-line bg-lp-paper-2 px-2 py-0.5 font-mono text-[10px] text-lp-ink/70">
                     {sec.items.length} artikel
                   </span>

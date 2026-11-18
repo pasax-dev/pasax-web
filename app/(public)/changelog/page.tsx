@@ -22,14 +22,15 @@ import {
   Cpu,
 } from "lucide-react"
 import { LegalNav } from "@/components/public/legal-nav"
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { PACKAGIST_URL, GITHUB_MONITOR_REPO } from "@/lib/packagist"
 
 interface ReleaseChange {
   type: "feat" | "security" | "perf" | "fix" | "docs"
   title: string
   description: string
-  scope?: "Sentinel" | "Monitor WAF" | "Core Mesh" | "UI / Docs" | "Threat Radar"
+  scope?:
+    "Sentinel" | "Monitor WAF" | "Core Mesh" | "UI / Docs" | "Threat Radar"
 }
 
 interface Release {
@@ -41,32 +42,48 @@ interface Release {
   tags: string[]
   changes: ReleaseChange[]
   githubUrl: string
+  packagistUrl?: string
 }
 
 const RELEASES: Release[] = [
   {
-    version: "v1.4.0",
-    codename: "Perimeter Sweep & Unified Switcher",
-    date: "17 November 2026",
+    version: "v1.0.2",
+    codename: "Packagist v1.0.2 — Laravel 10–13 & ReDoS Mitigations",
+    date: "15 November 2026",
     isLatest: true,
     summary:
-      "Rilis major yang memperkenalkan visualisasi 360° Tactical Perimeter Radar asli berpresisi tinggi di dashboard Threat Monitor, komponen VersionSwitcher terpadu di dokumentasi resmi, serta optimalisasi anti brute-force bertingkat pada WAF PHP.",
-    tags: ["Threat Radar", "Docs Switcher", "WAF Stepped Login", "Canvas Fixes"],
-    githubUrl: "https://github.com/pasax-dev/pasax-suit/releases/tag/v1.4.0",
+      "Rilis resmi paket Packagist pasax/secure-monitor v1.0.2. Memperkenalkan autoload berkas src/compat.php, penyelarasan dependency constraint untuk Laravel 10, 11, 12, dan 13, perbaikan auto-service provider discovery, penguatan regex ReDoS mitigasi, serta komponen VersionSwitcher berbasis modul ekosistem.",
+    tags: [
+      "Threat Radar",
+      "Packagist v1.0.2",
+      "WAF Stepped Login",
+      "Laravel 10-13",
+      "Docs Switcher",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.2",
+    packagistUrl: PACKAGIST_URL,
     changes: [
+      {
+        type: "security",
+        scope: "Monitor WAF",
+        title: "Packagist v1.0.2: Autoload src/compat.php & ReDoS Mitigation",
+        description:
+          "Menambahkan autoload src/compat.php langsung ke composer.json untuk penyelarasan fungsi helper kompatibilitas di Laravel 10–13 dan pengamanan pola regex terhadap serangan Catastrophic Backtracking.",
+      },
       {
         type: "feat",
         scope: "Threat Radar",
         title: "360° Tactical Marine Sweep Radar Engine",
         description:
-          "Menghadirkan kembali instrumen radar perimeter 360° dengan sapuan sweep phosphor kontinu, deretan skala kompas derajat kutub (000°–330°), cincin batas jarak jangkau (10 NM–100 NM), dan target blip telemetri real-time yang memetakan intersepsi ancaman.",
+          "Menghadirkan instrumen radar perimeter 360° dengan sapuan sweep phosphor kontinu, deretan skala kompas derajat kutub (000°–330°), cincin batas jarak jangkau (10 NM–100 NM), dan target blip telemetri real-time yang memetakan intersepsi ancaman.",
       },
       {
         type: "feat",
         scope: "UI / Docs",
-        title: "Dokumentasi Version & Module Switcher (Shadcn Dropdown)",
+        title: "Dokumentasi Version & Module Switcher (Ecosystem-Aware)",
         description:
-          "Menggantikan tombol tab modul lama dengan komponen VersionSwitcher dropdown modern berbasis Radix Primitives. Memungkinkan pengembang berpindah antara modul Pasax Secure Monitor, Pasax Sentinel, dan Core Engine serta beralih versi rilis dokumentasi secara instan.",
+          "Menggantikan pemilih versi lama dengan komponen VersionSwitcher yang membaca versi rilis riil dari Packagist untuk pasax-secure-monitor (v1.0.2, v1.0.1, v1.0.0) serta versi modul daemon Sentinel dan Platform Core secara terpisah.",
       },
       {
         type: "security",
@@ -76,153 +93,82 @@ const RELEASES: Release[] = [
           "Peningkatan algoritma anti brute-force adaptif pada Laravel WAF. Menerapkan pembatasan berbasis eksponensial dan token device-level quarantine untuk mencegah serangan credential stuffing terdistribusi.",
       },
       {
-        type: "perf",
-        scope: "UI / Docs",
-        title: "Interactive Sand Physics Wordmark Canvas",
-        description:
-          "Pengembangan simulasi gravitasi partikel pasir di footer landing page dengan komputasi offscreen canvas berkinerja 60 FPS tanpa beban CPU berlebih.",
-      },
-      {
         type: "fix",
-        scope: "UI / Docs",
-        title: "Fix Canvas Dithering Runtime IndexSizeError",
+        scope: "Monitor WAF",
+        title: "Auto-Service Provider Discovery di Laravel 11, 12, & 13",
         description:
-          "Memperbaiki IndexSizeError pada pemanggilan getImageData saat dimensi canvas bernilai 0px pada transisi projector showcase. Menambahkan pengaman dimensi dan validasi naturalWidth/naturalHeight gambar.",
+          "Pendaftaran PasaxServiceProvider dan Facade Pasax secara otomatis tanpa memerlukan registrasi manual di config/app.php.",
       },
     ],
   },
   {
-    version: "v1.3.2",
-    codename: "Kernel Inotify FIM & CVE Intelligence",
-    date: "24 Oktober 2026",
+    version: "v1.0.1",
+    codename: "Packagist v1.0.1 — Database Migrations & Relations",
+    date: "15 November 2026",
     summary:
-      "Pembaruan keamanan fokus pada File Integrity Monitoring (FIM) berbasis Linux inotify dengan penguncian otomatis berkas (chattr +i), serta integrasi feed intelijen CVE global.",
-    tags: ["Kernel FIM", "CVE Feed", "mTLS Telemetry"],
-    githubUrl: "https://github.com/pasax-dev/pasax-suit/releases/tag/v1.3.2",
+      "Pembaruan paket Packagist pasax/secure-monitor v1.0.1 yang berfokus pada penyempurnaan migrasi database SQLite dan MySQL, trait relasi HasPasaxSecurityRelations, dan isolasi token karantina.",
+    tags: [
+      "Packagist v1.0.1",
+      "Database Migrations",
+      "Kernel FIM",
+      "mTLS Telemetry",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.1",
+    packagistUrl: PACKAGIST_URL,
     changes: [
-      {
-        type: "security",
-        scope: "Sentinel",
-        title: "Autonomous Kernel FIM & Immutable Locks",
-        description:
-          "Deteksi manipulasi berkas kritis (/etc/passwd, /etc/shadow, direktori web server) secara sub-milidetik dengan eksekusi kunci atribut kernel seketika sebelum filewebshell dapat dijalankan.",
-      },
-      {
-        type: "feat",
-        scope: "Core Mesh",
-        title: "CVE-2026 Global Intelligence Feed",
-        description:
-          "Sinkronisasi otomatis feed ancaman zero-day dan signature payload berbahaya ke seluruh node VPS terdaftar melalui channel mTLS terenkripsi.",
-      },
-      {
-        type: "perf",
-        scope: "Sentinel",
-        title: "Optimized eBPF / inotify Ring Buffers",
-        description:
-          "Mengurangi overhead memori daemon Go menjadi kurang dari 18MB RAM saat mengamati lebih dari 250.000 file sistem.",
-      },
       {
         type: "fix",
         scope: "Monitor WAF",
-        title: "Reverse Proxy Client IP Multi-Hop Resolution",
+        title: "Migrasi Tabel Database SQLite & MySQL Multi-Hop",
         description:
-          "Memperbaiki deteksi IP asli klien di balik Cloudflare, AWS CloudFront, dan Nginx upstream multi-tier untuk mencegah spoofing header X-Forwarded-For.",
+          "Memperbaiki sintaks migrasi skema tabel pasax_threat_logs dan pasax_quarantines agar berjalan mulus di lingkungan pengujian SQLite in-memory maupun MySQL 8.0+ produksi.",
       },
-    ],
-  },
-  {
-    version: "v1.2.0",
-    codename: "Declarative Policy as Code",
-    date: "15 September 2026",
-    summary:
-      "Memperkenalkan standarisasi aturan keamanan terdesentralisasi pasax-rules.yml berbasis GitOps, pemindai webshell heuristik AST, dan orkestrasi armada node.",
-    tags: ["Policy as Code", "Webshell Scanner", "GitOps"],
-    githubUrl: "https://github.com/pasax-dev/pasax-suit/releases/tag/v1.2.0",
-    changes: [
       {
         type: "feat",
-        scope: "Core Mesh",
-        title: "Declarative Policy Engine (pasax-rules.yml)",
-        description:
-          "Format deklaratif YAML untuk mendefinisikan whitelist IP subnet, aturan rate-limiting, dan threshold drop paket yang dapat dikelola via version control (GitOps).",
-      },
-      {
-        type: "security",
         scope: "Monitor WAF",
-        title: "Heuristic PHP AST Webshell Scanner",
+        title: "HasPasaxSecurityRelations Trait untuk Model User",
         description:
-          "Parser AST statis untuk membedah kode PHP mencurigakan yang diobfuskasi dengan base64_decode, eval, str_rot13, dan panggilan fungsi variabel dinamis.",
-      },
-      {
-        type: "feat",
-        scope: "Sentinel",
-        title: "Fleet Sync Daemon Hooks",
-        description:
-          "Dukungan daemon untuk reload aturan keamanan secara live (SIGHUP) tanpa perlu me-restart layanan systemd atau mengganggu koneksi aktif.",
-      },
-      {
-        type: "fix",
-        scope: "Sentinel",
-        title: "SSH Port Exemption Safeguard",
-        description:
-          "Pencegahan otomatis penguncian akses root administrator saat firewall nftables mengaktifkan mode lockdown darurat.",
-      },
-    ],
-  },
-  {
-    version: "v1.1.0",
-    codename: "Linux Kernel nftables High-Performance Engine",
-    date: "10 Agustus 2026",
-    summary:
-      "Integrasi langsung subsistem nftables kernel Linux untuk mencapai pemblokiran paket jaringan di bawah 0.2 milidetik.",
-    tags: ["nftables", "Sub-0.2ms", "Linux Kernel"],
-    githubUrl: "https://github.com/pasax-dev/pasax-suit/releases/tag/v1.1.0",
-    changes: [
-      {
-        type: "perf",
-        scope: "Sentinel",
-        title: "Direct Kernel-Space Packet Drop (<0.2ms Latency)",
-        description:
-          "Bypass context switching ruang pengguna (userspace) dengan memasukkan tabel dan rantai aturan langsung ke dalam kernel nftables.",
-      },
-      {
-        type: "feat",
-        scope: "Sentinel",
-        title: "Automated Ban List Pruning & Expiration",
-        description:
-          "Mekanisme auto-aging untuk membersihkan IP penyerang sementara yang telah melewati masa karantina tanpa mengorbankan memori tabel.",
+          "Menyediakan trait Eloquent siap pakai untuk menghubungkan riwayat login, status karantina, dan IP terpercaya langsung dari model User host.",
       },
       {
         type: "security",
-        scope: "Core Mesh",
-        title: "Zero-Knowledge Telemetry Protocols",
+        scope: "Sentinel",
+        title: "Kernel Inotify FIM & Immutable Locks",
         description:
-          "Enkripsi mTLS 1.3 satu arah untuk transmisi metadata insiden tanpa pernah mengirimkan isi payload aplikasi atau data sensitif pengguna.",
+          "Deteksi manipulasi berkas kritis sistem secara sub-milidetik dengan eksekusi kunci atribut kernel seketika sebelum file webshell dapat dieksekusi.",
       },
     ],
   },
   {
     version: "v1.0.0",
     codename: "Genesis Release — The Pasax Trinity Architecture",
-    date: "01 Juli 2026",
+    date: "15 November 2026",
     summary:
-      "Rilis publik perdana ekosistem keamanan Pasax. Memadukan WAF 100% murni PHP untuk aplikasi web, daemon Sentinel Go untuk Linux server hardening, dan Central SOC Console.",
-    tags: ["Initial Release", "Trinity Architecture", "Open Source"],
-    githubUrl: "https://github.com/pasax-dev/pasax-suit/releases/tag/v1.0.0",
+      "Rilis publik perdana ekosistem keamanan Pasax. Memadukan WAF 100% murni PHP untuk aplikasi web Laravel (pasax/secure-monitor), daemon Sentinel Go untuk Linux server hardening (pasax-sentinel), dan Central SOC Console (pasax-web).",
+    tags: [
+      "Packagist v1.0.0",
+      "Sentinel v1.0.0",
+      "Trinity Architecture",
+      "Open Source",
+    ],
+    githubUrl:
+      "https://github.com/pasax-dev/pasax-secure-monitor-laravel/releases/tag/v1.0.0",
+    packagistUrl: PACKAGIST_URL,
     changes: [
+      {
+        type: "feat",
+        scope: "Monitor WAF",
+        title: "Pasax Secure Monitor for Laravel (Packagist Release)",
+        description:
+          "Paket middleware keamanan WAF murni PHP tanpa ekstensi C dan zero NPM dependency, siap dipasang via Composer pada Laravel 10, 11, 12, dan 13.",
+      },
       {
         type: "feat",
         scope: "Sentinel",
         title: "Pasax Sentinel Go Daemon",
         description:
           "Daemon Linux mandiri yang ringan, dikompilasi statis tanpa dependensi eksternal, kompatibel dengan arsitektur x86_64 dan ARM64.",
-      },
-      {
-        type: "feat",
-        scope: "Monitor WAF",
-        title: "Pasax Secure Monitor for Laravel",
-        description:
-          "Paket middleware keamanan WAF murni PHP tanpa ekstensi C, siap dipasang via Composer pada Laravel 10, 11, 12, dan 13.",
       },
       {
         type: "feat",
@@ -260,304 +206,320 @@ export default function ChangelogPage() {
             c.title.toLowerCase().includes(q) ||
             c.description.toLowerCase().includes(q)
         )
+
       return matchesTag && matchesSearch
     })
   }, [selectedTag, searchQuery])
 
-  const getChangeBadge = (type: ReleaseChange["type"]) => {
+  const renderChangeBadge = (type: ReleaseChange["type"]) => {
     switch (type) {
       case "feat":
         return (
-          <Badge className="border-2 border-border bg-emerald-500 font-mono text-[10px] font-black uppercase text-white shadow-[1px_1px_0px_0px_var(--border)]">
-            NEW FEATURE
-          </Badge>
+          <span className="font-semiboldtext-emerald-600 inline-flex items-center rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] uppercase dark:text-emerald-400">
+            New Feature
+          </span>
         )
       case "security":
         return (
-          <Badge className="border-2 border-border bg-rose-600 font-mono text-[10px] font-black uppercase text-white shadow-[1px_1px_0px_0px_var(--border)]">
-            SECURITY
-          </Badge>
+          <span className="font-semiboldtext-rose-600 inline-flex items-center rounded-md border border-rose-500/20 bg-rose-500/10 px-2 py-0.5 font-mono text-[10px] uppercase dark:text-rose-400">
+            Security
+          </span>
         )
       case "perf":
         return (
-          <Badge className="border-2 border-border bg-amber-500 font-mono text-[10px] font-black uppercase text-black shadow-[1px_1px_0px_0px_var(--border)]">
-            PERFORMANCE
-          </Badge>
+          <span className="font-semiboldtext-amber-600 inline-flex items-center rounded-md border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] uppercase dark:text-amber-400">
+            Performance
+          </span>
         )
       case "fix":
         return (
-          <Badge className="border-2 border-border bg-blue-600 font-mono text-[10px] font-black uppercase text-white shadow-[1px_1px_0px_0px_var(--border)]">
-            BUG FIX
-          </Badge>
+          <span className="font-semiboldtext-sky-600 inline-flex items-center rounded-md border border-sky-500/20 bg-sky-500/10 px-2 py-0.5 font-mono text-[10px] uppercase dark:text-sky-400">
+            Bug Fix
+          </span>
         )
       case "docs":
         return (
-          <Badge className="border-2 border-border bg-purple-600 font-mono text-[10px] font-black uppercase text-white shadow-[1px_1px_0px_0px_var(--border)]">
-            DOCS
-          </Badge>
+          <span className="font-semiboldtext-purple-600 inline-flex items-center rounded-md border border-purple-500/20 bg-purple-500/10 px-2 py-0.5 font-mono text-[10px] uppercase dark:text-purple-400">
+            Docs
+          </span>
         )
     }
   }
 
   return (
-    <div className="w-full max-w-full py-12 md:py-16">
+    <div className="w-full max-w-full py-10 md:py-14">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumbs */}
-        <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
+        {/* Breadcrumbs matching Fumadocs */}
+        <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs">
           <Link
             href="/"
-            className="text-muted-foreground transition-colors hover:text-foreground hover:underline"
+            className="text-lp-ink/60 transition-colors hover:text-lp-ink hover:underline"
           >
-            Home
+            Beranda
           </Link>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-foreground">Ecosystem</span>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-main">Changelog</span>
+          <span className="text-lp-ink/30">/</span>
+          <span className="text-lp-ink/75">Ekosistem</span>
+          <span className="text-lp-ink/30">/</span>
+          <span className="font-semibold text-lp-ink">Changelog</span>
         </div>
 
         {/* Legal & Docs Navigation Bar */}
         <LegalNav />
 
-        {/* Header Block */}
-        <div className="rounded-base border-2 border-border bg-card p-6 shadow-[6px_6px_0px_0px_var(--border)] md:p-10">
+        {/* Header Block matching Fumadocs card */}
+        <header className="rounded-2xl border border-lp-line bg-lp-paper p-6 shadow-xs sm:p-8 lg:p-10">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-secondary-background px-3 py-1 font-mono text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)]">
-              <Sparkles className="size-4 text-main" />
-              <span>RELEASE CHRONICLES &bull; PASAX SUITE</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-lp-orange/20 bg-lp-orange/10 px-3 py-1 font-mono text-xs font-medium text-lp-orange dark:border-lp-yellow/20 dark:bg-lp-yellow/10 dark:text-lp-yellow">
+              <Sparkles className="size-3.5" />
+              <span>PASAX ECOSYSTEM RELEASES</span>
             </div>
             <div className="inline-flex items-center gap-2">
               <a
-                href="https://github.com/pasax-dev/pasax-suit/releases"
+                href={PACKAGIST_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-main px-3 py-1 font-mono text-xs font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
               >
-                <GitCommit className="size-3.5" />
-                <span>GitHub Releases</span>
-                <ExternalLink className="size-3" />
+                <span>Packagist: pasax/secure-monitor</span>
+                <ExternalLink className="size-3 text-lp-ink/50" />
+              </a>
+              <a
+                href="https://github.com/pasax-dev"
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
+              >
+                <GitCommit className="size-3.5 text-lp-ink/50" />
+                <span>GitHub Org</span>
+                <ExternalLink className="size-3 text-lp-ink/50" />
               </a>
             </div>
           </div>
 
-          <h1 className="mt-4 font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
-            Changelog &amp; Catatan Rilis
+          <h1 className="mt-4 font-heading text-3xl font-semibold tracking-tight text-lp-ink sm:text-4xl lg:text-5xl">
+            Changelog &amp; Catatan Rilis Ekosistem
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80 sm:text-lg text-pretty">
-            Lacak seluruh pembaruan, peningkatan keamanan kernel, fitur baru WAF, dan perbaikan performa pada seluruh lini ekosistem <strong>Pasax Security</strong>. Setiap versi dirilis secara terbuka, transparan, dan dapat diverifikasi.
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-pretty text-lp-ink/75 sm:text-lg">
+            Pasax adalah grup/ekosistem keamanan server terpadu. Setiap modul
+            memiliki versi independen: paket Laravel{" "}
+            <strong>pasax/secure-monitor</strong> di Packagist, daemon{" "}
+            <strong>pasax-sentinel</strong> di Linux, dan platform web.
           </p>
 
           {/* Quick Metrics */}
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <div className="rounded-base border-2 border-border bg-secondary-background/80 p-3.5">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                VERSI TERBARU
+            <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+              <span className="font-mono text-[10px] font-medium tracking-wider text-lp-ink/60 uppercase">
+                PACKAGIST STABLE
               </span>
-              <div className="mt-1 font-mono text-xl font-black text-foreground tabular-nums">
-                v1.4.0
+              <div className="mt-1 font-mono text-xl font-bold text-emerald-600 tabular-nums dark:text-emerald-400">
+                v1.0.2
               </div>
             </div>
-            <div className="rounded-base border-2 border-border bg-secondary-background/80 p-3.5">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                TOTAL RILIS
+            <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+              <span className="font-mono text-[10px] font-medium tracking-wider text-lp-ink/60 uppercase">
+                SENTINEL DAEMON
               </span>
-              <div className="mt-1 font-mono text-xl font-black text-foreground tabular-nums">
-                5 Versi Utama
+              <div className="mt-1 font-mono text-xl font-bold text-lp-ink tabular-nums">
+                v1.0.0
               </div>
             </div>
-            <div className="rounded-base border-2 border-border bg-secondary-background/80 p-3.5">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+              <span className="font-mono text-[10px] font-medium tracking-wider text-lp-ink/60 uppercase">
                 LATENSI KERNEL
               </span>
-              <div className="mt-1 font-mono text-xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums">
+              <div className="mt-1 font-mono text-xl font-bold text-emerald-600 tabular-nums dark:text-emerald-400">
                 &lt; 0.2 ms
               </div>
             </div>
-            <div className="rounded-base border-2 border-border bg-secondary-background/80 p-3.5">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="rounded-xl border border-lp-line bg-lp-paper-2/40 p-3.5">
+              <span className="font-mono text-[10px] font-medium tracking-wider text-lp-ink/60 uppercase">
                 LISENSI
               </span>
-              <div className="mt-1 font-mono text-xl font-black text-foreground">
-                MIT 100% Open
+              <div className="mt-1 font-mono text-xl font-bold text-lp-ink">
+                MIT License
               </div>
             </div>
           </div>
 
-          {/* Filter & Search Bar */}
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          {/* Search & Tag Filter Matrix */}
+          <div className="mt-8 flex flex-col gap-4 border-t border-lp-line pt-6 md:flex-row md:items-center md:justify-between">
+            {/* Tag Badges */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="mr-1 flex items-center gap-1 font-mono text-xs text-lp-ink/60">
+                <Filter className="size-3.5" />
+                <span>FILTER:</span>
+              </span>
+              {allTags.map((tag) => {
+                const isActive = selectedTag === tag
+                return (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={cn(
+                      "cursor-pointer rounded-lg border px-2.5 py-1 font-mono text-xs transition-colors",
+                      isActive
+                        ? "border-lp-orange/30 bg-lp-orange/10 font-semibold text-lp-orange dark:border-lp-yellow/30 dark:bg-lp-yellow/10 dark:text-lp-yellow"
+                        : "lppaper-2hover:text-lp-ink border-lp-line bg-lp-paper-2/40 text-lp-ink/75 hover:bg-secondary-background/60"
+                    )}
+                  >
+                    {tag}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Live Search Input */}
+            <div className="relative w-full md:w-64">
+              <Search className="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-lp-ink/40" />
               <input
                 type="text"
+                placeholder="Cari rilis atau topik..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari versi, fitur, atau perbaikan bug..."
-                className="w-full rounded-base border-2 border-border bg-background py-2 pl-9 pr-4 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 shadow-[2px_2px_0px_0px_var(--border)] focus:outline-none focus:ring-2 focus:ring-main"
+                className="8pr-3 focus: w-full rounded-lg border border-lp-line bg-lp-paper-2/40 py-1.5 pl-9 font-mono text-xs text-lp-ink placeholder:text-lp-ink/40 focus:border-lp-line-strong focus:outline-none"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 font-mono text-xs text-muted-foreground hover:text-foreground"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-
-            {/* Tag Pills */}
-            <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto">
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(tag)}
-                  className={cn(
-                    "rounded-base border-2 border-border px-2.5 py-1 font-mono text-[10px] font-bold transition-all shadow-[1px_1px_0px_0px_var(--border)] cursor-pointer",
-                    selectedTag === tag
-                      ? "bg-main text-main-foreground"
-                      : "bg-secondary-background text-foreground hover:bg-muted"
-                  )}
-                >
-                  {tag}
-                </button>
-              ))}
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* Timeline List */}
-        <div className="mt-12 space-y-10">
-          {filteredReleases.length === 0 ? (
-            <div className="rounded-base border-2 border-border bg-card p-12 text-center shadow-[4px_4px_0px_0px_var(--border)]">
-              <p className="font-heading text-lg font-bold text-foreground">
-                Tidak ada catatan rilis yang cocok dengan pencarian Anda.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery("")
-                  setSelectedTag("ALL")
-                }}
-                className="mt-4 rounded-base border-2 border-border bg-main px-4 py-2 font-mono text-xs font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
-              >
-                Reset Filter
-              </button>
-            </div>
-          ) : (
-            filteredReleases.map((release) => (
-              <article
-                key={release.version}
-                id={release.version}
-                className="relative rounded-base border-2 border-border bg-card p-6 shadow-[6px_6px_0px_0px_var(--border)] md:p-8"
-              >
-                {/* Header of Release */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border pb-5">
+        {/* Releases Timeline */}
+        <div className="mt-8 space-y-8">
+          {filteredReleases.map((release) => (
+            <article
+              key={release.version}
+              id={release.version}
+              className="scroll-mt-24 rounded-2xl border border-lp-line bg-lp-paper p-6 shadow-xs sm:p-8"
+            >
+              {/* Release Header */}
+              <div className="flex flex-col gap-3 border-b border-lp-line pb-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <span className="rounded-base border-2 border-border bg-main px-3 py-1 font-mono text-sm font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] tabular-nums">
+                    <span className="font-mono text-2xl font-bold text-lp-ink">
                       {release.version}
                     </span>
                     {release.isLatest && (
-                      <Badge className="border-2 border-border bg-emerald-500 font-mono text-[10px] font-black uppercase text-white shadow-[1px_1px_0px_0px_var(--border)]">
+                      <span className="font-semiboldtext-emerald-600 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-xs dark:text-emerald-400">
                         LATEST STABLE
-                      </Badge>
+                      </span>
                     )}
-                    <h2 className="font-heading text-lg font-black text-foreground sm:text-2xl">
-                      {release.codename}
-                    </h2>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="inline-flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1 font-mono text-xs text-lp-ink/60">
                       <Calendar className="size-3.5" />
                       <span>{release.date}</span>
-                    </div>
+                    </span>
+                  </div>
+                  <h2 className="mt-2 font-heading text-lg font-semibold text-lp-ink sm:text-xl">
+                    {release.codename}
+                  </h2>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  {release.packagistUrl && (
                     <a
-                      href={release.githubUrl}
+                      href={release.packagistUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      title="Lihat tag di GitHub"
-                      className="inline-flex size-7 items-center justify-center rounded-base border-2 border-border bg-secondary-background hover:bg-main hover:text-main-foreground transition-colors shadow-[1px_1px_0px_0px_var(--border)]"
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-lp-orange/30 bg-lp-orange/10 px-3 py-1 font-mono text-xs font-medium text-lp-orange transition-colors hover:bg-lp-orange/20 dark:border-lp-yellow/30 dark:bg-lp-yellow/10 dark:text-lp-yellow"
                     >
-                      <ExternalLink className="size-3.5" />
+                      <span>Packagist</span>
+                      <ExternalLink className="size-3" />
                     </a>
-                  </div>
+                  )}
+                  <a
+                    href={release.githubUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
+                  >
+                    <GitCommit className="size-3.5 text-lp-ink/50" />
+                    <span>Release Notes</span>
+                    <ExternalLink className="size-3 text-lp-ink/50" />
+                  </a>
                 </div>
+              </div>
 
-                {/* Release Summary */}
-                <p className="mt-4 text-sm leading-relaxed text-foreground/85 sm:text-base text-pretty">
-                  {release.summary}
-                </p>
+              {/* Release Summary */}
+              <p className="mt-5 text-sm leading-relaxed text-lp-ink/80 md:text-base">
+                {release.summary}
+              </p>
 
-                {/* Tags Pill Row */}
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {release.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex items-center gap-1 rounded border border-border bg-secondary-background px-2 py-0.5 font-mono text-[10px] font-bold text-muted-foreground"
+              {/* Release Tag Pills */}
+              <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                <Tag className="size-3 text-lp-ink/40" />
+                {release.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-md border border-lp-line bg-lp-paper-2/40 px-2 py-0.5 font-mono text-[11px] text-lp-ink/70"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Granular Changes List */}
+              <div className="mt-6 space-y-2.5">
+                <h3 className="flex items-center gap-2 font-heading text-xs font-semibold tracking-wider text-lp-ink/60 uppercase">
+                  <CheckCircle2 className="size-3.5 text-lp-orange dark:text-lp-yellow" />
+                  <span>Rincian Perubahan &amp; Peningkatan</span>
+                </h3>
+                <div className="grid grid-cols-1 gap-2.5">
+                  {release.changes.map((change, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl border border-lp-line bg-lp-paper-2/30 p-3.5 transition-colors hover:bg-lp-paper-2/60"
                     >
-                      <Tag className="size-2.5" />
-                      <span>{t}</span>
-                    </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {renderChangeBadge(change.type)}
+                        {change.scope && (
+                          <span className="rounded-md border border-lp-line bg-lp-paper px-2 py-0.5 font-mono text-[10px] font-medium text-lp-ink">
+                            [{change.scope}]
+                          </span>
+                        )}
+                        <h4 className="font-heading text-sm font-semibold text-lp-ink">
+                          {change.title}
+                        </h4>
+                      </div>
+                      <p className="mt-1.5 text-xs leading-relaxed text-lp-ink/75 sm:text-sm">
+                        {change.description}
+                      </p>
+                    </div>
                   ))}
                 </div>
+              </div>
+            </article>
+          ))}
 
-                {/* Granular Changes List */}
-                <div className="mt-6 space-y-3">
-                  <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    Detail Perubahan &amp; Peningkatan:
-                  </h3>
-                  <div className="divide-y divide-border rounded-base border-2 border-border bg-background">
-                    {release.changes.map((change, idx) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col gap-2 p-4 sm:flex-row sm:items-start sm:gap-4"
-                      >
-                        <div className="flex shrink-0 items-center gap-2 sm:w-44">
-                          {getChangeBadge(change.type)}
-                          {change.scope && (
-                            <span className="font-mono text-[10px] font-bold text-foreground/70">
-                              [{change.scope}]
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex-1 space-y-1">
-                          <h4 className="font-heading text-sm font-bold text-foreground">
-                            {change.title}
-                          </h4>
-                          <p className="text-xs leading-relaxed text-foreground/80 text-pretty">
-                            {change.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))
+          {filteredReleases.length === 0 && (
+            <div className="rounded-2xl border border-lp-line bg-lp-paper p-12 text-center shadow-xs">
+              <Bug className="mx-auto size-8 text-lp-ink/40" />
+              <h3 className="mt-3 font-heading text-base font-semibold text-lp-ink">
+                Tidak ada riwayat rilis yang cocok
+              </h3>
+              <p className="mt-1 font-mono text-xs text-lp-ink/60">
+                Coba sesuaikan kata kunci pencarian atau bersihkan filter tag.
+              </p>
+            </div>
           )}
         </div>
 
-        {/* Footer Support Banner */}
-        <div className="mt-12 rounded-base border-2 border-border bg-secondary-background p-6 text-center shadow-[4px_4px_0px_0px_var(--border)] sm:p-8">
-          <h3 className="font-heading text-lg font-black text-foreground sm:text-xl">
-            Ingin Mengikuti Rilis dan Pembahasan Teknis Terbaru?
-          </h3>
-          <p className="mt-2 text-sm text-foreground/80">
-            Bergabunglah di repositori resmi GitHub untuk membaca commit log harian, mengajukan issue, atau berkontribusi pada kode sumber terbuka Pasax.
-          </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 font-mono text-xs font-bold">
-            <a
-              href="https://github.com/pasax-dev/pasax-suit"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-main px-4 py-2 font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
-            >
-              <span>Kunjungi GitHub Repository</span>
-              <ExternalLink className="size-3.5" />
-            </a>
+        {/* Bottom CTA to Docs matching Fumadocs */}
+        <div className="mt-12 rounded-2xl border border-lp-line bg-lp-paper-2/40 p-6 sm:p-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="font-heading text-lg font-semibold text-lp-ink">
+                Ingin mempelajari implementasi teknis lebih lanjut?
+              </h3>
+              <p className="mt-1 text-xs text-lp-ink/75 sm:text-sm">
+                Buka dokumentasi lengkap untuk panduan instalasi Composer,
+                konfigurasi middleware, dan arsitektur firewall.
+              </p>
+            </div>
             <Link
-              href="/faq"
-              className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-card px-4 py-2 text-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-muted transition-all"
+              href="/docs"
+              className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-lp-line bg-lp-paper px-4 py-2 font-mono text-xs font-medium text-lp-ink shadow-xs transition-colors hover:bg-lp-paper-2"
             >
-              <span>Buka Halaman FAQ</span>
+              <BookOpen className="size-4" />
+              <span>Buka Dokumentasi</span>
               <ArrowRight className="size-3.5" />
             </Link>
           </div>

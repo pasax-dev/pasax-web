@@ -358,7 +358,7 @@ export function Cli() {
               className="absolute bottom-4 left-4 z-6 flex flex-col gap-1 border border-lp-line-strong bg-lp-paper px-3 py-2 leading-none xl:bottom-3 xl:left-4.5 xl:py-1"
             >
               <code className="text-xs leading-none">pasax-sentinel</code>
-              <code className="text-xs leading-none text-lp-orange">v1.4.0</code>
+              <code className="text-xs leading-none text-lp-orange">v1.0.0</code>
             </p>
           </div>
           <p

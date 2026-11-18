@@ -3,7 +3,13 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Scale, ShieldCheck, ArrowRight, BookOpen, HelpCircle } from "lucide-react"
+import {
+  Scale,
+  ShieldCheck,
+  ArrowRight,
+  BookOpen,
+  HelpCircle,
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function LegalNav() {
@@ -26,7 +32,7 @@ export function LegalNav() {
     },
     {
       label: "Changelog",
-      sub: "Catatan Rilis & Versi",
+      sub: "Catatan Rilis & Versi Ekosistem",
       href: "/changelog",
       icon: BookOpen,
       active: pathname === "/changelog",
@@ -41,8 +47,8 @@ export function LegalNav() {
   ]
 
   return (
-    <div className="mb-8 overflow-x-auto pb-2">
-      <div className="inline-flex min-w-full items-center gap-2 rounded-base border-2 border-border bg-card p-1.5 shadow-[4px_4px_0px_0px_var(--border)] sm:min-w-0">
+    <div className="mb-8 overflow-x-auto pb-1">
+      <div className="inline-flex min-w-full items-center gap-1.5 rounded-xl border border-lp-line bg-lp-paper-2/60 p-1.5 shadow-xs sm:min-w-0">
         {tabs.map((tab) => {
           const Icon = tab.icon
           return (
@@ -50,19 +56,27 @@ export function LegalNav() {
               key={tab.href}
               href={tab.href}
               className={cn(
-                "group flex flex-1 items-center gap-2.5 rounded-base px-3.5 py-2 font-heading text-xs font-bold transition-all sm:text-sm",
+                "group flex flex-1 items-center gap-2.5 rounded-lg px-3.5 py-2 transition-all sm:text-sm",
                 tab.active
-                  ? "border-2 border-border bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
-                  : "text-foreground hover:bg-secondary-background hover:text-foreground"
+                  ? "border border-lp-line bg-lp-paper text-lp-ink shadow-xs"
+                  : "border border-transparent text-lp-ink/70 hover:bg-lp-paper/60 hover:text-lp-ink"
               )}
             >
-              <Icon className={cn("size-4 shrink-0", tab.active ? "text-main-foreground" : "text-main")} />
-              <div className="flex flex-col text-left">
-                <span className="leading-tight">{tab.label}</span>
-                <span className={cn(
-                  "hidden font-mono text-[10px] font-normal sm:block",
-                  tab.active ? "text-main-foreground/90" : "text-muted-foreground"
-                )}>
+              <div
+                className={cn(
+                  "flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors",
+                  tab.active
+                    ? "border-lp-orange/30 bg-lp-orange/10 text-lp-orange dark:border-lp-yellow/30 dark:bg-lp-yellow/10 dark:text-lp-yellow"
+                    : "border-lp-line bg-lp-paper text-lp-ink/60 group-hover:text-lp-ink"
+                )}
+              >
+                <Icon className="size-3.5" />
+              </div>
+              <div className="flex min-w-0 flex-col text-left">
+                <span className="truncate font-heading text-xs leading-tight font-semibold text-lp-ink">
+                  {tab.label}
+                </span>
+                <span className="hidden truncate font-mono text-[10px] text-lp-ink/50 sm:block">
                   {tab.sub}
                 </span>
               </div>

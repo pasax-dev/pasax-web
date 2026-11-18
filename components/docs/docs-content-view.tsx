@@ -3,27 +3,13 @@
 import * as React from "react"
 import {
   Clock,
-  ExternalLink,
   Copy,
   Check,
+  ExternalLink,
   ThumbsUp,
   ThumbsDown,
   FileText,
-  Terminal,
-  Code2,
 } from "lucide-react"
-
-function GithubIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-      />
-    </svg>
-  )
-}
 
 export function DocsContentView({
   title,
@@ -102,12 +88,21 @@ export function DocsContentView({
     })
   }
 
-  // Derive repo URL based on category or slug
-  const repoUrl = slug.includes("sentinel")
+  // Derive repo URL and version badge based on category or slug
+  const isSentinel = slug.includes("sentinel")
+  const isCore = slug.includes("core")
+
+  const repoUrl = isSentinel
     ? "https://github.com/pasax-dev/pasax-sentinel"
-    : slug.includes("core")
+    : isCore
       ? "https://github.com/pasax-dev/pasax-suit"
       : "https://github.com/pasax-dev/pasax-secure-monitor-laravel"
+
+  const versionBadge = isSentinel
+    ? "v1.0.0 Sentinel"
+    : isCore
+      ? "v1.0.0 Platform"
+      : "Packagist v1.0.2"
 
   return (
     <article className="w-full max-w-full min-w-0 flex-1">
@@ -123,8 +118,8 @@ export function DocsContentView({
             <span>5 min baca</span>
           </span>
           <span className="font-mono text-xs text-lp-ink/40">·</span>
-          <span className="rounded-full border border-lp-orange/20 dark:border-lp-yellow/20 bg-lp-orange/10 dark:bg-lp-yellow/10 px-2 py-0.5 font-mono text-[10px] font-medium text-lp-orange dark:text-lp-yellow">
-            v1.4 Official
+          <span className="rounded-full border border-lp-orange/20 bg-lp-orange/10 px-2 py-0.5 font-mono text-[10px] font-medium text-lp-orange dark:border-lp-yellow/20 dark:bg-lp-yellow/10 dark:text-lp-yellow">
+            {versionBadge}
           </span>
         </div>
 
@@ -142,7 +137,7 @@ export function DocsContentView({
         <div className="mt-5 flex flex-wrap items-center gap-2.5 pt-2">
           <button
             onClick={copyPageMarkdown}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink hover:bg-lp-paper-2 transition-colors cursor-pointer"
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
           >
             {copiedDoc ? (
               <>
@@ -163,47 +158,45 @@ export function DocsContentView({
             href={repoUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink hover:bg-lp-paper-2 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3 py-1.5 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
           >
-            <GithubIcon className="size-3.5" />
-            <span>Lihat di GitHub</span>
+            <span>GitHub Repositori</span>
             <ExternalLink className="size-3 text-lp-ink/50" />
           </a>
         </div>
       </header>
 
-      {/* Article Body Content */}
+      {/* Main Prose Content */}
       <div
         ref={contentRef}
         className="docs-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
 
-      {/* Article Footer Feedback matching Fumadocs feedback widget */}
-      <footer className="mt-14 space-y-6 border-t border-lp-line pt-8">
-        <div className="flex flex-col items-start justify-between gap-4 rounded-xl border border-lp-line bg-lp-paper-2/40 p-4 sm:flex-row sm:items-center sm:p-5">
-          <div className="space-y-1">
+      {/* Article Feedback & Footer */}
+      <footer className="mt-16 border-t border-lp-line pt-8">
+        <div className="mb-8 flex flex-col gap-4 rounded-xl border border-lp-line bg-lp-paper-2/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
             <h4 className="font-heading text-sm font-semibold text-lp-ink">
-              Apakah panduan ini bermanfaat?
+              Apakah dokumentasi ini bermanfaat?
             </h4>
             <p className="text-xs text-lp-ink/65">
-              Bantu kami meningkatkan kualitas dokumentasi resmi Pasax Suite.
+              Bantu kami menyempurnakan dokumentasi ekosistem Pasax.
             </p>
           </div>
-
           <div className="flex items-center gap-2">
             {feedback === null ? (
               <>
                 <button
                   onClick={() => setFeedback("yes")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink hover:bg-lp-paper-2 hover:border-emerald-500/50 transition-colors cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink transition-colors hover:border-emerald-500/50 hover:bg-lp-paper-2"
                 >
                   <ThumbsUp className="size-3.5 text-emerald-600 dark:text-emerald-400" />
                   <span>Ya, membantu</span>
                 </button>
                 <button
                   onClick={() => setFeedback("no")}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink hover:bg-lp-paper-2 hover:border-rose-500/50 transition-colors cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-3 py-1.5 text-xs font-medium text-lp-ink transition-colors hover:border-rose-500/50 hover:bg-lp-paper-2"
                 >
                   <ThumbsDown className="size-3.5 text-rose-500" />
                   <span>Kurang lengkap</span>
@@ -221,14 +214,14 @@ export function DocsContentView({
           <div className="flex items-center gap-2">
             <span>Lisensi: MIT Open Source</span>
             <span>·</span>
-            <span>Pasax Suite v1.4</span>
+            <span>Pasax Ecosystem</span>
           </div>
           <div className="flex items-center gap-3">
             <a
               href={`${repoUrl}/issues`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1 hover:text-lp-ink hover:underline transition-colors"
+              className="inline-flex items-center gap-1 transition-colors hover:text-lp-ink hover:underline"
             >
               <FileText className="size-3.5" />
               <span>Laporkan masalah dokumentasi</span>

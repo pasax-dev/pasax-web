@@ -9,6 +9,7 @@ import {
   Shield,
   Terminal,
   Layers,
+  ExternalLink,
 } from "lucide-react"
 
 import {
@@ -25,6 +26,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import {
+  ECOSYSTEM_PRODUCTS,
+  getEcosystemProduct,
+  PACKAGIST_URL,
+} from "@/lib/packagist"
 
 const MODULES = [
   {
@@ -33,6 +39,7 @@ const MODULES = [
     shortName: "PHP WAF Shield",
     href: "/docs/pasax-secure-monitor",
     icon: Shield,
+    source: "Packagist",
   },
   {
     id: "pasax-sentinel",
@@ -40,6 +47,7 @@ const MODULES = [
     shortName: "Kernel Daemon & FIM",
     href: "/docs/pasax-sentinel",
     icon: Terminal,
+    source: "Go Daemon",
   },
   {
     id: "core",
@@ -47,27 +55,42 @@ const MODULES = [
     shortName: "Mesh & Threat Ledger",
     href: "/docs/core",
     icon: Layers,
+    source: "Platform",
   },
 ]
 
 export function VersionSwitcher({
-  versions = ["1.4.0", "1.3.2", "1.2.0"],
-  defaultVersion = "1.4.0",
+  activeProduct: propProduct,
 }: {
+  activeProduct?: string
   versions?: string[]
   defaultVersion?: string
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const [selectedVersion, setSelectedVersion] = React.useState(defaultVersion)
 
-  // Detect current active module from path
-  const currentModule = React.useMemo(() => {
-    if (pathname.includes("/docs/pasax-sentinel")) return MODULES[1]
-    if (pathname.includes("/docs/core")) return MODULES[2]
-    return MODULES[0]
-  }, [pathname])
+  // Detect current active product from pathname or prop
+  const currentModuleId = React.useMemo(() => {
+    if (propProduct) return propProduct
+    if (pathname.includes("/docs/pasax-sentinel")) return "pasax-sentinel"
+    if (pathname.includes("/docs/core")) return "core"
+    if (pathname.includes("/docs/pasax-secure-monitor"))
+      return "pasax-secure-monitor"
+    return "pasax-secure-monitor"
+  }, [pathname, propProduct])
 
+  const productMeta = getEcosystemProduct(currentModuleId)
+  const [selectedVersion, setSelectedVersion] = React.useState(
+    productMeta.latestVersion
+  )
+
+  // Keep selected version in sync when switching between modules
+  React.useEffect(() => {
+    setSelectedVersion(productMeta.latestVersion)
+  }, [productMeta.id, productMeta.latestVersion])
+
+  const currentModule =
+    MODULES.find((m) => m.id === currentModuleId) || MODULES[0]
   const ActiveIcon = currentModule.icon || GalleryVerticalEnd
 
   return (
@@ -77,54 +100,66 @@ export function VersionSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="w-full border border-lp-line bg-lp-paper hover:bg-lp-paper-2 data-[state=open]:bg-lp-paper-2 transition-colors cursor-pointer"
+              className="w-full cursor-pointer border border-lp-line bg-lp-paper transition-colors hover:bg-lp-paper-2 data-[state=open]:bg-lp-paper-2"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-lp-ink text-lp-paper dark:bg-lp-yellow dark:text-lp-on-yellow">
                 <ActiveIcon className="size-4" />
               </div>
-              <div className="flex flex-col gap-0.5 leading-none text-left">
-                <span className="font-heading font-semibold text-xs text-lp-ink">
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5 text-left leading-none">
+                <span className="truncate font-heading text-xs font-semibold text-lp-ink">
                   {currentModule.name}
                 </span>
-                <span className="font-mono text-[10px] text-lp-ink-2">
-                  v{selectedVersion} &bull; {currentModule.shortName}
+                <span className="flex items-center gap-1 font-mono text-[10px] text-lp-ink-2">
+                  <span>v{selectedVersion}</span>
+                  <span>&bull;</span>
+                  <span className="truncate text-lp-orange dark:text-lp-yellow">
+                    {productMeta.source}
+                  </span>
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4 text-lp-ink-2" />
+              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-lp-ink-2" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--anchor-width) min-w-64 border border-lp-line bg-lp-paper p-1.5 shadow-xl"
+            className="w-(--anchor-width) min-w-68 border border-lp-line bg-lp-paper p-1.5 shadow-xl"
             align="start"
             side="bottom"
             sideOffset={4}
           >
             {/* Documentation Modules Switcher */}
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-wider text-lp-ink-2 px-2 py-1">
-                Pilih Modul Dokumentasi
+              <DropdownMenuLabel className="px-2 py-1 font-mono text-[10px] tracking-wider text-lp-ink-2 uppercase">
+                Modul Ekosistem Pasax
               </DropdownMenuLabel>
               {MODULES.map((mod) => {
                 const Icon = mod.icon
                 const isSelected = mod.id === currentModule.id
+                const modMeta = getEcosystemProduct(mod.id)
                 return (
                   <DropdownMenuItem
                     key={mod.id}
                     onSelect={() => router.push(mod.href)}
-                    className="flex items-center gap-2.5 px-2 py-2 rounded-md cursor-pointer hover:bg-lp-paper-2"
+                    className="flex cursor-pointer items-center gap-2.5 rounded-md px-2 py-2 hover:bg-lp-paper-2"
                   >
                     <div className="flex size-7 shrink-0 items-center justify-center rounded-md border border-lp-line bg-lp-paper text-lp-ink">
                       <Icon className="size-3.5 text-lp-orange" />
                     </div>
-                    <div className="flex flex-col min-w-0 flex-1">
-                      <span className="font-heading font-medium text-xs text-lp-ink">
-                        {mod.name}
-                      </span>
+                    <div className="flex min-w-0 flex-1 flex-col">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-heading text-xs font-medium text-lp-ink">
+                          {mod.name}
+                        </span>
+                        <span className="py-0.2 rounded border border-lp-line bg-lp-paper-2 px-1 font-mono text-[9px] text-lp-ink-2">
+                          v{modMeta.latestVersion}
+                        </span>
+                      </div>
                       <span className="font-mono text-[10px] text-lp-ink-2">
                         {mod.shortName}
                       </span>
                     </div>
-                    {isSelected && <Check className="ml-auto size-4 text-lp-orange" />}
+                    {isSelected && (
+                      <Check className="ml-auto size-4 text-lp-orange" />
+                    )}
                   </DropdownMenuItem>
                 )
               })}
@@ -132,18 +167,43 @@ export function VersionSwitcher({
 
             <DropdownMenuSeparator className="my-1.5 bg-lp-line" />
 
-            {/* Versions Switcher */}
+            {/* Product-Specific Version Switcher */}
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-wider text-lp-ink-2 px-2 py-1">
-                Versi Rilis
-              </DropdownMenuLabel>
-              {versions.map((version) => (
+              <div className="flex items-center justify-between px-2 py-1">
+                <DropdownMenuLabel className="p-0 font-mono text-[10px] tracking-wider text-lp-ink-2 uppercase">
+                  {productMeta.id === "pasax-secure-monitor"
+                    ? "Versi Packagist"
+                    : "Versi Rilis"}
+                </DropdownMenuLabel>
+                {productMeta.id === "pasax-secure-monitor" && (
+                  <a
+                    href={PACKAGIST_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 font-mono text-[10px] text-lp-orange hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span>packagist.org</span>
+                    <ExternalLink className="size-2.5" />
+                  </a>
+                )}
+              </div>
+              {productMeta.versions.map((version, idx) => (
                 <DropdownMenuItem
                   key={version}
                   onSelect={() => setSelectedVersion(version)}
-                  className="flex items-center justify-between px-2 py-1.5 rounded-md font-mono text-xs text-lp-ink cursor-pointer hover:bg-lp-paper-2"
+                  className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 font-mono text-xs text-lp-ink hover:bg-lp-paper-2"
                 >
-                  <span>v{version}</span>
+                  <div className="flex items-center gap-2">
+                    <span>v{version}</span>
+                    {idx === 0 && (
+                      <span className="py-0.2 rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                        {productMeta.id === "pasax-secure-monitor"
+                          ? "PACKAGIST STABLE"
+                          : "LATEST"}
+                      </span>
+                    )}
+                  </div>
                   {version === selectedVersion && (
                     <Check className="size-3.5 text-lp-orange" />
                   )}

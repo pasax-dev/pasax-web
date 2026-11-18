@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchTrigger } from "@/components/search/search-trigger"
+import { IllosThreatDetection } from "@/components/illos"
 import { cn } from "@/lib/utils"
 
 export function PublicNav() {
@@ -69,11 +70,10 @@ export function PublicNav() {
             className="hidden items-center gap-1 md:flex"
           >
             {/* Documentation Mega-Menu Dropdown */}
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative" ref={dropdownRef} onMouseEnter={() => setDocsDropdownOpen(true)} onMouseLeave={() => setDocsDropdownOpen(false)}>
               <button
                 type="button"
-                onClick={() => setDocsDropdownOpen(!docsDropdownOpen)}
-                onMouseEnter={() => setDocsDropdownOpen(true)}
+                onClick={() => setDocsDropdownOpen((v) => !v)}
                 aria-expanded={docsDropdownOpen}
                 className={cn(
                   "inline-flex h-8 items-center gap-1 rounded-md px-2.5 text-xs font-medium text-lp-ink-2 transition-colors hover:text-lp-ink",
@@ -91,8 +91,7 @@ export function PublicNav() {
 
               {docsDropdownOpen && (
                 <div
-                  onMouseLeave={() => setDocsDropdownOpen(false)}
-                  className="absolute left-0 top-full mt-1.5 w-[640px] rounded-xl border border-lp-line bg-lp-paper p-3 shadow-2xl transition-all animate-in fade-in-0 zoom-in-95"
+                  className="absolute top-full left-0 mt-1 w-[640px] animate-in rounded-xl border border-lp-line bg-lp-paper p-3 shadow-2xl transition-all fade-in-0 zoom-in-95"
                 >
                   <div className="grid grid-cols-12 gap-3">
                     {/* Left Preview Card */}
@@ -102,24 +101,40 @@ export function PublicNav() {
                       className="group col-span-5 flex flex-col justify-between overflow-hidden rounded-lg border border-lp-line bg-lp-paper-2 p-3 transition-colors hover:border-lp-line-strong hover:bg-lp-paper"
                     >
                       <div>
-                        <div className="-mx-3 -mt-3 mb-2.5 overflow-hidden rounded-t-lg">
-                          <Image
-                            src="/banner.png"
-                            alt="Documentation Preview"
-                            width={320}
-                            height={140}
-                            className="h-24 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            style={{
-                              maskImage:
-                                "linear-gradient(to bottom, white 60%, transparent)",
-                            }}
-                          />
+                        {/* Illos Threat Detection Animated Preview */}
+                        <div className="relative -mx-3 -mt-3 mb-2.5 flex h-28 items-center justify-center overflow-hidden rounded-t-lg border-b border-lp-line bg-lp-paper-2/60 transition-colors group-hover:bg-lp-paper">
+                          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,107,0,0.1),transparent_70%)]" />
+                          <div className="relative flex size-full items-center justify-center overflow-hidden p-1">
+                            <IllosThreatDetection
+                              className="size-full max-h-full max-w-full transition-transform duration-300 group-hover:scale-105 [&_svg]:size-full [&_svg]:object-contain"
+                              style={
+                                {
+                                  "--illos-ground": "var(--lp-paper)",
+                                  "--illos-ink": "var(--lp-ink)",
+                                  "--illos-line": "var(--lp-line-strong)",
+                                  "--illos-faint": "var(--lp-line)",
+                                  "--illos-accent":
+                                    "var(--color-lp-orange, #ff6b00)",
+                                  "--illos-accent-dim":
+                                    "rgba(255, 107, 0, 0.4)",
+                                  "--illos-alert": "#ff4d50",
+                                } as React.CSSProperties
+                              }
+                            />
+                          </div>
+                          {/* Live indicator tag */}
+                          <div className="pointer-events-none absolute bottom-1.5 left-2 flex items-center gap-1.5 rounded-full border border-lp-line bg-lp-paper/95 px-2 py-0.5 font-mono text-[10px] text-lp-ink shadow-xs backdrop-blur-sm">
+                            <span className="size-1.5 animate-pulse rounded-full bg-lp-orange" />
+                            <span>v1.0 Sentinel Core</span>
+                          </div>
                         </div>
+
                         <p className="font-heading text-xs font-semibold text-lp-ink">
                           Getting Started
                         </p>
                         <p className="mt-1 text-[11px] leading-relaxed text-lp-ink-2">
-                          Learn to deploy and integrate Pasax security in minutes.
+                          Learn to deploy and integrate Pasax security in
+                          minutes.
                         </p>
                       </div>
 
@@ -143,7 +158,7 @@ export function PublicNav() {
                           <p className="font-heading text-xs font-medium text-lp-ink group-hover:text-lp-orange">
                             Sentinel Daemon
                           </p>
-                          <p className="text-[11px] text-lp-ink-2 line-clamp-1">
+                          <p className="line-clamp-1 text-[11px] text-lp-ink-2">
                             Go 1.24 raw kernel drops &amp; FIM auto-lock.
                           </p>
                         </div>
@@ -161,7 +176,7 @@ export function PublicNav() {
                           <p className="font-heading text-xs font-medium text-lp-ink group-hover:text-lp-orange">
                             Shield WAF
                           </p>
-                          <p className="text-[11px] text-lp-ink-2 line-clamp-1">
+                          <p className="line-clamp-1 text-[11px] text-lp-ink-2">
                             Zero-dependency Laravel application firewall.
                           </p>
                         </div>
@@ -179,7 +194,7 @@ export function PublicNav() {
                           <p className="font-heading text-xs font-medium text-lp-ink group-hover:text-lp-orange">
                             Trinity Architecture
                           </p>
-                          <p className="text-[11px] text-lp-ink-2 line-clamp-1">
+                          <p className="line-clamp-1 text-[11px] text-lp-ink-2">
                             Triple-layer mesh linking kernel, app &amp; cloud.
                           </p>
                         </div>
@@ -197,7 +212,7 @@ export function PublicNav() {
                           <p className="font-heading text-xs font-medium text-lp-ink group-hover:text-lp-orange">
                             REST API Reference
                           </p>
-                          <p className="text-[11px] text-lp-ink-2 line-clamp-1">
+                          <p className="line-clamp-1 text-[11px] text-lp-ink-2">
                             Headless security endpoints and threat hooks.
                           </p>
                         </div>
@@ -264,7 +279,7 @@ export function PublicNav() {
             target="_blank"
             rel="noreferrer noopener"
             aria-label="GitHub Repository"
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink hover:bg-lp-paper-2 transition-colors"
+            className="inline-flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink transition-colors hover:bg-lp-paper-2"
           >
             <svg
               role="img"
@@ -284,7 +299,7 @@ export function PublicNav() {
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink hover:bg-lp-paper-2 transition-colors md:hidden"
+            className="inline-flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink transition-colors hover:bg-lp-paper-2 md:hidden"
           >
             {mobileMenuOpen ? (
               <X className="size-4" />

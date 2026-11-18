@@ -21,12 +21,17 @@ import {
   Check,
 } from "lucide-react"
 import { LegalNav } from "@/components/public/legal-nav"
-import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 interface FaqItem {
   id: string
-  category: "architecture" | "performance" | "compatibility" | "privacy" | "licensing" | "fleet"
+  category:
+    | "architecture"
+    | "performance"
+    | "compatibility"
+    | "privacy"
+    | "licensing"
+    | "fleet"
   question: string
   answer: string
   codeSnippet?: string
@@ -47,7 +52,8 @@ const FAQ_LIST: FaqItem[] = [
   {
     id: "what-is-pasax",
     category: "architecture",
-    question: "Apa itu Pasax Security Suite dan untuk siapa framework ini dibuat?",
+    question:
+      "Apa itu Pasax Security Suite dan untuk siapa framework ini dibuat?",
     answer:
       "Pasax adalah ekosistem kekebalan server mandiri (autonomous server fleet immunity) yang dirancang khusus untuk pengembang, DevOps, dan tim SecOps yang mengelola server Linux dan aplikasi web produksi. Berbeda dari solusi keamanan konvensional yang lambat dan berat, Pasax menggabungkan proteksi level aplikasi (PHP WAF) dengan proteksi level kernel (Linux nftables & inotify FIM) untuk memotong serangan siber dalam hitungan mikrodetik sebelum menyentuh resource server.",
     tags: ["Umum", "Arsitektur", "DevOps"],
@@ -55,7 +61,8 @@ const FAQ_LIST: FaqItem[] = [
   {
     id: "three-layer-architecture",
     category: "architecture",
-    question: "Mengapa Pasax memisahkan sistemnya menjadi 3 lapis (Trinity Architecture)?",
+    question:
+      "Mengapa Pasax memisahkan sistemnya menjadi 3 lapis (Trinity Architecture)?",
     answer:
       "Arsitektur 3 lapis memisahkan domain tanggung jawab keamanan secara independen namun terkoordinasi:\n1. Lapisan Aplikasi (Pasax Secure Monitor): WAF 100% PHP murni yang menyaring HTTP payload, brute-force login, dan karantina session tanpa dependensi runtime C.\n2. Lapisan Kernel (Pasax Sentinel): Daemon Go otonom yang mengeksekusi penolakan paket jaringan instan via Linux nftables dan mengunci integritas berkas sistem via inotify.\n3. Lapisan Koordinasi (Core Mesh & Threat Ledger): Mesh sinkronisasi GitOps (pasax-rules.yml) dan telemetri insiden terdesentralisasi antar-node.",
     tags: ["Arsitektur", "3 Layers", "Trinity"],
@@ -63,126 +70,65 @@ const FAQ_LIST: FaqItem[] = [
   {
     id: "comparison-fail2ban-cloudflare",
     category: "architecture",
-    question: "Apa perbedaan Pasax dengan Fail2ban, CrowdSec, atau Cloudflare WAF?",
+    question:
+      "Apa perbedaan Pasax dengan Fail2ban, CrowdSec, atau Cloudflare WAF?",
     answer:
       "Fail2ban membaca log teks secara reaktif setelah serangan terjadi (delay 5–30 detik). Cloudflare WAF hanya melindungi traffic HTTP publik dan tidak mengetahui apa yang terjadi di dalam OS Linux host Anda.\n\nPasax bekerja proaktif secara end-to-end: WAF aplikasi mendeteksi payload SQLi/XSS/Brute-force, seketika memerintahkan kernel nftables untuk memblokir IP penyerang di level TCP/IP (<0.2ms) sebelum request berikutnya sampai ke web server, sekaligus memantau integritas filesystem dari infeksi webshell.",
     tags: ["Perbandingan", "Fail2ban", "Cloudflare"],
   },
   {
-    id: "sub-millisecond-latency",
+    id: "how-sub-02ms-blocking-works",
     category: "performance",
-    question: "Bagaimana cara Pasax Sentinel mencapai pemblokiran paket jaringan di bawah 0.2 milidetik?",
+    question:
+      "Bagaimana cara Pasax Sentinel mencapai pemblokiran paket jaringan di bawah 0.2 milidetik?",
     answer:
-      "Pasax Sentinel berkomunikasi langsung dengan API Netlink subsistem nftables kernel Linux menggunakan socket biner murni tanpa memanggil proses shell terpisah (fork/exec). Aturan drop dimasukkan langsung ke tabel raw prerouting kernel, sehingga paket berbahaya dari IP terblokir dibuang seketika pada kartu jaringan (NIC) sebelum melewati stack memori socket TCP/IP ruang pengguna.",
-    tags: ["nftables", "Performa", "Sub-0.2ms"],
+      "Ketika WAF aplikasi mendeteksi payload berbahaya, ia mengirimkan sinyal IPC UNIX Socket lokal ke daemon Pasax Sentinel (latensi ~0.04ms). Sentinel langsung menyuntikkan rule penolakan ke nftables kernel set tanpa me-reload firewall.\n\nKarena nftables beroperasi langsung di kernel network stack (Netfilter hook) sebelum paket mencapai socket TCP web server (Nginx/Apache), paket penyerang selanjutnya di-drop secara wire-speed tanpa membebani CPU PHP maupun web server sama sekali.",
+    codeSnippet: "pasax sentinel status --benchmark-netfilter",
+    tags: ["Performa", "Kernel", "nftables"],
   },
   {
-    id: "waf-overhead-performance",
+    id: "memory-footprint",
     category: "performance",
-    question: "Apakah middleware Pasax Secure Monitor akan memperlambat response time aplikasi web saya?",
+    question:
+      "Berapa banyak penggunaan RAM dan CPU oleh Pasax Sentinel di server VPS?",
     answer:
-      "Overhead evaluasi regex WAF murni PHP Pasax telah dioptimalkan dengan algoritma Aho-Corasick dan caching token perangkat in-memory. Pada pengujian benchmark produksi (Laravel 11 di PHP 8.3 OPcache), penambahan latensi rata-rata hanya berkisar antara 0.15ms hingga 0.40ms per HTTP request, praktis tidak terasa oleh pengguna akhir.",
-    tags: ["PHP WAF", "Latensi", "Benchmark"],
+      "Pasax Sentinel dikompilasi statis dalam bahasa Go dengan alokasi memori nol-overhead. Rata-rata footprint memori hanya berkisar antara 14MB hingga 22MB RAM saat idle, dan lonjakan CPU di bawah 0.8% bahkan ketika memproses ribuan event inotify per detik.",
+    tags: ["RAM", "Overhead", "Efisiensi"],
   },
   {
-    id: "resource-consumption-ram-cpu",
-    category: "performance",
-    question: "Berapa konsumsi CPU dan RAM daemon Pasax Sentinel di server Linux?",
-    answer:
-      "Sangat efisien. Daemon Pasax Sentinel dikompilasi statis dengan bahasa Go. Dalam kondisi operasional normal memantau firewall nftables dan ratusan ribu file inotify, konsumsi memori hanya memakan 12MB hingga 25MB RAM dengan penggunaan CPU di bawah 0.5% pada VPS 1 vCPU.",
-    tags: ["RAM", "CPU", "Overhead"],
-  },
-  {
-    id: "supported-os-linux-distros",
+    id: "zero-npm-philosophy",
     category: "compatibility",
-    question: "Distro Linux apa saja yang didukung resmi oleh Pasax Sentinel?",
+    question:
+      "Mengapa pasax/secure-monitor tidak memiliki dependensi NPM / Node.js sama sekali?",
     answer:
-      "Pasax Sentinel mendukung kernel Linux 5.4 ke atas yang mendukung subsistem nftables, termasuk:\n• Ubuntu 20.04 LTS, 22.04 LTS, 24.04 LTS\n• Debian 11 (Bullseye), 12 (Bookworm)\n• RHEL 8 / 9, Rocky Linux, AlmaLinux\n• Alpine Linux (arsitektur x86_64 dan aarch64 / ARM64).",
-    tags: ["Linux", "Ubuntu", "Debian", "ARM64"],
+      "Mengikuti filosofi Spatie standar emas Laravel, paket ini adalah 100% Pure PHP. Anda tidak perlu menginstal Node.js, npm, yarn, atau menjalankan build step (Vite/Webpack) di server produksi backend Anda. Paket langsung bekerja di Laravel Blade, Livewire, Filament, Inertia, maupun API headless murni.",
+    tags: ["Laravel", "Pure PHP", "Zero NPM"],
   },
   {
-    id: "docker-container-support",
+    id: "laravel-compatibility",
     category: "compatibility",
-    question: "Apakah Pasax dapat berjalan di dalam container Docker atau Kubernetes?",
+    question:
+      "Versi Laravel dan PHP apa saja yang didukung oleh pasax/secure-monitor?",
     answer:
-      "Ya! Untuk Pasax Secure Monitor (WAF), Anda dapat menjalankannya di container PHP-FPM / Laravel manapun tanpa izin khusus.\nUntuk Pasax Sentinel (Kernel Daemon), daemon dijalankan pada level host server (atau container dengan flag cap-add=NET_ADMIN dan host network) agar dapat memanipulasi aturan nftables jaringan host.",
-    codeSnippet: "docker run -d --name pasax-sentinel --net=host --cap-add=NET_ADMIN -v /etc/pasax:/etc/pasax pasax/sentinel:latest",
-    tags: ["Docker", "Kubernetes", "Container"],
-  },
-  {
-    id: "php-laravel-versions",
-    category: "compatibility",
-    question: "Versi PHP dan framework apa saja yang kompatibel dengan WAF?",
-    answer:
-      "Pasax Secure Monitor kompatibel penuh dengan PHP 8.1, 8.2, 8.3, dan 8.4. Didesain secara khusus untuk framework Laravel versi 10, 11, 12, dan 13, serta dapat diintegrasikan dengan aplikasi non-Laravel via antarmuka middleware standalone PSR-15.",
-    codeSnippet: "composer require pasax/secure-monitor",
-    tags: ["PHP", "Laravel", "Composer"],
-  },
-  {
-    id: "nginx-apache-reverse-proxy",
-    category: "compatibility",
-    question: "Apakah Pasax memerlukan konfigurasi khusus jika menggunakan Nginx atau Apache?",
-    answer:
-      "Tidak wajib, namun kami menyediakan blueprint konfigurasi hardened Nginx dan Apache (.htaccess) di dokumentasi resmi. Pasax secara otomatis membaca header reverse proxy terpercaya (seperti X-Forwarded-For atau CF-Connecting-IP) dengan validasi subnet aman agar penyerang tidak dapat memalsukan IP aslinya.",
-    tags: ["Nginx", "Apache", "Reverse Proxy"],
+      "Paket Packagist pasax/secure-monitor mendukung penuh:\n- PHP: ^8.2, ^8.3, ^8.4, dan ^8.5\n- Framework Laravel: 10.x, 11.x, 12.x, dan 13.x\n\nPaket menggunakan auto-discovery modern untuk mendaftarkan PasaxServiceProvider dan Facade Pasax secara otomatis.",
+    tags: ["PHP 8.2+", "Laravel 10-13", "Composer"],
   },
   {
     id: "zero-knowledge-privacy",
     category: "privacy",
-    question: "Apakah Pasax mengirimkan isi request (payload), password, atau database saya ke cloud?",
+    question:
+      "Apakah telemetri Pasax mengirimkan data sensitif pelanggan ke server cloud?",
     answer:
-      "SAMA SEKALI TIDAK. Pasax menganut prinsip Zero-Knowledge Architecture. Seluruh inspeksi muatan HTTP dan berkas sensitif berlangsung lokal 100% di dalam mesin server Anda. Telemetri yang dikirimkan ke console terpusat HANYA berupa metadata keamanan anonim (IP penyerang, tipe serangan seperti SQLi/BruteForce, timestamp, dan kode negara) tanpa pernah membawa isi body request, cookie sesi, atau data pelanggan.",
-    tags: ["Privasi", "Zero-Knowledge", "Data Security"],
+      "TIDAK PERNAH. Pasax beroperasi berdasarkan prinsip Zero-Knowledge. Seluruh inspeksi regex WAF dan deteksi webshell berjalan 100% lokal di CPU server Anda. Telemetri keluar hanya mentransmisikan metadata teknis penyerang (misal: IP penyerang dan tipe serangan) lewat koneksi terenkripsi mTLS 1.3 demi membangun blocklist global.",
+    tags: ["Privasi", "Zero-Knowledge", "mTLS"],
   },
   {
-    id: "telemetry-egress-mtls",
-    category: "privacy",
-    question: "Mengapa koneksi telemetri Pasax bersifat egress-only via mTLS 1.3?",
-    answer:
-      "Server VPS Anda tidak pernah membuka port inbound listening tambahan untuk koneksi remote Pasax. Semua pertukaran data adalah outbound-only (keluar) yang dienkripsi timbal-balik (mutual TLS 1.3) menggunakan sertifikat kriptografi X.509 unik per node. Hal ini menjamin penyerang di luar internet tidak dapat melakukan port scanning atau mengeksploitasi celah komunikasi daemon.",
-    tags: ["mTLS", "Egress Only", "Port Security"],
-  },
-  {
-    id: "open-source-license-mit",
+    id: "licensing-model",
     category: "licensing",
-    question: "Apakah kode sumber Pasax benar-benar 100% open source dan gratis?",
+    question: "Apakah Pasax gratis untuk keperluan proyek komersial?",
     answer:
-      "Ya. Komponen inti Pasax Sentinel (daemon Go) dan Pasax Secure Monitor (WAF Laravel) dirilis di bawah lisensi terbuka MIT License. Anda bebas mengunduh, mengaudit, memodifikasi, dan menggunakannya untuk server pribadi maupun infrastruktur produksi komersial tanpa biaya royalti.",
-    tags: ["MIT License", "Open Source", "Gratis"],
-  },
-  {
-    id: "commercial-use",
-    category: "licensing",
-    question: "Bolehkah saya menggunakan Pasax untuk melindungi infrastruktur klien atau bisnis komersial?",
-    answer:
-      "Tentu saja. Lisensi MIT memberikan kebebasan komersial penuh. Anda dapat memasang Pasax pada server klien jasa hosting, agensi software house, maupun platform SaaS milik perusahaan Anda.",
-    tags: ["Komersial", "Lisensi", "Enterprise"],
-  },
-  {
-    id: "quick-install-command",
-    category: "fleet",
-    question: "Bagaimana cara memasang Pasax Sentinel pada server Linux baru?",
-    answer:
-      "Pemasangan dapat dilakukan dengan satu baris perintah shell interaktif yang secara otomatis mendeteksi distro, mengonfigurasi systemd service, dan menyiapkan whitelist SSH:",
-    codeSnippet: "curl -sSL https://get.pasax.dev | bash",
-    tags: ["Instalasi", "CLI", "Shell"],
-  },
-  {
-    id: "admin-lockout-ssh-protection",
-    category: "fleet",
-    question: "Bagaimana jika firewall tidak sengaja memblokir IP saya sendiri? Apakah ada proteksi SSH?",
-    answer:
-      "Pasax Sentinel memiliki fitur SSH Safe-Harbor otomatis. Port SSH Anda (default port 22 atau custom port yang aktif di sshd_config) secara otomatis dikecualikan dari pemblokiran massal. Selain itu, Anda dapat mendaftarkan subnet IP kantor/rumah ke dalam berkas whitelist permanen /etc/pasax/whitelist.conf.",
-    tags: ["SSH", "Lockout", "Whitelist"],
-  },
-  {
-    id: "gitops-fleet-rules-sync",
-    category: "fleet",
-    question: "Bagaimana cara menyinkronkan aturan keamanan di puluhan server secara bersamaan?",
-    answer:
-      "Anda dapat menggunakan fitur Declarative Policy as Code pasax-rules.yml. Cukup letakkan berkas konfigurasi di repositori Git internal organisasi Anda dan jalankan webhook pipeline (CI/CD) atau daemon sync pasax-sentinel sync untuk mendistribusikan aturan baru ke seluruh armada node secara instan.",
-    codeSnippet: "pasax-sentinel policy apply --config /path/to/pasax-rules.yml",
-    tags: ["GitOps", "Policy as Code", "Fleet Sync"],
+      "YA. Paket pasax-sentinel dan pasax/secure-monitor berlisensi MIT Open Source penuh. Anda bebas menggunakannya untuk aplikasi klien, startup, enterprise, maupun server produksi pribadi tanpa royalti.",
+    tags: ["Lisensi", "MIT", "Komersial"],
   },
 ]
 
@@ -191,9 +137,10 @@ export default function FaqPage() {
   const [searchQuery, setSearchQuery] = React.useState<string>("")
   const [openItems, setOpenItems] = React.useState<Record<string, boolean>>({
     "what-is-pasax": true,
-    "three-layer-architecture": true,
   })
-  const [copiedSnippetId, setCopiedSnippetId] = React.useState<string | null>(null)
+  const [copiedSnippetId, setCopiedSnippetId] = React.useState<string | null>(
+    null
+  )
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => ({
@@ -204,7 +151,9 @@ export default function FaqPage() {
 
   const expandAll = () => {
     const all: Record<string, boolean> = {}
-    FAQ_LIST.forEach((item) => (all[item.id] = true))
+    FAQ_LIST.forEach((item) => {
+      all[item.id] = true
+    })
     setOpenItems(all)
   }
 
@@ -213,80 +162,85 @@ export default function FaqPage() {
   }
 
   const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedSnippetId(id)
-    setTimeout(() => setCopiedSnippetId(null), 2000)
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedSnippetId(id)
+      setTimeout(() => setCopiedSnippetId(null), 2000)
+    })
   }
 
   const filteredFaqs = React.useMemo(() => {
-    return FAQ_LIST.filter((item) => {
+    return FAQ_LIST.filter((faq) => {
       const matchesCategory =
-        activeCategory === "all" || item.category === activeCategory
+        activeCategory === "all" || faq.category === activeCategory
+
       const q = searchQuery.toLowerCase().trim()
       const matchesSearch =
         !q ||
-        item.question.toLowerCase().includes(q) ||
-        item.answer.toLowerCase().includes(q) ||
-        item.tags.some((t) => t.toLowerCase().includes(q))
+        faq.question.toLowerCase().includes(q) ||
+        faq.answer.toLowerCase().includes(q) ||
+        faq.tags.some((t) => t.toLowerCase().includes(q))
+
       return matchesCategory && matchesSearch
     })
   }, [activeCategory, searchQuery])
 
   return (
-    <div className="w-full max-w-full py-12 md:py-16">
+    <div className="w-full max-w-full py-10 md:py-14">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs font-bold">
+        {/* Breadcrumb matching Fumadocs */}
+        <div className="mb-6 flex flex-wrap items-center gap-2 font-mono text-xs">
           <Link
             href="/"
-            className="text-muted-foreground transition-colors hover:text-foreground hover:underline"
+            className="text-lp-ink/60 transition-colors hover:text-lp-ink hover:underline"
           >
-            Home
+            Beranda
           </Link>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-foreground">Ecosystem</span>
-          <span className="text-muted-foreground">/</span>
-          <span className="text-main">FAQ</span>
+          <span className="text-lp-ink/30">/</span>
+          <span className="text-lp-ink/75">Ekosistem</span>
+          <span className="text-lp-ink/30">/</span>
+          <span className="font-semibold text-lp-ink">FAQ</span>
         </div>
 
         {/* Legal & Docs Navigation Bar */}
         <LegalNav />
 
-        {/* Header Block */}
-        <div className="rounded-base border-2 border-border bg-card p-6 shadow-[6px_6px_0px_0px_var(--border)] md:p-10">
+        {/* Header Block matching Fumadocs */}
+        <header className="rounded-2xl border border-lp-line bg-lp-paper p-6 shadow-xs sm:p-8 lg:p-10">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-secondary-background px-3 py-1 font-mono text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)]">
-              <HelpCircle className="size-4 text-main" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-lp-orange/20 bg-lp-orange/10 px-3 py-1 font-mono text-xs font-medium text-lp-orange dark:border-lp-yellow/20 dark:bg-lp-yellow/10 dark:text-lp-yellow">
+              <HelpCircle className="size-3.5" />
               <span>FREQUENTLY ASKED QUESTIONS</span>
             </div>
             <div className="inline-flex items-center gap-2">
-              <span className="rounded-base border-2 border-border bg-main px-2.5 py-0.5 font-mono text-xs font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
-                {FAQ_LIST.length} JAWABAN RESMI
+              <span className="rounded-full border border-lp-line bg-lp-paper-2 px-2.5 py-0.5 font-mono text-xs font-medium text-lp-ink">
+                {FAQ_LIST.length} Jawaban Resmi
               </span>
             </div>
           </div>
 
-          <h1 className="mt-4 font-heading text-3xl font-black tracking-tight text-foreground sm:text-5xl">
+          <h1 className="mt-4 font-heading text-3xl font-semibold tracking-tight text-lp-ink sm:text-4xl lg:text-5xl">
             Pertanyaan yang Sering Diajukan
           </h1>
-          <p className="mt-4 max-w-3xl text-base leading-relaxed text-foreground/80 sm:text-lg text-pretty">
-            Temukan jawaban komprehensif seputar arsitektur 3 lapis, performa latensi kernel di bawah 0.2 milidetik, kepatuhan privasi data Zero-Knowledge, dan tata cara implementasi di armada server Anda.
+          <p className="mt-4 max-w-3xl text-base leading-relaxed text-lp-ink/75 sm:text-lg">
+            Temukan jawaban komprehensif seputar arsitektur 3 lapis, performa
+            latensi kernel di bawah 0.2 milidetik, kepatuhan privasi data
+            Zero-Knowledge, dan implementasi di aplikasi web serta server Anda.
           </p>
 
           {/* Search Box */}
           <div className="relative mt-8">
-            <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-lp-ink/40" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Ketik kata kunci pertanyaan (misal: 'nftables', 'Docker', 'RAM', 'SSH', 'Lisensi')..."
-              className="w-full rounded-base border-2 border-border bg-background py-3 pl-10 pr-4 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 shadow-[3px_3px_0px_0px_var(--border)] focus:outline-none focus:ring-2 focus:ring-main sm:text-sm"
+              placeholder="Ketik kata kunci pertanyaan (misal: 'nftables', 'Laravel', 'RAM', 'Lisensi')..."
+              className="w-full rounded-xl border border-lp-line bg-lp-paper-2/40 py-2.5 pr-12 pl-10 font-mono text-xs text-lp-ink transition-colors placeholder:text-lp-ink/40 focus:border-lp-line-strong focus:outline-none sm:text-sm"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 font-mono text-xs text-muted-foreground hover:text-foreground"
+                className="absolute top-1/2 right-3.5 -translate-y-1/2 cursor-pointer font-mono text-xs text-lp-ink/50 hover:text-lp-ink"
               >
                 Clear
               </button>
@@ -294,7 +248,7 @@ export default function FaqPage() {
           </div>
 
           {/* Category Tabs */}
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-6 flex flex-wrap gap-1.5">
             {CATEGORIES.map((cat) => {
               const Icon = cat.icon
               const isSelected = activeCategory === cat.id
@@ -303,10 +257,10 @@ export default function FaqPage() {
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   className={cn(
-                    "flex items-center gap-1.5 rounded-base border-2 border-border px-3 py-1.5 font-heading text-xs font-bold transition-all shadow-[2px_2px_0px_0px_var(--border)] cursor-pointer",
+                    "flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 font-mono text-xs transition-colors",
                     isSelected
-                      ? "bg-main text-main-foreground"
-                      : "bg-secondary-background text-foreground hover:bg-muted"
+                      ? "border-lp-orange/30 bg-lp-orange/10 font-semibold text-lp-orange dark:border-lp-yellow/30 dark:bg-lp-yellow/10 dark:text-lp-yellow"
+                      : "border-lp-line bg-lp-paper-2/40 text-lp-ink/75 hover:bg-lp-paper-2 hover:text-lp-ink"
                   )}
                 >
                   <Icon className="size-3.5" />
@@ -315,24 +269,24 @@ export default function FaqPage() {
               )
             })}
           </div>
-        </div>
+        </header>
 
         {/* Action Bar (Expand/Collapse) */}
         <div className="mt-8 flex items-center justify-between text-xs">
-          <span className="font-mono font-bold text-muted-foreground">
+          <span className="font-mono text-lp-ink/60">
             Menampilkan {filteredFaqs.length} dari {FAQ_LIST.length} pertanyaan
           </span>
-          <div className="flex items-center gap-2 font-mono font-bold">
+          <div className="flex items-center gap-2 font-mono text-xs">
             <button
               onClick={expandAll}
-              className="text-muted-foreground hover:text-foreground hover:underline"
+              className="cursor-pointer text-lp-ink/70 hover:text-lp-ink hover:underline"
             >
               Buka Semua
             </button>
-            <span>&bull;</span>
+            <span className="text-lp-ink/30">&bull;</span>
             <button
               onClick={collapseAll}
-              className="text-muted-foreground hover:text-foreground hover:underline"
+              className="cursor-pointer text-lp-ink/70 hover:text-lp-ink hover:underline"
             >
               Tutup Semua
             </button>
@@ -340,11 +294,11 @@ export default function FaqPage() {
         </div>
 
         {/* FAQ Accordion List */}
-        <div className="mt-4 space-y-4">
+        <div className="mt-4 space-y-3">
           {filteredFaqs.length === 0 ? (
-            <div className="rounded-base border-2 border-border bg-card p-12 text-center shadow-[4px_4px_0px_0px_var(--border)]">
-              <AlertCircle className="mx-auto size-8 text-muted-foreground" />
-              <p className="mt-3 font-heading text-lg font-bold text-foreground">
+            <div className="rounded-2xl border border-lp-line bg-lp-paper p-12 text-center shadow-xs">
+              <AlertCircle className="mx-auto size-8 text-lp-ink/40" />
+              <p className="mt-3 font-heading text-lg font-semibold text-lp-ink">
                 Tidak ada pertanyaan yang sesuai dengan kata kunci pencarian.
               </p>
               <button
@@ -352,7 +306,7 @@ export default function FaqPage() {
                   setSearchQuery("")
                   setActiveCategory("all")
                 }}
-                className="mt-4 rounded-base border-2 border-border bg-main px-4 py-2 font-mono text-xs font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+                className="mt-4 cursor-pointer rounded-lg border border-lp-line bg-lp-paper-2 px-4 py-2 font-mono text-xs font-medium text-lp-ink transition-colors hover:bg-lp-paper"
               >
                 Reset Pencarian
               </button>
@@ -365,30 +319,30 @@ export default function FaqPage() {
                   key={faq.id}
                   id={faq.id}
                   className={cn(
-                    "rounded-base border-2 border-border bg-card transition-all shadow-[4px_4px_0px_0px_var(--border)]",
-                    isOpen && "bg-secondary-background/40"
+                    "overflow-hidden rounded-xl border border-lp-line bg-lp-paper shadow-xs transition-all",
+                    isOpen && "border-lp-line-strong bg-lp-paper-2/20"
                   )}
                 >
                   {/* Trigger Header */}
                   <button
                     onClick={() => toggleItem(faq.id)}
-                    className="flex w-full items-start justify-between gap-4 p-5 text-left cursor-pointer sm:p-6"
+                    className="flex w-full cursor-pointer items-start justify-between gap-4 p-5 text-left sm:p-6"
                   >
                     <div className="flex items-start gap-3">
-                      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-border bg-main font-mono text-[10px] font-black text-main-foreground shadow-[1px_1px_0px_0px_var(--border)]">
+                      <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-lp-line bg-lp-paper-2 font-mono text-xs font-bold text-lp-ink">
                         Q
                       </span>
                       <div className="space-y-1">
-                        <h2 className="font-heading text-base font-bold text-foreground sm:text-lg">
+                        <h2 className="font-heading text-base font-semibold text-lp-ink sm:text-lg">
                           {faq.question}
                         </h2>
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {faq.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="rounded border border-border bg-secondary-background px-1.5 py-0.2 font-mono text-[9px] font-bold text-muted-foreground uppercase"
+                              className="rounded-md border border-lp-line bg-lp-paper-2/40 px-2 py-0.5 font-mono text-[10px] text-lp-ink/65"
                             >
-                              {tag}
+                              #{tag}
                             </span>
                           ))}
                         </div>
@@ -396,8 +350,9 @@ export default function FaqPage() {
                     </div>
                     <div
                       className={cn(
-                        "mt-1 flex size-6 shrink-0 items-center justify-center rounded-base border-2 border-border bg-background transition-transform duration-200 shadow-[1px_1px_0px_0px_var(--border)]",
-                        isOpen && "rotate-180 bg-main text-main-foreground"
+                        "mt-1 flex size-6 shrink-0 items-center justify-center rounded-md border border-lp-line bg-lp-paper-2 text-lp-ink/60 transition-transform duration-200",
+                        isOpen &&
+                          "rotate-180 border-lp-orange/20 bg-lp-orange/10 text-lp-orange dark:border-lp-yellow/20 dark:bg-lp-yellow/10 dark:text-lp-yellow"
                       )}
                     >
                       <ChevronDown className="size-3.5" />
@@ -406,24 +361,28 @@ export default function FaqPage() {
 
                   {/* Body Content */}
                   {isOpen && (
-                    <div className="border-t-2 border-border px-5 pb-6 pt-4 sm:px-6">
-                      <div className="max-w-prose space-y-3 font-sans text-sm leading-relaxed text-foreground/85 whitespace-pre-line text-pretty">
+                    <div className="border-t border-lp-line px-5 pt-4 pb-6 sm:px-6">
+                      <div className="max-w-prose space-y-3 font-sans text-sm leading-relaxed whitespace-pre-line text-lp-ink/80">
                         {faq.answer}
                       </div>
 
                       {/* Optional Code Snippet */}
                       {faq.codeSnippet && (
-                        <div className="relative mt-4 overflow-hidden rounded-base border-2 border-border bg-[#0b0f19] p-3 text-slate-100 shadow-[2px_2px_0px_0px_var(--border)]">
-                          <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 text-[10px] font-mono text-slate-400">
+                        <div className="relative mt-4 overflow-hidden rounded-xl border border-lp-line bg-[#121210] p-3 text-[#eceae2]">
+                          <div className="flex items-center justify-between border-b border-[rgba(236,234,226,0.1)] pb-1.5 font-mono text-[10px] text-[#eceae2]/60">
                             <span>TERMINAL EXECUTION</span>
                             <button
-                              onClick={() => handleCopy(faq.id, faq.codeSnippet!)}
-                              className="inline-flex items-center gap-1 rounded bg-slate-800 px-2 py-0.5 text-[10px] font-mono text-slate-200 hover:bg-slate-700"
+                              onClick={() =>
+                                handleCopy(faq.id, faq.codeSnippet!)
+                              }
+                              className="inline-flex cursor-pointer items-center gap-1 rounded bg-[#1e1e1c] px-2 py-0.5 font-mono text-[10px] text-[#eceae2] hover:text-white"
                             >
                               {copiedSnippetId === faq.id ? (
                                 <>
                                   <Check className="size-2.5 text-emerald-400" />
-                                  <span>Tersalin!</span>
+                                  <span className="text-emerald-400">
+                                    Tersalin!
+                                  </span>
                                 </>
                               ) : (
                                 <>
@@ -446,27 +405,28 @@ export default function FaqPage() {
           )}
         </div>
 
-        {/* Still Have Questions Banner */}
-        <div className="mt-12 rounded-base border-2 border-border bg-secondary-background p-6 text-center shadow-[4px_4px_0px_0px_var(--border)] sm:p-8">
-          <h3 className="font-heading text-lg font-black text-foreground sm:text-xl">
+        {/* Still Have Questions Banner matching Fumadocs */}
+        <div className="mt-12 rounded-2xl border border-lp-line bg-lp-paper-2/40 p-6 text-center sm:p-8">
+          <h3 className="font-heading text-lg font-semibold text-lp-ink sm:text-xl">
             Punya Pertanyaan Spesifik Terkait Infrastruktur Anda?
           </h3>
-          <p className="mt-2 text-sm text-foreground/80">
-            Tim teknis dan komunitas Pasax siap membantu integrasi firewall, ruleset kustom, atau audit arsitektur keamanan server Anda.
+          <p className="mx-auto mt-2 max-w-xl text-sm text-lp-ink/75">
+            Tim teknis dan komunitas Pasax siap membantu integrasi firewall,
+            ruleset kustom, atau audit arsitektur keamanan server Anda.
           </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 font-mono text-xs font-bold">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3 font-mono text-xs">
             <a
-              href="https://github.com/pasax-dev/pasax-suit/discussions"
+              href="https://github.com/pasax-dev"
               target="_blank"
               rel="noreferrer noopener"
-              className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-main px-4 py-2 font-black text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper px-4 py-2 font-medium text-lp-ink shadow-xs transition-colors hover:bg-lp-paper-2"
             >
               <span>GitHub Discussions</span>
-              <ExternalLink className="size-3.5" />
+              <ExternalLink className="size-3.5 text-lp-ink/50" />
             </a>
             <Link
               href="/docs"
-              className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-card px-4 py-2 text-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-muted transition-all"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-lp-orange/30 bg-lp-orange/10 px-4 py-2 font-medium text-lp-orange shadow-xs transition-colors hover:bg-lp-orange/20 dark:border-lp-yellow/30 dark:bg-lp-yellow/10 dark:text-lp-yellow"
             >
               <span>Baca Dokumentasi Lengkap</span>
               <ArrowRight className="size-3.5" />

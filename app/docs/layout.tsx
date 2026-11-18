@@ -10,23 +10,23 @@ export default function DocsLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col lg:flex-row w-full min-h-screen bg-lp-paper text-lp-ink font-sans antialiased selection:bg-lp-yellow selection:text-lp-on-yellow">
+    <div className="flex min-h-screen w-full flex-col bg-lp-paper font-sans text-lp-ink antialiased selection:bg-lp-yellow selection:text-lp-on-yellow lg:flex-row">
       {/* 1. Left Sidebar (desktop full-height + mobile drawer) */}
       <DocsSidebar />
 
       {/* 2. Main Documentation Container */}
-      <div className="flex-1 min-w-0 flex flex-col w-full">
+      <div className="flex w-full min-w-0 flex-1 flex-col">
         {/* Desktop Header Action Bar (matching Fumadocs Spacious actions) */}
-        <div className="hidden lg:flex items-center justify-between h-12 px-8 border-b border-lp-line bg-lp-paper/85 backdrop-blur-md sticky top-0 z-20">
+        <div className="sticky top-0 z-20 hidden h-12 items-center justify-between border-b border-lp-line bg-lp-paper/85 px-8 backdrop-blur-md lg:flex">
           <div className="flex items-center gap-2 font-mono text-xs text-lp-ink/65">
-            <span className="inline-block size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Pasax Suite v1.4 Documentation</span>
+            <span className="inline-block size-2 animate-pulse rounded-full bg-emerald-500" />
+            <span>Pasax Suite Documentation</span>
           </div>
 
           <div className="flex items-center gap-4">
             <Link
               href="/showcase"
-              className="inline-flex items-center gap-1.5 font-mono text-xs text-lp-ink/75 hover:text-lp-ink transition-colors"
+              className="inline-flex items-center gap-1.5 font-mono text-xs text-lp-ink/75 transition-colors hover:text-lp-ink"
             >
               <LayoutTemplate className="size-3.5" />
               <span>Showcase</span>
@@ -36,7 +36,7 @@ export default function DocsLayout({
               href="https://github.com/pasax-dev/pasax-suit"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 font-mono text-xs text-lp-ink/75 hover:text-lp-ink transition-colors"
+              className="inline-flex items-center gap-1.5 font-mono text-xs text-lp-ink/75 transition-colors hover:text-lp-ink"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="size-3.5">
                 <path
@@ -54,7 +54,7 @@ export default function DocsLayout({
         </div>
 
         {/* Content Body */}
-        <main className="flex-1 w-full flex flex-col">{children}</main>
+        <main className="flex w-full flex-1 flex-col">{children}</main>
       </div>
     </div>
   )

@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils"
 import { SearchTrigger } from "@/components/search/search-trigger"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { VersionSwitcher } from "@/components/docs/version-switcher"
+import { getEcosystemProduct } from "@/lib/packagist"
 
 const iconMap: Record<string, React.ElementType> = {
   Rocket,
@@ -74,6 +75,7 @@ export function DocsSidebar({ className }: { className?: string }) {
 
   const activeConfig =
     PRODUCTS_CONFIG[activeProduct] || PRODUCTS_CONFIG["pasax-secure-monitor"]
+  const activeEcosystem = getEcosystemProduct(activeProduct)
 
   // Filter items if search is active
   const filteredCategories = React.useMemo(() => {
@@ -96,10 +98,10 @@ export function DocsSidebar({ className }: { className?: string }) {
   const sidebarContent = (
     <div className="flex h-full flex-col bg-lp-paper">
       {/* 1. Sidebar Brand Header (matches Fumadocs NavTitle in desktop sidebar) */}
-      <div className="hidden lg:flex items-center justify-between h-14 px-4 border-b border-lp-line shrink-0">
+      <div className="hidden h-12 shrink-0 items-center justify-between border-b border-lp-line px-4 lg:flex">
         <Link
           href="/"
-          className="inline-flex items-center gap-2.5 font-heading font-semibold text-sm text-lp-ink hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2.5 font-heading text-sm font-semibold text-lp-ink transition-opacity hover:opacity-90"
         >
           <Image
             src="/icon.png"
@@ -108,22 +110,15 @@ export function DocsSidebar({ className }: { className?: string }) {
             height={22}
             className="size-5.5 rounded-sm object-contain"
           />
-          <span className="font-heading font-semibold text-base tracking-tight text-lp-ink">
+          <span className="font-heading text-base font-semibold tracking-tight text-lp-ink">
             Pasax
           </span>
-          <span className="rounded-full border border-lp-line bg-lp-paper-2 px-1.5 py-0.2 font-mono text-[10px] text-lp-ink/70">
-            v1.4
-          </span>
         </Link>
-        <ThemeToggle className="size-7" />
       </div>
 
       {/* 2. Module & Version Switcher, and Search */}
-      <div className="space-y-2.5 border-b border-lp-line p-3 shrink-0">
-        <VersionSwitcher
-          versions={["1.4.0", "1.3.2", "1.2.0"]}
-          defaultVersion="1.4.0"
-        />
+      <div className="shrink-0 space-y-2.5 border-b border-lp-line p-3">
+        <VersionSwitcher activeProduct={activeProduct} />
 
         {/* Fumadocs Search Box with ⌘K */}
         <SearchTrigger
@@ -142,7 +137,7 @@ export function DocsSidebar({ className }: { className?: string }) {
             <div key={cat.slug} className="space-y-1">
               <button
                 onClick={() => toggleCategory(cat.slug)}
-                className="group flex w-full items-center justify-between py-1.5 px-2 text-left font-mono text-[11px] font-semibold tracking-wider text-lp-ink/60 uppercase transition-colors hover:text-lp-ink cursor-pointer"
+                className="group flex w-full cursor-pointer items-center justify-between px-2 py-1.5 text-left font-mono text-[11px] font-semibold tracking-wider text-lp-ink/60 uppercase transition-colors hover:text-lp-ink"
               >
                 <span className="flex items-center gap-2">
                   <Icon className="size-3.5 text-lp-ink/50 group-hover:text-lp-ink/80" />
@@ -172,7 +167,7 @@ export function DocsSidebar({ className }: { className?: string }) {
                         className={cn(
                           "block rounded-md px-2.5 py-1.5 text-xs transition-colors",
                           isActive
-                            ? "border-s-2 border-lp-orange dark:border-lp-yellow bg-lp-orange/10 dark:bg-lp-yellow/10 font-medium text-lp-orange dark:text-lp-yellow -ms-[9px] ps-[7px]"
+                            ? "-ms-[9px] border-s-2 border-lp-orange bg-lp-orange/10 ps-[7px] font-medium text-lp-orange dark:border-lp-yellow dark:bg-lp-yellow/10 dark:text-lp-yellow"
                             : "text-lp-ink/75 hover:bg-lp-paper-2/60 hover:text-lp-ink"
                         )}
                       >
@@ -194,7 +189,7 @@ export function DocsSidebar({ className }: { className?: string }) {
       </div>
 
       {/* 4. Sidebar Bottom Footer */}
-      <div className="border-t border-lp-line bg-lp-paper-2/40 p-3 text-xs text-lp-ink/70 shrink-0">
+      <div className="shrink-0 border-t border-lp-line bg-lp-paper-2/40 p-3 text-xs text-lp-ink/70">
         <div className="flex items-center justify-between font-mono text-[11px]">
           <Link
             href="/docs"
@@ -221,7 +216,7 @@ export function DocsSidebar({ className }: { className?: string }) {
       {/* Desktop Sidebar (Spans full height 100vh with sticky positioning) */}
       <aside
         className={cn(
-          "hidden w-72 shrink-0 border-r border-lp-line bg-lp-paper sticky top-0 h-screen lg:block z-30",
+          "sticky top-0 z-30 hidden h-screen w-72 shrink-0 border-r border-lp-line bg-lp-paper lg:block",
           className
         )}
       >
@@ -241,8 +236,8 @@ export function DocsSidebar({ className }: { className?: string }) {
           <span className="font-heading text-sm font-semibold text-lp-ink">
             Pasax Docs
           </span>
-          <span className="rounded-full border border-lp-line bg-lp-paper-2 px-1.5 py-0.2 font-mono text-[10px] text-lp-ink/70">
-            v1.4
+          <span className="py-0.2 rounded-full border border-lp-line bg-lp-paper-2 px-1.5 font-mono text-[10px] text-lp-ink/70">
+            v{activeEcosystem.latestVersion}
           </span>
         </Link>
 
@@ -251,7 +246,7 @@ export function DocsSidebar({ className }: { className?: string }) {
           <ThemeToggle className="size-8" />
           <button
             onClick={() => setMobileOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/80 px-2.5 py-1.5 font-mono text-xs text-lp-ink hover:bg-lp-paper-2 cursor-pointer"
+            className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/80 px-2.5 py-1.5 font-mono text-xs text-lp-ink hover:bg-lp-paper-2"
           >
             <Menu className="size-4" />
             <span>Menu</span>
@@ -267,7 +262,7 @@ export function DocsSidebar({ className }: { className?: string }) {
             onClick={() => setMobileOpen(false)}
           />
           <div className="relative flex w-80 max-w-[85vw] flex-1 flex-col border-r border-lp-line bg-lp-paper shadow-2xl">
-            <div className="flex items-center justify-between border-b border-lp-line bg-lp-paper-2/40 px-3.5 py-3 shrink-0">
+            <div className="flex shrink-0 items-center justify-between border-b border-lp-line bg-lp-paper-2/40 px-3.5 py-3">
               <div className="flex items-center gap-2">
                 <Image
                   src="/icon.png"
@@ -279,13 +274,13 @@ export function DocsSidebar({ className }: { className?: string }) {
                 <span className="font-heading text-sm font-semibold text-lp-ink">
                   Dokumentasi Pasax
                 </span>
-                <span className="rounded-full border border-lp-line bg-lp-paper px-1.5 py-0.2 font-mono text-[10px] text-lp-ink/70">
-                  v1.4
+                <span className="py-0.2 rounded-full border border-lp-line bg-lp-paper px-1.5 font-mono text-[10px] text-lp-ink/70">
+                  v{activeEcosystem.latestVersion}
                 </span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="flex size-8 items-center justify-center rounded-md text-lp-ink/70 hover:bg-lp-paper-2 hover:text-lp-ink transition-colors cursor-pointer"
+                className="flex size-8 cursor-pointer items-center justify-center rounded-md text-lp-ink/70 transition-colors hover:bg-lp-paper-2 hover:text-lp-ink"
                 aria-label="Tutup Navigasi"
               >
                 <X className="size-4" />

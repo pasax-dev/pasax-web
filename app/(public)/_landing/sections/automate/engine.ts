@@ -143,25 +143,28 @@ interface Mark {
 }
 
 /** `part` marked, with a bar if it's given the window's `pop` to draw one in */
-function mark(part: HTMLElement, framed: boolean, pop?: HTMLElement): Mark {
+function mark(part: HTMLElement | null | undefined, framed: boolean, pop?: HTMLElement): Mark {
+  const target = part ?? pop ?? document.body;
   const span = (parent: HTMLElement, className: string) => {
     const el = document.createElement('span');
     el.className = `pointer-events-none invisible absolute ${className}`;
     parent.append(el);
     return el;
   };
-  part.dataset.mark = '';
+  if (target && target.dataset) {
+    target.dataset.mark = '';
+  }
   const flash = span(
-    part,
+    target,
     `inset-0 -z-1 rounded-[inherit] bg-lp-yellow ${framed ? 'border-2 border-lp-ink' : ''}`,
   );
   flash.dataset.frame = '';
-  return { part, flash, bar: pop && span(pop, 'left-px w-0.5 bg-lp-ink') };
+  return { part: target, flash, bar: pop && span(pop, 'left-px w-0.5 bg-lp-ink') };
 }
 
 /** `m`'s bar level with its part, by layout, so a window's pop doesn't skew it */
 function level({ part, bar }: Mark) {
-  if (!bar) return;
+  if (!bar || !part || !part.parentElement) return;
   let y = 0;
   for (
     let el: Element | null = part;
@@ -264,7 +267,10 @@ export function createAutomate(desk: HTMLElement): () => void {
     const part =
       after.querySelector<HTMLElement>('[data-mark]') ??
       after.querySelector('.line-through')?.closest('button') ??
-      after.querySelectorAll<HTMLElement>('.line')[EDIT_LINE];
+      after.querySelector<HTMLElement>('[data-card]') ??
+      after.querySelectorAll<HTMLElement>('.line')[EDIT_LINE] ??
+      (after.firstElementChild as HTMLElement | null) ??
+      after;
     const pop = el.querySelector<HTMLElement>('[data-pop]')!;
     outputs.push({
       window: el,
@@ -286,16 +292,21 @@ export function createAutomate(desk: HTMLElement): () => void {
     });
   }
   const said = desk.querySelector('[data-said]')!;
-  const edit = desk.querySelectorAll<HTMLElement>('[data-code] .line')[EDIT_LINE];
+  const edit =
+    desk.querySelectorAll<HTMLElement>('[data-code] .line')[EDIT_LINE] ??
+    desk.querySelector<HTMLElement>('[data-code] .line') ??
+    desk.querySelector<HTMLElement>('[data-code]')!;
   const edited = mark(edit, false, sourcePop);
   const footer = desk.querySelector('[data-footer]')!;
   const modified = desk.querySelector('[data-modified]')!;
   const caret = document.createElement('span');
   caret.className = 'inline-block h-lh w-[1ch] bg-current align-top';
   const typed: { node: Text; text: string }[] = [];
-  const walker = document.createTreeWalker(edit, NodeFilter.SHOW_TEXT);
-  for (let node = walker.nextNode(); node; node = walker.nextNode())
-    typed.push({ node: node as Text, text: node.nodeValue ?? '' });
+  if (edit) {
+    const walker = document.createTreeWalker(edit, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode())
+      typed.push({ node: node as Text, text: node.nodeValue ?? '' });
+  }
   const clock = createClock([desk]);
   let dead = false;
 

@@ -1,8 +1,7 @@
-/* the palette covers the whole document while the landing is mounted, portals included, and
-   `body`, where the docs' section class (`.framework`) sets its own primary. The landing is a child
-   of `body`: a `:has()` looking no deeper is matched again only when one of those changes */
-:root:has(> body > .landing),
-:root:has(> body > .landing) body {
+/* the palette covers the whole document while the landing is mounted, portals included */
+:root:has(.landing),
+:root:has(.landing) body,
+.landing {
   --lp-paper: #f2f0ea;
   --lp-paper-2: #e8e5dc;
   --lp-ink: #121210;
@@ -36,8 +35,10 @@
   --color-fd-info: var(--color-fd-primary);
 }
 
-:root.dark:has(> body > .landing),
-:root.dark:has(> body > .landing) body {
+:root.dark:has(.landing),
+:root.dark:has(.landing) body,
+.dark .landing,
+.dark.landing {
   --lp-paper: #0d0d0c;
   --lp-paper-2: #171715;
   --lp-ink: #eceae2;
@@ -54,26 +55,27 @@
   --color-fd-ring: var(--lp-yellow);
 }
 
-/* layout only on the root, so the breakpoints below reach everything that inherits it */
-:root:has(> body > .landing) {
-  /* the home layout's 1400px width and h-14 navbar; the gutter widens once the frame shows */
+/* layout on root and landing wrapper: responsive gutters and section paddings */
+:root:has(.landing),
+.landing {
   --lp-max: 1400px;
   --lp-gutter: 16px;
-  /* the room a figure keeps from its seams, over its title and under its last part */
   --lp-section: 64px;
   --lp-menu-h: 56px;
   --lp-status-h: 28px;
 }
 
 @media (min-width: 768px) {
-  :root:has(> body > .landing) {
+  :root:has(.landing),
+  .landing {
     --lp-section: 80px;
   }
 }
 
 /* the sheet's frame lines show once it is narrower than the viewport, content keeps clear of them */
 @media (min-width: 1400px) {
-  :root:has(> body > .landing) {
+  :root:has(.landing),
+  .landing {
     --lp-gutter: 32px;
   }
 }
@@ -85,7 +87,7 @@
   isolation: isolate;
 }
 
-body:has(> .landing),
+body:has(.landing),
 .landing {
   background-color: var(--lp-paper);
   color: var(--lp-ink);

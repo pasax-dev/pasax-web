@@ -21,7 +21,7 @@ import { PlusIcon } from "lucide-react"
 // This is sample data.
 const data = {
   user: {
-    name: "Roby Firmansyah",
+    name: "Roby Karti",
     email: "admin@pasax.dev",
     avatar: "/avatars/shadcn.jpg",
   },
@@ -62,8 +62,7 @@ export function SidebarRight({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
-              <PlusIcon
-              />
+              <PlusIcon />
               <span>New Calendar</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
