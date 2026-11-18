@@ -96,6 +96,16 @@ export function VersionSwitcher({
     setSelectedVersion(productMeta.latestVersion)
   }, [productMeta.id, productMeta.latestVersion])
 
+  // Display only 5 latest versions to keep sidebar dropdown compact
+  const displayVersions = React.useMemo(() => {
+    const top5 = productMeta.versions.slice(0, 5)
+    // If user previously selected an older version, ensure it remains in view
+    if (selectedVersion && !top5.includes(selectedVersion)) {
+      top5.push(selectedVersion)
+    }
+    return top5
+  }, [productMeta.versions, selectedVersion])
+
   const currentModule =
     MODULES.find((m) => m.id === currentModuleId) || MODULES[0]
   const ActiveIcon = currentModule.icon || GalleryVerticalEnd
@@ -174,12 +184,12 @@ export function VersionSwitcher({
 
             <DropdownMenuSeparator className="my-1.5 bg-lp-line" />
 
-            {/* Product-Specific Version Switcher */}
+            {/* Product-Specific Version Switcher (5 latest versions) */}
             <DropdownMenuGroup>
               <div className="flex items-center justify-between px-2 py-1">
                 <DropdownMenuLabel className="p-0 font-mono text-[10px] tracking-wider text-lp-ink-2 uppercase">
                   {productMeta.id === "pasax-secure-monitor"
-                    ? "Versi Packagist (Live)"
+                    ? "Versi Packagist (5 Terkini)"
                     : "Versi Rilis"}
                 </DropdownMenuLabel>
                 {productMeta.id === "pasax-secure-monitor" && (
@@ -195,27 +205,53 @@ export function VersionSwitcher({
                   </a>
                 )}
               </div>
-              {productMeta.versions.map((version, idx) => (
-                <DropdownMenuItem
-                  key={version}
-                  onSelect={() => setSelectedVersion(version)}
-                  className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 font-mono text-xs text-lp-ink hover:bg-lp-paper-2"
-                >
-                  <div className="flex items-center gap-2">
-                    <span>v{version}</span>
-                    {idx === 0 && (
-                      <span className="py-0.2 rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
-                        {productMeta.id === "pasax-secure-monitor"
-                          ? "PACKAGIST STABLE"
-                          : "LATEST"}
-                      </span>
+              {displayVersions.map((version) => {
+                const isLatest = version === productMeta.versions[0]
+                const isSelected = version === selectedVersion
+                return (
+                  <DropdownMenuItem
+                    key={version}
+                    onSelect={() => setSelectedVersion(version)}
+                    className="flex cursor-pointer items-center justify-between rounded-md px-2 py-1.5 font-mono text-xs text-lp-ink hover:bg-lp-paper-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span>v{version}</span>
+                      {isLatest && (
+                        <span className="py-0.2 rounded border border-emerald-500/20 bg-emerald-500/10 px-1.5 text-[9px] font-semibold text-emerald-600 dark:text-emerald-400">
+                          {productMeta.id === "pasax-secure-monitor"
+                            ? "PACKAGIST STABLE"
+                            : "LATEST"}
+                        </span>
+                      )}
+                    </div>
+                    {isSelected && (
+                      <Check className="size-3.5 text-lp-orange" />
                     )}
-                  </div>
-                  {version === selectedVersion && (
-                    <Check className="size-3.5 text-lp-orange" />
-                  )}
-                </DropdownMenuItem>
-              ))}
+                  </DropdownMenuItem>
+                )
+              })}
+
+              {productMeta.versions.length > 5 && (
+                <div className="mt-1 border-t border-lp-line/60 px-2 pt-1.5 pb-0.5">
+                  <a
+                    href={
+                      productMeta.id === "pasax-secure-monitor"
+                        ? PACKAGIST_URL
+                        : productMeta.repoUrl
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center justify-between font-mono text-[10px] text-lp-ink-2 transition-colors hover:text-lp-orange hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span>
+                      +{productMeta.versions.length - 5} versi lainnya di{" "}
+                      {productMeta.source}
+                    </span>
+                    <ExternalLink className="size-2.5 opacity-60" />
+                  </a>
+                </div>
+              )}
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
