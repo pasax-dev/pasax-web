@@ -43,14 +43,7 @@ export default async function Page() {
   const isTenantOnly = userRole === "User"
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 14)",
-        } as React.CSSProperties
-      }
-    >
+    <SidebarProvider>
       <AppSidebar
         role={userRole}
         user={{
@@ -59,9 +52,8 @@ export default async function Page() {
           role: userRole,
           avatar: "/avatars/admin.jpg",
         }}
-        variant="inset"
       />
-      <SidebarInset className="relative min-h-screen overflow-x-hidden">
+      <SidebarInset className="relative min-h-screen overflow-x-hidden font-sans">
         {/* Subtle Cyber Tactical Grid Pattern & Ambient Radial Glow */}
         <div
           aria-hidden="true"
@@ -73,20 +65,20 @@ export default async function Page() {
         />
 
         <SiteHeader />
-        <div className="relative z-10 flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="relative z-10 flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="@container/main flex flex-1 flex-col gap-4">
             {isTenantOnly ? (
               // ---------------------------------------------------------
               // ROLE: USER (TENANT / CUSTOMER VIEW)
               // ---------------------------------------------------------
-              <div className="py-4 md:py-6">
+              <div className="py-2 md:py-4">
                 <UserTenantPortal initialData={tenantOverview} />
               </div>
             ) : (
               // ---------------------------------------------------------
               // ROLE: SUPERADMIN & ADMIN (FULL SOC MASTER SUITE)
               // ---------------------------------------------------------
-              <div className="flex flex-col gap-6 py-4 md:py-6">
+              <div className="flex flex-col gap-6 py-2 md:py-4">
                 {/* 1. Global Stat Cards */}
                 <div id="overview">
                   <SectionCards

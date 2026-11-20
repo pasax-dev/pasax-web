@@ -5,6 +5,14 @@ import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { InstallAgentDialog } from "@/components/install-agent-dialog"
 import { ThemeToggle } from "@/components/theme-toggle"
 import {
@@ -24,7 +32,11 @@ import {
 } from "@/components/ui/alert-dialog"
 import { ShieldCheck, LogOut, AlertTriangle } from "lucide-react"
 
-export function SiteHeader() {
+export function SiteHeader({
+  breadcrumbs,
+}: {
+  breadcrumbs?: { title: string; href?: string }[]
+}) {
   const { data: session } = useSession()
   const [showLogoutDialog, setShowLogoutDialog] = React.useState(false)
   const [isLoggingOut, setIsLoggingOut] = React.useState(false)
@@ -51,27 +63,57 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b-2 border-border bg-background/80 px-4 font-sans backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-6">
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b-2 border-border bg-background/80 px-4 font-sans backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:px-6">
+        <div className="flex items-center gap-2">
           <SidebarTrigger className="-ml-1 border-2 border-border bg-main text-main-foreground shadow-shadow hover:translate-x-0.5 hover:translate-y-0.5" />
           <Separator
             orientation="vertical"
-            className="mx-1 h-4 data-vertical:self-auto sm:mx-2"
+            className="mr-2 data-[orientation=vertical]:h-4"
           />
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs sm:text-sm">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-1.5 font-bold tracking-tight text-foreground transition-colors hover:text-main"
-            >
-              <ShieldCheck className="size-4 text-main" />
-              <span>PASAX SOC</span>
-            </Link>
-            <span className="text-muted-foreground">/</span>
-            <span className="hidden font-mono text-xs font-semibold text-foreground/80 sm:inline-flex items-center gap-1.5">
-              <span className="size-1.5 rounded-full bg-green-500 animate-pulse" />
-              Fleet Operations & Intelligence
-            </span>
-          </nav>
+          <Breadcrumb>
+            <BreadcrumbList>
+              {breadcrumbs && breadcrumbs.length > 0 ? (
+                breadcrumbs.map((crumb, idx) => {
+                  const isLast = idx === breadcrumbs.length - 1
+                  return (
+                    <React.Fragment key={crumb.title}>
+                      <BreadcrumbItem>
+                        {isLast || !crumb.href ? (
+                          <BreadcrumbPage className="font-semibold text-foreground">
+                            {crumb.title}
+                          </BreadcrumbPage>
+                        ) : (
+                          <BreadcrumbLink href={crumb.href} className="font-medium hover:text-foreground">
+                            {crumb.title}
+                          </BreadcrumbLink>
+                        )}
+                      </BreadcrumbItem>
+                      {!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+                    </React.Fragment>
+                  )
+                })
+              ) : (
+                <>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      href="/dashboard"
+                      className="flex items-center gap-1.5 font-bold tracking-tight text-foreground transition-colors hover:text-main"
+                    >
+                      <ShieldCheck className="size-4 text-main" />
+                      <span>PASAX SOC</span>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="hidden md:block" />
+                  <BreadcrumbItem className="hidden md:block">
+                    <BreadcrumbPage className="flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground/80">
+                      <span className="size-1.5 rounded-full bg-green-500 animate-pulse" />
+                      <span>Fleet Operations & Intelligence</span>
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </>
+              )}
+            </BreadcrumbList>
+          </Breadcrumb>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-2.5">
