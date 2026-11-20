@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Pasax Sentinel Provisioning & Installation Script
 # Usage:
-#   curl -sSL https://pasak.vercel.app/install.sh | sudo bash -s -- --token=PSK_TOKEN --project=prj_id
+#   curl -sSL https://pasax.web.id/install.sh | sudo bash -s -- --token=PSK_TOKEN --project=prj_id
 
 set -euo pipefail
 
@@ -14,7 +14,7 @@ NC='\033[0m'
 
 TOKEN=""
 PROJECT="default"
-CLOUD_URL="https://pasak.vercel.app"
+CLOUD_URL="https://pasax.web.id"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -101,15 +101,14 @@ elif [ -f "./pasax-sentinel" ]; then
 fi
 
 if [ -n "${BINARY_SRC}" ]; then
-    echo -e "${GREEN}[+] Menggunakan binary lokal: ${BINARY_SRC}${NC}"
+    echo -e "${GREEN}[+] Menggunakan binary yang sudah tersedia: ${BINARY_SRC}${NC}"
     if [ "${BINARY_SRC}" != "/usr/local/bin/pasax-sentinel" ]; then
         cp "${BINARY_SRC}" /usr/local/bin/pasax-sentinel
     fi
 else
-    # CDN Fallbacks: pasak.vercel.app -> pasax-web.vercel.app -> github release
+    # CDN Fallbacks: pasax.web.id -> github release
     DOWNLOAD_URLS=(
-        "https://pasak.vercel.app/downloads/pasax-sentinel-linux-${ARCH}"
-        "https://pasax-web.vercel.app/downloads/pasax-sentinel-linux-${ARCH}"
+        "https://pasax.web.id/downloads/pasax-sentinel-linux-${ARCH}"
         "https://github.com/pasax-dev/pasax-sentinel/releases/latest/download/pasax-sentinel-linux-${ARCH}"
     )
 
