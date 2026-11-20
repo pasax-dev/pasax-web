@@ -8,7 +8,7 @@ import { blocks, steps } from "./data"
 import { RailBed, RailColumn } from "./rail"
 import { Stage } from "./stage"
 
-const FILE = "docs/quickstart.mdx"
+const FILE = "pasax-rules.yml"
 
 export function Write() {
   if (asMarkdown())
