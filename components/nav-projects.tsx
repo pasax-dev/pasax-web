@@ -53,8 +53,8 @@ export function NavProjects({
   }
 
   return (
-    <SidebarGroup className="py-1.5">
-      <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 group-data-[collapsible=icon]:hidden">
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+      <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
         {label}
       </SidebarGroupLabel>
       <SidebarMenu className="gap-0.5">
@@ -63,7 +63,7 @@ export function NavProjects({
             <SidebarMenuButton
               size="sm"
               tooltip={item.name}
-              className="font-sans text-xs text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center"
+              className="font-sans text-xs text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               render={
                 <a
                   href={item.url}
@@ -83,11 +83,11 @@ export function NavProjects({
               <span className="shrink-0 text-muted-foreground">
                 {renderProjectIcon(item.icon)}
               </span>
-              <span className="truncate font-mono text-[11px] font-medium group-data-[collapsible=icon]:hidden">
+              <span className="truncate font-mono text-[11px] font-medium">
                 {item.name}
               </span>
               {item.badge && (
-                <span className="ml-auto rounded-full border border-border/60 bg-muted/60 px-1.5 py-0.2 font-mono text-[9px] font-bold text-muted-foreground group-data-[collapsible=icon]:hidden">
+                <span className="ml-auto rounded-full border border-border/60 bg-muted/60 px-1.5 py-0.2 font-mono text-[9px] font-bold text-muted-foreground">
                   {item.badge}
                 </span>
               )}
@@ -97,7 +97,7 @@ export function NavProjects({
                 render={
                   <SidebarMenuAction
                     showOnHover
-                    className="aria-expanded:bg-muted group-data-[collapsible=icon]:hidden"
+                    className="aria-expanded:bg-muted"
                   />
                 }
               >

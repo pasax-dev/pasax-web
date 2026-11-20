@@ -109,11 +109,9 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                         tooltip={item.title}
                         isActive={isActive}
                         className={cn(
-                          "flex items-center justify-between rounded-md px-2.5 py-2 font-sans text-xs sm:text-sm font-medium transition-all",
-                          "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                          "group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center",
+                          "font-sans text-xs sm:text-sm font-medium transition-all text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                           isActive &&
-                            "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs border-l-2 border-main pl-2 group-data-[collapsible=icon]:border-l-0 group-data-[collapsible=icon]:pl-2"
+                            "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs"
                         )}
                         render={
                           <a
@@ -131,23 +129,12 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                           />
                         }
                       >
-                        <div className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:justify-center">
-                          <span
-                            className={cn(
-                              "shrink-0 transition-colors",
-                              isActive
-                                ? "text-main"
-                                : "text-muted-foreground group-hover/menu-button:text-sidebar-foreground"
-                            )}
-                          >
-                            {renderIcon(item.icon)}
-                          </span>
-                          <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-                        </div>
+                        {renderIcon(item.icon)}
+                        <span className="truncate">{item.title}</span>
                         {item.badge && (
                           <span
                             className={cn(
-                              "shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase border transition-colors group-data-[collapsible=icon]:hidden",
+                              "ml-auto shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase border transition-colors",
                               isActive
                                 ? "border-main/50 bg-main/20 text-foreground font-black"
                                 : item.badge === "ALERT"
@@ -192,11 +179,9 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                   tooltip={item.title}
                   isActive={isItemActive}
                   className={cn(
-                    "flex items-center justify-between rounded-md px-2.5 py-2 font-sans text-xs sm:text-sm font-medium transition-all",
-                    "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                    "group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center",
+                    "font-sans text-xs sm:text-sm font-medium transition-all text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                     isItemActive &&
-                      "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs border-l-2 border-main pl-2 group-data-[collapsible=icon]:border-l-0 group-data-[collapsible=icon]:pl-2"
+                      "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs"
                   )}
                   render={
                     <a
@@ -214,14 +199,10 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                     />
                   }
                 >
-                  <div className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:justify-center">
-                    <span className="shrink-0 text-muted-foreground">
-                      {renderIcon(item.icon)}
-                    </span>
-                    <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-                  </div>
+                  {renderIcon(item.icon)}
+                  <span className="truncate">{item.title}</span>
                   {item.badge && (
-                    <span className="ml-auto rounded-full border border-border/70 bg-muted/60 px-2 py-0.5 font-mono text-[9px] font-bold text-muted-foreground group-data-[collapsible=icon]:hidden">
+                    <span className="ml-auto rounded-full border border-border/70 bg-muted/60 px-2 py-0.5 font-mono text-[9px] font-bold text-muted-foreground">
                       {item.badge}
                     </span>
                   )}
@@ -245,15 +226,11 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                 <SidebarMenuButton
                   tooltip={item.title}
                   render={<CollapsibleTrigger />}
-                  className="flex items-center justify-between rounded-md px-2.5 py-2 font-sans text-xs sm:text-sm font-medium transition-all text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center"
+                  className="font-sans text-xs sm:text-sm font-medium transition-all text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 >
-                  <div className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:justify-center">
-                    <span className="shrink-0 text-muted-foreground">
-                      {renderIcon(item.icon)}
-                    </span>
-                    <span className="truncate group-data-[collapsible=icon]:hidden">{item.title}</span>
-                  </div>
-                  <ChevronRight className="ml-auto size-4 text-muted-foreground transition-transform duration-200 group-data-open/collapsible:rotate-90 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
+                  {renderIcon(item.icon)}
+                  <span className="truncate">{item.title}</span>
+                  <ChevronRight className="ml-auto size-4 text-muted-foreground transition-transform duration-200 group-data-open/collapsible:rotate-90 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
                 <CollapsibleContent>
                   <SidebarMenuSub>

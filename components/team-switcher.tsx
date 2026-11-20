@@ -52,27 +52,24 @@ export function TeamSwitcher({
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <SidebarMenuButton
-                size="lg"
-                tooltip={activeTeam.name}
-                className="rounded-lg border border-sidebar-border bg-sidebar-accent/50 p-2 font-sans transition-colors hover:bg-sidebar-accent aria-expanded:bg-sidebar-accent data-[slot=sidebar-menu-button]:h-12 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center"
-              />
-            }
-          >
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-main text-black shadow-xs">
-              {renderTeamLogo(activeTeam.logo)}
-            </div>
-            <div className="grid flex-1 text-left text-sm leading-tight min-w-0 group-data-[collapsible=icon]:hidden">
-              <span className="truncate font-bold tracking-tight text-sidebar-foreground">
-                {activeTeam.name}
-              </span>
-              <span className="truncate font-mono text-[10px] font-semibold text-muted-foreground">
-                {activeTeam.plan}
-              </span>
-            </div>
-            <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground font-sans cursor-pointer"
+            >
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-main text-black shrink-0 font-bold shadow-xs">
+                {renderTeamLogo(activeTeam.logo)}
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                <span className="truncate font-bold tracking-tight text-sidebar-foreground">
+                  {activeTeam.name}
+                </span>
+                <span className="truncate font-mono text-[10px] font-semibold text-muted-foreground">
+                  {activeTeam.plan}
+                </span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
+            </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-64 rounded-lg font-sans"

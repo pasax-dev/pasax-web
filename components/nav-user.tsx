@@ -92,38 +92,33 @@ export function NavUser({
       <SidebarMenu>
         <SidebarMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <SidebarMenuButton
-                  size="lg"
-                  tooltip={userName}
-                  className="rounded-lg font-sans transition-colors hover:bg-sidebar-accent aria-expanded:bg-sidebar-accent data-[state=open]:bg-sidebar-accent group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center"
-                />
-              }
-            >
-              <Avatar className="size-8 rounded-base border border-border shrink-0">
-                <AvatarImage src={userAvatar} alt={userName} />
-                <AvatarFallback className="rounded-base bg-main font-mono text-xs font-black text-black">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight min-w-0 group-data-[collapsible=icon]:hidden">
-                <div className="flex items-center gap-1.5">
+            <DropdownMenuTrigger asChild>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground font-sans cursor-pointer"
+              >
+                <Avatar className="size-8 rounded-lg shrink-0">
+                  <AvatarImage src={userAvatar} alt={userName} />
+                  <AvatarFallback className="rounded-lg bg-main font-mono text-xs font-black text-black">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
                   <span className="truncate font-bold tracking-tight text-foreground">
                     {userName}
                   </span>
+                  <span className="truncate font-mono text-[11px] text-muted-foreground">
+                    {userEmail}
+                  </span>
                 </div>
-                <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground truncate">
-                  <span className="truncate">{userEmail}</span>
-                </div>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
+              </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="w-64 rounded-xl p-1.5 font-sans shadow-lg border border-border bg-popover"
               side={isMobile ? "bottom" : "right"}
               align="end"
-              sideOffset={6}
+              sideOffset={4}
             >
               {/* Header Profile Card */}
               <DropdownMenuGroup>
