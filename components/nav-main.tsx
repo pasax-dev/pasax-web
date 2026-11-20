@@ -18,11 +18,17 @@ export interface NavMainItem {
   badge?: string
 }
 
-export function NavMain({
-  items,
-}: {
+export interface NavMainSection {
+  label: string
   items: NavMainItem[]
-}) {
+}
+
+interface NavMainProps {
+  items?: NavMainItem[]
+  sections?: NavMainSection[]
+}
+
+export function NavMain({ items, sections }: NavMainProps) {
   const [currentHash, setCurrentHash] = React.useState("")
 
   React.useEffect(() => {
@@ -34,63 +40,86 @@ export function NavMain({
     return () => window.removeEventListener("hashchange", handleHash)
   }, [])
 
+  // If sections are provided, render each section group; otherwise single group
+  const groups: NavMainSection[] = sections
+    ? sections
+    : [{ label: "Security Operations", items: items || [] }]
+
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel className="font-heading text-[11px] font-black uppercase tracking-wider text-muted-foreground">
-        Security Operations
-      </SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu className="gap-1">
-          {items.map((item) => {
-            const isActive = currentHash === item.url
-            return (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  tooltip={item.title}
-                  className={cn(
-                    "flex items-center justify-between font-heading text-sm font-semibold transition-all hover:bg-main/20 hover:border-border",
-                    isActive &&
-                      "border-2 border-border bg-main text-main-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main hover:text-main-foreground"
-                  )}
-                  render={
-                    <a
-                      href={item.url}
-                      onClick={(e) => {
-                        if (item.url.startsWith("#")) {
-                          const hash = item.url.replace("#", "")
-                          window.location.hash = hash
-                          const el =
-                            document.getElementById(hash) ||
-                            document.getElementById("operations-matrix")
-                          el?.scrollIntoView({ behavior: "smooth" })
-                        }
-                      }}
-                    />
-                  }
-                >
-                  <div className="flex items-center gap-2">
-                    {item.icon}
-                    <span>{item.title}</span>
-                  </div>
-                  {item.badge && (
-                    <span
+    <>
+      {groups.map((group) => (
+        <SidebarGroup key={group.label} className="py-1.5">
+          <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+            {group.label}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1">
+              {group.items.map((item) => {
+                const isActive = currentHash === item.url
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      isActive={isActive}
                       className={cn(
-                        "rounded px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase",
-                        isActive
-                          ? "bg-black text-white"
-                          : "border border-border bg-secondary-background text-foreground/80"
+                        "flex items-center justify-between rounded-md px-2.5 py-2 font-sans text-xs sm:text-sm font-medium transition-all",
+                        "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+                        isActive &&
+                          "bg-sidebar-accent text-sidebar-accent-foreground font-semibold shadow-xs border-l-2 border-main pl-2"
                       )}
+                      render={
+                        <a
+                          href={item.url}
+                          onClick={(e) => {
+                            if (item.url.startsWith("#")) {
+                              const hash = item.url.replace("#", "")
+                              window.location.hash = hash
+                              const el =
+                                document.getElementById(hash) ||
+                                document.getElementById("operations-matrix")
+                              el?.scrollIntoView({ behavior: "smooth" })
+                            }
+                          }}
+                        />
+                      }
                     >
-                      {item.badge}
-                    </span>
-                  )}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )
-          })}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span
+                          className={cn(
+                            "shrink-0 transition-colors",
+                            isActive
+                              ? "text-main"
+                              : "text-muted-foreground group-hover/menu-button:text-sidebar-foreground"
+                          )}
+                        >
+                          {item.icon}
+                        </span>
+                        <span className="truncate">{item.title}</span>
+                      </div>
+                      {item.badge && (
+                        <span
+                          className={cn(
+                            "shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase border transition-colors",
+                            isActive
+                              ? "border-main/50 bg-main/20 text-foreground font-black"
+                              : item.badge === "ALERT"
+                              ? "border-rose-500/40 bg-rose-500/15 text-rose-600 dark:text-rose-400 font-black animate-pulse"
+                              : item.badge === "LIVE" || item.badge === "ACTIVE" || item.badge === "SECURE"
+                              ? "border-emerald-500/30 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                              : "border-border/70 bg-muted/60 text-muted-foreground"
+                          )}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      ))}
+    </>
   )
 }
-
