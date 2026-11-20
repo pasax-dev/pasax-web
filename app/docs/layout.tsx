@@ -52,6 +52,20 @@ export default async function DocsLayout({
               <ExternalLink className="size-2.5 text-lp-ink/40" />
             </a>
             <span className="text-lp-line">|</span>
+            <span className="text-lp-line">|</span>
+            <Link
+              href="/login"
+              className="inline-flex items-center font-mono text-xs font-semibold text-lp-ink/75 transition-colors hover:text-lp-ink"
+            >
+              <span>Masuk</span>
+            </Link>
+            <Link
+              href="/register"
+              className="inline-flex items-center rounded-sm border border-border bg-main px-2.5 py-1 font-mono text-xs font-bold text-black shadow-[1.5px_1.5px_0px_0px_var(--border)] transition-transform hover:translate-x-0.5 hover:translate-y-0.5"
+            >
+              <span>Daftar</span>
+            </Link>
+            <span className="text-lp-line">|</span>
             <ThemeToggle className="size-7" />
           </div>
         </div>

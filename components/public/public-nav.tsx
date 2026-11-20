@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -15,6 +16,9 @@ import {
   ArrowRight,
   BookOpen,
   Sparkles,
+  LogIn,
+  UserPlus,
+  LayoutDashboard,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchTrigger } from "@/components/search/search-trigger"
@@ -22,6 +26,7 @@ import { IllosThreatDetection } from "@/components/illos"
 import { cn } from "@/lib/utils"
 
 export function PublicNav() {
+  const { data: session, status } = useSession()
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [docsDropdownOpen, setDocsDropdownOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
@@ -294,6 +299,35 @@ export function PublicNav() {
           {/* Clean Theme Toggle */}
           <ThemeToggle />
 
+          {/* Desktop Login & Register Buttons */}
+          <div className="hidden items-center gap-1.5 md:flex">
+            <span className="mx-0.5 h-4 w-px bg-lp-line" />
+            {status === "authenticated" ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-lp-line bg-main px-3 font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5"
+              >
+                <LayoutDashboard className="size-3.5 stroke-[2.5]" />
+                <span>Konsol SOC</span>
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="inline-flex h-8 items-center rounded-md px-2.5 font-mono text-xs font-semibold text-lp-ink-2 transition-colors hover:bg-lp-paper-2 hover:text-lp-ink"
+                >
+                  <span>Masuk</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex h-8 items-center gap-1 rounded-md border border-lp-line bg-main px-3 font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 active:shadow-none"
+                >
+                  <span>Daftar</span>
+                </Link>
+              </>
+            )}
+          </div>
+
           {/* Mobile Hamburger Trigger */}
           <button
             type="button"
@@ -373,6 +407,39 @@ export function PublicNav() {
                 <span>FAQ</span>
               </Link>
             </nav>
+
+            {/* Mobile Auth Actions */}
+            <div className="mt-2 border-t border-lp-line pt-3">
+              {status === "authenticated" ? (
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-main px-4 py-2.5 font-heading text-xs font-black text-black shadow-[3px_3px_0px_0px_var(--border)]"
+                >
+                  <LayoutDashboard className="size-4 stroke-[2.5]" />
+                  <span>Buka Konsol SOC (Dashboard)</span>
+                </Link>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2 px-3 py-2 font-mono text-xs font-bold text-lp-ink hover:bg-lp-paper"
+                  >
+                    <LogIn className="size-3.5 text-lp-ink-2" />
+                    <span>Masuk</span>
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-main px-3 py-2 font-mono text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)]"
+                  >
+                    <UserPlus className="size-3.5 stroke-[2.5]" />
+                    <span>Daftar</span>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
