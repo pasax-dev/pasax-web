@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  UserPlus,
 } from "lucide-react"
 import { OAuthButtons } from "./oauth-buttons"
 
@@ -38,12 +39,12 @@ export function RegisterForm() {
     setError(null)
 
     if (password !== confirmPassword) {
-      setError("Konfirmasi kata sandi tidak cocok.")
+      setError("Konfirmasi kata sandi tidak cocok. Harap periksa kembali.")
       return
     }
 
     if (password.length < 8) {
-      setError("Kata sandi harus minimal 8 karakter.")
+      setError("Kata sandi harus minimal 8 karakter demi standar keamanan SOC.")
       return
     }
 
@@ -58,7 +59,7 @@ export function RegisterForm() {
       })
 
       if (res?.error) {
-        setError("Pendaftaran gagal. Silakan coba kembali.")
+        setError("Pendaftaran gagal diproses oleh gateway. Silakan coba kembali.")
         setIsLoading(false)
       } else {
         setSuccess(true)
@@ -68,7 +69,7 @@ export function RegisterForm() {
         }, 1200)
       }
     } catch {
-      setError("Terjadi kendala konektivitas saat mendaftar.")
+      setError("Terjadi kendala konektivitas saat mendaftarkan akun operator.")
       setIsLoading(false)
     }
   }
@@ -77,15 +78,15 @@ export function RegisterForm() {
     <>
       {/* Success Alert */}
       {success && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-emerald-500/20 p-3 font-mono text-xs font-black text-emerald-700 shadow-[2px_2px_0px_0px_var(--border)] dark:text-emerald-300">
+        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-emerald-500/20 p-3.5 font-mono text-xs font-black text-emerald-800 shadow-[3px_3px_0px_0px_var(--border)] dark:text-emerald-300">
           <CheckCircle2 className="size-4 shrink-0 stroke-[2.5]" />
-          <span>Akun berhasil didaftarkan! Mengarahkan ke Dashboard...</span>
+          <span>Operator berhasil didaftarkan! Mengarahkan ke SOC Dashboard...</span>
         </div>
       )}
 
       {/* Error Alert */}
       {error && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-destructive/15 p-3 font-mono text-xs font-bold text-destructive shadow-[2px_2px_0px_0px_var(--border)]">
+        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-destructive/15 p-3.5 font-mono text-xs font-bold text-destructive shadow-[3px_3px_0px_0px_var(--border)]">
           <AlertCircle className="size-4 shrink-0 stroke-[2.5]" />
           <span>{error}</span>
         </div>
@@ -102,49 +103,51 @@ export function RegisterForm() {
       {/* Divider */}
       <div className="relative my-6 text-center text-xs">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t-2 border-dashed border-border" />
+          <div className="w-full border-t-2 border-dashed border-border/80" />
         </div>
-        <span className="relative rounded-sm border border-border bg-card px-2.5 py-0.5 font-mono text-[10px] font-black tracking-wider text-foreground uppercase shadow-[1px_1px_0px_0px_var(--border)]">
-          Atau Isi Formulir Operator
+        <span className="relative rounded-base border-2 border-border bg-card px-3 py-1 font-mono text-[10px] font-black tracking-wider text-muted-foreground uppercase shadow-[2px_2px_0px_0px_var(--border)]">
+          Atau Formulir Operator Baru
         </span>
       </div>
 
       {/* Registration Form */}
-      <form onSubmit={handleRegister} className="relative z-10 space-y-3.5">
-        <div className="space-y-1">
-          <label className="flex items-center gap-1.5 font-mono text-xs font-black text-foreground uppercase">
-            <User className="size-3.5 text-foreground" />
-            <span>Nama Lengkap</span>
-          </label>
-          <input
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Contoh: Pratama Satria"
-            className="w-full rounded-base border-2 border-border bg-secondary-background px-3 py-2 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] placeholder:text-foreground/50 focus:ring-2 focus:ring-main focus:outline-none"
-          />
+      <form onSubmit={handleRegister} className="relative z-10 space-y-4">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
+              <User className="size-3.5 text-main" />
+              <span>Nama Lengkap</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Pratama Satria"
+              className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
+              <Building2 className="size-3.5 text-main" />
+              <span>Instansi / Lembaga</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={organization}
+              onChange={(e) => setOrganization(e.target.value)}
+              placeholder="Diskominfo / Enterprise"
+              className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+            />
+          </div>
         </div>
 
-        <div className="space-y-1">
-          <label className="flex items-center gap-1.5 font-mono text-xs font-black text-foreground uppercase">
-            <Building2 className="size-3.5 text-foreground" />
-            <span>Instansi / Lembaga</span>
-          </label>
-          <input
-            type="text"
-            required
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-            placeholder="Contoh: Diskominfo / PT Siber Nusantara"
-            className="w-full rounded-base border-2 border-border bg-secondary-background px-3 py-2 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] placeholder:text-foreground/50 focus:ring-2 focus:ring-main focus:outline-none"
-          />
-        </div>
-
-        <div className="space-y-1">
-          <label className="flex items-center gap-1.5 font-mono text-xs font-black text-foreground uppercase">
-            <Mail className="size-3.5 text-foreground" />
-            <span>Email Resmi</span>
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
+            <Mail className="size-3.5 text-main" />
+            <span>Email Resmi Instansi</span>
           </label>
           <input
             type="email"
@@ -152,47 +155,43 @@ export function RegisterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="operator@instansi.go.id"
-            className="w-full rounded-base border-2 border-border bg-secondary-background px-3 py-2 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] placeholder:text-foreground/50 focus:ring-2 focus:ring-main focus:outline-none"
+            className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-          <div className="space-y-1">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black text-foreground uppercase">
-              <Lock className="size-3.5 text-foreground" />
-              <span>Kata Sandi</span>
-            </label>
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
+                <Lock className="size-3.5 text-main" />
+                <span>Kata Sandi</span>
+              </label>
+              <span className="font-mono text-[9px] font-bold text-muted-foreground">min. 8 char</span>
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-base border-2 border-border bg-secondary-background py-2 pr-8 pl-3 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] placeholder:text-foreground/50 focus:ring-2 focus:ring-main focus:outline-none"
+                placeholder="••••••••••••"
+                className="w-full rounded-base border-2 border-border bg-secondary-background py-2.5 pr-10 pl-3.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 right-2 -translate-y-1/2 text-foreground hover:opacity-75"
-                title={
-                  showPassword
-                    ? "Sembunyikan kata sandi"
-                    : "Tampilkan kata sandi"
-                }
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
               >
-                {showPassword ? (
-                  <EyeOff className="size-3.5" />
-                ) : (
-                  <Eye className="size-3.5" />
-                )}
+                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
             </div>
           </div>
-          <div className="space-y-1">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black text-foreground uppercase">
-              <Lock className="size-3.5 text-foreground" />
-              <span>Ulangi Sandi</span>
+
+          <div className="space-y-1.5">
+            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
+              <Lock className="size-3.5 text-main" />
+              <span>Konfirmasi Sandi</span>
             </label>
             <div className="relative">
               <input
@@ -200,24 +199,16 @@ export function RegisterForm() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-base border-2 border-border bg-secondary-background py-2 pr-8 pl-3 font-mono text-xs font-semibold text-foreground shadow-[2px_2px_0px_0px_var(--border)] placeholder:text-foreground/50 focus:ring-2 focus:ring-main focus:outline-none"
+                placeholder="••••••••••••"
+                className="w-full rounded-base border-2 border-border bg-secondary-background py-2.5 pr-10 pl-3.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-1/2 right-2 -translate-y-1/2 text-foreground hover:opacity-75"
-                title={
-                  showConfirmPassword
-                    ? "Sembunyikan kata sandi"
-                    : "Tampilkan kata sandi"
-                }
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                title={showConfirmPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
               >
-                {showConfirmPassword ? (
-                  <EyeOff className="size-3.5" />
-                ) : (
-                  <Eye className="size-3.5" />
-                )}
+                {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
             </div>
           </div>
@@ -226,16 +217,17 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={isLoading || success}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-base border-2 border-border bg-main px-4 py-2.5 font-heading text-sm font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+          className="mt-2 inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-main px-4 py-3 font-heading text-sm font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
         >
           {isLoading ? (
             <>
               <Loader2 className="size-4 animate-spin text-black" />
-              <span>Memproses Registrasi...</span>
+              <span>Mendaftarkan Operator Baru...</span>
             </>
           ) : (
             <>
-              <span>Daftar & Masuk Otomatis</span>
+              <UserPlus className="size-4 stroke-[2.5]" />
+              <span>Otorisasi & Daftarkan Akun</span>
               <ArrowRight className="size-4 stroke-[2.5]" />
             </>
           )}
@@ -243,12 +235,12 @@ export function RegisterForm() {
       </form>
 
       {/* Link to Login */}
-      <div className="relative z-10 mt-6 text-center">
-        <p className="text-xs font-medium text-foreground">
+      <div className="relative z-10 mt-6 border-t-2 border-dashed border-border/70 pt-4 text-center">
+        <p className="text-xs font-semibold text-muted-foreground">
           Sudah memiliki akun terdaftar?{" "}
           <Link
             href="/login"
-            className="rounded-sm px-1 py-0.5 font-black text-foreground underline decoration-main decoration-3 underline-offset-4 transition-all hover:bg-main hover:text-black hover:no-underline"
+            className="rounded-base border border-transparent px-1.5 py-0.5 font-black text-foreground underline decoration-main decoration-2 underline-offset-4 transition-all hover:border-border hover:bg-main hover:text-black hover:no-underline"
           >
             Masuk di sini
           </Link>

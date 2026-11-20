@@ -70,25 +70,25 @@ export function OAuthButtons({
   }
 
   return (
-    <div className="relative z-10 space-y-2.5">
+    <div className="relative z-10 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
       <button
         type="button"
         disabled={isLoading}
         onClick={() => handleOAuthSignIn("google")}
-        className="inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+        className="inline-flex items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
       >
         <GoogleIcon />
-        <span>Masuk dengan Google</span>
+        <span>Google</span>
       </button>
 
       <button
         type="button"
         disabled={isLoading}
         onClick={() => handleOAuthSignIn("github")}
-        className="inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+        className="inline-flex items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
       >
         <GitHubIcon className="text-foreground" />
-        <span>Masuk dengan GitHub</span>
+        <span>GitHub</span>
       </button>
     </div>
   )

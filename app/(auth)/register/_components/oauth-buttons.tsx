@@ -46,6 +46,7 @@ function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
 }
 
 interface OAuthButtonsProps {
+  callbackUrl?: string
   isLoading: boolean
   disabled?: boolean
   setIsLoading: (val: boolean) => void
@@ -53,42 +54,43 @@ interface OAuthButtonsProps {
 }
 
 export function OAuthButtons({
+  callbackUrl = "/dashboard",
   isLoading,
-  disabled,
+  disabled = false,
   setIsLoading,
   onError,
 }: OAuthButtonsProps) {
-  const handleOAuthSignUp = async (provider: "google" | "github") => {
+  const handleOAuthSignIn = async (provider: "google" | "github") => {
     setIsLoading(true)
     onError(null)
     try {
-      await signIn(provider, { callbackUrl: "/dashboard" })
+      await signIn(provider, { callbackUrl })
     } catch {
-      onError("Gagal menghubungkan autentikasi pihak ketiga.")
+      onError("Gagal menginisiasi pendaftaran pihak ketiga.")
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="relative z-10 space-y-2.5">
+    <div className="relative z-10 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
       <button
         type="button"
         disabled={isLoading || disabled}
-        onClick={() => handleOAuthSignUp("google")}
-        className="inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+        onClick={() => handleOAuthSignIn("google")}
+        className="inline-flex items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
       >
         <GoogleIcon />
-        <span>Daftar dengan Google</span>
+        <span>Daftar Google</span>
       </button>
 
       <button
         type="button"
         disabled={isLoading || disabled}
-        onClick={() => handleOAuthSignUp("github")}
-        className="inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-heading text-xs font-black text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+        onClick={() => handleOAuthSignIn("github")}
+        className="inline-flex items-center justify-center gap-2.5 rounded-base border-2 border-border bg-secondary-background px-4 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1.5px_1.5px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
       >
         <GitHubIcon className="text-foreground" />
-        <span>Daftar dengan GitHub</span>
+        <span>Daftar GitHub</span>
       </button>
     </div>
   )
