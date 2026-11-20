@@ -225,7 +225,7 @@ function ensureInitialized() {
   const user1: ManagedUser = {
     id: "usr_superadmin",
     name: "Roby Kartis (Chief SOC)",
-    email: "superadmin@pasax.id",
+    email: "pasak.dev@gmail.com",
     role: "Superadmin",
     plan: "enterprise",
     serverQuota: 100,
@@ -236,7 +236,7 @@ function ensureInitialized() {
   const user2: ManagedUser = {
     id: "usr_admin",
     name: "Fleet SecOps Admin",
-    email: "admin@pasax.id",
+    email: "robyfull.dev@gmail.com",
     role: "Admin",
     plan: "pro",
     serverQuota: 10,

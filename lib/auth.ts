@@ -42,11 +42,22 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        // Demo / Operator accounts
         const email = credentials.email.toLowerCase().trim()
+        const password = credentials.password
 
+        // Custom Superadmin & Admin accounts validation
         let role = "User"
-        if (email.includes("superadmin")) {
+        let name = email.split("@")[0].toUpperCase() + " (SOC)"
+
+        if (email === "pasak.dev@gmail.com") {
+          if (password !== "Tiram@1993") return null
+          role = "Superadmin"
+          name = "Roby Kartis (Chief SOC)"
+        } else if (email === "robyfull.dev@gmail.com") {
+          if (password !== "Tiram@1993") return null
+          role = "Admin"
+          name = "SecOps Fleet Administrator (Admin)"
+        } else if (email.includes("superadmin")) {
           role = "Superadmin"
         } else if (email.includes("admin")) {
           role = "Admin"
@@ -59,7 +70,7 @@ export const authOptions: NextAuthOptions = {
         // Return user session
         return {
           id: `usr_${Buffer.from(email).toString("base64").substring(0, 8)}`,
-          name: email.split("@")[0].toUpperCase() + " (SOC)",
+          name: name,
           email: email,
           role: role,
         }
@@ -75,6 +86,14 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as any).role ?? "Operator"
+      }
+      if (token.email) {
+        const em = token.email.toLowerCase().trim()
+        if (em === "pasak.dev@gmail.com") {
+          token.role = "Superadmin"
+        } else if (em === "robyfull.dev@gmail.com") {
+          token.role = "Admin"
+        }
       }
       return token
     },
