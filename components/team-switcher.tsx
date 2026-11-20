@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,69 +15,107 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronDownIcon, PlusIcon } from "lucide-react"
+import { ChevronsUpDown, Plus } from "lucide-react"
+
+export interface FleetTeam {
+  name: string
+  logo: React.ComponentType<{ className?: string }> | React.ReactNode
+  plan: string
+}
+
+function renderTeamLogo(logo: React.ComponentType<{ className?: string }> | React.ReactNode) {
+  if (React.isValidElement(logo)) {
+    return logo
+  }
+  if (typeof logo === "function") {
+    const Component = logo
+    return <Component className="size-4 stroke-[2.5]" />
+  }
+  return null
+}
 
 export function TeamSwitcher({
   teams,
 }: {
-  teams: {
-    name: string
-    logo: React.ReactNode
-    plan: string
-  }[]
+  teams: FleetTeam[]
 }) {
+  const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
+
   if (!activeTeam) {
     return null
   }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <SidebarMenuButton className="w-fit px-1.5 aria-expanded:bg-muted aria-expanded:text-foreground" />
+              <SidebarMenuButton
+                size="lg"
+                className="rounded-lg border border-sidebar-border bg-sidebar-accent/50 p-2 font-sans transition-colors hover:bg-sidebar-accent aria-expanded:bg-sidebar-accent data-[slot=sidebar-menu-button]:h-12"
+              />
             }
           >
-            <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-              {activeTeam.logo}
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-main text-black shadow-xs">
+              {renderTeamLogo(activeTeam.logo)}
             </div>
-            <span className="truncate font-medium">{activeTeam.name}</span>
-            <ChevronDownIcon className="opacity-50" />
+            <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+              <span className="truncate font-bold tracking-tight text-sidebar-foreground">
+                {activeTeam.name}
+              </span>
+              <span className="truncate font-mono text-[10px] font-semibold text-muted-foreground">
+                {activeTeam.plan}
+              </span>
+            </div>
+            <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-64 rounded-lg"
+            className="w-64 rounded-lg font-sans"
             align="start"
-            side="bottom"
+            side={isMobile ? "bottom" : "right"}
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground">
-                Teams
+              <DropdownMenuLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                Fleet Clusters & Meshes
               </DropdownMenuLabel>
               {teams.map((team, index) => (
                 <DropdownMenuItem
                   key={team.name}
                   onClick={() => setActiveTeam(team)}
-                  className="gap-2 p-2"
+                  className="gap-2.5 p-2 font-sans text-xs cursor-pointer"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-xs border">
-                    {team.logo}
+                  <div className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-sidebar-accent text-sidebar-foreground">
+                    {renderTeamLogo(team.logo)}
                   </div>
-                  {team.name}
-                  <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                  <div className="grid flex-1 text-left leading-tight">
+                    <span className="font-semibold text-foreground">{team.name}</span>
+                    <span className="font-mono text-[10px] text-muted-foreground">{team.plan}</span>
+                  </div>
+                  <DropdownMenuShortcut className="font-mono text-[10px]">
+                    ⌘{index + 1}
+                  </DropdownMenuShortcut>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 p-2">
-                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                  <PlusIcon className="size-4" />
+              <DropdownMenuItem
+                onClick={() => {
+                  const el = document.getElementById("install-node") || document.getElementById("nodes")
+                  el?.scrollIntoView({ behavior: "smooth" })
+                }}
+                className="gap-2 p-2 font-sans text-xs cursor-pointer"
+              >
+                <div className="flex size-6 shrink-0 items-center justify-center rounded-md border border-dashed border-border bg-background">
+                  <Plus className="size-3.5 text-muted-foreground" />
                 </div>
                 <div className="font-medium text-muted-foreground">
-                  Add team
+                  Hubungkan Node Baru...
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>

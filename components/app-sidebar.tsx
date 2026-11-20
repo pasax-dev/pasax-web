@@ -1,36 +1,27 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain, type NavMainSection } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
+import { NavMain, type NavMainItem } from "@/components/nav-main"
+import { NavProjects, type NavProjectItem } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
+import { TeamSwitcher, type FleetTeam } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 import {
-  LayoutDashboardIcon,
+  ShieldCheck,
   Server,
   ShieldAlert,
-  Globe,
-  Flame,
-  ShieldCheck,
-  FileCode2,
-  BookOpen,
-  Terminal,
-  Settings2Icon,
-  CircleHelpIcon,
   Users,
-  CreditCard,
+  BookOpen,
+  Settings2,
+  Terminal,
+  Globe,
   Layers,
-  DatabaseIcon,
 } from "lucide-react"
 
 const defaultAdminUser = {
@@ -40,133 +31,218 @@ const defaultAdminUser = {
   role: "Superadmin",
 }
 
-const adminSections: NavMainSection[] = [
+const adminTeams: FleetTeam[] = [
   {
-    label: "Security Operations",
+    name: "Pasax Cyber Defense",
+    plan: "Enterprise Fleet • SG-01",
+    logo: ShieldCheck,
+  },
+  {
+    name: "Staging US-East Cluster",
+    plan: "Pro Fleet Mesh • US-02",
+    logo: Server,
+  },
+  {
+    name: "Gov & Air-Gapped SOC",
+    plan: "Sovereign Air-Gapped",
+    logo: ShieldAlert,
+  },
+]
+
+const userTeams: FleetTeam[] = [
+  {
+    name: "Pasax Personal Defense",
+    plan: "Pro Subscriber • SG-01",
+    logo: ShieldCheck,
+  },
+  {
+    name: "Staging App Mesh",
+    plan: "Connected Tenant App",
+    logo: Server,
+  },
+]
+
+const adminNavMain: NavMainItem[] = [
+  {
+    title: "Security Operations",
+    url: "#overview",
+    icon: ShieldCheck,
+    isActive: true,
     items: [
       {
         title: "Fleet Overview",
         url: "#overview",
-        icon: <LayoutDashboardIcon className="size-4" />,
-        badge: "LIVE",
       },
       {
         title: "Server Nodes (VPS)",
         url: "#nodes",
-        icon: <Server className="size-4" />,
         badge: "3",
       },
       {
         title: "Threat Incidents",
         url: "#threats",
-        icon: <ShieldAlert className="size-4" />,
         badge: "ALERT",
       },
       {
         title: "Crowd Defense Blocklist",
         url: "#blocklist",
-        icon: <Flame className="size-4" />,
         badge: "ACTIVE",
       },
       {
         title: "VHost & SSL Recon",
         url: "#vhosts",
-        icon: <Globe className="size-4" />,
         badge: "4",
       },
     ],
   },
   {
-    label: "Fleet Management",
+    title: "Fleet Management",
+    url: "#auth-licenses",
+    icon: Users,
     items: [
       {
         title: "Pengguna & Lisensi",
         url: "#auth-licenses",
-        icon: <Users className="size-4" />,
         badge: "ADMIN",
       },
       {
         title: "Model Bisnis & Paket",
         url: "#business",
-        icon: <CreditCard className="size-4" />,
         badge: "TIERS",
       },
       {
         title: "Portal Pelanggan (Tenant)",
         url: "#tenant-portal",
-        icon: <Layers className="size-4" />,
         badge: "VIEW",
+      },
+    ],
+  },
+  {
+    title: "Blueprints & Specs",
+    url: "#blueprint",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Commercial Blueprint",
+        url: "#blueprint",
+      },
+      {
+        title: "Infra Architecture",
+        url: "#infra",
+      },
+      {
+        title: "Laravel WAF Core",
+        url: "#waf-core",
+      },
+    ],
+  },
+  {
+    title: "Platform & Tools",
+    url: "/threats-map",
+    icon: Settings2,
+    items: [
+      {
+        title: "Global 3D Threat Map",
+        url: "/threats-map",
+        badge: "3D MAP",
+      },
+      {
+        title: "Dokumentasi Resmi",
+        url: "/docs",
+      },
+      {
+        title: "Agent CLI Hardening",
+        url: "#settings",
       },
     ],
   },
 ]
 
-const userSections: NavMainSection[] = [
+const userNavMain: NavMainItem[] = [
   {
-    label: "My Security Portal",
+    title: "My Security Portal",
+    url: "#overview",
+    icon: ShieldCheck,
+    isActive: true,
     items: [
       {
         title: "Paket & Kuota Saya",
         url: "#overview",
-        icon: <CreditCard className="size-4" />,
         badge: "PRO",
       },
       {
         title: "Aplikasi Web Terhubung",
         url: "#connected-apps",
-        icon: <Globe className="size-4" />,
         badge: "LIVE",
       },
       {
         title: "Server VPS Sentinel",
         url: "#nodes",
-        icon: <Server className="size-4" />,
         badge: "ACTIVE",
       },
       {
         title: "Kesehatan VPS & Serangan",
         url: "#threats",
-        icon: <ShieldCheck className="size-4" />,
         badge: "SECURE",
+      },
+    ],
+  },
+  {
+    title: "Resources & Map",
+    url: "/threats-map",
+    icon: BookOpen,
+    items: [
+      {
+        title: "Global 3D Threat Map",
+        url: "/threats-map",
+      },
+      {
+        title: "Dokumentasi Pasax",
+        url: "/docs",
       },
     ],
   },
 ]
 
-const documents = [
+const adminProjects: NavProjectItem[] = [
   {
-    name: "Commercial Blueprint",
-    url: "#blueprint",
-    icon: <BookOpen className="size-4" />,
+    name: "sentinel-sgp-01.mesh",
+    url: "#nodes",
+    icon: <Server className="size-3.5" />,
+    badge: "ONLINE",
   },
   {
-    name: "Infra Architecture",
-    url: "#infra",
-    icon: <DatabaseIcon className="size-4" />,
+    name: "staging-app-us01.mesh",
+    url: "#nodes",
+    icon: <Globe className="size-3.5" />,
+    badge: "HEALTHY",
   },
   {
-    name: "Laravel WAF Core",
-    url: "#waf-core",
-    icon: <FileCode2 className="size-4" />,
+    name: "api.pasax.is-a.dev",
+    url: "#vhosts",
+    icon: <Terminal className="size-3.5" />,
+    badge: "WAF LIVE",
+  },
+  {
+    name: "clientportal.id",
+    url: "#vhosts",
+    icon: <Layers className="size-3.5" />,
+    badge: "TLS 1.3",
   },
 ]
 
-const navSecondary = [
+const userProjects: NavProjectItem[] = [
   {
-    title: "Global 3D Threat Map",
-    url: "/threats-map",
-    icon: <Globe className="size-4" />,
-    badge: "3D MAP",
+    name: "my-laravel-vps.com",
+    url: "#connected-apps",
+    icon: <Globe className="size-3.5" />,
+    badge: "ACTIVE",
   },
   {
-    title: "Dokumentasi Resmi",
-    url: "/docs",
-    icon: <CircleHelpIcon className="size-4" />,
-  },
-  {
-    title: "Agent CLI Hardening",
-    url: "#settings",
-    icon: <Settings2Icon className="size-4" />,
+    name: "node-production-01",
+    url: "#nodes",
+    icon: <Server className="size-3.5" />,
+    badge: "HEALTHY",
   },
 ]
 
@@ -180,41 +256,25 @@ export function AppSidebar({
 }) {
   const currentUser = user || defaultAdminUser
   const isUserRole = role === "User"
-  const sections = isUserRole ? userSections : adminSections
+  const teams = isUserRole ? userTeams : adminTeams
+  const navMain = isUserRole ? userNavMain : adminNavMain
+  const projects = isUserRole ? userProjects : adminProjects
 
   return (
     <Sidebar collapsible="icon" className="font-sans" {...props}>
-      <SidebarHeader className="border-b border-sidebar-border/80 pb-2.5">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="rounded-lg border border-sidebar-border bg-sidebar-accent/50 p-2 font-sans transition-colors hover:bg-sidebar-accent data-[slot=sidebar-menu-button]:h-12"
-              render={<Link href="/dashboard" />}
-            >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-main text-black shadow-xs">
-                <ShieldCheck className="size-4.5 stroke-[2.5]" />
-              </div>
-              <div className="flex flex-col text-left min-w-0">
-                <span className="truncate text-sm font-bold tracking-tight text-sidebar-foreground">
-                  Pasax Defense Suite
-                </span>
-                <span className="truncate font-mono text-[10px] font-semibold text-muted-foreground">
-                  {isUserRole ? "Customer Security Portal" : "Enterprise SOC Sovereign"}
-                </span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      <SidebarHeader>
+        <TeamSwitcher teams={teams} />
       </SidebarHeader>
 
-      <SidebarContent className="gap-1 px-1.5">
-        <NavMain sections={sections} />
-        <NavDocuments items={documents} />
-        <NavSecondary items={navSecondary} className="mt-auto" />
+      <SidebarContent>
+        <NavMain items={navMain} label={isUserRole ? "Tenant Portal" : "Fleet Operations"} />
+        <NavProjects
+          projects={projects}
+          label={isUserRole ? "Connected Workspaces" : "Fleet Workspaces"}
+        />
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border/80 pt-2">
+      <SidebarFooter>
         <NavUser
           user={{
             name: currentUser.name,
@@ -224,6 +284,8 @@ export function AppSidebar({
           }}
         />
       </SidebarFooter>
+
+      <SidebarRail />
     </Sidebar>
   )
 }
