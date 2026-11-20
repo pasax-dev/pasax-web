@@ -10,7 +10,7 @@ export default async function AdminLayout({
   const session = await getServerSession(authOptions)
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
+    <div className="relative min-h-screen bg-background font-sans text-foreground antialiased selection:bg-main selection:text-black [--font-heading:var(--font-sans)]">
       {children}
     </div>
   )

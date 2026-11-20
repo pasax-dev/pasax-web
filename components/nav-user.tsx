@@ -1,5 +1,7 @@
 "use client"
 
+import * as React from "react"
+import { signOut } from "next-auth/react"
 import {
   Avatar,
   AvatarFallback,
@@ -20,7 +22,26 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon, Sun, Moon } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
+  EllipsisVerticalIcon,
+  CircleUserRoundIcon,
+  CreditCardIcon,
+  BellIcon,
+  LogOutIcon,
+  Sun,
+  Moon,
+  AlertTriangle,
+} from "lucide-react"
 import { useTheme } from "next-themes"
 
 export function NavUser({
@@ -30,98 +51,142 @@ export function NavUser({
     name: string
     email: string
     avatar: string
+    role?: string
   }
 }) {
   const { isMobile } = useSidebar()
   const { setTheme, resolvedTheme } = useTheme()
+  const [showLogoutDialog, setShowLogoutDialog] = React.useState(false)
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false)
+
+  const initials =
+    user.name
+      .split(" ")
+      .filter(Boolean)
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "OP"
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    await signOut({ callbackUrl: "/login" })
+  }
+
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <SidebarMenuButton size="lg" className="aria-expanded:bg-muted" />
-            }
-          >
-            <Avatar className="size-8 rounded-lg grayscale">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-            </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{user.name}</span>
-              <span className="truncate text-xs text-foreground/70">
-                {user.email}
-              </span>
-            </div>
-            <EllipsisVerticalIcon className="ml-auto size-4" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="min-w-56"
-            side={isMobile ? "bottom" : "right"}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="size-8">
-                    <AvatarImage src={user.avatar} alt={user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user.name}</span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {user.email}
-                    </span>
-                  </div>
-                </div>
-              </DropdownMenuLabel>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-              >
-                {resolvedTheme === "dark" ? (
-                  <>
-                    <Sun className="size-4 text-yellow-400" />
-                    Light Mode
-                  </>
-                ) : (
-                  <>
-                    <Moon className="size-4" />
-                    Dark Mode
-                  </>
-                )}
-                <span className="ml-auto font-mono text-[10px] text-muted-foreground border border-border px-1.5 py-0.5 rounded-base">
-                  D
+    <>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <SidebarMenuButton size="lg" className="aria-expanded:bg-muted font-sans" />
+              }
+            >
+              <Avatar className="size-8 rounded-base border border-border">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-base bg-main font-mono text-xs font-black text-black">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-bold text-foreground">{user.name}</span>
+                <span className="truncate font-mono text-xs text-foreground/70">
+                  {user.email}
                 </span>
+              </div>
+              <EllipsisVerticalIcon className="ml-auto size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="min-w-56 font-sans"
+              side={isMobile ? "bottom" : "right"}              align="end"
+              sideOffset={4}
+            >
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="size-8 rounded-base border border-border">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback className="rounded-base bg-main font-mono text-xs font-black text-black">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-bold text-foreground">{user.name}</span>
+                      <span className="truncate font-mono text-xs text-muted-foreground">
+                        {user.email}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                >
+                  {resolvedTheme === "dark" ? (                    <>                      <Sun className="size-4 text-yellow-400" />                      Light Mode                    </>                  ) : (                    <>                      <Moon className="size-4" />                      Dark Mode                    </>                  )}
+                  <span className="ml-auto font-mono text-[10px] text-muted-foreground border border-border px-1.5 py-0.5 rounded-base">                    D                  </span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CircleUserRoundIcon />
+                  Profil Operator
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CreditCardIcon />
+                  Langganan & Node
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <BellIcon />
+                  Notifikasi SOC
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setShowLogoutDialog(true)}
+                className="cursor-pointer text-destructive font-semibold focus:bg-destructive/15 focus:text-destructive"
+              >
+                <LogOutIcon className="size-4" />
+                Keluar Sesi
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CircleUserRoundIcon
-                />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCardIcon
-                />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon
-                />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOutIcon
-              />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
+      </SidebarMenu>
+
+      {/* Confirmation Alert Dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent className="border-2 border-border bg-card p-6 font-sans shadow-[6px_6px_0px_0px_var(--border)] sm:max-w-md">
+          <AlertDialogHeader>
+            <div className="mb-2 flex size-10 items-center justify-center rounded-base border-2 border-border bg-destructive/15 text-destructive shadow-[2px_2px_0px_0px_var(--border)]">
+              <AlertTriangle className="size-5 stroke-[2.5]" />
+            </div>
+            <AlertDialogTitle className="text-base font-bold tracking-tight text-foreground">
+              Konfirmasi Keluar Sesi SOC
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-xs font-normal leading-relaxed text-muted-foreground">
+              Apakah Anda yakin ingin mengakhiri sesi operator untuk akun{" "}
+              <span className="font-mono font-bold text-foreground">{user.email}</span>? Anda harus
+              memasukkan kredensial otorisasi kembali untuk mengakses konsol fleet pertahanan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 flex gap-2">
+            <AlertDialogCancel
+              disabled={isLoggingOut}
+              className="border-2 border-border font-sans text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)] hover:bg-secondary"
+            >
+              Batal
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="border-2 border-border bg-destructive font-sans text-xs font-bold text-destructive-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-destructive/90"
+            >
+              {isLoggingOut ? "Memproses Keluar..." : "Ya, Keluar Sesi"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
