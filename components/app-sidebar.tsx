@@ -262,11 +262,11 @@ export function AppSidebar({
 
   return (
     <Sidebar collapsible="icon" className="font-sans" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="border-b border-sidebar-border/80 group-data-[collapsible=icon]:p-1.5">
         <TeamSwitcher teams={teams} />
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="gap-1 px-1.5 group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:gap-1">
         <NavMain items={navMain} label={isUserRole ? "Tenant Portal" : "Fleet Operations"} />
         <NavProjects
           projects={projects}
@@ -274,7 +274,7 @@ export function AppSidebar({
         />
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/80 group-data-[collapsible=icon]:p-1.5">
         <NavUser
           user={{
             name: currentUser.name,

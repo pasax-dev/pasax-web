@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -43,8 +42,8 @@ export function NavProjects({
   }
 
   return (
-    <SidebarGroup className="py-1.5 group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
+    <SidebarGroup className="py-1.5">
+      <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 group-data-[collapsible=icon]:hidden">
         {label}
       </SidebarGroupLabel>
       <SidebarMenu className="gap-0.5">
@@ -52,7 +51,8 @@ export function NavProjects({
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
               size="sm"
-              className="font-sans text-xs text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              tooltip={item.name}
+              className="font-sans text-xs text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2! group-data-[collapsible=icon]:justify-center"
               render={
                 <a
                   href={item.url}
@@ -70,9 +70,11 @@ export function NavProjects({
               }
             >
               <span className="shrink-0 text-muted-foreground">{item.icon}</span>
-              <span className="truncate font-mono text-[11px] font-medium">{item.name}</span>
+              <span className="truncate font-mono text-[11px] font-medium group-data-[collapsible=icon]:hidden">
+                {item.name}
+              </span>
               {item.badge && (
-                <span className="ml-auto rounded-full border border-border/60 bg-muted/60 px-1.5 py-0.2 font-mono text-[9px] font-bold text-muted-foreground">
+                <span className="ml-auto rounded-full border border-border/60 bg-muted/60 px-1.5 py-0.2 font-mono text-[9px] font-bold text-muted-foreground group-data-[collapsible=icon]:hidden">
                   {item.badge}
                 </span>
               )}
@@ -82,7 +84,7 @@ export function NavProjects({
                 render={
                   <SidebarMenuAction
                     showOnHover
-                    className="aria-expanded:bg-muted"
+                    className="aria-expanded:bg-muted group-data-[collapsible=icon]:hidden"
                   />
                 }
               >
@@ -103,14 +105,14 @@ export function NavProjects({
                       el?.scrollIntoView({ behavior: "smooth" })
                     }
                   }}
-                  className="gap-2 text-xs"
+                  className="gap-2 text-xs cursor-pointer"
                 >
                   <Terminal className="size-3.5 text-muted-foreground" />
                   <span>Inspeksi Telemetri</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => copyHostname(item.name)}
-                  className="gap-2 text-xs"
+                  className="gap-2 text-xs cursor-pointer"
                 >
                   {copiedName === item.name ? (
                     <>

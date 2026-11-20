@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { signOut } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
 import {
   Avatar,
   AvatarFallback,
@@ -33,16 +33,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import {
-  EllipsisVerticalIcon,
-  CircleUserRoundIcon,
-  CreditCardIcon,
+  BadgeCheckIcon,
   BellIcon,
+  CreditCardIcon,
   LogOutIcon,
-  Sun,
-  Moon,
+  SparklesIcon,
+  EllipsisVerticalIcon,
   AlertTriangle,
 } from "lucide-react"
-import { useTheme } from "next-themes"
 
 export function NavUser({
   user,
@@ -55,10 +53,16 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const { setTheme, resolvedTheme } = useTheme()
+  const { data: session } = useSession()
   const [showLogoutDialog, setShowLogoutDialog] = React.useState(false)
   const [isLoggingOut, setIsLoggingOut] = React.useState(false)
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    await signOut({ callbackUrl: "/login" })
+  }
+
+  // Derive initials from name
   const initials =
     user.name
       .split(" ")
@@ -68,11 +72,6 @@ export function NavUser({
       .join("")
       .toUpperCase() || "OP"
 
-  const handleLogout = async () => {
-    setIsLoggingOut(true)
-    await signOut({ callbackUrl: "/login" })
-  }
-
   return (
     <>
       <SidebarMenu>
@@ -80,26 +79,31 @@ export function NavUser({
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <SidebarMenuButton size="lg" className="aria-expanded:bg-muted font-sans" />
+                <SidebarMenuButton
+                  size="lg"
+                  tooltip={user.name}
+                  className="aria-expanded:bg-muted font-sans group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center"
+                />
               }
             >
-              <Avatar className="size-8 rounded-base border border-border">
+              <Avatar className="size-8 rounded-base border border-border shrink-0">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-base bg-main font-mono text-xs font-black text-black">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate font-bold text-foreground">{user.name}</span>
                 <span className="truncate font-mono text-xs text-foreground/70">
                   {user.email}
                 </span>
               </div>
-              <EllipsisVerticalIcon className="ml-auto size-4" />
+              <EllipsisVerticalIcon className="ml-auto size-4 group-data-[collapsible=icon]:hidden" />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               className="min-w-56 font-sans"
-              side={isMobile ? "bottom" : "right"}              align="end"
+              side={isMobile ? "bottom" : "right"}
+              align="end"
               sideOffset={4}
             >
               <DropdownMenuGroup>
@@ -116,38 +120,44 @@ export function NavUser({
                       <span className="truncate font-mono text-xs text-muted-foreground">
                         {user.email}
                       </span>
+                      {user.role && (
+                        <span className="font-mono text-[9px] font-black uppercase tracking-wider text-main">
+                          {user.role}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </DropdownMenuLabel>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                >
-                  {resolvedTheme === "dark" ? (                    <>                      <Sun className="size-4 text-yellow-400" />                      Light Mode                    </>                  ) : (                    <>                      <Moon className="size-4" />                      Dark Mode                    </>                  )}
-                  <span className="ml-auto font-mono text-[10px] text-muted-foreground border border-border px-1.5 py-0.5 rounded-base">                    D                  </span>
+                <DropdownMenuItem className="gap-2 text-xs">
+                  <SparklesIcon className="size-4 text-muted-foreground" />
+                  <span>Sovereign License</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CircleUserRoundIcon />
-                  Profil Operator
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem className="gap-2 text-xs">
+                  <BadgeCheckIcon className="size-4 text-muted-foreground" />
+                  <span>Pengaturan Akun</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCardIcon />
-                  Langganan & Node
+                <DropdownMenuItem className="gap-2 text-xs">
+                  <CreditCardIcon className="size-4 text-muted-foreground" />
+                  <span>Paket & Billing</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <BellIcon />
-                  Notifikasi SOC
+                <DropdownMenuItem className="gap-2 text-xs">
+                  <BellIcon className="size-4 text-muted-foreground" />
+                  <span>Notifikasi Insiden</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => setShowLogoutDialog(true)}
-                className="cursor-pointer text-destructive font-semibold focus:bg-destructive/15 focus:text-destructive"
+                className="gap-2 text-xs font-semibold text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer"
               >
                 <LogOutIcon className="size-4" />
-                Keluar Sesi
+                <span>Keluar Akun</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -165,9 +175,9 @@ export function NavUser({
               Konfirmasi Keluar Sesi SOC
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs font-normal leading-relaxed text-muted-foreground">
-              Apakah Anda yakin ingin mengakhiri sesi operator untuk akun{" "}
+              Apakah Anda yakin ingin mengakhiri sesi untuk akun{" "}
               <span className="font-mono font-bold text-foreground">{user.email}</span>? Anda harus
-              memasukkan kredensial otorisasi kembali untuk mengakses konsol fleet pertahanan.
+              memasukkan kredensial kembali untuk mengakses konsol pertahanan.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-4 flex gap-2">
@@ -182,7 +192,7 @@ export function NavUser({
               disabled={isLoggingOut}
               className="border-2 border-border bg-destructive font-sans text-xs font-bold text-destructive-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-destructive/90"
             >
-              {isLoggingOut ? "Memproses Keluar..." : "Ya, Keluar Sesi"}
+              {isLoggingOut ? "Memproses..." : "Ya, Keluar Akun"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
