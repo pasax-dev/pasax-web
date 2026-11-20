@@ -58,6 +58,18 @@ function renderIcon(icon?: React.ComponentType<{ className?: string }> | React.R
 
 export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
   const [currentHash, setCurrentHash] = React.useState("")
+  const navItems = React.useMemo(() => items || [], [items])
+
+  // Controlled open state for sidebar-07 collapsible sections
+  const [openItems, setOpenItems] = React.useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {}
+    navItems.forEach((item) => {
+      if (item.isActive) {
+        initial[item.title] = true
+      }
+    })
+    return initial
+  })
 
   React.useEffect(() => {
     const handleHash = () => {
@@ -67,6 +79,16 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
     window.addEventListener("hashchange", handleHash)
     return () => window.removeEventListener("hashchange", handleHash)
   }, [])
+
+  // Auto-expand group when URL hash targets a nested item
+  React.useEffect(() => {
+    if (!currentHash) return
+    navItems.forEach((item) => {
+      if (item.items?.some((sub) => sub.url === currentHash) || item.url === currentHash) {
+        setOpenItems((prev) => (prev[item.title] ? prev : { ...prev, [item.title]: true }))
+      }
+    })
+  }, [currentHash, navItems])
 
   // If sections are provided, render each section group (legacy/multi-section mode)
   if (sections && sections.length > 0) {
@@ -149,9 +171,6 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
     )
   }
 
-  // Official sidebar-07 format: Single/Primary group with Collapsible sub-items
-  const navItems = items || []
-
   return (
     <SidebarGroup className="py-1.5">
       <SidebarGroupLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80">
@@ -209,10 +228,15 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
             )
           }
 
+          const isOpen = Boolean(openItems[item.title])
+
           return (
             <Collapsible
               key={item.title}
-              defaultOpen={isItemActive}
+              open={isOpen}
+              onOpenChange={(open) =>
+                setOpenItems((prev) => ({ ...prev, [item.title]: open }))
+              }
               className="group/collapsible"
             >
               <SidebarMenuItem>
