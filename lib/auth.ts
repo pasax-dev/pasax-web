@@ -5,17 +5,17 @@ import GoogleProvider from "next-auth/providers/google"
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    ...(process.env.GITHUB_ID && process.env.GITHUB_SECRET
+    ...( (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) && (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)
       ? [
           GithubProvider({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
+            clientId: (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID)!,
+            clientSecret: (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)!,
           }),
         ]
       : [
           GithubProvider({
-            clientId: process.env.GITHUB_ID ?? "mock-github-client-id",
-            clientSecret: process.env.GITHUB_SECRET ?? "mock-github-client-secret",
+            clientId: (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) ?? "mock-github-client-id",
+            clientSecret: (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET) ?? "mock-github-client-secret",
           }),
         ]),
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
