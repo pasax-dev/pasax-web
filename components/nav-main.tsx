@@ -49,11 +49,8 @@ export interface NavMainProps {
 function renderIcon(icon?: React.ComponentType<{ className?: string }> | React.ReactNode) {
   if (!icon) return null
   if (React.isValidElement(icon)) return icon
-  if (typeof icon === "function") {
-    const IconComp = icon
-    return <IconComp className="size-4 shrink-0" />
-  }
-  return null
+  const IconComp = icon as React.ElementType
+  return <IconComp className="size-4 shrink-0" />
 }
 
 export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
@@ -134,7 +131,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                         {item.badge && (
                           <span
                             className={cn(
-                              "ml-auto shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase border transition-colors",
+                              "ml-auto shrink-0 rounded-full px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase border transition-colors group-data-[collapsible=icon]:hidden",
                               isActive
                                 ? "border-main/50 bg-main/20 text-foreground font-black"
                                 : item.badge === "ALERT"
@@ -202,7 +199,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                   {renderIcon(item.icon)}
                   <span className="truncate">{item.title}</span>
                   {item.badge && (
-                    <span className="ml-auto rounded-full border border-border/70 bg-muted/60 px-2 py-0.5 font-mono text-[9px] font-bold text-muted-foreground">
+                    <span className="ml-auto rounded-full border border-border/70 bg-muted/60 px-2 py-0.5 font-mono text-[9px] font-bold text-muted-foreground group-data-[collapsible=icon]:hidden">
                       {item.badge}
                     </span>
                   )}
@@ -230,7 +227,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                 >
                   {renderIcon(item.icon)}
                   <span className="truncate">{item.title}</span>
-                  <ChevronRight className="ml-auto size-4 text-muted-foreground transition-transform duration-200 group-data-open/collapsible:rotate-90 group-data-[state=open]/collapsible:rotate-90" />
+                  <ChevronRight className="ml-auto size-4 text-muted-foreground transition-transform duration-200 group-data-open/collapsible:rotate-90 group-data-[state=open]/collapsible:rotate-90 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
                 <CollapsibleContent>
                   <SidebarMenuSub>
@@ -262,7 +259,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                           >
                             <span className="truncate">{subItem.title}</span>
                             {subItem.badge && (
-                              <span className="ml-auto rounded-full border border-border/60 bg-muted/60 px-1.5 py-0.2 font-mono text-[8px] font-bold text-muted-foreground">
+                              <span className="ml-auto font-mono text-[9px] font-bold text-muted-foreground">
                                 {subItem.badge}
                               </span>
                             )}

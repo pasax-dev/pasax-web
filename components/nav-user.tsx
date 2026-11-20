@@ -111,7 +111,7 @@ export function NavUser({
                     {userEmail}
                   </span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
+                <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -122,159 +122,144 @@ export function NavUser({
             >
               {/* Header Profile Card */}
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2.5 rounded-lg border border-border/70 bg-secondary-background/60 p-2 text-left text-sm">
-                    <Avatar className="size-9 rounded-base border border-border shrink-0">
-                      <AvatarImage src={userAvatar} alt={userName} />
-                      <AvatarFallback className="rounded-base bg-main font-mono text-xs font-black text-black">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left leading-tight min-w-0">
-                      <span className="truncate font-bold text-foreground">{userName}</span>
-                      <span className="truncate font-mono text-[10px] text-muted-foreground">
-                        {userEmail}
+                <div className="flex items-center gap-2.5 p-2">
+                  <Avatar className="size-9 rounded-lg border border-border">
+                    <AvatarImage src={userAvatar} alt={userName} />
+                    <AvatarFallback className="rounded-lg bg-main font-mono text-xs font-black text-black">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="grid flex-1 text-left text-xs leading-tight min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-foreground truncate">{userName}</span>
+                      <span className="rounded-md border border-main/50 bg-main/20 px-1 py-0.2 font-mono text-[9px] font-black uppercase text-foreground">
+                        {userRole}
                       </span>
-                      <div className="mt-1 flex items-center gap-1.5">
-                        <span className="inline-flex items-center rounded-full bg-main/20 px-1.5 py-0.2 font-mono text-[9px] font-black uppercase tracking-wider text-foreground border border-main/40">
-                          {userRole}
-                        </span>
-                        <span className="inline-flex items-center gap-1 font-mono text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold">
-                          <span className="size-1 rounded-full bg-emerald-500 animate-pulse" />
-                          ONLINE
-                        </span>
-                      </div>
                     </div>
+                    <span className="truncate font-mono text-[10px] text-muted-foreground">
+                      {userEmail}
+                    </span>
                   </div>
+                </div>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {/* Status & Subscription Quick View */}
+              <DropdownMenuGroup>
+                <div className="rounded-lg bg-sidebar-accent/60 p-2 text-xs">
+                  <div className="flex items-center justify-between font-mono text-[11px]">
+                    <span className="text-muted-foreground">Armada Pasax:</span>
+                    <span className="font-bold text-emerald-500 flex items-center gap-1">
+                      <span className="size-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+                      Sovereign Air-Gapped
+                    </span>
+                  </div>
+                  <div className="mt-1 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
+                    <span>Cluster Sync:</span>
+                    <span>100% Locked</span>
+                  </div>
+                </div>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {/* Navigation & Management Actions */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Pusat Kendali SOC
                 </DropdownMenuLabel>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator className="my-1.5" />
-
-              {/* License & Tier Status */}
-              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  onClick={() => scrollToHash("overview")}
+                  className="gap-2 text-xs cursor-pointer"
+                >
+                  <Sparkles className="size-4 text-main" />
+                  <span>Fleet Health & Skor SOC</span>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => scrollToHash("auth-licenses")}
-                  className="gap-2.5 py-2 text-xs cursor-pointer font-medium"
+                  className="gap-2 text-xs cursor-pointer"
                 >
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-sidebar-accent text-sidebar-foreground">
-                    <Sparkles className="size-3.5 text-main" />
-                  </div>
-                  <div className="grid flex-1 leading-tight">
-                    <span className="font-semibold text-foreground">Sovereign Air-Gapped</span>
-                    <span className="font-mono text-[10px] text-muted-foreground">Enterprise SOC Fleet</span>
-                  </div>
+                  <Key className="size-4 text-sky-500" />
+                  <span>Otoritas Pengguna & Kunci API</span>
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator className="my-1.5" />
-
-              {/* Account, Management & Settings */}
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => scrollToHash("auth-licenses")}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium"
-                >
-                  <BadgeCheck className="size-4 text-muted-foreground" />
-                  <span>Profil & Kredensial SOC</span>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  onClick={() => scrollToHash("auth-licenses")}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium"
-                >
-                  <Key className="size-4 text-muted-foreground" />
-                  <span>Kunci Lisensi & API Keys</span>
-                </DropdownMenuItem>
-
                 <DropdownMenuItem
                   onClick={() => scrollToHash("business")}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium"
+                  className="gap-2 text-xs cursor-pointer"
                 >
-                  <CreditCard className="size-4 text-muted-foreground" />
-                  <span>Model Bisnis & Kuota Server</span>
+                  <CreditCard className="size-4 text-purple-500" />
+                  <span>Model Bisnis & Tier Armada</span>
                 </DropdownMenuItem>
-
                 <DropdownMenuItem
                   onClick={() => scrollToHash("threats")}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium flex items-center justify-between"
+                  className="gap-2 text-xs cursor-pointer"
                 >
-                  <div className="flex items-center gap-2">
-                    <Bell className="size-4 text-muted-foreground" />
-                    <span>Notifikasi Insiden & Alert</span>
-                  </div>
-                  <span className="rounded-full bg-rose-500/20 px-1.5 py-0.2 font-mono text-[9px] font-bold text-rose-600 dark:text-rose-400">
-                    LIVE
-                  </span>
+                  <Shield className="size-4 text-rose-500" />
+                  <span>Insiden & Ancaman WAF</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 
-              <DropdownMenuSeparator className="my-1.5" />
+              <DropdownMenuSeparator />
 
-              {/* Documentation & Manuals */}
+              {/* External / Resource Links */}
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  render={<Link href="/docs" />}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium"
-                >
-                  <BookOpen className="size-4 text-muted-foreground" />
-                  <span>Dokumentasi Resmi Pasax</span>
-                </DropdownMenuItem>
                 <DropdownMenuItem
                   render={<Link href="/threats-map" />}
-                  className="gap-2 py-1.5 text-xs cursor-pointer font-medium"
+                  className="cursor-pointer gap-2 text-xs"
                 >
-                  <Shield className="size-4 text-muted-foreground" />
-                  <span>3D Perimeter Threat Radar</span>
+                  <Sparkles className="size-4 text-emerald-500" />
+                  <span>Live 3D Threat Radar</span>
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator className="my-1.5" />
-
-              {/* Logout Action */}
-              <DropdownMenuGroup>
                 <DropdownMenuItem
-                  onClick={() => setShowLogoutDialog(true)}
-                  className="gap-2 py-2 text-xs font-semibold text-destructive focus:bg-destructive focus:text-destructive-foreground cursor-pointer rounded-md"
+                  render={<Link href="/docs" />}
+                  className="cursor-pointer gap-2 text-xs"
                 >
-                  <LogOut className="size-4" />
-                  <span>Keluar dari Sesi SOC</span>
+                  <BookOpen className="size-4 text-amber-500" />
+                  <span>Dokumentasi Resmi Pasax</span>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+
+              {/* Danger Zone: Log Out Trigger with Dialog */}
+              <DropdownMenuItem
+                onClick={() => setShowLogoutDialog(true)}
+                className="gap-2 text-xs text-rose-500 focus:bg-rose-500/10 focus:text-rose-500 cursor-pointer"
+              >
+                <LogOut className="size-4" />
+                <span className="font-bold">Keluar dari Sesi SOC</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </SidebarMenuItem>
       </SidebarMenu>
 
-      {/* Confirmation Alert Dialog */}
+      {/* Logout Confirmation Alert Dialog */}
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-        <AlertDialogContent className="border-2 border-border bg-card p-6 font-sans shadow-[6px_6px_0px_0px_var(--border)] sm:max-w-md">
+        <AlertDialogContent className="max-w-md font-sans">
           <AlertDialogHeader>
-            <div className="mb-2 flex size-10 items-center justify-center rounded-base border-2 border-border bg-destructive/15 text-destructive shadow-[2px_2px_0px_0px_var(--border)]">
-              <AlertTriangle className="size-5 stroke-[2.5]" />
+            <div className="flex items-center gap-2 text-rose-500">
+              <AlertTriangle className="size-5 shrink-0" />
+              <AlertDialogTitle className="font-bold">Konfirmasi Keluar Sesi SOC</AlertDialogTitle>
             </div>
-            <AlertDialogTitle className="text-base font-bold tracking-tight text-foreground">
-              Konfirmasi Keluar Sesi SOC
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs font-normal leading-relaxed text-muted-foreground">
-              Apakah Anda yakin ingin mengakhiri sesi untuk operator{" "}
-              <span className="font-mono font-bold text-foreground">{userEmail}</span>? Anda harus
-              memasukkan kredensial otorisasi kembali untuk mengakses konsol pertahanan armada.
+            <AlertDialogDescription className="text-xs text-muted-foreground leading-relaxed pt-1">
+              Anda akan mengakhiri sesi aktif sebagai <strong className="text-foreground">{userName} ({userRole})</strong>.
+              Sistem akan memutus token autentikasi lokal dan mengembalikan Anda ke gerbang masuk aman.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-4 flex gap-2">
+          <AlertDialogFooter className="gap-2 pt-2">
             <AlertDialogCancel
               disabled={isLoggingOut}
-              className="border-2 border-border font-sans text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)] hover:bg-secondary cursor-pointer"
+              className="font-sans text-xs"
             >
               Batal
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="border-2 border-border bg-destructive font-sans text-xs font-bold text-destructive-foreground shadow-[2px_2px_0px_0px_var(--border)] hover:bg-destructive/90 cursor-pointer"
+              className="bg-rose-600 font-sans text-xs font-bold text-white hover:bg-rose-700"
             >
-              {isLoggingOut ? "Memproses..." : "Ya, Keluar Akun"}
+              {isLoggingOut ? "Mengakhiri Sesi..." : "Ya, Akhiri Sesi"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

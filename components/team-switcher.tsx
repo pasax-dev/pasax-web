@@ -26,14 +26,12 @@ export interface FleetTeam {
 }
 
 function renderTeamLogo(logo: React.ComponentType<{ className?: string }> | React.ReactNode) {
+  if (!logo) return null
   if (React.isValidElement(logo)) {
     return logo
   }
-  if (typeof logo === "function") {
-    const Component = logo
-    return <Component className="size-4 stroke-[2.5]" />
-  }
-  return null
+  const Component = logo as React.ElementType
+  return <Component className="size-4 stroke-[2.5]" />
 }
 
 export function TeamSwitcher({
@@ -68,7 +66,7 @@ export function TeamSwitcher({
                   {activeTeam.plan}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground" />
+              <ChevronsUpDown className="ml-auto size-4 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
