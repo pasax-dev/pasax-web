@@ -21,8 +21,19 @@ import { MoreHorizontalIcon, Terminal, Copy, Check } from "lucide-react"
 export interface NavProjectItem {
   name: string
   url: string
-  icon: React.ReactNode
+  icon: React.ComponentType<{ className?: string }> | React.ReactNode
   badge?: string
+}
+
+function renderProjectIcon(icon: React.ComponentType<{ className?: string }> | React.ReactNode) {
+  if (React.isValidElement(icon)) {
+    return icon
+  }
+  if (typeof icon === "function") {
+    const IconComponent = icon
+    return <IconComponent className="size-3.5" />
+  }
+  return null
 }
 
 export function NavProjects({
@@ -69,7 +80,9 @@ export function NavProjects({
                 />
               }
             >
-              <span className="shrink-0 text-muted-foreground">{item.icon}</span>
+              <span className="shrink-0 text-muted-foreground">
+                {renderProjectIcon(item.icon)}
+              </span>
               <span className="truncate font-mono text-[11px] font-medium group-data-[collapsible=icon]:hidden">
                 {item.name}
               </span>

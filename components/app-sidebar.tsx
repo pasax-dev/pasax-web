@@ -93,6 +93,16 @@ const adminNavMain: NavMainItem[] = [
         url: "#vhosts",
         badge: "4",
       },
+      {
+        title: "Live Firewall & Rules",
+        url: "#firewall",
+        badge: "HARDENED",
+      },
+      {
+        title: "Syslog & Audit Stream",
+        url: "#logs",
+        badge: "STREAM",
+      },
     ],
   },
   {
@@ -104,6 +114,11 @@ const adminNavMain: NavMainItem[] = [
         title: "Pengguna & Lisensi",
         url: "#auth-licenses",
         badge: "ADMIN",
+      },
+      {
+        title: "Kunci Lisensi & API",
+        url: "#auth-licenses",
+        badge: "KEYS",
       },
       {
         title: "Model Bisnis & Paket",
@@ -134,10 +149,14 @@ const adminNavMain: NavMainItem[] = [
         title: "Laravel WAF Core",
         url: "#waf-core",
       },
+      {
+        title: "Zero-Trust Perimeter",
+        url: "#zero-trust",
+      },
     ],
   },
   {
-    title: "Platform & Tools",
+    title: "Platform & Security Tools",
     url: "/threats-map",
     icon: Settings2,
     items: [
@@ -147,12 +166,16 @@ const adminNavMain: NavMainItem[] = [
         badge: "3D MAP",
       },
       {
-        title: "Dokumentasi Resmi",
+        title: "Dokumentasi Resmi Pasax",
         url: "/docs",
       },
       {
         title: "Agent CLI Hardening",
         url: "#settings",
+      },
+      {
+        title: "Changelog & Release Notes",
+        url: "/changelog",
       },
     ],
   },
@@ -188,17 +211,22 @@ const userNavMain: NavMainItem[] = [
     ],
   },
   {
-    title: "Resources & Map",
+    title: "Platform & Resources",
     url: "/threats-map",
     icon: BookOpen,
     items: [
       {
         title: "Global 3D Threat Map",
         url: "/threats-map",
+        badge: "3D MAP",
       },
       {
-        title: "Dokumentasi Pasax",
+        title: "Dokumentasi Resmi",
         url: "/docs",
+      },
+      {
+        title: "Panduan Hardening VPS",
+        url: "/docs/pasax-sentinel",
       },
     ],
   },
@@ -229,6 +257,12 @@ const adminProjects: NavProjectItem[] = [
     icon: <Layers className="size-3.5" />,
     badge: "TLS 1.3",
   },
+  {
+    name: "edge-proxy-lon01.mesh",
+    url: "#nodes",
+    icon: <Server className="size-3.5" />,
+    badge: "EDGE",
+  },
 ]
 
 const userProjects: NavProjectItem[] = [
@@ -243,6 +277,12 @@ const userProjects: NavProjectItem[] = [
     url: "#nodes",
     icon: <Server className="size-3.5" />,
     badge: "HEALTHY",
+  },
+  {
+    name: "api.tenant-app.id",
+    url: "#connected-apps",
+    icon: <Terminal className="size-3.5" />,
+    badge: "WAF ON",
   },
 ]
 

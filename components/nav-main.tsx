@@ -40,7 +40,7 @@ export interface NavMainSection {
   items: NavMainItem[]
 }
 
-interface NavMainProps {
+export interface NavMainProps {
   items?: NavMainItem[]
   sections?: NavMainSection[]
   label?: string
