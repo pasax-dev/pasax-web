@@ -10,7 +10,10 @@ export async function GET(req: NextRequest) {
     const keys = pasaxStore.getLicenseKeys(userId)
     return NextResponse.json({ status: "success", data: keys })
   } catch (err: any) {
-    return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
   }
 }
 
@@ -19,7 +22,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     if (!body.userId) {
       return NextResponse.json(
-        { status: "error", message: "Target userId diperlukan untuk membuat license key." },
+        {
+          status: "error",
+          message: "Target userId diperlukan untuk membuat license key.",
+        },
         { status: 400 }
       )
     }
@@ -38,7 +44,10 @@ export async function POST(req: NextRequest) {
       data: key,
     })
   } catch (err: any) {
-    return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
   }
 }
 
@@ -46,12 +55,18 @@ export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json()
     if (!body.id) {
-      return NextResponse.json({ status: "error", message: "ID license diperlukan." }, { status: 400 })
+      return NextResponse.json(
+        { status: "error", message: "ID license diperlukan." },
+        { status: 400 }
+      )
     }
 
     const key = pasaxStore.toggleLicenseKey(body.id)
     if (!key) {
-      return NextResponse.json({ status: "error", message: "License key tidak ditemukan." }, { status: 404 })
+      return NextResponse.json(
+        { status: "error", message: "License key tidak ditemukan." },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json({
@@ -60,6 +75,50 @@ export async function PATCH(req: NextRequest) {
       data: key,
     })
   } catch (err: any) {
-    return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    let id = searchParams.get("id")
+
+    if (!id) {
+      try {
+        const body = await req.json()
+        id = body?.id
+      } catch {
+        // body empty
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json(
+        { status: "error", message: "ID license diperlukan." },
+        { status: 400 }
+      )
+    }
+
+    const deleted = pasaxStore.deleteLicenseKey(id)
+    if (!deleted) {
+      return NextResponse.json(
+        { status: "error", message: "License key tidak ditemukan." },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      status: "success",
+      message: "License key berhasil dihapus.",
+    })
+  } catch (err: any) {
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
   }
 }

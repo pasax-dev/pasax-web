@@ -19,6 +19,8 @@ export interface ParsedDoc {
 const PASAX_API_URL =
   process.env.NEXT_PUBLIC_PASAX_API_URL ||
   process.env.PASAX_API_URL ||
+  process.env.NEXT_PUBLIC_PASAK_API_URL ||
+  process.env.PASAK_API_URL ||
   "https://pasax-service.vercel.app"
 
 function slugify(text: string): string {

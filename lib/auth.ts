@@ -5,17 +5,23 @@ import GoogleProvider from "next-auth/providers/google"
 
 export const authOptions: NextAuthOptions = {
   providers: [
-    ...( (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) && (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)
+    ...((process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) &&
+    (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)
       ? [
           GithubProvider({
             clientId: (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID)!,
-            clientSecret: (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET)!,
+            clientSecret: (process.env.GITHUB_SECRET ||
+              process.env.GITHUB_CLIENT_SECRET)!,
           }),
         ]
       : [
           GithubProvider({
-            clientId: (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) ?? "mock-github-client-id",
-            clientSecret: (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET) ?? "mock-github-client-secret",
+            clientId:
+              (process.env.GITHUB_ID || process.env.GITHUB_CLIENT_ID) ??
+              "mock-github-client-id",
+            clientSecret:
+              (process.env.GITHUB_SECRET || process.env.GITHUB_CLIENT_SECRET) ??
+              "mock-github-client-secret",
           }),
         ]),
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
@@ -28,13 +34,18 @@ export const authOptions: NextAuthOptions = {
       : [
           GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID ?? "mock-google-client-id",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "mock-google-client-secret",
+            clientSecret:
+              process.env.GOOGLE_CLIENT_SECRET ?? "mock-google-client-secret",
           }),
         ]),
     CredentialsProvider({
       name: "SOC Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "operator@pasax.id" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "operator@pasax.id",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -45,8 +56,8 @@ export const authOptions: NextAuthOptions = {
         const email = credentials.email.toLowerCase().trim()
         const password = credentials.password
 
-        // Custom Superadmin & Admin accounts validation
-        let role = "User"
+        // Default role for any registered user is Admin per requirement
+        let role = "Admin"
         let name = email.split("@")[0].toUpperCase() + " (SOC)"
 
         if (email === "pasak.dev@gmail.com") {
@@ -85,7 +96,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role ?? "Operator"
+        token.role = (user as any).role ?? "Admin"
       }
       if (token.email) {
         const em = token.email.toLowerCase().trim()
@@ -99,12 +110,14 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = token.role ?? "Operator"
+        ;(session.user as any).role = token.role ?? "Admin"
       }
       return session
     },
   },
-  secret: process.env.NEXTAUTH_SECRET || "pasax-defense-suite-super-secret-key-32chars",
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    "pasax-defense-suite-super-secret-key-32chars",
   session: {
     strategy: "jwt",
   },

@@ -26,8 +26,14 @@ export interface NodeTelemetry {
   uptime_seconds: number
   memory_used_percent: number
   cpu_used_percent: number
+  disk_used_percent?: number
   last_seen: number
   status: "ONLINE" | "TAMPERED" | "OFFLINE"
+  assignedUserIds?: string[]
+  ssh_port?: number
+  description?: string
+  tags?: string[]
+  createdAt?: number
   webservers: {
     nginx?: WebserverStatus
     apache2?: WebserverStatus
@@ -85,6 +91,7 @@ export interface ManagedUser {
   createdAt: number
   phone?: string
   organization?: string
+  assignedNodeIds?: string[]
 }
 
 export interface ManagedLicenseKey {
@@ -232,6 +239,8 @@ function ensureInitialized() {
     isActive: true,
     createdAt: now - 90 * 86400,
     organization: "Pasax Cyber Defense Group",
+    phone: "+62 812-3456-7890",
+    assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A", "nd_03LM0C2D345ZUS9E8F1T63AA1C"],
   }
   const user2: ManagedUser = {
     id: "usr_admin",
@@ -243,28 +252,34 @@ function ensureInitialized() {
     isActive: true,
     createdAt: now - 60 * 86400,
     organization: "Pasax SOC Operations",
+    phone: "+62 821-9876-5432",
+    assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A", "nd_02JK9A1B234YTR8C7D0S52ZY0B", "nd_03LM0C2D345ZUS9E8F1T63AA1C"],
   }
   const user3: ManagedUser = {
     id: "usr_client_kominfo",
     name: "Pengelola Layanan Publik",
     email: "user@pasax.id",
-    role: "User",
+    role: "Admin",
     plan: "pro",
     serverQuota: 10,
     isActive: true,
     createdAt: now - 30 * 86400,
     organization: "Diskominfo / Tenant Layanan",
+    phone: "+62 856-1122-3344",
+    assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A", "nd_02JK9A1B234YTR8C7D0S52ZY0B"],
   }
   const user4: ManagedUser = {
     id: "usr_dev_startup",
     name: "Indra Developer",
     email: "indra@startup.id",
-    role: "User",
+    role: "Admin",
     plan: "free",
     serverQuota: 1,
     isActive: true,
     createdAt: now - 10 * 86400,
     organization: "Fintech Sandbox",
+    phone: "+62 878-5566-7788",
+    assignedNodeIds: ["nd_02JK9A1B234YTR8C7D0S52ZY0B"],
   }
 
   globalStore.users.set(user1.id, user1)
@@ -354,7 +369,7 @@ function ensureInitialized() {
   globalStore.connectedApps.set(app2.id, app2)
   globalStore.connectedApps.set(app3.id, app3)
 
-  // 4. Seed default Sentinel nodes
+  // 4. Seed default Sentinel nodes (Multi-User assigned per VPS)
   globalStore.nodes.set("nd_01HW8P9Y124XQW7V6B9R41ZX9A", {
     node_id: "nd_01HW8P9Y124XQW7V6B9R41ZX9A",
     project_id: user3.id,
@@ -364,8 +379,14 @@ function ensureInitialized() {
     uptime_seconds: 1209600,
     memory_used_percent: 42.8,
     cpu_used_percent: 18.4,
+    disk_used_percent: 54.2,
     last_seen: now - 15,
     status: "ONLINE",
+    assignedUserIds: [user1.id, user2.id, user3.id],
+    ssh_port: 22,
+    description: "Kluster Utama Edge-WAF SG-01 Singapore",
+    tags: ["Production", "Singapore", "Edge-WAF"],
+    createdAt: now - 45 * 86400,
     webservers: {
       nginx: {
         installed: true,
@@ -406,8 +427,14 @@ function ensureInitialized() {
     uptime_seconds: 432000,
     memory_used_percent: 68.2,
     cpu_used_percent: 34.7,
+    disk_used_percent: 62.1,
     last_seen: now - 30,
     status: "ONLINE",
+    assignedUserIds: [user2.id, user3.id, user4.id],
+    ssh_port: 2222,
+    description: "Kluster Pengujian & Staging Mesh US-East",
+    tags: ["Staging", "US-East", "Testing"],
+    createdAt: now - 25 * 86400,
     webservers: {
       nginx: {
         installed: true,
@@ -435,8 +462,14 @@ function ensureInitialized() {
     uptime_seconds: 2840000,
     memory_used_percent: 29.1,
     cpu_used_percent: 8.9,
+    disk_used_percent: 35.8,
     last_seen: now - 45,
     status: "ONLINE",
+    assignedUserIds: [user1.id, user2.id],
+    ssh_port: 22,
+    description: "Node Cadangan & Disaster Recovery Jakarta",
+    tags: ["Disaster-Recovery", "Jakarta", "Backup"],
+    createdAt: now - 15 * 86400,
     webservers: {
       nginx: {
         installed: true,
@@ -521,15 +554,131 @@ function ensureInitialized() {
 }
 
 export const pasaxStore = {
-  // --- NODES ---
+  // --- NODES (VPS FLEET CRUD & MULTI-USER ASSIGNMENT) ---
   getNodes(): NodeTelemetry[] {
     ensureInitialized()
-    return Array.from(globalStore.nodes.values())
+    return Array.from(globalStore.nodes.values()).sort(
+      (a, b) => (b.createdAt || 0) - (a.createdAt || 0)
+    )
   },
 
   getNode(nodeId: string): NodeTelemetry | undefined {
     ensureInitialized()
     return globalStore.nodes.get(nodeId)
+  },
+
+  createNode(payload: {
+    hostname: string
+    ip_v4: string
+    os?: string
+    ssh_port?: number
+    description?: string
+    tags?: string[]
+    assignedUserIds?: string[]
+    status?: "ONLINE" | "TAMPERED" | "OFFLINE"
+  }): NodeTelemetry {
+    ensureInitialized()
+    const now = Math.floor(Date.now() / 1000)
+    const rand = Math.random().toString(36).substring(2, 8).toUpperCase()
+    const nodeId = "nd_" + Date.now().toString(36).toUpperCase() + rand
+    const userIds = payload.assignedUserIds || []
+
+    const newNode: NodeTelemetry = {
+      node_id: nodeId,
+      project_id: userIds[0] || "prj_default",
+      hostname: payload.hostname.trim(),
+      ip_v4: payload.ip_v4.trim(),
+      os: payload.os || "Ubuntu 24.04 LTS (Noble)",
+      uptime_seconds: 3600,
+      memory_used_percent: 24.5,
+      cpu_used_percent: 5.2,
+      disk_used_percent: 20.0,
+      last_seen: now,
+      status: payload.status || "ONLINE",
+      assignedUserIds: userIds,
+      ssh_port: payload.ssh_port || 22,
+      description: payload.description || "",
+      tags: payload.tags || ["Production"],
+      createdAt: now,
+      webservers: {
+        nginx: { installed: true, running: true, version: "1.24.0", vhosts: [] },
+        apache2: { installed: false, running: false, version: null, vhosts: [] },
+      },
+    }
+
+    globalStore.nodes.set(nodeId, newNode)
+
+    // Sync to assigned users
+    for (const uid of userIds) {
+      const u = globalStore.users.get(uid)
+      if (u) {
+        if (!u.assignedNodeIds) u.assignedNodeIds = []
+        if (!u.assignedNodeIds.includes(nodeId)) {
+          u.assignedNodeIds.push(nodeId)
+        }
+      }
+    }
+
+    return newNode
+  },
+
+  updateNode(nodeId: string, updates: Partial<NodeTelemetry>): NodeTelemetry | null {
+    ensureInitialized()
+    const node = globalStore.nodes.get(nodeId)
+    if (!node) return null
+
+    if (updates.assignedUserIds !== undefined) {
+      const newUserIds = updates.assignedUserIds
+      const oldUserIds = node.assignedUserIds || []
+
+      // Unassign from users removed
+      for (const oldUid of oldUserIds) {
+        if (!newUserIds.includes(oldUid)) {
+          const u = globalStore.users.get(oldUid)
+          if (u && u.assignedNodeIds) {
+            u.assignedNodeIds = u.assignedNodeIds.filter((id) => id !== nodeId)
+          }
+        }
+      }
+
+      // Assign to users added
+      for (const newUid of newUserIds) {
+        const u = globalStore.users.get(newUid)
+        if (u) {
+          if (!u.assignedNodeIds) u.assignedNodeIds = []
+          if (!u.assignedNodeIds.includes(nodeId)) {
+            u.assignedNodeIds.push(nodeId)
+          }
+        }
+      }
+    }
+
+    const updated = { ...node, ...updates }
+    globalStore.nodes.set(nodeId, updated)
+    return updated
+  },
+
+  deleteNode(nodeId: string): boolean {
+    ensureInitialized()
+    const node = globalStore.nodes.get(nodeId)
+    if (!node) return false
+
+    // Unassign node from all users
+    for (const u of globalStore.users.values()) {
+      if (u.assignedNodeIds) {
+        u.assignedNodeIds = u.assignedNodeIds.filter((id) => id !== nodeId)
+      }
+    }
+
+    return globalStore.nodes.delete(nodeId)
+  },
+
+  assignUsersToNode(nodeId: string, userIds: string[]): NodeTelemetry | null {
+    return this.updateNode(nodeId, { assignedUserIds: userIds })
+  },
+
+  assignNodesToUser(userId: string, nodeIds: string[]): ManagedUser | null {
+    return this.updateUser(userId, { assignedNodeIds: nodeIds })
   },
 
   upsertTelemetry(payload: {
@@ -639,13 +788,16 @@ export const pasaxStore = {
     serverQuota?: number
     organization?: string
     phone?: string
+    assignedNodeIds?: string[]
   }): { user: ManagedUser; defaultKey: ManagedLicenseKey } {
     ensureInitialized()
     const now = Math.floor(Date.now() / 1000)
     const id = "usr_" + Math.random().toString(36).substring(2, 10)
     const plan = payload.plan || "pro"
-    const role = payload.role || "User"
+    // Default role is Admin as specified in requirement
+    const role = payload.role || "Admin"
     const serverQuota = payload.serverQuota ?? (plan === "enterprise" ? 100 : plan === "pro" ? 10 : 1)
+    const nodeIds = payload.assignedNodeIds || []
 
     const user: ManagedUser = {
       id,
@@ -658,8 +810,20 @@ export const pasaxStore = {
       createdAt: now,
       organization: payload.organization,
       phone: payload.phone,
+      assignedNodeIds: nodeIds,
     }
     globalStore.users.set(id, user)
+
+    // Sync newly created user to assigned nodes
+    for (const nid of nodeIds) {
+      const n = globalStore.nodes.get(nid)
+      if (n) {
+        if (!n.assignedUserIds) n.assignedUserIds = []
+        if (!n.assignedUserIds.includes(id)) {
+          n.assignedUserIds.push(id)
+        }
+      }
+    }
 
     // Automatically generate first production license key for this user
     const hex = Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join("")
@@ -686,6 +850,32 @@ export const pasaxStore = {
     const user = globalStore.users.get(id)
     if (!user) return null
 
+    if (updates.assignedNodeIds !== undefined) {
+      const newNodeIds = updates.assignedNodeIds
+      const oldNodeIds = user.assignedNodeIds || []
+
+      // Unassign user from nodes that were removed
+      for (const oldNid of oldNodeIds) {
+        if (!newNodeIds.includes(oldNid)) {
+          const n = globalStore.nodes.get(oldNid)
+          if (n && n.assignedUserIds) {
+            n.assignedUserIds = n.assignedUserIds.filter((uid) => uid !== id)
+          }
+        }
+      }
+
+      // Assign user to nodes that were added
+      for (const newNid of newNodeIds) {
+        const n = globalStore.nodes.get(newNid)
+        if (n) {
+          if (!n.assignedUserIds) n.assignedUserIds = []
+          if (!n.assignedUserIds.includes(id)) {
+            n.assignedUserIds.push(id)
+          }
+        }
+      }
+    }
+
     const updated = { ...user, ...updates }
     globalStore.users.set(id, updated)
     return updated
@@ -693,6 +883,12 @@ export const pasaxStore = {
 
   deleteUser(id: string): boolean {
     ensureInitialized()
+    // Unassign user from all nodes
+    for (const n of globalStore.nodes.values()) {
+      if (n.assignedUserIds) {
+        n.assignedUserIds = n.assignedUserIds.filter((uid) => uid !== id)
+      }
+    }
     return globalStore.users.delete(id)
   },
 

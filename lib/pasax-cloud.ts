@@ -3,11 +3,11 @@ import { NodeTelemetry, ThreatEvent, pasaxStore, VHostInfo } from "./store"
 const DEFAULT_API_URL = "https://pasax-service.vercel.app"
 
 export function getPasaxApiUrl(): string {
-  if (typeof process !== "undefined" && process.env.PASAX_API_URL) {
-    return process.env.PASAX_API_URL.replace(/\/$/, "")
+  if (typeof process !== "undefined" && (process.env.PASAX_API_URL || process.env.PASAK_API_URL)) {
+    return (process.env.PASAX_API_URL || process.env.PASAK_API_URL)!.replace(/\/$/, "")
   }
-  if (typeof process !== "undefined" && process.env.NEXT_PUBLIC_PASAX_API_URL) {
-    return process.env.NEXT_PUBLIC_PASAX_API_URL.replace(/\/$/, "")
+  if (typeof process !== "undefined" && (process.env.NEXT_PUBLIC_PASAX_API_URL || process.env.NEXT_PUBLIC_PASAK_API_URL)) {
+    return (process.env.NEXT_PUBLIC_PASAX_API_URL || process.env.NEXT_PUBLIC_PASAK_API_URL)!.replace(/\/$/, "")
   }
   return DEFAULT_API_URL
 }
@@ -59,17 +59,24 @@ export const pasaxCloud = {
               ? Math.floor(new Date(n.lastSeenAt).getTime() / 1000)
               : nowSeconds
 
+            const localNode = pasaxStore.getNode(n.id)
             return {
               node_id: n.id,
-              project_id: n.userId || "prj_cloud",
+              project_id: n.userId || localNode?.project_id || "prj_cloud",
               hostname: n.hostname,
               ip_v4: n.publicIp,
               os: n.osInfo,
               uptime_seconds: 86400,
               memory_used_percent: 36.4,
               cpu_used_percent: 12.8,
+              disk_used_percent: localNode?.disk_used_percent || 45.0,
               last_seen: lastSeen,
               status: n.status === "healthy" ? "ONLINE" : "OFFLINE",
+              assignedUserIds: localNode?.assignedUserIds || (n.userId ? [n.userId] : []),
+              tags: localNode?.tags || ["Production"],
+              description: localNode?.description || "",
+              ssh_port: localNode?.ssh_port || 22,
+              createdAt: localNode?.createdAt || nowSeconds,
               webservers: {
                 nginx: {
                   installed: true,
@@ -235,5 +242,29 @@ export const pasaxCloud = {
     }
 
     return updated
+  },
+
+  /**
+   * Fetch all users from Pasax Cloud API or local store fallback.
+   */
+  async fetchUsers(): Promise<any[]> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/users`, {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+        next: { revalidate: 0 },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        const rawUsers = Array.isArray(json) ? json : json.data
+        if (Array.isArray(rawUsers) && rawUsers.length > 0) {
+          return rawUsers
+        }
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to fetch users from remote API:", err)
+    }
+    return pasaxStore.getUsers()
   },
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { NavMain, type NavMainItem } from "@/components/nav-main"
+import { NavMain, type NavMainSection } from "@/components/nav-main"
 import { NavProjects, type NavProjectItem } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher, type FleetTeam } from "@/components/team-switcher"
@@ -18,10 +18,12 @@ import {
   ShieldAlert,
   Users,
   BookOpen,
-  Settings2,
-  Terminal,
+  Key,
+  Shield,
   Globe,
   Layers,
+  LayoutDashboard,
+  Activity,
 } from "lucide-react"
 
 const defaultAdminUser = {
@@ -62,171 +64,125 @@ const userTeams: FleetTeam[] = [
   },
 ]
 
-const adminNavMain: NavMainItem[] = [
+// 1. Flat Administrator Navigation (No Dropdowns - Simple & Direct)
+const adminNavSections: NavMainSection[] = [
   {
-    title: "Security Operations",
-    url: "#overview",
-    icon: ShieldCheck,
-    isActive: true,
+    label: "Fleet Operations",
     items: [
       {
-        title: "Fleet Overview",
-        url: "#overview",
+        title: "Executive Dashboard",
+        url: "/dashboard",
+        icon: LayoutDashboard,
       },
       {
         title: "Server Nodes (VPS)",
-        url: "#nodes",
-        badge: "3",
+        url: "/node",
+        icon: Server,
+        badge: "FLEET",
       },
       {
-        title: "Threat Incidents",
-        url: "#threats",
+        title: "Pemegang VPS & User",
+        url: "/users",
+        icon: Users,
+        badge: "ADMIN",
+      },
+      {
+        title: "Insiden Serangan",
+        url: "/threats",
+        icon: ShieldAlert,
         badge: "ALERT",
       },
       {
+        title: "Kunci Lisensi & API",
+        url: "/licenses",
+        icon: Key,
+        badge: "KEYS",
+      },
+      {
         title: "Crowd Defense Blocklist",
-        url: "#blocklist",
+        url: "/blocklist",
+        icon: Shield,
         badge: "ACTIVE",
       },
       {
         title: "VHost & SSL Recon",
-        url: "#vhosts",
-        badge: "4",
-      },
-      {
-        title: "Live Firewall & Rules",
-        url: "#firewall",
-        badge: "HARDENED",
-      },
-      {
-        title: "Syslog & Audit Stream",
-        url: "#logs",
-        badge: "STREAM",
+        url: "/vhosts",
+        icon: Globe,
+        badge: "TLS",
       },
     ],
   },
   {
-    title: "Fleet Management",
-    url: "#auth-licenses",
-    icon: Users,
-    items: [
-      {
-        title: "Pengguna & Lisensi",
-        url: "#auth-licenses",
-        badge: "ADMIN",
-      },
-      {
-        title: "Kunci Lisensi & API",
-        url: "#auth-licenses",
-        badge: "KEYS",
-      },
-      {
-        title: "Model Bisnis & Paket",
-        url: "#business",
-        badge: "TIERS",
-      },
-      {
-        title: "Portal Pelanggan (Tenant)",
-        url: "#tenant-portal",
-        badge: "VIEW",
-      },
-    ],
-  },
-  {
-    title: "Blueprints & Specs",
-    url: "#blueprint",
-    icon: BookOpen,
-    items: [
-      {
-        title: "Commercial Blueprint",
-        url: "#blueprint",
-      },
-      {
-        title: "Infra Architecture",
-        url: "#infra",
-      },
-      {
-        title: "Laravel WAF Core",
-        url: "#waf-core",
-      },
-      {
-        title: "Zero-Trust Perimeter",
-        url: "#zero-trust",
-      },
-    ],
-  },
-  {
-    title: "Platform & Security Tools",
-    url: "/threats-map",
-    icon: Settings2,
+    label: "Platform & Resources",
     items: [
       {
         title: "Global 3D Threat Map",
         url: "/threats-map",
-        badge: "3D MAP",
+        icon: Activity,
+        badge: "3D",
       },
       {
-        title: "Dokumentasi Resmi Pasax",
+        title: "Dokumentasi Resmi",
         url: "/docs",
+        icon: BookOpen,
       },
       {
-        title: "Agent CLI Hardening",
-        url: "#settings",
-      },
-      {
-        title: "Changelog & Release Notes",
+        title: "Changelog & Releases",
         url: "/changelog",
+        icon: Layers,
       },
     ],
   },
 ]
 
-const userNavMain: NavMainItem[] = [
+// 2. Flat User / Tenant Navigation
+const userNavSections: NavMainSection[] = [
   {
-    title: "My Security Portal",
-    url: "#overview",
-    icon: ShieldCheck,
-    isActive: true,
+    label: "Tenant Portal",
     items: [
       {
-        title: "Paket & Kuota Saya",
-        url: "#overview",
-        badge: "PRO",
+        title: "Dashboard Pelanggan",
+        url: "/dashboard",
+        icon: LayoutDashboard,
       },
       {
-        title: "Aplikasi Web Terhubung",
-        url: "#connected-apps",
-        badge: "LIVE",
-      },
-      {
-        title: "Server VPS Sentinel",
-        url: "#nodes",
+        title: "Server VPS Saya",
+        url: "/node",
+        icon: Server,
         badge: "ACTIVE",
       },
       {
-        title: "Kesehatan VPS & Serangan",
-        url: "#threats",
+        title: "Insiden & Serangan",
+        url: "/threats",
+        icon: ShieldAlert,
         badge: "SECURE",
+      },
+      {
+        title: "Kunci Lisensi Saya",
+        url: "/licenses",
+        icon: Key,
+        badge: "KEYS",
       },
     ],
   },
   {
-    title: "Platform & Resources",
-    url: "/threats-map",
-    icon: BookOpen,
+    label: "Platform & Resources",
     items: [
       {
         title: "Global 3D Threat Map",
         url: "/threats-map",
-        badge: "3D MAP",
+        icon: Activity,
+        badge: "3D",
       },
       {
         title: "Dokumentasi Resmi",
         url: "/docs",
+        icon: BookOpen,
       },
       {
-        title: "Panduan Hardening VPS",
-        url: "/docs/pasax-sentinel",
+        title: "Changelog & Releases",
+        url: "/changelog",
+        icon: Layers,
       },
     ],
   },
@@ -235,54 +191,36 @@ const userNavMain: NavMainItem[] = [
 const adminProjects: NavProjectItem[] = [
   {
     name: "sentinel-sgp-01.mesh",
-    url: "#nodes",
+    url: "/node",
     icon: <Server className="size-3.5" />,
     badge: "ONLINE",
   },
   {
     name: "staging-app-us01.mesh",
-    url: "#nodes",
+    url: "/node",
     icon: <Globe className="size-3.5" />,
     badge: "HEALTHY",
   },
   {
-    name: "api.pasax.is-a.dev",
-    url: "#vhosts",
-    icon: <Terminal className="size-3.5" />,
-    badge: "WAF LIVE",
-  },
-  {
-    name: "clientportal.id",
-    url: "#vhosts",
-    icon: <Layers className="size-3.5" />,
+    name: "app.pasax.is-a.dev",
+    url: "/vhosts",
+    icon: <ShieldCheck className="size-3.5" />,
     badge: "TLS 1.3",
-  },
-  {
-    name: "edge-proxy-lon01.mesh",
-    url: "#nodes",
-    icon: <Server className="size-3.5" />,
-    badge: "EDGE",
   },
 ]
 
 const userProjects: NavProjectItem[] = [
   {
-    name: "my-laravel-vps.com",
-    url: "#connected-apps",
-    icon: <Globe className="size-3.5" />,
-    badge: "ACTIVE",
-  },
-  {
-    name: "node-production-01",
-    url: "#nodes",
+    name: "prod-vps-sg01",
+    url: "/node",
     icon: <Server className="size-3.5" />,
     badge: "HEALTHY",
   },
   {
-    name: "api.tenant-app.id",
-    url: "#connected-apps",
-    icon: <Terminal className="size-3.5" />,
-    badge: "WAF ON",
+    name: "layanan.kominfo.go.id",
+    url: "/vhosts",
+    icon: <Globe className="size-3.5" />,
+    badge: "ACTIVE",
   },
 ]
 
@@ -297,7 +235,7 @@ export function AppSidebar({
   const currentUser = user || defaultAdminUser
   const isUserRole = role === "User"
   const teams = isUserRole ? userTeams : adminTeams
-  const navMain = isUserRole ? userNavMain : adminNavMain
+  const sections = isUserRole ? userNavSections : adminNavSections
   const projects = isUserRole ? userProjects : adminProjects
 
   return (
@@ -307,7 +245,10 @@ export function AppSidebar({
       </SidebarHeader>
 
       <SidebarContent className="gap-0">
-        <NavMain items={navMain} label={isUserRole ? "Tenant Portal" : "Fleet Operations"} />
+        <NavMain
+          sections={sections}
+          label={isUserRole ? "Tenant Portal" : "Fleet Operations"}
+        />
         <NavProjects
           projects={projects}
           label={isUserRole ? "Connected Workspaces" : "Fleet Workspaces"}
