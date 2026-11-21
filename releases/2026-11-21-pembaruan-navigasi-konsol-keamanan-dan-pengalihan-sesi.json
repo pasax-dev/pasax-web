@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-21",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasak.web.id"
+  },
+  "title": {
+    "id": "Pembaruan Navigasi Konsol Keamanan Ergonomis dan Pengalihan Sesi Cerdas",
+    "en": "Ergonomic Security Console Navigation Overhaul and Smart Session Routing"
+  },
+  "body": {
+    "id": "Menghadirkan pembaruan navigasi bilah sisi konsol pusat keamanan dengan mode ringkas berdaya adaptasi tinggi, penyempurnaan menu profil pengguna dan dialog keluar aman, serta pengalihan sesi cerdas yang mempermudah akses langsung ke dashboard operasional.",
+    "en": "Introduced an ergonomic security console navigation overhaul with high-adaptability compact icon mode, refined user profile controls with secure sign-out confirmation, and smart session routing for direct access to the operational dashboard."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Bilah Navigasi Konsol Adaptif: Desain bilah samping yang dapat diciutkan menjadi mode ikon terpusat yang rapi untuk memaksimalkan area kerja pemantauan keamanan, didukung transisi halus dan kompatibilitas tema gelap menyeluruh.",
+      "en": "Adaptive Console Navigation Bar: Collapsible sidebar transitioning seamlessly into clean centered icon-only mode to maximize security telemetry workspace, backed by full dark mode ergonomics."
+    },
+    {
+      "type": "new",
+      "id": "Pengalihan Sesi Pengguna Cerdas: Navigasi publik dan pusat dokumentasi otomatis menampilkan tombol pintas Dashboard bagi pengguna yang telah masuk, sekaligus melindungi rute masuk dan pendaftaran dari pengisian ganda.",
+      "en": "Smart User Session Routing: Public navigation and documentation hub dynamically display direct Dashboard shortcuts for active sessions while automatically protecting authentication routes from redundant access."
+    },
+    {
+      "type": "improvement",
+      "id": "Menu Profil Pengguna dan Pengalih Kluster Terpadu: Penataan menu akun di sudut bawah bilah samping dengan dialog konfirmasi keluar yang aman serta kemudahan berpindah kluster pertahanan pada bagian atas konsol.",
+      "en": "Unified User Profile Menu & Cluster Switcher: Streamlined bottom profile control with secure logout confirmation dialogs and rapid defensive cluster switching at the top of the console."
+    },
+    {
+      "type": "improvement",
+      "id": "Struktur Halaman Operasional Berjenjang: Penambahan penunjuk jalur navigasi bertingkat pada setiap halaman operasional guna mempermudah penelusuran status server dan telemetri keamanan.",
+      "en": "Hierarchical Operational Breadcrumbs: Added multi-level navigational path indicators across operational views for seamless tracking of server nodes and threat telemetry."
+    }
+  ]
+}
