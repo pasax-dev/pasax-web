@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import {
   Mail,
   Lock,
@@ -18,6 +18,7 @@ import { OAuthButtons } from "./oauth-buttons"
 
 function LoginFormInner() {
   const router = useRouter()
+  const { status } = useSession()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
   const urlError = searchParams.get("error")
@@ -29,6 +30,13 @@ function LoginFormInner() {
   const [authError, setAuthError] = React.useState<string | null>(
     urlError ? "Autentikasi gagal atau sesi telah kedaluwarsa." : null
   )
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (status === "authenticated") {
+      router.replace(callbackUrl)
+    }
+  }, [status, router, callbackUrl])
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,15 +66,14 @@ function LoginFormInner() {
 
   return (
     <>
-      {/* Error Alert */}
       {authError && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-destructive/15 p-3.5 font-mono text-xs font-bold text-destructive shadow-[3px_3px_0px_0px_var(--border)]">
-          <AlertCircle className="size-4 shrink-0 stroke-[2.5]" />
+        <div className="mb-4 flex items-center gap-2 rounded-base border-2 border-destructive bg-destructive/10 p-3 font-mono text-xs font-bold text-destructive">
+          <AlertCircle className="size-4 shrink-0" />
           <span>{authError}</span>
         </div>
       )}
 
-      {/* Quick OAuth Buttons */}
+      {/* OAuth Social Buttons (GitHub & Google) */}
       <OAuthButtons
         callbackUrl={callbackUrl}
         isLoading={isLoading}
@@ -74,63 +81,68 @@ function LoginFormInner() {
         onError={setAuthError}
       />
 
-      {/* Divider */}
-      <div className="relative my-6 text-center text-xs">
+      <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t-2 border-dashed border-border/80" />
+          <div className="w-full border-t border-border" />
         </div>
-        <span className="relative rounded-base border-2 border-border bg-card px-3 py-1 font-mono text-[10px] font-black tracking-wider text-muted-foreground uppercase shadow-[2px_2px_0px_0px_var(--border)]">
-          Atau Akses Kredensial
-        </span>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 font-mono text-[10px] font-bold text-muted-foreground">
+            Atau gunakan kredensial SOC
+          </span>
+        </div>
       </div>
 
-      {/* Credentials Form */}
-      <form onSubmit={handleCredentialsSubmit} className="relative z-10 space-y-4">
+      <form onSubmit={handleCredentialsSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-            <Mail className="size-3.5 text-main" />
-            <span>Email Operator</span>
+          <label
+            htmlFor="email"
+            className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+          >
+            <Mail className="size-3.5 text-muted-foreground" />
+            <span>Alamat Email Operator</span>
           </label>
           <div className="relative">
             <input
+              id="email"
               type="email"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="nama@organisasi.id"
-              className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+              placeholder="operator@pasax.id"
+              required
+              disabled={isLoading}
+              className="w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-              <Lock className="size-3.5 text-main" />
-              <span>Kata Sandi</span>
+            <label
+              htmlFor="password"
+              className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+            >
+              <Lock className="size-3.5 text-muted-foreground" />
+              <span>Kata Sandi Master</span>
             </label>
-            <span className="font-mono text-[10px] font-bold text-muted-foreground">
-              min. 8 karakter
+            <span className="font-mono text-[10px] text-muted-foreground">
+              Min. 8 karakter
             </span>
           </div>
           <div className="relative">
             <input
+              id="password"
               type={showPassword ? "text" : "password"}
-              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
-              className="w-full rounded-base border-2 border-border bg-secondary-background py-2.5 pr-10 pl-3.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+              required
+              disabled={isLoading}
+              className="w-full rounded-base border-2 border-border bg-background px-3 py-2 pr-10 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-              title={
-                showPassword
-                  ? "Sembunyikan kata sandi"
-                  : "Tampilkan kata sandi"
-              }
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               {showPassword ? (
                 <EyeOff className="size-4" />
@@ -141,37 +153,51 @@ function LoginFormInner() {
           </div>
         </div>
 
+        {/* Demo Credentials Helper Box */}
+        <div className="rounded-base border border-dashed border-border/80 bg-muted/40 p-2.5 font-mono text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-1 font-bold text-foreground">
+            <KeyRound className="size-3 text-main" />
+            <span>Kredensial Demo Superadmin:</span>
+          </div>
+          <div className="mt-1 flex flex-col gap-0.5">
+            <div>
+              Email:{" "}
+              <code className="text-foreground">pasak.dev@gmail.com</code>
+            </div>
+            <div>
+              Password:{" "}
+              <code className="text-foreground">Tiram@1993</code>
+            </div>
+          </div>
+        </div>
+
         <button
           type="submit"
           disabled={isLoading}
-          className="inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-main px-4 py-3 font-heading text-sm font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+          className="group flex w-full items-center justify-center gap-2 rounded-base border-2 border-border bg-main px-4 py-2.5 font-heading text-xs font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-50"
         >
           {isLoading ? (
             <>
-              <Loader2 className="size-4 animate-spin text-black" />
-              <span>Memvalidasi Kredensial...</span>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Memvalidasi Akses SOC...</span>
             </>
           ) : (
             <>
-              <KeyRound className="size-4 stroke-[2.5]" />
-              <span>Otorisasi Konsol SOC</span>
-              <ArrowRight className="size-4 stroke-[2.5]" />
+              <span>Masuk ke Konsol SOC</span>
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </>
           )}
         </button>
       </form>
 
-      {/* Link to Register */}
-      <div className="relative z-10 mt-6 border-t-2 border-dashed border-border/70 pt-4 text-center">
-        <p className="text-xs font-semibold text-muted-foreground">
-          Belum memiliki kredensial resmi?{" "}
-          <Link
-            href="/register"
-            className="rounded-base border border-transparent px-1.5 py-0.5 font-black text-foreground underline decoration-main decoration-2 underline-offset-4 transition-all hover:border-border hover:bg-main hover:text-black hover:no-underline"
-          >
-            Daftar Akun Baru
-          </Link>
-        </p>
+      <div className="mt-6 text-center font-sans text-xs text-muted-foreground">
+        Belum memiliki node armada terdaftar?{" "}
+        <Link
+          href="/register"
+          className="font-bold text-foreground underline decoration-main underline-offset-4 hover:text-main"
+        >
+          Daftarkan Operator Baru
+        </Link>
       </div>
     </>
   )
@@ -181,8 +207,8 @@ export function LoginForm() {
   return (
     <React.Suspense
       fallback={
-        <div className="flex items-center justify-center p-8">
-          <Loader2 className="size-6 animate-spin text-main" />
+        <div className="flex h-48 items-center justify-center font-mono text-xs text-muted-foreground">
+          <Loader2 className="size-5 animate-spin text-main" />
         </div>
       }
     >

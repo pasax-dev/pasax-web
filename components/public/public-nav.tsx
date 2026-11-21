@@ -299,7 +299,7 @@ export function PublicNav() {
           {/* Clean Theme Toggle */}
           <ThemeToggle />
 
-          {/* Desktop Login & Register Buttons */}
+          {/* Desktop Login & Register Buttons / Dashboard Button if Authenticated */}
           <div className="hidden items-center gap-1.5 md:flex">
             <span className="mx-0.5 h-4 w-px bg-lp-line" />
             {status === "authenticated" ? (
@@ -308,7 +308,7 @@ export function PublicNav() {
                 className="inline-flex h-8 items-center gap-1.5 rounded-md border border-lp-line bg-main px-3 font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5"
               >
                 <LayoutDashboard className="size-3.5 stroke-[2.5]" />
-                <span>Konsol SOC</span>
+                <span>Dashboard</span>
               </Link>
             ) : (
               <>
@@ -417,7 +417,7 @@ export function PublicNav() {
                   className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-border bg-main px-4 py-2.5 font-heading text-xs font-black text-black shadow-[3px_3px_0px_0px_var(--border)]"
                 >
                   <LayoutDashboard className="size-4 stroke-[2.5]" />
-                  <span>Buka Konsol SOC (Dashboard)</span>
+                  <span>Buka Dashboard SOC</span>
                 </Link>
               ) : (
                 <div className="grid grid-cols-2 gap-2">

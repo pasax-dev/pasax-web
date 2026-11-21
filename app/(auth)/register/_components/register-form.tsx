@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import {
   User,
   Building2,
@@ -21,6 +21,7 @@ import { OAuthButtons } from "./oauth-buttons"
 
 export function RegisterForm() {
   const router = useRouter()
+  const { status } = useSession()
 
   const [name, setName] = React.useState("")
   const [organization, setOrganization] = React.useState("")
@@ -33,6 +34,13 @@ export function RegisterForm() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [success, setSuccess] = React.useState(false)
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (status === "authenticated") {
+      router.replace("/dashboard")
+    }
+  }, [status, router])
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -59,7 +67,7 @@ export function RegisterForm() {
       })
 
       if (res?.error) {
-        setError("Pendaftaran gagal diproses oleh gateway. Silakan coba kembali.")
+        setError("Registrasi gagal. Format data tidak valid atau email telah terdaftar.")
         setIsLoading(false)
       } else {
         setSuccess(true)
@@ -69,146 +77,170 @@ export function RegisterForm() {
         }, 1200)
       }
     } catch {
-      setError("Terjadi kendala konektivitas saat mendaftarkan akun operator.")
+      setError("Terjadi kegagalan komunikasi dengan cluster auth gateway.")
       setIsLoading(false)
     }
   }
 
   return (
     <>
-      {/* Success Alert */}
-      {success && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-emerald-500/20 p-3.5 font-mono text-xs font-black text-emerald-800 shadow-[3px_3px_0px_0px_var(--border)] dark:text-emerald-300">
-          <CheckCircle2 className="size-4 shrink-0 stroke-[2.5]" />
-          <span>Operator berhasil didaftarkan! Mengarahkan ke SOC Dashboard...</span>
-        </div>
-      )}
-
-      {/* Error Alert */}
       {error && (
-        <div className="mb-5 flex items-start gap-2.5 rounded-base border-2 border-border bg-destructive/15 p-3.5 font-mono text-xs font-bold text-destructive shadow-[3px_3px_0px_0px_var(--border)]">
-          <AlertCircle className="size-4 shrink-0 stroke-[2.5]" />
+        <div className="mb-4 flex items-center gap-2 rounded-base border-2 border-destructive bg-destructive/10 p-3 font-mono text-xs font-bold text-destructive">
+          <AlertCircle className="size-4 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* OAuth Buttons */}
+      {success && (
+        <div className="mb-4 flex items-center gap-2 rounded-base border-2 border-emerald-500 bg-emerald-500/10 p-3 font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          <CheckCircle2 className="size-4 shrink-0" />
+          <span>Pendaftaran berhasil! Mengalihkan ke Konsol SOC Armada...</span>
+        </div>
+      )}
+
+      {/* OAuth Social Buttons (GitHub & Google) */}
       <OAuthButtons
+        callbackUrl="/dashboard"
         isLoading={isLoading}
-        disabled={success}
         setIsLoading={setIsLoading}
         onError={setError}
       />
 
-      {/* Divider */}
-      <div className="relative my-6 text-center text-xs">
+      <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t-2 border-dashed border-border/80" />
+          <div className="w-full border-t border-border" />
         </div>
-        <span className="relative rounded-base border-2 border-border bg-card px-3 py-1 font-mono text-[10px] font-black tracking-wider text-muted-foreground uppercase shadow-[2px_2px_0px_0px_var(--border)]">
-          Atau Formulir Operator Baru
-        </span>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 font-mono text-[10px] font-bold text-muted-foreground">
+            Atau daftarkan node secara mandiri
+          </span>
+        </div>
       </div>
 
-      {/* Registration Form */}
-      <form onSubmit={handleRegister} className="relative z-10 space-y-4">
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-              <User className="size-3.5 text-main" />
-              <span>Nama Lengkap</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Pratama Satria"
-              className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-              <Building2 className="size-3.5 text-main" />
-              <span>Instansi / Lembaga</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={organization}
-              onChange={(e) => setOrganization(e.target.value)}
-              placeholder="Diskominfo / Enterprise"
-              className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
-            />
-          </div>
-        </div>
-
+      <form onSubmit={handleRegister} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-            <Mail className="size-3.5 text-main" />
-            <span>Email Resmi Instansi</span>
+          <label
+            htmlFor="name"
+            className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+          >
+            <User className="size-3.5 text-muted-foreground" />
+            <span>Nama Lengkap Operator</span>
           </label>
           <input
-            type="email"
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Misal: Indra Setiawan"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="operator@instansi.go.id"
-            className="w-full rounded-base border-2 border-border bg-secondary-background px-3.5 py-2.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+            disabled={isLoading || success}
+            className="w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <label
+            htmlFor="org"
+            className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+          >
+            <Building2 className="size-3.5 text-muted-foreground" />
+            <span>Instansi / Nama Kluster VPS</span>
+          </label>
+          <input
+            id="org"
+            type="text"
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+            placeholder="Misal: Diskominfo Daerah / Fintech Sandbox"
+            required
+            disabled={isLoading || success}
+            className="w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label
+            htmlFor="email"
+            className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+          >
+            <Mail className="size-3.5 text-muted-foreground" />
+            <span>Email Resmi Operator</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="operator@instansi.go.id"
+            required
+            disabled={isLoading || success}
+            className="w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-                <Lock className="size-3.5 text-main" />
-                <span>Kata Sandi</span>
-              </label>
-              <span className="font-mono text-[9px] font-bold text-muted-foreground">min. 8 char</span>
-            </div>
+            <label
+              htmlFor="password"
+              className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+            >
+              <Lock className="size-3.5 text-muted-foreground" />
+              <span>Kata Sandi Master</span>
+            </label>
             <div className="relative">
               <input
+                id="password"
                 type={showPassword ? "text" : "password"}
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-base border-2 border-border bg-secondary-background py-2.5 pr-10 pl-3.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+                required
+                disabled={isLoading || success}
+                className="w-full rounded-base border-2 border-border bg-background px-3 py-2 pr-10 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <label className="flex items-center gap-1.5 font-mono text-xs font-black tracking-tight text-foreground uppercase">
-              <Lock className="size-3.5 text-main" />
-              <span>Konfirmasi Sandi</span>
+            <label
+              htmlFor="confirmPassword"
+              className="flex items-center gap-1.5 font-heading text-xs font-bold text-foreground"
+            >
+              <Lock className="size-3.5 text-muted-foreground" />
+              <span>Ulangi Sandi</span>
             </label>
             <div className="relative">
               <input
+                id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
-                required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full rounded-base border-2 border-border bg-secondary-background py-2.5 pr-10 pl-3.5 font-mono text-xs font-bold text-foreground shadow-[3px_3px_0px_0px_var(--border)] transition-all placeholder:text-muted-foreground/60 focus:translate-x-0.5 focus:translate-y-0.5 focus:shadow-[1.5px_1.5px_0px_0px_var(--border)] focus:ring-2 focus:ring-main focus:outline-none"
+                required
+                disabled={isLoading || success}
+                className="w-full rounded-base border-2 border-border bg-background px-3 py-2 pr-10 font-mono text-xs font-medium text-foreground placeholder:text-muted-foreground/60 focus:border-main focus:outline-hidden disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-                title={showConfirmPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                {showConfirmPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
             </div>
           </div>
@@ -217,34 +249,31 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={isLoading || success}
-          className="mt-2 inline-flex w-full items-center justify-center gap-2.5 rounded-base border-2 border-border bg-main px-4 py-3 font-heading text-sm font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:opacity-50"
+          className="group mt-2 flex w-full items-center justify-center gap-2 rounded-base border-2 border-border bg-main px-4 py-2.5 font-heading text-xs font-black text-black shadow-[4px_4px_0px_0px_var(--border)] transition-all hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--border)] active:translate-x-1 active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-50"
         >
           {isLoading ? (
             <>
-              <Loader2 className="size-4 animate-spin text-black" />
-              <span>Mendaftarkan Operator Baru...</span>
+              <Loader2 className="size-4 animate-spin" />
+              <span>Mendaftarkan Node SOC...</span>
             </>
           ) : (
             <>
               <UserPlus className="size-4 stroke-[2.5]" />
-              <span>Otorisasi & Daftarkan Akun</span>
-              <ArrowRight className="size-4 stroke-[2.5]" />
+              <span>Daftarkan Operator &amp; Amankan VPS</span>
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </>
           )}
         </button>
       </form>
 
-      {/* Link to Login */}
-      <div className="relative z-10 mt-6 border-t-2 border-dashed border-border/70 pt-4 text-center">
-        <p className="text-xs font-semibold text-muted-foreground">
-          Sudah memiliki akun terdaftar?{" "}
-          <Link
-            href="/login"
-            className="rounded-base border border-transparent px-1.5 py-0.5 font-black text-foreground underline decoration-main decoration-2 underline-offset-4 transition-all hover:border-border hover:bg-main hover:text-black hover:no-underline"
-          >
-            Masuk di sini
-          </Link>
-        </p>
+      <div className="mt-6 text-center font-sans text-xs text-muted-foreground">
+        Sudah memiliki akses operator SOC?{" "}
+        <Link
+          href="/login"
+          className="font-bold text-foreground underline decoration-main underline-offset-4 hover:text-main"
+        >
+          Masuk ke Gerbang Utama
+        </Link>
       </div>
     </>
   )

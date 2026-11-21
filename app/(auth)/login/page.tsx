@@ -1,4 +1,7 @@
 import type { Metadata } from "next"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
+import { authOptions } from "@/lib/auth"
 import { LoginHeader } from "./_components/login-header"
 import { LoginForm } from "./_components/login-form"
 
@@ -8,7 +11,12 @@ export const metadata: Metadata = {
     "Pusat kendali pertahanan web Laravel, daemon Sentinel, dan kluster server Pasax Suite.",
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getServerSession(authOptions)
+  if (session?.user) {
+    redirect("/dashboard")
+  }
+
   return (
     <div className="w-full max-w-md">
       <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-6 shadow-[8px_8px_0px_0px_var(--border)] transition-all sm:p-8">

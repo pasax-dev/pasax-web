@@ -1,4 +1,7 @@
 import type { Metadata } from "next"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
+import { authOptions } from "@/lib/auth"
 import { RegisterHeader } from "./_components/register-header"
 import { RegisterForm } from "./_components/register-form"
 
@@ -8,7 +11,12 @@ export const metadata: Metadata = {
     "Daftarkan instansi atau operator Anda untuk memonitor kluster server dan pertahanan siber Pasax Suite.",
 }
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const session = await getServerSession(authOptions)
+  if (session?.user) {
+    redirect("/dashboard")
+  }
+
   return (
     <div className="w-full max-w-lg">
       <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-6 shadow-[8px_8px_0px_0px_var(--border)] transition-all sm:p-8">
