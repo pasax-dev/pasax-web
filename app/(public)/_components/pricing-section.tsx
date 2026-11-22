@@ -56,6 +56,7 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
     "monthly"
   )
   const [currency, setCurrency] = React.useState<"IDR" | "USD">("IDR")
+  const [wiseRate, setWiseRate] = React.useState<number>(18290)
 
   // Fetch plans from API if initialPlans is empty
   React.useEffect(() => {
@@ -71,6 +72,18 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         .catch(() => {})
     }
   }, [plans.length])
+
+  // Fetch live exchange rate from Wise
+  React.useEffect(() => {
+    fetch("/api/currency/rate?source=USD&target=IDR")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && typeof json.rate === "number" && json.rate > 0) {
+          setWiseRate(json.rate)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const formatPrice = (plan: PricingPlan) => {
     if (plan.isCustomQuote) {
@@ -167,8 +180,22 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         }
       }
     } else {
-      // USD
-      if (plan.priceMonthlyUsd === 0 && plan.priceYearlyUsd === 0) {
+      // USD Calculation (accurately backed by Wise rate if not statically set)
+      const monthlyUsd =
+        plan.priceMonthlyUsd > 0
+          ? plan.priceMonthlyUsd
+          : plan.priceMonthlyIdr > 0 && wiseRate > 0
+            ? Math.round(plan.priceMonthlyIdr / wiseRate)
+            : 0
+
+      const yearlyUsd =
+        plan.priceYearlyUsd > 0
+          ? plan.priceYearlyUsd
+          : plan.priceYearlyIdr > 0 && wiseRate > 0
+            ? Math.round(plan.priceYearlyIdr / wiseRate)
+            : 0
+
+      if (monthlyUsd === 0 && yearlyUsd === 0) {
         return {
           amount: "$0",
           period: "Forever",
@@ -182,12 +209,11 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         const hasDiscount = (plan.discountMonthlyPercent || 0) > 0
         const finalPrice = hasDiscount
           ? Math.round(
-              plan.priceMonthlyUsd *
-                (1 - (plan.discountMonthlyPercent || 0) / 100)
+              monthlyUsd * (1 - (plan.discountMonthlyPercent || 0) / 100)
             )
-          : plan.priceMonthlyUsd
+          : monthlyUsd
 
-        const originalAmount = hasDiscount ? `$${plan.priceMonthlyUsd}` : null
+        const originalAmount = hasDiscount ? `$${monthlyUsd}` : null
         const discountBadge = hasDiscount
           ? `Disc ${plan.discountMonthlyPercent}%`
           : null
@@ -197,32 +223,30 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
           period: "/ mo",
           originalAmount,
           discountBadge,
-          subtitle: `$${plan.priceYearlyUsd} / year`,
+          subtitle: `Atau $${yearlyUsd} / year (Kurs Wise)`,
         }
       } else {
-        const rawYearly = plan.priceMonthlyUsd * 12
+        const rawYearly = monthlyUsd * 12
         const hasYearlyDiscount =
           (plan.discountYearlyPercent || 0) > 0 ||
-          (rawYearly > 0 && plan.priceYearlyUsd < rawYearly)
+          (rawYearly > 0 && yearlyUsd < rawYearly)
         const percent =
           plan.discountYearlyPercent && plan.discountYearlyPercent > 0
             ? plan.discountYearlyPercent
             : rawYearly > 0
-              ? Math.round((1 - plan.priceYearlyUsd / rawYearly) * 100)
+              ? Math.round((1 - yearlyUsd / rawYearly) * 100)
               : 0
 
         const originalAmount =
-          hasYearlyDiscount && rawYearly > plan.priceYearlyUsd
-            ? `$${rawYearly}`
-            : null
+          hasYearlyDiscount && rawYearly > yearlyUsd ? `$${rawYearly}` : null
         const discountBadge = percent > 0 ? `Save ${percent}%` : null
 
         return {
-          amount: `$${plan.priceYearlyUsd}`,
+          amount: `$${yearlyUsd}`,
           period: "/ yr",
           originalAmount,
           discountBadge,
-          subtitle: "Billed annually (All features included)",
+          subtitle: "Billed annually (Mid-market rate via Wise)",
         }
       }
     }
@@ -316,6 +340,17 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
                 USD ($)
               </button>
             </div>
+
+            {/* Wise Live Badge */}
+            {wiseRate > 0 && (
+              <div className="hidden items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[10px] font-medium text-emerald-600 sm:inline-flex dark:text-emerald-400">
+                <span className="size-1.5 animate-pulse rounded-full bg-emerald-500" />
+                <span>
+                  Wise Live: $1 = Rp{" "}
+                  {new Intl.NumberFormat("id-ID").format(wiseRate)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

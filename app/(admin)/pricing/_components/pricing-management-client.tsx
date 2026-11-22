@@ -25,6 +25,7 @@ import {
   Percent,
   X,
   BadgePercent,
+  ArrowRightLeft,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -144,6 +145,78 @@ export function PricingManagementClient({
     setNotification({ type, message })
     setTimeout(() => setNotification(null), 4000)
   }
+  // Wise Currency Rate State
+  const [wiseRate, setWiseRate] = React.useState<number>(18290)
+  const [isFetchingWise, setIsFetchingWise] = React.useState<boolean>(false)
+  const [wiseTimestamp, setWiseTimestamp] = React.useState<string>("")
+  const [autoSyncWise, setAutoSyncWise] = React.useState<boolean>(true)
+
+  const fetchWiseExchangeRate = async () => {
+    setIsFetchingWise(true)
+    try {
+      const res = await fetch("/api/currency/rate?source=USD&target=IDR")
+      if (res.ok) {
+        const json = await res.json()
+        if (json && typeof json.rate === "number" && json.rate > 0) {
+          setWiseRate(json.rate)
+          if (json.timestamp) setWiseTimestamp(json.timestamp)
+        }
+      }
+    } catch {
+      // Keep existing rate
+    } finally {
+      setIsFetchingWise(false)
+    }
+  }
+
+  React.useEffect(() => {
+    fetchWiseExchangeRate()
+  }, [])
+
+  const convertIdrToUsdWise = () => {
+    if (wiseRate <= 0) return
+    const discount = formData.discountYearlyPercent || 0
+    const monthlyUsd =
+      formData.priceMonthlyIdr > 0
+        ? Math.round(formData.priceMonthlyIdr / wiseRate)
+        : 0
+    const rawYearlyUsd = monthlyUsd * 12
+    const yearlyUsd =
+      discount > 0 ? Math.round(rawYearlyUsd * (1 - discount / 100)) : rawYearlyUsd
+
+    setFormData((prev) => ({
+      ...prev,
+      priceMonthlyUsd: monthlyUsd,
+      priceYearlyUsd: yearlyUsd,
+    }))
+    showNotification(
+      "success",
+      `Dikonversi ke USD via Wise (Rate: Rp ${wiseRate.toLocaleString("id-ID")}/$)`
+    )
+  }
+
+  const convertUsdToIdrWise = () => {
+    if (wiseRate <= 0) return
+    const discount = formData.discountYearlyPercent || 0
+    const monthlyIdr =
+      formData.priceMonthlyUsd > 0
+        ? Math.round(formData.priceMonthlyUsd * wiseRate)
+        : 0
+    const rawYearlyIdr = monthlyIdr * 12
+    const yearlyIdr =
+      discount > 0 ? Math.round(rawYearlyIdr * (1 - discount / 100)) : rawYearlyIdr
+
+    setFormData((prev) => ({
+      ...prev,
+      priceMonthlyIdr: monthlyIdr,
+      priceYearlyIdr: yearlyIdr,
+    }))
+    showNotification(
+      "success",
+      `Dikonversi ke IDR via Wise (Rate: Rp ${wiseRate.toLocaleString("id-ID")}/$)`
+    )
+  }
+
 
   // Refresh plans from API
   const refreshPlans = async () => {
@@ -170,11 +243,27 @@ export function PricingManagementClient({
     const rawYearly = val * 12
     const finalYearly =
       discount > 0 ? Math.round(rawYearly * (1 - discount / 100)) : rawYearly
-    setFormData((prev) => ({
-      ...prev,
-      priceMonthlyIdr: val,
-      priceYearlyIdr: finalYearly,
-    }))
+
+    if (autoSyncWise && wiseRate > 0) {
+      const usdMonthly = val > 0 ? Math.round(val / wiseRate) : 0
+      const rawYearlyUsd = usdMonthly * 12
+      const finalYearlyUsd =
+        discount > 0 ? Math.round(rawYearlyUsd * (1 - discount / 100)) : rawYearlyUsd
+
+      setFormData((prev) => ({
+        ...prev,
+        priceMonthlyIdr: val,
+        priceYearlyIdr: finalYearly,
+        priceMonthlyUsd: usdMonthly,
+        priceYearlyUsd: finalYearlyUsd,
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        priceMonthlyIdr: val,
+        priceYearlyIdr: finalYearly,
+      }))
+    }
   }
 
   const handleMonthlyUsdChange = (val: number) => {
@@ -506,7 +595,29 @@ export function PricingManagementClient({
         </div>
 
         {/* Quick Stats Grid */}
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 uppercase">
+                Kurs Wise Live
+              </span>
+              <button
+                type="button"
+                onClick={fetchWiseExchangeRate}
+                disabled={isFetchingWise}
+                title="Perbarui kurs dari Wise"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <RefreshCw className={cn("size-3", isFetchingWise && "animate-spin")} />
+              </button>
+            </div>
+            <p className="mt-1 font-mono text-base font-black text-foreground">
+              $1 = Rp {wiseRate.toLocaleString("id-ID")}
+            </p>
+            <span className="text-[9px] font-mono text-muted-foreground">
+              Mid-market Wise API
+            </span>
+          </div>
           <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
             <span className="text-[11px] font-medium text-muted-foreground uppercase">
               Total Paket Terdaftar
@@ -998,6 +1109,45 @@ export function PricingManagementClient({
                   </span>
                 </div>
 
+                {/* Wise Live Converter Banner */}
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      Kurs Wise (Live Mid-Market):
+                    </span>
+                    <span className="font-mono font-black text-foreground">
+                      $1 USD = Rp {wiseRate.toLocaleString("id-ID")}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={fetchWiseExchangeRate}
+                      disabled={isFetchingWise}
+                      title="Perbarui kurs dari Wise API"
+                      className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <RefreshCw
+                        className={cn("size-3", isFetchingWise && "animate-spin")}
+                      />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={convertIdrToUsdWise}
+                      className="rounded border border-border bg-background px-2 py-1 font-mono text-[10px] font-bold text-foreground hover:bg-muted"
+                    >
+                      IDR ➔ USD (Wise)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={convertUsdToIdrWise}
+                      className="rounded border border-border bg-background px-2 py-1 font-mono text-[10px] font-bold text-foreground hover:bg-muted"
+                    >
+                      USD ➔ IDR (Wise)
+                    </button>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
                   <div>
                     <label className="text-[11px] font-medium text-foreground">
@@ -1058,6 +1208,18 @@ export function PricingManagementClient({
                     />
                   </div>
                 </div>
+
+                <label className="flex items-center gap-2 cursor-pointer text-[11px] text-muted-foreground">
+                  <input
+                    type="checkbox"
+                    checked={autoSyncWise}
+                    onChange={(e) => setAutoSyncWise(e.target.checked)}
+                    className="rounded border-border accent-main"
+                  />
+                  <span>
+                    Sinkronisasi otomatis ke USD via kurs Wise saat mengetik harga IDR
+                  </span>
+                </label>
 
                 {/* Promo & Discount Controls */}
                 <div className="border-t border-border/60 pt-3">

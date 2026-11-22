@@ -294,4 +294,27 @@ export const pasaxCloud = {
     }
     return pasaxStore.getUsers()
   },
-}
+  /**
+   * Fetch live mid-market exchange rate via Wise
+   */
+  async fetchWiseRate(source = "USD", target = "IDR"): Promise<{ rate: number; timestamp: string }> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/currency/rate?source=${encodeURIComponent(source)}&target=${encodeURIComponent(target)}`, {
+        next: { revalidate: 600 },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        if (json && typeof json.rate === "number" && json.rate > 0) {
+          return { rate: json.rate, timestamp: json.timestamp || new Date().toISOString() }
+        }
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to fetch Wise rate:", err)
+    }
+    return {
+      rate: source === "USD" && target === "IDR" ? 18290.0 : 1 / 18290.0,
+      timestamp: new Date().toISOString(),
+    }
+  },
+};
