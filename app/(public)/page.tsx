@@ -13,7 +13,6 @@ import { Proof } from "./_landing/sections/proof"
 import { Start } from "./_landing/sections/start"
 import { summary } from "./_landing/content"
 import { PricingSection } from "./_components/pricing-section"
-import { pasaxCloud } from "@/lib/pasax-cloud"
 
 export const metadata: Metadata = createMetadata({
   description: summary,
@@ -22,9 +21,8 @@ export const metadata: Metadata = createMetadata({
   },
 })
 
-export default async function Page() {
+export default function Page() {
   asMarkdown()
-  const pricingPlans = await pasaxCloud.fetchPricingPlans(false)
 
   return (
     <>
@@ -39,7 +37,7 @@ export default async function Page() {
         <Proof />
         <Feedback />
       </Wires>
-      <PricingSection initialPlans={pricingPlans} />
+      <PricingSection />
       <Start />
     </>
   )
