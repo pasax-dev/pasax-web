@@ -832,23 +832,23 @@ export function PricingManagementClient({
                   ) : (
                     <div>
                       {/* Monthly Section */}
-                      <div className="flex items-baseline gap-2">
-                        {hasMonthlyPromo && (
-                          <span className="font-mono text-xs text-muted-foreground line-through">
+                      {hasMonthlyPromo && (
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="font-mono text-xs text-muted-foreground line-through opacity-70">
                             {formatRupiah(plan.priceMonthlyIdr)}
                           </span>
-                        )}
+                          <span className="rounded-md bg-rose-500/20 px-1.5 py-0.5 font-mono text-[10px] font-black text-rose-600 dark:text-rose-400">
+                            Disc {plan.discountMonthlyPercent}%
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex items-baseline gap-1.5">
                         <span className="font-mono text-2xl font-black text-foreground">
                           {formatRupiah(finalMonthlyIdr)}
                         </span>
                         {plan.priceMonthlyIdr > 0 && (
                           <span className="text-xs text-muted-foreground">
                             / bulan
-                          </span>
-                        )}
-                        {hasMonthlyPromo && (
-                          <span className="rounded-md bg-rose-500/20 px-1.5 py-0.5 font-mono text-[10px] font-black text-rose-600 dark:text-rose-400">
-                            Disc {plan.discountMonthlyPercent}%
                           </span>
                         )}
                       </div>

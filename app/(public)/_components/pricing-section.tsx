@@ -180,22 +180,18 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         }
       }
     } else {
-      // USD Calculation (accurately backed by Wise rate if not statically set)
-      const monthlyUsd =
-        plan.priceMonthlyUsd > 0
-          ? plan.priceMonthlyUsd
-          : plan.priceMonthlyIdr > 0 && wiseRate > 0
-            ? Math.round(plan.priceMonthlyIdr / wiseRate)
-            : 0
+      // USD Calculation (accurately converted from IDR via Wise rate)
+      const baseMonthlyUsd =
+        wiseRate > 0 && plan.priceMonthlyIdr > 0
+          ? Math.round(plan.priceMonthlyIdr / wiseRate)
+          : plan.priceMonthlyUsd
 
-      const yearlyUsd =
-        plan.priceYearlyUsd > 0
-          ? plan.priceYearlyUsd
-          : plan.priceYearlyIdr > 0 && wiseRate > 0
-            ? Math.round(plan.priceYearlyIdr / wiseRate)
-            : 0
+      const baseYearlyUsd =
+        wiseRate > 0 && plan.priceYearlyIdr > 0
+          ? Math.round(plan.priceYearlyIdr / wiseRate)
+          : plan.priceYearlyUsd
 
-      if (monthlyUsd === 0 && yearlyUsd === 0) {
+      if (baseMonthlyUsd === 0 && baseYearlyUsd === 0) {
         return {
           amount: "$0",
           period: "Forever",
@@ -209,11 +205,11 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         const hasDiscount = (plan.discountMonthlyPercent || 0) > 0
         const finalPrice = hasDiscount
           ? Math.round(
-              monthlyUsd * (1 - (plan.discountMonthlyPercent || 0) / 100)
+              baseMonthlyUsd * (1 - (plan.discountMonthlyPercent || 0) / 100)
             )
-          : monthlyUsd
+          : baseMonthlyUsd
 
-        const originalAmount = hasDiscount ? `$${monthlyUsd}` : null
+        const originalAmount = hasDiscount ? `$${baseMonthlyUsd}` : null
         const discountBadge = hasDiscount
           ? `Disc ${plan.discountMonthlyPercent}%`
           : null
@@ -223,30 +219,32 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
           period: "/ mo",
           originalAmount,
           discountBadge,
-          subtitle: `Atau $${yearlyUsd} / year (Kurs Wise)`,
+          subtitle: `Atau $${baseYearlyUsd} / year (Kurs Wise: $1 ≈ Rp ${new Intl.NumberFormat("id-ID").format(wiseRate)})`,
         }
       } else {
-        const rawYearly = monthlyUsd * 12
+        const rawYearly = baseMonthlyUsd * 12
         const hasYearlyDiscount =
           (plan.discountYearlyPercent || 0) > 0 ||
-          (rawYearly > 0 && yearlyUsd < rawYearly)
+          (rawYearly > 0 && baseYearlyUsd < rawYearly)
         const percent =
           plan.discountYearlyPercent && plan.discountYearlyPercent > 0
             ? plan.discountYearlyPercent
             : rawYearly > 0
-              ? Math.round((1 - yearlyUsd / rawYearly) * 100)
+              ? Math.round((1 - baseYearlyUsd / rawYearly) * 100)
               : 0
 
         const originalAmount =
-          hasYearlyDiscount && rawYearly > yearlyUsd ? `$${rawYearly}` : null
+          hasYearlyDiscount && rawYearly > baseYearlyUsd
+            ? `$${rawYearly}`
+            : null
         const discountBadge = percent > 0 ? `Save ${percent}%` : null
 
         return {
-          amount: `$${yearlyUsd}`,
+          amount: `$${baseYearlyUsd}`,
           period: "/ yr",
           originalAmount,
           discountBadge,
-          subtitle: "Billed annually (Mid-market rate via Wise)",
+          subtitle: `Ditagih tahunan (Kurs Wise: $1 ≈ Rp ${new Intl.NumberFormat("id-ID").format(wiseRate)})`,
         }
       }
     }
@@ -419,26 +417,33 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
                   </div>
 
                   {/* Price Box */}
-                  <div className="mt-4 rounded-xl border border-lp-line/80 bg-lp-paper-2 p-3">
-                    <div className="flex flex-wrap items-baseline gap-1.5">
-                      {price.originalAmount && (
-                        <span className="font-mono text-xs text-lp-ink-2 line-through">
+                  <div className="mt-4 rounded-xl border border-lp-line/80 bg-lp-paper-2 p-3.5">
+                    {/* Separate Top Row for Original Price and Discount Badge */}
+                    {price.originalAmount && (
+                      <div className="mb-1 flex items-center gap-2">
+                        <span className="font-mono text-xs text-lp-ink-2 line-through opacity-70">
                           {price.originalAmount}
                         </span>
-                      )}
-                      <span className="font-mono text-xl font-black text-lp-ink">
+                        {price.discountBadge && (
+                          <span className="rounded-md border border-rose-500/30 bg-rose-500/15 px-1.5 py-0.5 font-mono text-[9px] font-black text-rose-600 uppercase dark:text-rose-400">
+                            {price.discountBadge}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Main Row: Promo Price & Period */}
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-mono text-2xl font-black text-lp-ink">
                         {price.amount}
                       </span>
-                      <span className="text-[11px] text-lp-ink-2">
+                      <span className="font-mono text-xs text-lp-ink-2">
                         {price.period}
                       </span>
-                      {price.discountBadge && (
-                        <span className="rounded bg-rose-500/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-rose-600 dark:text-rose-400">
-                          {price.discountBadge}
-                        </span>
-                      )}
                     </div>
-                    <p className="mt-0.5 text-[10px] text-lp-ink-2">
+
+                    {/* Subtitle / Yearly Info */}
+                    <p className="mt-1 text-[11px] text-lp-ink-2">
                       {price.subtitle}
                     </p>
                     {plan.isFirstPurchaseOnly && (
