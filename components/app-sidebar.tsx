@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar"
 import {
   ShieldCheck,
+  Tag,
   Server,
   ShieldAlert,
   Users,
@@ -91,6 +92,12 @@ const adminNavSections: NavMainSection[] = [
         url: "/threats",
         icon: ShieldAlert,
         badge: "ALERT",
+      },
+      {
+        title: "Paket Harga & Bundling",
+        url: "/pricing",
+        icon: Tag,
+        badge: "TIERS",
       },
       {
         title: "Kunci Lisensi & API",

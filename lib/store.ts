@@ -65,6 +65,33 @@ export interface ThreatEvent {
 // BUSINESS MODEL & MULTI-TENANT TYPES
 // -------------------------------------------------------------
 
+
+export interface PricingPlan {
+  id: string
+  name: string
+  slug: string
+  category: "standard" | "agency" | "enterprise_gov" | string
+  badge?: string
+  description: string
+  targetAudience?: string
+  vpsQuota: number
+  appsPerVps: string
+  priceMonthlyIdr: number
+  priceYearlyIdr: number
+  priceMonthlyUsd: number
+  priceYearlyUsd: number
+  features: string[]
+  highlightFeatures?: string[]
+  logRetentionDays: number
+  maxSeats: number
+  crowdDefenseSync: string
+  supportSla: string
+  complianceCert?: string
+  isCustomQuote: boolean
+  isActive: boolean
+  sortOrder: number
+}
+
 export interface SubscriptionTier {
   id: "free" | "pro" | "enterprise"
   name: string
@@ -199,6 +226,7 @@ interface GlobalPasaxStore {
   users: Map<string, ManagedUser>
   licenseKeys: Map<string, ManagedLicenseKey>
   connectedApps: Map<string, ConnectedApp>
+  pricingPlans: Map<string, PricingPlan>
   initialized: boolean
 }
 
@@ -215,6 +243,7 @@ const globalStore: GlobalPasaxStore = (globalThis as any).__PASAX_STORE__ || {
   users: new Map(),
   licenseKeys: new Map(),
   connectedApps: new Map(),
+  pricingPlans: new Map(),
   initialized: false,
 }
 
@@ -227,6 +256,193 @@ function ensureInitialized() {
   if (globalStore.initialized) return
 
   const now = Math.floor(Date.now() / 1000)
+
+  
+  // 0. Seed Pricing Plans
+  if (globalStore.pricingPlans.size === 0) {
+    const defaultPlans: PricingPlan[] = [
+      {
+        id: "free-scout",
+        name: "Free Community",
+        slug: "free-scout",
+        category: "standard",
+        badge: "OPEN SOURCE",
+        description: "Ideal untuk mahasiswa, proyek hobi, dan pengujian lokal tanpa biaya.",
+        targetAudience: "Hobi, Riset & Staging",
+        vpsQuota: 1,
+        appsPerVps: "Unlimited",
+        priceMonthlyIdr: 0,
+        priceYearlyIdr: 0,
+        priceMonthlyUsd: 0,
+        priceYearlyUsd: 0,
+        features: [
+          "1 Server VPS Terkelola (Sentinel Agent)",
+          "Unlimited Aplikasi Laravel di dalam VPS",
+          "WAF Rule Dasar (SQLi, XSS, Path Traversal)",
+          "Kernel Firewall Auto-Drop (nftables / ipset)",
+          "Retensi Log & Forensik: 24 Jam",
+          "Sinkronisasi Crowd Defense: 1x / 24 Jam",
+          "Kompatibel Laravel 10, 11, 12, & 13 (PHP 8.2 - 8.5)",
+          "Dukungan Komunitas GitHub",
+        ],
+        highlightFeatures: ["1 VPS (Unlimited Laravel Apps)", "nftables Kernel Drop", "Free Selamanya"],
+        logRetentionDays: 1,
+        maxSeats: 1,
+        crowdDefenseSync: "24h",
+        supportSla: "Community Forum",
+        complianceCert: "Standard Security",
+        isCustomQuote: false,
+        isActive: true,
+        sortOrder: 1,
+      },
+      {
+        id: "single-vps",
+        name: "Solo Developer",
+        slug: "single-vps",
+        category: "standard",
+        badge: "HEMAT",
+        description: "Untuk freelancer & indie developer yang menjalankan 1 VPS produksi dengan banyak web klien.",
+        targetAudience: "Freelancer & Solo Founder",
+        vpsQuota: 1,
+        appsPerVps: "Unlimited",
+        priceMonthlyIdr: 49000,
+        priceYearlyIdr: 470000,
+        priceMonthlyUsd: 4,
+        priceYearlyUsd: 39,
+        features: [
+          "1 Server VPS Produksi (Sentinel Agent)",
+          "Unlimited Aplikasi Laravel di dalam VPS",
+          "Real-time WAF & Attack Forensic Stream",
+          "Kernel Firewall Auto-Drop Instan (nftables)",
+          "Proteksi Spesifik Laravel (RCE, .env probe, Debug Mode)",
+          "Retensi Log Forensik: 14 Hari",
+          "Sinkronisasi Crowd Defense Global Tiap 1 Jam",
+          "Notifikasi Instan via Telegram & Email",
+          "1-Click IP Unban / Whitelist dari Dashboard",
+          "Dukungan Email (SLA 48 Jam)",
+        ],
+        highlightFeatures: ["1 VPS (Unlimited Laravel Apps)", "Notifikasi Telegram Instan", "Sinkronisasi Blocklist 1 Jam"],
+        logRetentionDays: 14,
+        maxSeats: 1,
+        crowdDefenseSync: "1h",
+        supportSla: "Email 48 Jam",
+        complianceCert: "Standard Security",
+        isCustomQuote: false,
+        isActive: true,
+        sortOrder: 2,
+      },
+      {
+        id: "fleet-mesh",
+        name: "Fleet Mesh (5 VPS)",
+        slug: "fleet-mesh",
+        category: "agency",
+        badge: "MOST POPULAR",
+        description: "Paket terlengkap untuk Software House, startup, dan tim yang mengelola beberapa server terpisah.",
+        targetAudience: "Software House & Tim Startup",
+        vpsQuota: 5,
+        appsPerVps: "Unlimited",
+        priceMonthlyIdr: 199000,
+        priceYearlyIdr: 1900000,
+        priceMonthlyUsd: 15,
+        priceYearlyUsd: 149,
+        features: [
+          "5 Server VPS Terhubung (Sentinel Mesh)",
+          "Unlimited Aplikasi Laravel di SELURUH 5 VPS",
+          "Cross-VPS Defense: 1 VPS diserang, 5 VPS langsung kebal!",
+          "Multi-User Assignment (Hingga 5 Anggota Tim)",
+          "Whitelist IP Akses Admin Panel (Filament / Nova)",
+          "Audit Virtual Host Nginx/Apache & Tracker Kadaluarsa SSL",
+          "Retensi Log Serangan Forensik: 30 Hari",
+          "Sinkronisasi Crowd Defense Real-time",
+          "Alert Telegram, Discord, Slack, & Webhook",
+          "Dukungan Priority Chat & Email (SLA 12 Jam)",
+        ],
+        highlightFeatures: ["5 VPS (Bebas Pasang Berapa Pun Web)", "Cross-VPS Auto Immunity", "Multi-User Team (5 Seats)"],
+        logRetentionDays: 30,
+        maxSeats: 5,
+        crowdDefenseSync: "realtime",
+        supportSla: "Priority Chat 12 Jam",
+        complianceCert: "Security Hardened",
+        isCustomQuote: false,
+        isActive: true,
+        sortOrder: 3,
+      },
+      {
+        id: "agency-fleet",
+        name: "Agency Fleet (15 VPS)",
+        slug: "agency-fleet",
+        category: "agency",
+        badge: "BEST VALUE",
+        description: "Dirancang untuk Digital Agency & Dev Shop yang memegang puluhan server dan aplikasi klien.",
+        targetAudience: "Digital Agency & Konsultan IT",
+        vpsQuota: 15,
+        appsPerVps: "Unlimited",
+        priceMonthlyIdr: 499000,
+        priceYearlyIdr: 4790000,
+        priceMonthlyUsd: 39,
+        priceYearlyUsd: 379,
+        features: [
+          "15 Server VPS Terkelola (Sentinel Agent)",
+          "Unlimited Aplikasi Laravel di Seluruh Server",
+          "Cross-VPS Global Immunity Otomatis",
+          "Multi-User Team hingga 15 Akun Tim",
+          "Export PDF Laporan Keamanan Bulanan (White-label untuk Klien)",
+          "File Integrity Monitoring (FIM) Anti-Webshell & Backdoor",
+          "Retensi Log Forensik: 90 Hari",
+          "Sinkronisasi Crowd Defense Real-time",
+          "Alert Lengkap (Telegram, Slack, Discord, Webhook)",
+          "Dukungan Prioritas Tinggi (SLA 4 Jam)",
+        ],
+        highlightFeatures: ["15 VPS (Unlimited Laravel Apps)", "Export PDF Laporan Klien", "Anti-Webshell FIM"],
+        logRetentionDays: 90,
+        maxSeats: 15,
+        crowdDefenseSync: "realtime",
+        supportSla: "Priority Support 4 Jam",
+        complianceCert: "Multi-Tenant Enterprise",
+        isCustomQuote: false,
+        isActive: true,
+        sortOrder: 4,
+      },
+      {
+        id: "enterprise-gov",
+        name: "Gov & Enterprise Fleet",
+        slug: "enterprise-gov",
+        category: "enterprise_gov",
+        badge: "GOVERNMENT READY",
+        description: "Kepatuhan penuh BSSN, UU PDP, dan opsi instalasi On-Premise / Air-Gapped di Data Center Instansi.",
+        targetAudience: "Kementerian, BUMN, Pemda & Korporasi",
+        vpsQuota: 50,
+        appsPerVps: "Unlimited",
+        priceMonthlyIdr: 2500000,
+        priceYearlyIdr: 27000000,
+        priceMonthlyUsd: 189,
+        priceYearlyUsd: 1999,
+        features: [
+          "Kapasitas 25 - 50+ Node Server / VM Instansi",
+          "Unlimited Aplikasi Laravel di Seluruh Infrastruktur",
+          "Anti-Deface & Proteksi Injeksi Judi Online (Webshell/Storage FIM)",
+          "Sesuai Standar CSIRT BSSN & ISO 27001",
+          "Kepatuhan UU PDP (Lokasi Data 100% di Indonesia)",
+          "Opsi On-Premise / Air-Gapped (Pusat Data Nasional / Private Cloud)",
+          "Retensi Log Forensik 1 Tahun Penuh (365 Hari - Audit Trail)",
+          "Dokumen Pengadaan Resmi: SPK, BAST, Faktur Pajak PPN 11%",
+          "SLA Respons Darurat 1 Jam & Dedicated Security Engineer",
+        ],
+        highlightFeatures: ["Kepatuhan BSSN & UU PDP", "Anti-Deface & Judi Online", "Opsi On-Premise / Air-Gapped"],
+        logRetentionDays: 365,
+        maxSeats: 100,
+        crowdDefenseSync: "realtime",
+        supportSla: "Dedicated SLA 1 Jam",
+        complianceCert: "CSIRT BSSN & ISO 27001 Ready",
+        isCustomQuote: true,
+        isActive: true,
+        sortOrder: 5,
+      },
+    ]
+    for (const p of defaultPlans) {
+      globalStore.pricingPlans.set(p.id, p)
+    }
+  }
 
   // 1. Seed Users
   const user1: ManagedUser = {
@@ -1014,6 +1230,56 @@ export const pasaxStore = {
     keyRecord.lastUsedAt = now
 
     return newApp
+  },
+
+
+  // --- PRICING PLANS CRUD ---
+  getPricingPlans(): PricingPlan[] {
+    ensureInitialized()
+    return Array.from(globalStore.pricingPlans.values()).sort((a, b) => a.sortOrder - b.sortOrder)
+  },
+
+  getPricingPlan(id: string): PricingPlan | undefined {
+    ensureInitialized()
+    return globalStore.pricingPlans.get(id)
+  },
+
+  upsertPricingPlan(plan: Partial<PricingPlan> & { id?: string; name: string }): PricingPlan {
+    ensureInitialized()
+    const id = plan.id || plan.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    const existing = globalStore.pricingPlans.get(id)
+    const updated: PricingPlan = {
+      id,
+      name: plan.name,
+      slug: plan.slug || existing?.slug || id,
+      category: plan.category || existing?.category || "standard",
+      badge: plan.badge !== undefined ? plan.badge : existing?.badge,
+      description: plan.description || existing?.description || "",
+      targetAudience: plan.targetAudience !== undefined ? plan.targetAudience : existing?.targetAudience,
+      vpsQuota: plan.vpsQuota !== undefined ? Number(plan.vpsQuota) : existing?.vpsQuota ?? 1,
+      appsPerVps: plan.appsPerVps || existing?.appsPerVps || "Unlimited",
+      priceMonthlyIdr: plan.priceMonthlyIdr !== undefined ? Number(plan.priceMonthlyIdr) : existing?.priceMonthlyIdr ?? 0,
+      priceYearlyIdr: plan.priceYearlyIdr !== undefined ? Number(plan.priceYearlyIdr) : existing?.priceYearlyIdr ?? 0,
+      priceMonthlyUsd: plan.priceMonthlyUsd !== undefined ? Number(plan.priceMonthlyUsd) : existing?.priceMonthlyUsd ?? 0,
+      priceYearlyUsd: plan.priceYearlyUsd !== undefined ? Number(plan.priceYearlyUsd) : existing?.priceYearlyUsd ?? 0,
+      features: Array.isArray(plan.features) ? plan.features : existing?.features ?? [],
+      highlightFeatures: Array.isArray(plan.highlightFeatures) ? plan.highlightFeatures : existing?.highlightFeatures ?? [],
+      logRetentionDays: plan.logRetentionDays !== undefined ? Number(plan.logRetentionDays) : existing?.logRetentionDays ?? 14,
+      maxSeats: plan.maxSeats !== undefined ? Number(plan.maxSeats) : existing?.maxSeats ?? 1,
+      crowdDefenseSync: plan.crowdDefenseSync || existing?.crowdDefenseSync || "1h",
+      supportSla: plan.supportSla || existing?.supportSla || "Standard",
+      complianceCert: plan.complianceCert !== undefined ? plan.complianceCert : existing?.complianceCert,
+      isCustomQuote: plan.isCustomQuote !== undefined ? Boolean(plan.isCustomQuote) : existing?.isCustomQuote ?? false,
+      isActive: plan.isActive !== undefined ? Boolean(plan.isActive) : existing?.isActive ?? true,
+      sortOrder: plan.sortOrder !== undefined ? Number(plan.sortOrder) : existing?.sortOrder ?? 99,
+    }
+    globalStore.pricingPlans.set(id, updated)
+    return updated
+  },
+
+  deletePricingPlan(id: string): boolean {
+    ensureInitialized()
+    return globalStore.pricingPlans.delete(id)
   },
 
   // --- TENANT SPECIFIC OVERVIEW ---

@@ -257,6 +257,12 @@ export function PublicNav() {
             </Link>
 
             <Link
+              href="/#pricing"
+              className="inline-flex h-8 items-center px-2.5 text-xs font-medium text-lp-ink-2 transition-colors hover:text-lp-ink"
+            >
+              Harga &amp; Paket
+            </Link>
+            <Link
               href="/#benchmark"
               className="inline-flex h-8 items-center px-2.5 text-xs font-medium text-lp-ink-2 transition-colors hover:text-lp-ink"
             >

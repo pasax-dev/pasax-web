@@ -247,6 +247,33 @@ export const pasaxCloud = {
   /**
    * Fetch all users from Pasax Cloud API or local store fallback.
    */
+
+  /**
+   * Fetch all active pricing plans from Pasax Cloud API or local fallback.
+   */
+  async fetchPricingPlans(includeInactive = false): Promise<any[]> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const endpoint = includeInactive ? "/api/v1/pricing/all" : "/api/v1/pricing"
+      const res = await fetch(`${apiUrl}${endpoint}`, {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+        next: { revalidate: 0 },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        const rawPlans = Array.isArray(json) ? json : json.data
+        if (Array.isArray(rawPlans) && rawPlans.length > 0) {
+          return rawPlans
+        }
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to fetch pricing plans from remote API:", err)
+    }
+    const plans = pasaxStore.getPricingPlans()
+    return includeInactive ? plans : plans.filter((p) => p.isActive)
+  },
+
   async fetchUsers(): Promise<any[]> {
     const apiUrl = getPasaxApiUrl()
     try {
