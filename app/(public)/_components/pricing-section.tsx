@@ -30,6 +30,10 @@ export interface PricingPlan {
   priceYearlyIdr: number
   priceMonthlyUsd: number
   priceYearlyUsd: number
+  discountMonthlyPercent?: number
+  discountYearlyPercent?: number
+  isFirstPurchaseOnly?: boolean
+  promoTag?: string
   features: string[]
   highlightFeatures?: string[]
   logRetentionDays: number
@@ -74,52 +78,152 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
         amount: "Kontrak Kustom",
         period: "Sesuai SLA",
         subtitle: "Pengadaan BUMN / APBD / APBN",
+        originalAmount: null as string | null,
+        discountBadge: null as string | null,
       }
     }
 
     if (currency === "IDR") {
-      const amount =
-        billingCycle === "monthly" ? plan.priceMonthlyIdr : plan.priceYearlyIdr
-      if (amount === 0) {
+      if (plan.priceMonthlyIdr === 0 && plan.priceYearlyIdr === 0) {
         return {
           amount: "Rp 0",
           period: "Selamanya",
           subtitle: "Gratis untuk riset & open source",
+          originalAmount: null,
+          discountBadge: null,
         }
       }
-      return {
-        amount: new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-          maximumFractionDigits: 0,
-        }).format(amount),
-        period: billingCycle === "monthly" ? "/ bulan" : "/ tahun",
-        subtitle:
-          billingCycle === "yearly"
-            ? "Hemat 20% dibanding bulanan"
-            : `Atau ${new Intl.NumberFormat("id-ID", {
+
+      if (billingCycle === "monthly") {
+        const hasDiscount = (plan.discountMonthlyPercent || 0) > 0
+        const finalPrice = hasDiscount
+          ? Math.round(
+              plan.priceMonthlyIdr *
+                (1 - (plan.discountMonthlyPercent || 0) / 100)
+            )
+          : plan.priceMonthlyIdr
+
+        const originalAmount = hasDiscount
+          ? new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              maximumFractionDigits: 0,
+            }).format(plan.priceMonthlyIdr)
+          : null
+
+        const discountBadge = hasDiscount
+          ? `Disc ${plan.discountMonthlyPercent}%`
+          : null
+
+        return {
+          amount: new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+          }).format(finalPrice),
+          period: "/ bulan",
+          originalAmount,
+          discountBadge,
+          subtitle: `Atau ${new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+          }).format(plan.priceYearlyIdr)} / tahun`,
+        }
+      } else {
+        // yearly
+        const rawYearly = plan.priceMonthlyIdr * 12
+        const hasYearlyDiscount =
+          (plan.discountYearlyPercent || 0) > 0 ||
+          (rawYearly > 0 && plan.priceYearlyIdr < rawYearly)
+        const percent =
+          plan.discountYearlyPercent && plan.discountYearlyPercent > 0
+            ? plan.discountYearlyPercent
+            : rawYearly > 0
+              ? Math.round((1 - plan.priceYearlyIdr / rawYearly) * 100)
+              : 0
+
+        const originalAmount =
+          hasYearlyDiscount && rawYearly > plan.priceYearlyIdr
+            ? new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR",
                 maximumFractionDigits: 0,
-              }).format(plan.priceYearlyIdr)} / tahun`,
+              }).format(rawYearly)
+            : null
+
+        const discountBadge = percent > 0 ? `Hemat ${percent}%` : null
+
+        return {
+          amount: new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0,
+          }).format(plan.priceYearlyIdr),
+          period: "/ tahun",
+          originalAmount,
+          discountBadge,
+          subtitle: "Ditagih tahunan (Semua fitur aktif)",
+        }
       }
     } else {
-      const amount =
-        billingCycle === "monthly" ? plan.priceMonthlyUsd : plan.priceYearlyUsd
-      if (amount === 0) {
+      // USD
+      if (plan.priceMonthlyUsd === 0 && plan.priceYearlyUsd === 0) {
         return {
           amount: "$0",
           period: "Forever",
           subtitle: "Free for research & community",
+          originalAmount: null,
+          discountBadge: null,
         }
       }
-      return {
-        amount: `$${amount}`,
-        period: billingCycle === "monthly" ? "/ mo" : "/ yr",
-        subtitle:
-          billingCycle === "yearly"
-            ? "Save 20% annually"
-            : `$${plan.priceYearlyUsd} / year`,
+
+      if (billingCycle === "monthly") {
+        const hasDiscount = (plan.discountMonthlyPercent || 0) > 0
+        const finalPrice = hasDiscount
+          ? Math.round(
+              plan.priceMonthlyUsd *
+                (1 - (plan.discountMonthlyPercent || 0) / 100)
+            )
+          : plan.priceMonthlyUsd
+
+        const originalAmount = hasDiscount ? `$${plan.priceMonthlyUsd}` : null
+        const discountBadge = hasDiscount
+          ? `Disc ${plan.discountMonthlyPercent}%`
+          : null
+
+        return {
+          amount: `$${finalPrice}`,
+          period: "/ mo",
+          originalAmount,
+          discountBadge,
+          subtitle: `$${plan.priceYearlyUsd} / year`,
+        }
+      } else {
+        const rawYearly = plan.priceMonthlyUsd * 12
+        const hasYearlyDiscount =
+          (plan.discountYearlyPercent || 0) > 0 ||
+          (rawYearly > 0 && plan.priceYearlyUsd < rawYearly)
+        const percent =
+          plan.discountYearlyPercent && plan.discountYearlyPercent > 0
+            ? plan.discountYearlyPercent
+            : rawYearly > 0
+              ? Math.round((1 - plan.priceYearlyUsd / rawYearly) * 100)
+              : 0
+
+        const originalAmount =
+          hasYearlyDiscount && rawYearly > plan.priceYearlyUsd
+            ? `$${rawYearly}`
+            : null
+        const discountBadge = percent > 0 ? `Save ${percent}%` : null
+
+        return {
+          amount: `$${plan.priceYearlyUsd}`,
+          period: "/ yr",
+          originalAmount,
+          discountBadge,
+          subtitle: "Billed annually (All features included)",
+        }
       }
     }
   }
@@ -179,8 +283,8 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
                 )}
               >
                 <span>Tahunan</span>
-                <span className="py-0.2 rounded-full bg-emerald-500/20 px-1.5 font-mono text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
-                  Hemat 20%
+                <span className="rounded-full bg-emerald-500/20 px-1.5 py-0.5 font-mono text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+                  Hemat s/d 20%
                 </span>
               </button>
             </div>
@@ -237,24 +341,36 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
               >
                 {/* Header Badge */}
                 <div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={cn(
-                        "rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase",
-                        isGov
-                          ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400"
-                          : isFeatured
-                            ? "border-lp-orange/50 bg-lp-orange/15 text-lp-orange"
-                            : "border-lp-line bg-lp-paper-2 text-lp-ink-2"
-                      )}
-                    >
-                      {plan.category.replace("_", " ")}
-                    </span>
-                    {plan.badge && (
-                      <span className="rounded-full bg-lp-ink px-2 py-0.5 font-mono text-[9px] font-black text-lp-paper uppercase">
-                        {plan.badge}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "rounded-full border px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider uppercase",
+                          isGov
+                            ? "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                            : isFeatured
+                              ? "border-lp-orange/50 bg-lp-orange/15 text-lp-orange"
+                              : "border-lp-line bg-lp-paper-2 text-lp-ink-2"
+                        )}
+                      >
+                        {plan.category.replace("_", " ")}
                       </span>
-                    )}
+                      {plan.badge && (
+                        <span className="rounded-full bg-lp-ink px-2 py-0.5 font-mono text-[9px] font-black text-lp-paper uppercase">
+                          {plan.badge}
+                        </span>
+                      )}
+                      {plan.promoTag && (
+                        <span className="rounded-full border border-rose-500/40 bg-rose-500/15 px-2 py-0.5 font-mono text-[9px] font-black text-rose-600 uppercase dark:text-rose-400">
+                          {plan.promoTag}
+                        </span>
+                      )}
+                      {plan.isFirstPurchaseOnly && (
+                        <span className="rounded-full border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 font-mono text-[9px] font-bold text-amber-600 dark:text-amber-400">
+                          Pembelian Pertama
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Plan Name & Tagline */}
@@ -269,17 +385,32 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
 
                   {/* Price Box */}
                   <div className="mt-4 rounded-xl border border-lp-line/80 bg-lp-paper-2 p-3">
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex flex-wrap items-baseline gap-1.5">
+                      {price.originalAmount && (
+                        <span className="font-mono text-xs text-lp-ink-2 line-through">
+                          {price.originalAmount}
+                        </span>
+                      )}
                       <span className="font-mono text-xl font-black text-lp-ink">
                         {price.amount}
                       </span>
                       <span className="text-[11px] text-lp-ink-2">
                         {price.period}
                       </span>
+                      {price.discountBadge && (
+                        <span className="rounded bg-rose-500/15 px-1.5 py-0.5 font-mono text-[10px] font-bold text-rose-600 dark:text-rose-400">
+                          {price.discountBadge}
+                        </span>
+                      )}
                     </div>
                     <p className="mt-0.5 text-[10px] text-lp-ink-2">
                       {price.subtitle}
                     </p>
+                    {plan.isFirstPurchaseOnly && (
+                      <p className="mt-1 font-mono text-[9px] text-amber-600 dark:text-amber-400">
+                        * Promo khusus pembelian pertama
+                      </p>
+                    )}
                   </div>
 
                   {/* Node Capacity Highlights */}

@@ -80,6 +80,10 @@ export interface PricingPlan {
   priceYearlyIdr: number
   priceMonthlyUsd: number
   priceYearlyUsd: number
+  discountMonthlyPercent?: number
+  discountYearlyPercent?: number
+  isFirstPurchaseOnly?: boolean
+  promoTag?: string
   features: string[]
   highlightFeatures?: string[]
   logRetentionDays: number
@@ -1191,6 +1195,10 @@ export const pasaxStore = {
       priceYearlyIdr: plan.priceYearlyIdr !== undefined ? Number(plan.priceYearlyIdr) : existing?.priceYearlyIdr ?? 0,
       priceMonthlyUsd: plan.priceMonthlyUsd !== undefined ? Number(plan.priceMonthlyUsd) : existing?.priceMonthlyUsd ?? 0,
       priceYearlyUsd: plan.priceYearlyUsd !== undefined ? Number(plan.priceYearlyUsd) : existing?.priceYearlyUsd ?? 0,
+      discountMonthlyPercent: plan.discountMonthlyPercent !== undefined ? Number(plan.discountMonthlyPercent) : existing?.discountMonthlyPercent ?? 0,
+      discountYearlyPercent: plan.discountYearlyPercent !== undefined ? Number(plan.discountYearlyPercent) : existing?.discountYearlyPercent ?? 0,
+      isFirstPurchaseOnly: plan.isFirstPurchaseOnly !== undefined ? Boolean(plan.isFirstPurchaseOnly) : existing?.isFirstPurchaseOnly ?? false,
+      promoTag: plan.promoTag !== undefined ? plan.promoTag : existing?.promoTag,
       features: Array.isArray(plan.features) ? plan.features : existing?.features ?? [],
       highlightFeatures: Array.isArray(plan.highlightFeatures) ? plan.highlightFeatures : existing?.highlightFeatures ?? [],
       logRetentionDays: plan.logRetentionDays !== undefined ? Number(plan.logRetentionDays) : existing?.logRetentionDays ?? 14,

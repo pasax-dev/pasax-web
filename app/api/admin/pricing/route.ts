@@ -23,7 +23,10 @@ export async function GET(request: Request) {
       return NextResponse.json(data)
     }
   } catch (err: any) {
-    console.warn("[Admin Pricing API] Remote pasax-service fetch failed:", err?.message)
+    console.warn(
+      "[Admin Pricing API] Remote pasax-service fetch failed:",
+      err?.message
+    )
   }
 
   // Fallback to local store
@@ -62,7 +65,10 @@ export async function POST(request: Request) {
         return NextResponse.json(json, { status: 201 })
       }
     } catch (err: any) {
-      console.warn("[Admin Pricing POST] Remote pasax-service failed:", err?.message)
+      console.warn(
+        "[Admin Pricing POST] Remote pasax-service failed:",
+        err?.message
+      )
     }
 
     // Local store fallback creation
@@ -88,8 +94,18 @@ export async function POST(request: Request) {
       priceYearlyIdr: Number(body.priceYearlyIdr || 0),
       priceMonthlyUsd: Number(body.priceMonthlyUsd || 0),
       priceYearlyUsd: Number(body.priceYearlyUsd || 0),
+      discountMonthlyPercent: body.discountMonthlyPercent
+        ? Number(body.discountMonthlyPercent)
+        : 0,
+      discountYearlyPercent: body.discountYearlyPercent
+        ? Number(body.discountYearlyPercent)
+        : 0,
+      isFirstPurchaseOnly: Boolean(body.isFirstPurchaseOnly),
+      promoTag: body.promoTag || undefined,
       features: Array.isArray(body.features) ? body.features : [],
-      highlightFeatures: Array.isArray(body.highlightFeatures) ? body.highlightFeatures : [],
+      highlightFeatures: Array.isArray(body.highlightFeatures)
+        ? body.highlightFeatures
+        : [],
       logRetentionDays: Number(body.logRetentionDays || 14),
       maxSeats: Number(body.maxSeats || 1),
       crowdDefenseSync: body.crowdDefenseSync || "1h",
@@ -110,7 +126,10 @@ export async function POST(request: Request) {
       { status: 201 }
     )
   } catch (err: any) {
-    return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
   }
 }
 
@@ -139,7 +158,10 @@ export async function PATCH(request: Request) {
         return NextResponse.json(json)
       }
     } catch (err: any) {
-      console.warn("[Admin Pricing PATCH] Remote pasax-service failed:", err?.message)
+      console.warn(
+        "[Admin Pricing PATCH] Remote pasax-service failed:",
+        err?.message
+      )
     }
 
     // Local fallback update
@@ -150,7 +172,10 @@ export async function PATCH(request: Request) {
       data: updated,
     })
   } catch (err: any) {
-    return NextResponse.json({ status: "error", message: err.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: err.message },
+      { status: 500 }
+    )
   }
 }
 
@@ -159,7 +184,10 @@ export async function DELETE(request: Request) {
   const id = searchParams.get("id")
 
   if (!id) {
-    return NextResponse.json({ status: "error", message: "ID paket diperlukan" }, { status: 400 })
+    return NextResponse.json(
+      { status: "error", message: "ID paket diperlukan" },
+      { status: 400 }
+    )
   }
 
   const apiUrl = getPasaxApiUrl()
@@ -169,12 +197,21 @@ export async function DELETE(request: Request) {
     })
     if (res.ok) {
       pasaxStore.deletePricingPlan(id)
-      return NextResponse.json({ status: "success", message: "Paket berhasil dihapus" })
+      return NextResponse.json({
+        status: "success",
+        message: "Paket berhasil dihapus",
+      })
     }
   } catch (err: any) {
-    console.warn("[Admin Pricing DELETE] Remote pasax-service failed:", err?.message)
+    console.warn(
+      "[Admin Pricing DELETE] Remote pasax-service failed:",
+      err?.message
+    )
   }
 
   pasaxStore.deletePricingPlan(id)
-  return NextResponse.json({ status: "success", message: "Paket berhasil dihapus" })
+  return NextResponse.json({
+    status: "success",
+    message: "Paket berhasil dihapus",
+  })
 }
