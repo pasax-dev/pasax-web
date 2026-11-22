@@ -215,8 +215,8 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
           </div>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {/* Pricing Cards Grid (Optimized 3-tier layout) */}
+        <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
           {plans.map((plan) => {
             const price = formatPrice(plan)
             const isFeatured =
