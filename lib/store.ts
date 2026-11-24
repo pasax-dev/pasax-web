@@ -115,7 +115,7 @@ export interface ManagedUser {
   id: string
   name: string
   email: string
-  role: "Superadmin" | "Admin" | "User" | "Support" | "Teknis"
+  role: "Superadmin" | "Admin" | "User" | "Support" | "Teknis" | "Programmer" | "DevOps"
   plan: "free" | "pro" | "enterprise"
   serverQuota: number
   isActive: boolean
@@ -384,10 +384,39 @@ function ensureInitialized() {
     assignedNodeIds: ["nd_02JK9A1B234YTR8C7D0S52ZY0B"],
   }
 
+  const userProgrammer: ManagedUser = {
+    id: "usr_prog_team",
+    name: "Budi Pratama (Programmer L7)",
+    email: "programmer@pasax.id",
+    role: "Programmer",
+    plan: "pro",
+    serverQuota: 5,
+    isActive: true,
+    createdAt: now - 12 * 86400,
+    organization: "Dev App Team",
+    phone: "+62 813-2233-4455",
+    assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A"],
+  }
+  const userDevOps: ManagedUser = {
+    id: "usr_devops_team",
+    name: "Ahmad Fauzi (Server Maintainer / DevOps)",
+    email: "devops@pasax.id",
+    role: "DevOps",
+    plan: "pro",
+    serverQuota: 5,
+    isActive: true,
+    createdAt: now - 10 * 86400,
+    organization: "Infrastructure & Cloud Ops",
+    phone: "+62 818-7788-9900",
+    assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A", "nd_02JK9A1B234YTR8C7D0S52ZY0B"],
+  }
+
   globalStore.users.set(user1.id, user1)
   globalStore.users.set(user2.id, user2)
   globalStore.users.set(user3.id, user3)
   globalStore.users.set(user4.id, user4)
+  globalStore.users.set(userProgrammer.id, userProgrammer)
+  globalStore.users.set(userDevOps.id, userDevOps)
 
   // 2. Seed License Keys (Multi-App, Multi-Node Supported)
   const keyTenant: ManagedLicenseKey = {
@@ -890,7 +919,7 @@ export const pasaxStore = {
   createUser(payload: {
     name: string
     email: string
-    role?: "Superadmin" | "Admin" | "User" | "Support" | "Teknis"
+    role?: "Superadmin" | "Admin" | "User" | "Support" | "Teknis" | "Programmer" | "DevOps"
     plan?: "free" | "pro" | "enterprise"
     serverQuota?: number
     organization?: string

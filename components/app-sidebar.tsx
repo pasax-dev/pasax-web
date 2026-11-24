@@ -82,10 +82,16 @@ const adminNavSections: NavMainSection[] = [
         badge: "FLEET",
       },
       {
-        title: "Pemegang VPS & User",
+        title: "Tim VPS & Pengguna",
         url: "/users",
         icon: Users,
-        badge: "ADMIN",
+        badge: "TEAM",
+      },
+      {
+        title: "Matriks Hak Akses Peran",
+        url: "/permissions",
+        icon: ShieldCheck,
+        badge: "ROLES",
       },
       {
         title: "Insiden Serangan",
@@ -169,6 +175,12 @@ const userNavSections: NavMainSection[] = [
         url: "/licenses",
         icon: Key,
         badge: "KEYS",
+      },
+      {
+        title: "Panduan Hak Akses Peran",
+        url: "/permissions",
+        icon: ShieldCheck,
+        badge: "ROLES",
       },
     ],
   },

@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -405,6 +407,35 @@ export function NodesManagementClient({
         </div>
       </div>
 
+            {/* Otoritas Monitoring Admin Banner */}
+      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 sm:p-5 shadow-[4px_4px_0px_0px_var(--border)]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1 max-w-2xl">
+            <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+              <ShieldCheck className="size-4.5 text-main" />
+              <span>Monitoring Terpusat Seluruh Armada VPS (Admin View)</span>
+            </div>
+            <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+              Sebagai Admin, Anda dapat memantau <strong>SEMUA node VPS</strong> yang aktif dalam ekosistem, memeriksa beban resource hardware &amp; kernel nftables secara real-time, serta mengatur tim <strong>Programmer Aplikasi</strong> dan <strong>Server Maintainer (DevOps)</strong> pada setiap server.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Link href="/users">
+              <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)]">
+                <Users className="size-3.5" />
+                <span>Kelola Tim VPS</span>
+              </Button>
+            </Link>
+            <Link href="/permissions">
+              <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)]">
+                <ShieldCheck className="size-3.5" />
+                <span>Matriks Hak Akses Peran</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
       {/* 2. Tactical Metrics Row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
@@ -655,11 +686,17 @@ export function NodesManagementClient({
                                     <Badge
                                       key={user.id}
                                       variant="outline"
-                                      className="font-mono text-[10px] px-2 py-0.5 flex items-center gap-1 border-main/50 bg-main/10 text-foreground"
+                                      className={`font-mono text-[10px] px-2 py-0.5 flex items-center gap-1 border-2 ${
+                                        user.role === "Programmer"
+                                          ? "border-purple-500/50 bg-purple-500/10 text-purple-700 dark:text-purple-300"
+                                          : user.role === "DevOps"
+                                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                                          : "border-main/50 bg-main/10 text-foreground"
+                                      }`}
                                     >
-                                      <Users className="size-2.5 text-main" />
+                                      <Users className="size-2.5" />
                                       <span>{user.name.split(" ")[0]}</span>
-                                      <span className="text-[9px] text-muted-foreground">({user.role})</span>
+                                      <span className="text-[9px] font-bold">({user.role})</span>
                                     </Badge>
                                   ))}
                                 </div>

@@ -59,6 +59,24 @@ export function RegisterForm() {
     setIsLoading(true)
 
     try {
+      // 1. Register new user as Admin in persistent store with 14-day Pro Trial
+      const regRes = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          organization,
+          email,
+          password,
+        }),
+      })
+
+      const regData = await regRes.json()
+      if (!regRes.ok || regData.status !== "success") {
+        throw new Error(regData.message || "Gagal mendaftarkan operator.")
+      }
+
+      // 2. Sign in with credentials as Admin
       const res = await signIn("credentials", {
         redirect: false,
         email,
@@ -67,7 +85,7 @@ export function RegisterForm() {
       })
 
       if (res?.error) {
-        setError("Registrasi gagal. Format data tidak valid atau email telah terdaftar.")
+        setError("Registrasi akun Admin berhasil namun autentikasi otomatis gagal. Silakan masuk manual.")
         setIsLoading(false)
       } else {
         setSuccess(true)
@@ -76,8 +94,8 @@ export function RegisterForm() {
           router.refresh()
         }, 1200)
       }
-    } catch {
-      setError("Terjadi kegagalan komunikasi dengan cluster auth gateway.")
+    } catch (err: any) {
+      setError(err.message || "Terjadi kegagalan komunikasi dengan cluster auth gateway.")
       setIsLoading(false)
     }
   }

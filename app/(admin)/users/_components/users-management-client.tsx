@@ -1,5 +1,7 @@
 "use client"
 
+import Link from "next/link"
+
 import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -83,7 +85,7 @@ export function UsersManagementClient({
   const [formData, setFormData] = React.useState<{
     name: string
     email: string
-    role: "Superadmin" | "Admin" | "User" | "Support" | "Teknis"
+    role: "Superadmin" | "Admin" | "User" | "Support" | "Teknis" | "Programmer" | "DevOps"
     plan: "free" | "pro" | "enterprise"
     serverQuota: number
     organization: string
@@ -368,14 +370,14 @@ export function UsersManagementClient({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-              Manajemen Pengguna &amp; Pemegang VPS
+              Manajemen Tim VPS &amp; Pengguna
             </h1>
             <Badge variant="outline" className="border-main/50 bg-main/10 text-main font-mono text-xs">
-              DEFENSE ACCESS
+              FLEET &amp; TEAM ACCESS
             </Badge>
           </div>
           <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Kelola hak akses operator, penugasan VPS/Node Sentinel, dan kuota pertahanan cyber armada.
+            Sebagai Admin, Anda dapat membuat akun untuk <strong>Programmer Aplikasi (L7)</strong> dan <strong>Server Maintainer (DevOps L3/L4)</strong> yang bertugas di VPS armada.
           </p>
         </div>
 
@@ -396,8 +398,30 @@ export function UsersManagementClient({
             className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
           >
             <Plus className="mr-1.5 size-4 stroke-[3]" />
-            Tambah Pemegang VPS
+            Tambah Anggota Tim / VPS
           </Button>
+        </div>
+      </div>
+
+            {/* Otoritas Admin & Panduan Peran Banner */}
+      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 sm:p-5 shadow-[4px_4px_0px_0px_var(--border)]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1 max-w-2xl">
+            <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
+              <ShieldCheck className="size-4.5 text-main" />
+              <span>Otoritas Administrator: Manajemen Tim Programmer &amp; Server Maintainer</span>
+            </div>
+            <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+              Setiap user yang mendaftar mandiri otomatis berstatus <strong>Admin</strong> dengan wewenang mengawasi <strong>SEMUA node VPS</strong>.
+              Admin dapat mendelegasikan tugas dengan membuatkan user khusus untuk tim programmer aplikasi atau teknisi maintainer VPS.
+            </p>
+          </div>
+          <Link href="/permissions">
+            <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)] shrink-0">
+              <Shield className="size-3.5" />
+              <span>Lihat Matriks Hak Akses Peran</span>
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -492,10 +516,12 @@ export function UsersManagementClient({
               >
                 <option value="all">Semua Role</option>
                 <option value="Superadmin">Superadmin</option>
-                <option value="Admin">Admin</option>
+                <option value="Admin">Admin (Fleet Owner)</option>
+                <option value="Programmer">Programmer (App L7)</option>
+                <option value="DevOps">DevOps (Server Maintainer L3/L4)</option>
                 <option value="Teknis">Teknis</option>
                 <option value="Support">Support</option>
-                <option value="User">User</option>
+                <option value="User">User (Viewer)</option>
               </select>
 
               {/* Plan Filter */}
@@ -597,10 +623,14 @@ export function UsersManagementClient({
                                   ? "bg-amber-500 text-black border-amber-600"
                                   : u.role === "Admin"
                                   ? "bg-main text-black border-main"
+                                  : u.role === "Programmer"
+                                  ? "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500"
+                                  : u.role === "DevOps"
+                                  ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500"
                                   : "bg-muted text-foreground border-border"
                               }`}
                             >
-                              {u.role.toUpperCase()}
+                              {u.role === "DevOps" ? "SERVER MAINTAINER" : u.role === "Programmer" ? "PROGRAMMER L7" : u.role.toUpperCase()}
                             </Badge>
 
                             <Badge variant="outline" className="font-mono text-[10px] uppercase border-border">
@@ -817,11 +847,12 @@ export function UsersManagementClient({
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
                   className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
                 >
-                  <option value="Admin">Admin (Default)</option>
-                  <option value="Superadmin">Superadmin</option>
-                  <option value="Teknis">Teknis</option>
-                  <option value="Support">Support</option>
-                  <option value="User">User</option>
+                  <option value="Admin">Admin (Co-Admin / Fleet Owner)</option>
+                  <option value="Programmer">Programmer (Web Developer L7 - Rute & Integrasi WAF)</option>
+                  <option value="DevOps">DevOps (Server Maintainer - VPS & Kernel L3/L4)</option>
+                  <option value="Teknis">Teknis (Operator Teknis SOC)</option>
+                  <option value="Support">Support (Layanan Bantuan)</option>
+                  <option value="User">User (Viewer / Observer)</option>
                 </select>
               </div>
 
@@ -988,11 +1019,12 @@ export function UsersManagementClient({
                   onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
                   className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
                 >
-                  <option value="Admin">Admin</option>
-                  <option value="Superadmin">Superadmin</option>
-                  <option value="Teknis">Teknis</option>
-                  <option value="Support">Support</option>
-                  <option value="User">User</option>
+                  <option value="Admin">Admin (Co-Admin / Fleet Owner)</option>
+                  <option value="Programmer">Programmer (Web Developer L7 - Rute & Integrasi WAF)</option>
+                  <option value="DevOps">DevOps (Server Maintainer - VPS & Kernel L3/L4)</option>
+                  <option value="Teknis">Teknis (Operator Teknis SOC)</option>
+                  <option value="Support">Support (Layanan Bantuan)</option>
+                  <option value="User">User (Viewer / Observer)</option>
                 </select>
               </div>
 
