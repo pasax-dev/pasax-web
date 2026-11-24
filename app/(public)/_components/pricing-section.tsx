@@ -352,8 +352,15 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
           </div>
         </div>
 
-        {/* Pricing Cards Grid (Optimized 3-tier layout) */}
-        <div className="mx-auto mt-14 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
+        {/* Pricing Cards Grid (Optimized 2-tier or multi-tier layout) */}
+        <div
+          className={cn(
+            "mx-auto mt-14 grid gap-8",
+            plans.length <= 2
+              ? "max-w-4xl grid-cols-1 md:grid-cols-2"
+              : "max-w-6xl grid-cols-1 md:grid-cols-3"
+          )}
+        >
           {plans.map((plan) => {
             const price = formatPrice(plan)
             const isFeatured =
@@ -514,7 +521,11 @@ export function PricingSection({ initialPlans }: PricingSectionProps) {
                           : "border-lp-line bg-lp-paper-2 text-lp-ink hover:border-lp-ink/40 hover:bg-lp-paper"
                       )}
                     >
-                      <span>Mulai Berlangganan</span>
+                      <span>
+                        {plan.id === "pro"
+                          ? "Mulai Trial Pro 14 Hari"
+                          : "Mulai Berlangganan"}
+                      </span>
                       <ArrowRight className="size-3.5" />
                     </Link>
                   )}

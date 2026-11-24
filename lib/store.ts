@@ -137,6 +137,11 @@ export interface ManagedLicenseKey {
   connectedNodesCount: number
   connectedAppsCount: number
   lastUsedAt?: number
+  isTrial?: boolean
+  trialEndsAt?: number
+  subscriptionStatus?: "trialing" | "active" | "expired" | "cancelled"
+  isExpired?: boolean
+  remainingDays?: number
 }
 
 export interface ConnectedApp {
@@ -156,29 +161,9 @@ export interface ConnectedApp {
 
 export const SUBSCRIPTION_PLANS: SubscriptionTier[] = [
   {
-    id: "free",
-    name: "Starter / Dev",
-    tagline: "Proteksi WAF dasar untuk developer dan riset mandiri",
-    priceIdr: 0,
-    priceYearlyIdr: 0,
-    serverQuota: 1,
-    appQuota: 3,
-    retentionDays: 7,
-    fimEnabled: false,
-    kernelFirewallEnabled: false,
-    features: [
-      "1 VPS Node Sentinel",
-      "Maksimal 3 Aplikasi Web Laravel",
-      "Pure PHP WAF (Zero NPM/Node.js)",
-      "Layer 7 In-App Rate Limiting & Cooldown",
-      "7 Hari Retensi Log Serangan",
-      "Komunitas & Dokumentasi Publik",
-    ],
-  },
-  {
     id: "pro",
     name: "Pro Fleet SOC",
-    tagline: "Proteksi pertahanan militer Linux Kernel untuk armada production",
+    tagline: "Proteksi pertahanan militer Linux Kernel untuk armada production (Trial 14 Hari Gratis)",
     priceIdr: 149000,
     priceYearlyIdr: 1490000,
     serverQuota: 10,
@@ -188,6 +173,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionTier[] = [
     fimEnabled: true,
     kernelFirewallEnabled: true,
     features: [
+      "Masa Percobaan Pro 14 Hari Penuh (Free Trial)",
       "Hingga 10 VPS Nodes (Sentinel Daemon)",
       "Unlimited Aplikasi Web (1 License Key Multi-App)",
       "Linux Kernel Firewall (nftables drop < 0.2ms)",
@@ -262,50 +248,16 @@ function ensureInitialized() {
   const now = Math.floor(Date.now() / 1000)
 
   
-  // 0. Seed Pricing Plans
+  // 0. Seed Pricing Plans (2 Tiers Only: Pro with 14-Day Free Trial, and Enterprise)
   if (globalStore.pricingPlans.size === 0) {
-        const defaultPlans: PricingPlan[] = [
-      {
-        id: "free",
-        name: "Free Community",
-        slug: "free",
-        category: "standard",
-        badge: "OPEN SOURCE",
-        description: "Ideal untuk mahasiswa, proyek hobi, dan pengujian lokal tanpa biaya komersial.",
-        targetAudience: "Hobi, Riset & Staging",
-        vpsQuota: 1,
-        appsPerVps: "Unlimited",
-        priceMonthlyIdr: 0,
-        priceYearlyIdr: 0,
-        priceMonthlyUsd: 0,
-        priceYearlyUsd: 0,
-        features: [
-          "1 Server VPS Terkelola (Sentinel Agent)",
-          "Unlimited Aplikasi Laravel di dalam VPS",
-          "WAF Rule Dasar (SQLi, XSS, Path Traversal)",
-          "Kernel Firewall Auto-Drop (nftables / ipset)",
-          "Retensi Log Forensik: 24 Jam",
-          "Sinkronisasi Crowd Defense: 1x / 24 Jam",
-          "Kompatibel Laravel 10, 11, 12, & 13 (PHP 8.2 - 8.5)",
-          "Dukungan Komunitas GitHub",
-        ],
-        highlightFeatures: ["1 VPS (Unlimited Laravel Apps)", "nftables Kernel Drop", "Gratis Selamanya"],
-        logRetentionDays: 1,
-        maxSeats: 1,
-        crowdDefenseSync: "24h",
-        supportSla: "Community Forum",
-        complianceCert: "Standard Security",
-        isCustomQuote: false,
-        isActive: true,
-        sortOrder: 1,
-      },
+    const defaultPlans: PricingPlan[] = [
       {
         id: "pro",
         name: "Pro Fleet SOC",
         slug: "pro",
         category: "agency",
-        badge: "MOST POPULAR",
-        description: "Solusi lengkap untuk Freelancer, Software House, dan Startup yang mengelola armada server produksi.",
+        badge: "14 HARI TRIAL PRO GRATIS",
+        description: "Solusi lengkap armada server produksi. Mulai dengan 14 hari masa percobaan Pro penuh gratis tanpa kartu kredit.",
         targetAudience: "Developer, Agency & Startup",
         vpsQuota: 5,
         appsPerVps: "Unlimited",
@@ -314,6 +266,7 @@ function ensureInitialized() {
         priceMonthlyUsd: 12,
         priceYearlyUsd: 119,
         features: [
+          "Termasuk 14 Hari Masa Percobaan Pro Penuh (Free Trial)",
           "Hingga 5 Server VPS Terhubung (Sentinel Mesh)",
           "Unlimited Aplikasi Laravel di SELURUH 5 VPS",
           "Cross-VPS Defense: 1 server diserang, seluruh server kebal!",
@@ -326,7 +279,7 @@ function ensureInitialized() {
           "Sinkronisasi Crowd Defense Real-time",
           "Dukungan Prioritas Email & Chat (SLA 12 Jam)",
         ],
-        highlightFeatures: ["5 VPS (Unlimited Laravel Apps)", "Cross-VPS Auto Immunity", "Multi-User Team (5 Seats)"],
+        highlightFeatures: ["14 Hari Trial Pro Gratis", "5 VPS (Unlimited Laravel Apps)", "Cross-VPS Auto Immunity"],
         logRetentionDays: 30,
         maxSeats: 5,
         crowdDefenseSync: "realtime",
@@ -334,7 +287,7 @@ function ensureInitialized() {
         complianceCert: "Security Hardened",
         isCustomQuote: false,
         isActive: true,
-        sortOrder: 2,
+        sortOrder: 1,
       },
       {
         id: "enterprise",
@@ -369,7 +322,7 @@ function ensureInitialized() {
         complianceCert: "CSIRT BSSN & ISO 27001 Ready",
         isCustomQuote: true,
         isActive: true,
-        sortOrder: 3,
+        sortOrder: 2,
       },
     ]
     for (const p of defaultPlans) {
@@ -422,10 +375,10 @@ function ensureInitialized() {
     name: "Indra Developer",
     email: "indra@startup.id",
     role: "Admin",
-    plan: "free",
-    serverQuota: 1,
+    plan: "pro",
+    serverQuota: 5,
     isActive: true,
-    createdAt: now - 10 * 86400,
+    createdAt: now - 18 * 86400,
     organization: "Fintech Sandbox",
     phone: "+62 878-5566-7788",
     assignedNodeIds: ["nd_02JK9A1B234YTR8C7D0S52ZY0B"],
@@ -445,10 +398,13 @@ function ensureInitialized() {
     key: "psk_live_f90c11e5c1125deebae571815a01384c",
     name: "Production Multi-App & Sentinel Token",
     isActive: true,
-    createdAt: now - 28 * 86400,
+    createdAt: now - 3 * 86400,
     connectedNodesCount: 2,
     connectedAppsCount: 2,
     lastUsedAt: now - 120,
+    isTrial: true,
+    trialEndsAt: now + 11 * 86400,
+    subscriptionStatus: "trialing",
   }
 
   const keyAdmin: ManagedLicenseKey = {
@@ -463,6 +419,8 @@ function ensureInitialized() {
     connectedNodesCount: 1,
     connectedAppsCount: 3,
     lastUsedAt: now - 45,
+    isTrial: false,
+    subscriptionStatus: "active",
   }
 
   globalStore.licenseKeys.set(keyTenant.id, keyTenant)
@@ -988,6 +946,9 @@ export const pasaxStore = {
       createdAt: now,
       connectedNodesCount: 0,
       connectedAppsCount: 0,
+      isTrial: true,
+      trialEndsAt: now + 14 * 86400,
+      subscriptionStatus: "trialing",
     }
     globalStore.licenseKeys.set(defaultKey.id, defaultKey)
 
@@ -1076,10 +1037,23 @@ export const pasaxStore = {
       createdAt: now,
       connectedNodesCount: 0,
       connectedAppsCount: 0,
+      isTrial: true,
+      trialEndsAt: now + 14 * 86400,
+      subscriptionStatus: "trialing",
     }
 
     globalStore.licenseKeys.set(newKey.id, newKey)
     return newKey
+  },
+
+  updateLicenseKey(id: string, updates: Partial<ManagedLicenseKey>): ManagedLicenseKey | null {
+    ensureInitialized()
+    const key = globalStore.licenseKeys.get(id)
+    if (!key) return null
+
+    const updated = { ...key, ...updates }
+    globalStore.licenseKeys.set(id, updated)
+    return updated
   },
 
   toggleLicenseKey(id: string): ManagedLicenseKey | null {

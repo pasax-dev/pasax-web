@@ -372,6 +372,7 @@ export function VHostsClient({
                             <Button
                               variant="ghost"
                               size="icon"
+                              nativeButton={false}
                               render={<a href={`https://${vhost.domain}`} target="_blank" rel="noreferrer" />}
                               title="Buka Website"
                               className="size-8 text-sky-500"

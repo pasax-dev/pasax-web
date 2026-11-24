@@ -23,6 +23,9 @@ import {
   Globe,
   Code2,
   Terminal,
+  ShieldCheck,
+  Clock,
+  Sparkles,
 } from "lucide-react"
 import { ManagedLicenseKey, ManagedUser } from "@/lib/store"
 
@@ -124,6 +127,32 @@ export function LicensesClient({
       if (res.ok) {
         refreshData()
       }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleUpgradeToPro = async (id: string) => {
+    try {
+      const res = await fetch("/api/admin/licenses", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "convert_pro" }),
+      })
+      if (res.ok) refreshData()
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleExtendTrial = async (id: string, days = 14) => {
+    try {
+      const res = await fetch("/api/admin/licenses", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "extend_trial", days }),
+      })
+      if (res.ok) refreshData()
     } catch (err) {
       console.error(err)
     }
@@ -286,6 +315,7 @@ export function LicensesClient({
                   <TableHead className="font-mono text-xs font-bold text-foreground">PEMILIK LISENSI</TableHead>
                   <TableHead className="font-mono text-xs font-bold text-foreground text-center">APPS</TableHead>
                   <TableHead className="font-mono text-xs font-bold text-foreground text-center">NODES</TableHead>
+                  <TableHead className="font-mono text-xs font-bold text-foreground text-center">TIER / TRIAL</TableHead>
                   <TableHead className="font-mono text-xs font-bold text-foreground text-center">STATUS</TableHead>
                   <TableHead className="font-mono text-xs font-bold text-foreground text-right">AKSI</TableHead>
                 </TableRow>
@@ -293,7 +323,7 @@ export function LicensesClient({
               <TableBody>
                 {filteredKeys.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="py-8 text-center font-mono text-xs text-muted-foreground">
+                    <TableCell colSpan={8} className="py-8 text-center font-mono text-xs text-muted-foreground">
                       Tidak ada kunci lisensi yang cocok.
                     </TableCell>
                   </TableRow>
@@ -342,6 +372,40 @@ export function LicensesClient({
                         </Badge>
                       </TableCell>
 
+                      <TableCell className="text-center font-mono text-xs font-bold">
+                        {k.isTrial ? (
+                          (() => {
+                            const nowSec = Math.floor(Date.now() / 1000)
+                            const remainingDays = k.trialEndsAt ? Math.max(0, Math.ceil((k.trialEndsAt - nowSec) / 86400)) : 0
+                            const isExpired = remainingDays <= 0 || k.subscriptionStatus === "expired"
+                            return (
+                              <div className="flex flex-col items-center gap-0.5">
+                                <Badge
+                                  variant="outline"
+                                  className={
+                                    isExpired
+                                      ? "border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-mono text-[10px]"
+                                      : "border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono text-[10px]"
+                                  }
+                                >
+                                  {isExpired ? "TRIAL HABIS" : `TRIAL (${remainingDays}d)`}
+                                </Badge>
+                                {isExpired && (
+                                  <span className="text-[9px] text-rose-500 font-bold uppercase tracking-tight">Mode Pasif</span>
+                                )}
+                              </div>
+                            )
+                          })()
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px]"
+                          >
+                            PRO BERBAYAR
+                          </Badge>
+                        )}
+                      </TableCell>
+
                       <TableCell className="text-center">
                         <button
                           onClick={() => handleToggle(k)}
@@ -358,6 +422,30 @@ export function LicensesClient({
 
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
+                          {k.isTrial && (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleUpgradeToPro(k.id)}
+                                title="Jadikan Lisensi Berbayar Penuh (Aktif)"
+                                className="font-mono text-[10px] border-emerald-500 text-emerald-600 hover:bg-emerald-500/10 h-7 px-1.5"
+                              >
+                                <Sparkles className="mr-1 size-3 text-emerald-500" />
+                                Jadi Pro
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleExtendTrial(k.id, 14)}
+                                title="Perpanjang Masa Trial +14 Hari"
+                                className="font-mono text-[10px] border-amber-500 text-amber-600 hover:bg-amber-500/10 h-7 px-1.5"
+                              >
+                                <Clock className="mr-1 size-3 text-amber-500" />
+                                +14h
+                              </Button>
+                            </>
+                          )}
                           <Button
                             variant="outline"
                             size="sm"
@@ -365,7 +453,7 @@ export function LicensesClient({
                               setSelectedKey(k)
                               setIsGuideOpen(true)
                             }}
-                            className="font-mono text-xs border-2 text-sky-500 hover:text-sky-600"
+                            className="font-mono text-xs border-2 text-sky-500 hover:text-sky-600 h-7 px-2"
                           >
                             <Terminal className="mr-1 size-3" />
                             Integrasi
@@ -374,7 +462,7 @@ export function LicensesClient({
                             variant="ghost"
                             size="icon"
                             onClick={() => handleDelete(k.id)}
-                            className="size-8 text-destructive"
+                            className="size-7 text-destructive"
                           >
                             <Trash2 className="size-3.5" />
                           </Button>
