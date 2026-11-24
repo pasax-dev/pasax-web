@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-25",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasax.web.id"
+  },
+  "title": {
+    "id": "Peluncuran Seksi Publik Katalog Penanganan Ancaman dan Matriks Komparasi",
+    "en": "Launch of Public Threat Defense Catalog and Matrix Comparison Section"
+  },
+  "body": {
+    "id": "Menambahkan seksi interaktif komprehensif pada beranda publik yang merinci 12 vektor ancaman nyata yang ditangani secara otomatis oleh Pasak lintas aplikasi web, kernel Linux, integritas berkas rahasia, dan armada server.",
+    "en": "Introduced a comprehensive interactive section on the public homepage detailing 12 real threat vectors automatically mitigated by Pasak across web applications, Linux kernel, file integrity, and server fleets."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Katalog Interaktif Penanganan Ancaman: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran .env, hingga OOM crash) lengkap dengan skenario masalah dan solusi otomatis Pasak.",
+      "en": "Interactive Threat Defense Catalog: Detailed breakdowns of 12 real-world threat vectors (SQLi, XSS, RCE, DDoS, Shodan recon, honeypots, .env leaks, and OOM crashes) with problem contexts and automatic mitigation."
+    },
+    {
+      "type": "new",
+      "id": "Filter Kategori & Matriks Komparasi Langsung: Pengguna dapat memfilter vektor proteksi berdasarkan domain (Aplikasi Web L7, Kernel L3/L4, Integritas Berkas FIM, dan Armada SOC) serta beralih ke tabel perbandingan langsung.",
+      "en": "Category Filters & Live Comparison Matrix: Users can filter defense vectors across domains (Web L7, Kernel L3/L4, Filesystem FIM, and Fleet SOC) and switch seamlessly to a direct tabular comparison."
+    },
+    {
+      "type": "improvement",
+      "id": "Panduan Nilai Tambah per Segmen Pengguna: Rangkuman dampak proteksi nyata yang dirasakan oleh pengembang Laravel, pengelola WordPress, pengembang API Docker, dan tim DevOps multi-server.",
+      "en": "Audience Value Guidance: Tailored breakdowns highlighting concrete security benefits for Laravel developers, WordPress administrators, Docker microservices, and multi-server DevOps teams."
+    }
+  ]
+}

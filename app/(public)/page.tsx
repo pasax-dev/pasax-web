@@ -3,6 +3,7 @@ import { asMarkdown } from "fumadocs-core/server"
 import { createMetadata } from "@/lib/metadata"
 import { Hero } from "./_landing/sections/hero"
 import { Style } from "./_landing/sections/style"
+import { DefenseScope } from "./_landing/sections/defense-scope"
 import { Write } from "./_landing/sections/write"
 import { Automate } from "./_landing/sections/automate"
 import { Parts } from "./_landing/sections/parts"
@@ -28,6 +29,7 @@ export default function Page() {
     <>
       <Hero />
       <Style />
+      <DefenseScope />
       <Write />
       <Automate />
       <Parts />

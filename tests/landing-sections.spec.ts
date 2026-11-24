@@ -23,12 +23,16 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(getStartedBtn).toBeVisible()
     await expect(getStartedBtn).toHaveAttribute("href", "/docs")
 
-    const liveThreatMapBtn = hero.getByRole("link", { name: /live threat map/i })
+    const liveThreatMapBtn = hero.getByRole("link", {
+      name: /live threat map/i,
+    })
     await expect(liveThreatMapBtn).toBeVisible()
     await expect(liveThreatMapBtn).toHaveAttribute("href", "/threats-map")
 
     // Install command widget
-    await expect(hero.getByText(/curl -sSL https:\/\/get\.pasax\.dev \| bash/i)).toBeVisible()
+    await expect(
+      hero.getByText(/curl -sSL https:\/\/get\.pasax\.dev \| bash/i)
+    ).toBeVisible()
 
     // Frameworks
     for (const name of ["Ubuntu", "Debian", "Docker", "Laravel"]) {
@@ -51,7 +55,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(style).toContainText("Pasax is an")
     await expect(style).toContainText("fleet immunity framework")
     await expect(
-      style.getByText(/Brings military-grade packet drop & FIM to your server workloads/i)
+      style.getByText(
+        /Brings military-grade packet drop & FIM to your server workloads/i
+      )
     ).toBeVisible()
 
     // Tab buttons
@@ -74,7 +80,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
       await page.waitForTimeout(300)
       await tabThreatRadar.click()
     }
-    await expect(tabThreatRadar).toHaveAttribute("aria-selected", "true", { timeout: 10000 })
+    await expect(tabThreatRadar).toHaveAttribute("aria-selected", "true", {
+      timeout: 10000,
+    })
 
     // Verify 360° Tactical Ship Radar Screen inside monitor
     await expect(style.getByText(/THREAT RADAR/i).first()).toBeVisible()
@@ -94,10 +102,60 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
       await page.waitForTimeout(300)
       await tabKernel.click()
     }
-    await expect(tabKernel).toHaveAttribute("aria-selected", "true", { timeout: 10000 })
+    await expect(tabKernel).toHaveAttribute("aria-selected", "true", {
+      timeout: 10000,
+    })
   })
 
-  test("3. Write Section: Declarative policy rules as code (pasax-rules.yml)", async ({ page }) => {
+  test("2.5 Defense Scope Section: Displays what Pasax defends across web, kernel & fleet", async ({
+    page,
+  }) => {
+    const defenseScope = page.locator("#what-pasax-defends")
+    await defenseScope.scrollIntoViewIfNeeded()
+    await expect(defenseScope).toBeVisible()
+
+    // Heading verification
+    await expect(defenseScope).toContainText("Apa saja yang")
+    await expect(defenseScope).toContainText("ditangani Pasak")
+    await expect(defenseScope).toContainText("untuk Anda")
+
+    // Threat vector cards
+    await expect(
+      defenseScope.getByText("SQL Injection & Data Extraction").first()
+    ).toBeVisible()
+    await expect(
+      defenseScope.getByText("Volumetric DDoS & SYN Floods").first()
+    ).toBeVisible()
+    await expect(
+      defenseScope
+        .getByText(/Pencurian & Perubahan Berkas \.env Kritis/i)
+        .first()
+    ).toBeVisible()
+    await expect(
+      defenseScope.getByText(/Pertahanan Kolektif/i).first()
+    ).toBeVisible()
+
+    // Category filter tab interaction
+    const kernelTab = defenseScope.getByRole("tab", {
+      name: /Kernel & Jaringan/i,
+    })
+    await expect(kernelTab).toBeVisible()
+    await kernelTab.click()
+    await expect(
+      defenseScope.getByText("Volumetric DDoS & SYN Floods").first()
+    ).toBeVisible()
+
+    // View mode switch to matrix
+    const matrixBtn = defenseScope.getByRole("button", {
+      name: "Matriks Komparasi",
+    })
+    await matrixBtn.click()
+    await expect(defenseScope.locator("table")).toBeVisible()
+  })
+
+  test("3. Write Section: Declarative policy rules as code (pasax-rules.yml)", async ({
+    page,
+  }) => {
     const write = page.locator("#write")
     await write.scrollIntoViewIfNeeded()
     await expect(write).toBeVisible()
@@ -111,18 +169,24 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(write.getByText(/BLOCK_AND_QUARANTINE/i).first()).toBeVisible()
   })
 
-  test("4. Automate Section: Fleet defense rules synchronization", async ({ page }) => {
+  test("4. Automate Section: Fleet defense rules synchronization", async ({
+    page,
+  }) => {
     const automate = page.locator("#automate")
     await automate.scrollIntoViewIfNeeded()
     await expect(automate).toBeVisible()
 
     // Lead & Title
     await expect(automate.getByText(/Always in sync\./i)).toBeVisible()
-    await expect(automate).toContainText("Synchronize defense rules across your")
+    await expect(automate).toContainText(
+      "Synchronize defense rules across your"
+    )
     await expect(automate).toContainText("fleet")
   })
 
-  test("5. Parts Section: Composable 3-layer security architecture", async ({ page }) => {
+  test("5. Parts Section: Composable 3-layer security architecture", async ({
+    page,
+  }) => {
     const parts = page.locator("#parts")
     await parts.scrollIntoViewIfNeeded()
     await expect(parts).toBeVisible()
@@ -133,7 +197,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(parts).toContainText("separated into 3 defense layers.")
   })
 
-  test("6. Integrations Section: Ecosystem modules & distributions", async ({ page }) => {
+  test("6. Integrations Section: Ecosystem modules & distributions", async ({
+    page,
+  }) => {
     const integrations = page.locator("#integrations")
     await integrations.scrollIntoViewIfNeeded()
     await expect(integrations).toBeVisible()
@@ -146,7 +212,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(integrations.getByText(/\+\d+ more/i)).toBeVisible()
   })
 
-  test("7. CLI Section: Pasax Sentinel autonomous node hardening", async ({ page }) => {
+  test("7. CLI Section: Pasax Sentinel autonomous node hardening", async ({
+    page,
+  }) => {
     const cli = page.locator("#cli")
     await cli.scrollIntoViewIfNeeded()
     await expect(cli).toBeVisible()
@@ -171,7 +239,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     expect(chipCount).toBeGreaterThanOrEqual(1)
   })
 
-  test("8. Proof & Showcase Section: Production battle-tested metrics", async ({ page }) => {
+  test("8. Proof & Showcase Section: Production battle-tested metrics", async ({
+    page,
+  }) => {
     const proof = page.locator("#proof")
     await proof.scrollIntoViewIfNeeded()
     await expect(proof).toBeVisible()
@@ -186,7 +256,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(showcaseLink).toHaveAttribute("href", "/showcase")
   })
 
-  test("9. Feedback Section: DevOps & Security testimonials", async ({ page }) => {
+  test("9. Feedback Section: DevOps & Security testimonials", async ({
+    page,
+  }) => {
     const feedback = page.locator("#feedback")
     await feedback.scrollIntoViewIfNeeded()
     await expect(feedback).toBeVisible()
@@ -201,7 +273,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(feedback.getByText("@ssalbdivad")).toBeVisible()
   })
 
-  test("10. Start Section: CTA, Sand physics Wordmark canvas, and Footer", async ({ page }) => {
+  test("10. Start Section: CTA, Sand physics Wordmark canvas, and Footer", async ({
+    page,
+  }) => {
     const start = page.locator("#start")
     await start.scrollIntoViewIfNeeded()
     await expect(start).toBeVisible()
@@ -212,12 +286,18 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(start).toContainText("your servers now.")
 
     // Install command
-    await expect(start.getByText(/curl -sSL https:\/\/get\.pasax\.dev \| bash/i)).toBeVisible()
+    await expect(
+      start.getByText(/curl -sSL https:\/\/get\.pasax\.dev \| bash/i)
+    ).toBeVisible()
 
     // Action buttons
     await expect(start.getByRole("link", { name: "Get started" })).toBeVisible()
-    await expect(start.getByRole("link", { name: "What is Pasax?" })).toBeVisible()
-    await expect(start.getByRole("link", { name: "Star on GitHub" })).toBeVisible()
+    await expect(
+      start.getByRole("link", { name: "What is Pasax?" })
+    ).toBeVisible()
+    await expect(
+      start.getByRole("link", { name: "Star on GitHub" })
+    ).toBeVisible()
 
     // Wordmark Canvas (Filled particle sand simulation)
     const wordmarkCanvas = start.locator("canvas").first()
@@ -228,7 +308,9 @@ test.describe("Landing Page - Comprehensive Sections & Interactions", () => {
     await expect(footer).toBeVisible()
     await expect(footer.getByRole("link", { name: "Docs" })).toBeVisible()
     await expect(footer.getByRole("link", { name: "Threat Map" })).toBeVisible()
-    await expect(footer.getByRole("link", { name: "Sentinel Daemon" })).toBeVisible()
+    await expect(
+      footer.getByRole("link", { name: "Sentinel Daemon" })
+    ).toBeVisible()
     await expect(footer.getByRole("link", { name: "Shield WAF" })).toBeVisible()
   })
 })
