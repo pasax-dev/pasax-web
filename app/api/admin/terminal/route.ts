@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { pasaxCloud } from "@/lib/pasax-cloud"
 import { ensureSessionUser, getScopedNodes } from "@/lib/tenant-scope"
+import { decryptSshSecret } from "@/lib/ssh-profile-crypto"
 import {
   closeSshTerminalSession,
   createSshTerminalSession,
@@ -55,7 +56,6 @@ export async function GET(req: NextRequest) {
   }
 
   const encoder = new TextEncoder()
-
   let cleanupFn: (() => void) | null = null
 
   const stream = new ReadableStream<Uint8Array>({
@@ -63,7 +63,9 @@ export async function GET(req: NextRequest) {
       const sendEvent = (event: string, payload: unknown) => {
         try {
           controller.enqueue(
-            encoder.encode(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`)
+            encoder.encode(
+              `event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`
+            )
           )
         } catch {
           // stream already closed
@@ -192,19 +194,70 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === "connect" || action === "exec") {
-      const nodeId = String(body?.nodeId || "")
-      if (!nodeId) {
+      const profileId = String(body?.profileId || "").trim()
+      const allNodes = await pasaxCloud.fetchNodes()
+      const scopedNodes = getScopedNodes(session, allNodes)
+
+      let resolvedNodeId = String(body?.nodeId || "").trim()
+      let resolvedHost = String(body?.host || "").trim()
+      let resolvedPort = Number(body?.port || 0)
+      let resolvedUsername = String(body?.username || "").trim()
+      let resolvedPassword =
+        typeof body?.password === "string" && body.password.length > 0
+          ? body.password
+          : undefined
+      let resolvedPrivateKey =
+        typeof body?.privateKey === "string" && body.privateKey.trim()
+          ? body.privateKey.trim()
+          : undefined
+      let resolvedHostname = ""
+
+      if (profileId) {
+        const profile = await pasaxCloud.resolveSshProfile(profileId, ctx.email)
+        if (!profile) {
+          return NextResponse.json(
+            {
+              status: "error",
+              message:
+                "Konfigurasi SSH tersimpan tidak ditemukan atau bukan milik akun Anda.",
+            },
+            { status: 404 }
+          )
+        }
+        resolvedNodeId = profile.nodeId || resolvedNodeId
+        resolvedHost = profile.host
+        resolvedPort = profile.port
+        resolvedUsername = profile.username
+        resolvedHostname = profile.label
+
+        if (
+          !resolvedPassword &&
+          !resolvedPrivateKey &&
+          profile.encryptedSecret
+        ) {
+          const decrypted = decryptSshSecret(profile.encryptedSecret)
+          if (decrypted) {
+            if (profile.authMethod === "key") {
+              resolvedPrivateKey = decrypted
+            } else {
+              resolvedPassword = decrypted
+            }
+          }
+        }
+      }
+
+      if (!resolvedNodeId) {
         return NextResponse.json(
-          { status: "error", message: "Pilih VPS Node tujuan terlebih dahulu." },
+          {
+            status: "error",
+            message: "Pilih Server VPS target terlebih dahulu.",
+          },
           { status: 400 }
         )
       }
 
       // Enforce multi-tenant VPS node ownership before any network attempt
-      const allNodes = await pasaxCloud.fetchNodes()
-      const scopedNodes = getScopedNodes(session, allNodes)
-      const targetNode = scopedNodes.find((n) => n.node_id === nodeId)
-
+      const targetNode = scopedNodes.find((n) => n.node_id === resolvedNodeId)
       if (!targetNode) {
         return NextResponse.json(
           {
@@ -216,8 +269,11 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      const rawHost = String(body?.host || targetNode.ip_v4 || "").trim()
-      const hostCheck = validateTargetHost(rawHost)
+      if (!resolvedHost) resolvedHost = targetNode.ip_v4
+      if (!resolvedPort) resolvedPort = targetNode.ssh_port || 22
+      if (!resolvedHostname) resolvedHostname = targetNode.hostname
+
+      const hostCheck = validateTargetHost(resolvedHost)
       if (!hostCheck.valid) {
         return NextResponse.json(
           { status: "error", message: hostCheck.reason },
@@ -225,30 +281,29 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      const port = Number(body?.port || targetNode.ssh_port || 22)
-      if (!Number.isInteger(port) || port < 1 || port > 65535) {
+      if (
+        !Number.isInteger(resolvedPort) ||
+        resolvedPort < 1 ||
+        resolvedPort > 65535
+      ) {
         return NextResponse.json(
           { status: "error", message: "Port SSH harus di antara 1 - 65535." },
           { status: 400 }
         )
       }
 
-      const username = String(body?.username || "").trim()
-      const password = typeof body?.password === "string" ? body.password : undefined
-      const privateKey =
-        typeof body?.privateKey === "string" ? body.privateKey : undefined
-
-      if (!username) {
+      if (!resolvedUsername) {
         return NextResponse.json(
           { status: "error", message: "Username SSH wajib diisi." },
           { status: 400 }
         )
       }
-      if (!password && !privateKey?.trim()) {
+      if (!resolvedPassword && !resolvedPrivateKey) {
         return NextResponse.json(
           {
             status: "error",
-            message: "Password atau Private Key SSH wajib diisi.",
+            message:
+              "Password atau Private Key SSH wajib diisi (atau simpan terlebih dahulu pada profil).",
           },
           { status: 400 }
         )
@@ -266,12 +321,18 @@ export async function POST(req: NextRequest) {
         try {
           const result = await execSshCommandOnce({
             host: hostCheck.host,
-            port,
-            username,
-            password,
-            privateKey,
+            port: resolvedPort,
+            username: resolvedUsername,
+            password: resolvedPassword,
+            privateKey: resolvedPrivateKey,
             command,
           })
+          if (profileId) {
+            void pasaxCloud.updateSshProfile(profileId, {
+              ownerEmail: ctx.email,
+              lastConnectedAt: new Date().toISOString(),
+            })
+          }
           return NextResponse.json({
             status: "success",
             data: result,
@@ -280,7 +341,7 @@ export async function POST(req: NextRequest) {
           return NextResponse.json(
             {
               status: "error",
-              message: formatSshErrorMessage(err, hostCheck.host, port),
+              message: formatSshErrorMessage(err, hostCheck.host, resolvedPort),
             },
             { status: 502 }
           )
@@ -294,15 +355,22 @@ export async function POST(req: NextRequest) {
         const sshSession = await createSshTerminalSession({
           ownerEmail: ctx.email,
           nodeId: targetNode.node_id,
-          hostname: targetNode.hostname,
+          hostname: resolvedHostname,
           host: hostCheck.host,
-          port,
-          username,
-          password,
-          privateKey,
+          port: resolvedPort,
+          username: resolvedUsername,
+          password: resolvedPassword,
+          privateKey: resolvedPrivateKey,
           cols,
           rows,
         })
+
+        if (profileId) {
+          void pasaxCloud.updateSshProfile(profileId, {
+            ownerEmail: ctx.email,
+            lastConnectedAt: new Date().toISOString(),
+          })
+        }
 
         return NextResponse.json({
           status: "success",
@@ -319,7 +387,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             status: "error",
-            message: formatSshErrorMessage(err, hostCheck.host, port),
+            message: formatSshErrorMessage(err, hostCheck.host, resolvedPort),
           },
           { status: 502 }
         )

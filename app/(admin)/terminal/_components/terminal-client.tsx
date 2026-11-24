@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import type { SavedSshProfile } from "@/lib/pasax-cloud"
 import type { NodeTelemetry } from "@/lib/store"
 import {
   TerminalSquare,
@@ -28,10 +29,24 @@ import {
   RefreshCw,
   ZoomIn,
   ZoomOut,
+  Plus,
+  Pencil,
+  CheckCircle2,
+  Database,
+  X,
 } from "lucide-react"
+
+interface SshProfileEntitlement {
+  allowed: boolean
+  plan: string
+  maxProfiles: number
+  reason?: string
+}
 
 interface TerminalClientProps {
   nodes: NodeTelemetry[]
+  savedProfiles: SavedSshProfile[]
+  entitlement: SshProfileEntitlement
   initialNodeId?: string
   currentRole: string
   currentEmail: string
@@ -86,7 +101,10 @@ const inputClass =
 const selectClass =
   "h-9 w-full rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold text-foreground focus:border-main focus:outline-hidden"
 
-function getDefaultUsername(node: NodeTelemetry | undefined, role: string): string {
+function getDefaultUsername(
+  node: NodeTelemetry | undefined,
+  role: string
+): string {
   const isVBox =
     node?.ip_v4 === "10.0.2.15" ||
     node?.ip_v4 === "127.0.0.1" ||
@@ -111,56 +129,130 @@ function isVirtualBoxLikeNode(node: NodeTelemetry | undefined): boolean {
   )
 }
 
+function isPrivateOrLocalHost(host: string): boolean {
+  const trimmed = host.trim()
+  return (
+    trimmed === "127.0.0.1" ||
+    trimmed === "localhost" ||
+    trimmed.startsWith("10.") ||
+    trimmed.startsWith("192.168.") ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(trimmed)
+  )
+}
+
 export function TerminalClient({
   nodes = [],
+  savedProfiles = [],
+  entitlement,
   initialNodeId,
   currentRole,
   currentEmail,
   isVercelCloud = false,
 }: TerminalClientProps) {
-  const defaultNode =
+  // Saved SSH configurations persisted in Neon PostgreSQL via pasax-service
+  const [profiles, setProfiles] =
+    React.useState<SavedSshProfile[]>(savedProfiles)
+
+  const initialMatchedProfile = React.useMemo(() => {
+    if (initialNodeId) {
+      const byNode = savedProfiles.find((p) => p.nodeId === initialNodeId)
+      if (byNode) return byNode
+    }
+    return savedProfiles[0] || undefined
+  }, [savedProfiles, initialNodeId])
+
+  const [selectedProfileId, setSelectedProfileId] = React.useState<string>(
+    initialMatchedProfile?.id || ""
+  )
+
+  const selectedProfile = React.useMemo(
+    () => profiles.find((p) => p.id === selectedProfileId),
+    [profiles, selectedProfileId]
+  )
+
+  const selectedProfileNode = React.useMemo(() => {
+    if (!selectedProfile?.nodeId) return undefined
+    return nodes.find((n) => n.node_id === selectedProfile.nodeId)
+  }, [nodes, selectedProfile])
+
+  // Ephemeral credential override when selected saved profile does not store secret
+  const [ephemeralSecret, setEphemeralSecret] = React.useState<string>("")
+  const [showEphemeralSecret, setShowEphemeralSecret] = React.useState(false)
+  const [transportOverride, setTransportOverride] =
+    React.useState<TerminalTransportMode>(
+      initialMatchedProfile?.transportMode ||
+        (isVercelCloud ? "command" : "pty")
+    )
+
+  // Add / Edit Profile Form State
+  const defaultDraftNode =
     nodes.find((n) => n.node_id === initialNodeId) || nodes[0] || undefined
+  const shouldAutoOpenForm =
+    savedProfiles.length === 0 ||
+    (Boolean(initialNodeId) && !initialMatchedProfile)
 
-  const [selectedNodeId, setSelectedNodeId] = React.useState<string>(
-    defaultNode?.node_id || ""
+  const [showProfileForm, setShowProfileForm] = React.useState<boolean>(
+    shouldAutoOpenForm && entitlement.allowed
   )
-  const [host, setHost] = React.useState<string>(
-    isVirtualBoxLikeNode(defaultNode) && !isVercelCloud
+  const [editingProfileId, setEditingProfileId] = React.useState<string | null>(
+    null
+  )
+  const [formNodeId, setFormNodeId] = React.useState<string>(
+    defaultDraftNode?.node_id || ""
+  )
+  const [formLabel, setFormLabel] = React.useState<string>(() => {
+    if (!defaultDraftNode) return ""
+    const user = getDefaultUsername(defaultDraftNode, currentRole)
+    return `${defaultDraftNode.hostname} (${user})`
+  })
+  const [formHost, setFormHost] = React.useState<string>(
+    isVirtualBoxLikeNode(defaultDraftNode) && !isVercelCloud
       ? "127.0.0.1"
-      : defaultNode?.ip_v4 || ""
+      : defaultDraftNode?.ip_v4 || ""
   )
-  const [port, setPort] = React.useState<string>(
-    isVirtualBoxLikeNode(defaultNode) && !isVercelCloud
+  const [formPort, setFormPort] = React.useState<string>(
+    isVirtualBoxLikeNode(defaultDraftNode) && !isVercelCloud
       ? "2222"
-      : String(defaultNode?.ssh_port || 22)
+      : String(defaultDraftNode?.ssh_port || 22)
   )
-  const [username, setUsername] = React.useState<string>(
-    getDefaultUsername(defaultNode, currentRole)
+  const [formUsername, setFormUsername] = React.useState<string>(
+    getDefaultUsername(defaultDraftNode, currentRole)
   )
-  const [authMethod, setAuthMethod] = React.useState<"password" | "key">(
-    "password"
-  )
-  const [password, setPassword] = React.useState<string>("")
-  const [privateKey, setPrivateKey] = React.useState<string>("")
-  const [showPassword, setShowPassword] = React.useState<boolean>(false)
-
-  const [transportMode, setTransportMode] =
+  const [formTransportMode, setFormTransportMode] =
     React.useState<TerminalTransportMode>(isVercelCloud ? "command" : "pty")
+  const [formAuthMethod, setFormAuthMethod] = React.useState<
+    "password" | "key"
+  >("password")
+  const [formPassword, setFormPassword] = React.useState<string>("")
+  const [formPrivateKey, setFormPrivateKey] = React.useState<string>("")
+  const [showFormPassword, setShowFormPassword] = React.useState<boolean>(false)
+  const [formSaveSecret, setFormSaveSecret] = React.useState<boolean>(true)
+  const [formAllowUnverifiedLocal, setFormAllowUnverifiedLocal] =
+    React.useState<boolean>(false)
+
+  const [isSavingProfile, setIsSavingProfile] = React.useState<boolean>(false)
+  const [deletingProfileId, setDeletingProfileId] = React.useState<
+    string | null
+  >(null)
+  const [profileFormError, setProfileFormError] = React.useState<string | null>(
+    null
+  )
+  const [profileNotice, setProfileNotice] = React.useState<string | null>(null)
+
+  // Terminal Runtime State
   const [status, setStatus] = React.useState<ConnectionStatus>("idle")
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
   const [sessionId, setSessionId] = React.useState<string | null>(null)
-  const [dimensions, setDimensions] = React.useState<{ cols: number; rows: number }>({
+  const [dimensions, setDimensions] = React.useState<{
+    cols: number
+    rows: number
+  }>({
     cols: 100,
     rows: 28,
   })
   const [fontSize, setFontSize] = React.useState<number>(13)
   const [isFullscreen, setIsFullscreen] = React.useState<boolean>(false)
   const [copiedOutput, setCopiedOutput] = React.useState<boolean>(false)
-
-  const selectedNode = React.useMemo(
-    () => nodes.find((n) => n.node_id === selectedNodeId),
-    [nodes, selectedNodeId]
-  )
 
   // Refs for Xterm.js & live callbacks
   const terminalHostRef = React.useRef<HTMLDivElement | null>(null)
@@ -169,7 +261,7 @@ export function TerminalClient({
   const eventSourceRef = React.useRef<EventSource | null>(null)
 
   const statusRef = React.useRef<ConnectionStatus>("idle")
-  const modeRef = React.useRef<TerminalTransportMode>(transportMode)
+  const modeRef = React.useRef<TerminalTransportMode>(transportOverride)
   const sessionIdRef = React.useRef<string | null>(null)
   const localLineBufferRef = React.useRef<string>("")
   const cmdHistoryRef = React.useRef<string[]>([])
@@ -178,40 +270,67 @@ export function TerminalClient({
   const pendingInputBufferRef = React.useRef<string>("")
   const flushTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Keep refs synced with latest state & connection form values
   const connConfigRef = React.useRef({
-    nodeId: selectedNodeId,
-    host,
-    port,
-    username,
-    authMethod,
-    password,
-    privateKey,
+    profileId: selectedProfile?.id || "",
+    nodeId: selectedProfile?.nodeId || "",
+    host: selectedProfile?.host || "",
+    port: selectedProfile?.port || 22,
+    username: selectedProfile?.username || "",
+    authMethod: selectedProfile?.authMethod || ("password" as const),
+    ephemeralSecret,
   })
 
   React.useEffect(() => {
     connConfigRef.current = {
-      nodeId: selectedNodeId,
-      host,
-      port,
-      username,
-      authMethod,
-      password,
-      privateKey,
+      profileId: selectedProfile?.id || "",
+      nodeId: selectedProfile?.nodeId || "",
+      host: selectedProfile?.host || "",
+      port: selectedProfile?.port || 22,
+      username: selectedProfile?.username || "",
+      authMethod: selectedProfile?.authMethod || "password",
+      ephemeralSecret,
     }
-  }, [selectedNodeId, host, port, username, authMethod, password, privateKey])
+  }, [selectedProfile, ephemeralSecret])
 
   React.useEffect(() => {
     statusRef.current = status
   }, [status])
 
   React.useEffect(() => {
-    modeRef.current = transportMode
-  }, [transportMode])
+    modeRef.current = transportOverride
+  }, [transportOverride])
 
   React.useEffect(() => {
     sessionIdRef.current = sessionId
   }, [sessionId])
+
+  const syncResize = React.useCallback(() => {
+    if (!fitAddonRef.current || !xtermRef.current) return
+    try {
+      fitAddonRef.current.fit()
+      const cols = xtermRef.current.cols
+      const rows = xtermRef.current.rows
+      setDimensions({ cols, rows })
+      if (
+        statusRef.current === "connected" &&
+        modeRef.current === "pty" &&
+        sessionIdRef.current
+      ) {
+        void fetch("/api/admin/terminal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "resize",
+            sessionId: sessionIdRef.current,
+            cols,
+            rows,
+          }),
+        }).catch(() => {})
+      }
+    } catch {
+      // ignore fit while container hidden
+    }
+  }, [])
 
   const writeLocalPrompt = React.useCallback(() => {
     const term = xtermRef.current
@@ -251,12 +370,16 @@ export function TerminalClient({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               action: "exec",
-              nodeId: cfg.nodeId,
-              host: cfg.host,
-              port: Number(cfg.port || 22),
-              username: cfg.username,
-              password: cfg.authMethod === "password" ? cfg.password : undefined,
-              privateKey: cfg.authMethod === "key" ? cfg.privateKey : undefined,
+              profileId: cfg.profileId || undefined,
+              nodeId: cfg.nodeId || undefined,
+              password:
+                cfg.authMethod === "password" && cfg.ephemeralSecret
+                  ? cfg.ephemeralSecret
+                  : undefined,
+              privateKey:
+                cfg.authMethod === "key" && cfg.ephemeralSecret
+                  ? cfg.ephemeralSecret
+                  : undefined,
               command: cmd,
             }),
           })
@@ -271,7 +394,9 @@ export function TerminalClient({
             if (out) term.write(`\r\n${out}`)
             if (errOut) term.write(`\r\n\x1b[33m${errOut}\x1b[0m`)
             if (!out && !errOut) {
-              term.write(`\r\n\x1b[90m(exit code: ${json.data?.exitCode ?? 0})\x1b[0m`)
+              term.write(
+                `\r\n\x1b[90m(exit code: ${json.data?.exitCode ?? 0})\x1b[0m`
+              )
             }
           }
         } catch (err: any) {
@@ -281,21 +406,46 @@ export function TerminalClient({
         return
       }
 
-      // Otherwise run built-in local Pasax Telemetry Console commands
+      // Built-in local Pasax Telemetry Console commands
       term.write("\r\n")
       if (cmd === "help") {
         term.writeln("\x1b[1;36mPasax Local Telemetry Console (Pre-SSH)\x1b[0m")
-        term.writeln("  \x1b[33mhelp\x1b[0m      Tampilkan bantuan perintah lokal")
-        term.writeln("  \x1b[33mnodes\x1b[0m     Daftar VPS Node dalam cakupan akun Anda")
-        term.writeln("  \x1b[33mstatus\x1b[0m    Ringkasan status node terpilih & konfigurasi SSH")
-        term.writeln("  \x1b[33mvhosts\x1b[0m    Daftar Virtual Host terdeteksi pada node terpilih")
+        term.writeln(
+          "  \x1b[33mhelp\x1b[0m      Tampilkan bantuan perintah lokal"
+        )
+        term.writeln(
+          "  \x1b[33mprofiles\x1b[0m  Daftar konfigurasi SSH tersimpan di database"
+        )
+        term.writeln(
+          "  \x1b[33mnodes\x1b[0m     Daftar VPS Node dalam cakupan akun Anda"
+        )
+        term.writeln(
+          "  \x1b[33mstatus\x1b[0m    Ringkasan status target terpilih"
+        )
+        term.writeln(
+          "  \x1b[33mvhosts\x1b[0m    Daftar Virtual Host terdeteksi pada node target"
+        )
         term.writeln("  \x1b[33mclear\x1b[0m     Bersihkan layar terminal")
         term.writeln(
-          "\x1b[90mTip: Isi kredensial SSH di panel atas lalu klik 'Hubungkan SSH' untuk shell Linux penuh.\x1b[0m"
+          "\x1b[90mTip: Simpan konfigurasi SSH terverifikasi lalu klik 'Hubungkan SSH'.\x1b[0m"
         )
+      } else if (cmd === "profiles") {
+        if (profiles.length === 0) {
+          term.writeln(
+            "\x1b[33mBelum ada konfigurasi SSH yang tersimpan dan terverifikasi.\x1b[0m"
+          )
+        } else {
+          profiles.forEach((p, i) => {
+            term.writeln(
+              `  [${i + 1}] \x1b[1;32m${p.label}\x1b[0m  ${p.username}@${p.host}:${p.port}  (${p.transportMode.toUpperCase()})`
+            )
+          })
+        }
       } else if (cmd === "nodes") {
         if (nodes.length === 0) {
-          term.writeln("\x1b[33mBelum ada VPS Node terdaftar pada akun Anda.\x1b[0m")
+          term.writeln(
+            "\x1b[33mBelum ada VPS Node terdaftar pada akun Anda.\x1b[0m"
+          )
         } else {
           nodes.forEach((n, i) => {
             term.writeln(
@@ -304,25 +454,35 @@ export function TerminalClient({
           })
         }
       } else if (cmd === "status") {
-        const node = nodes.find((n) => n.node_id === connConfigRef.current.nodeId)
+        const node = nodes.find(
+          (n) => n.node_id === connConfigRef.current.nodeId
+        )
         if (!node) {
-          term.writeln("\x1b[33mTidak ada node yang dipilih.\x1b[0m")
+          term.writeln(
+            "\x1b[33mBelum ada target konfigurasi SSH terpilih.\x1b[0m"
+          )
         } else {
-          term.writeln(`Hostname : \x1b[1m${node.hostname}\x1b[0m (${node.node_id})`)
-          term.writeln(`IP / Port: ${node.ip_v4}:${node.ssh_port || 22}`)
+          term.writeln(
+            `Target   : \x1b[1m${connConfigRef.current.username}@${connConfigRef.current.host}:${connConfigRef.current.port}\x1b[0m`
+          )
+          term.writeln(`Node VPS : ${node.hostname} (${node.node_id})`)
           term.writeln(`OS       : ${node.os}`)
           term.writeln(
             `Metrics  : CPU ${node.cpu_used_percent}% | RAM ${node.memory_used_percent}% | Status ${node.status}`
           )
         }
       } else if (cmd === "vhosts") {
-        const node = nodes.find((n) => n.node_id === connConfigRef.current.nodeId)
+        const node = nodes.find(
+          (n) => n.node_id === connConfigRef.current.nodeId
+        )
         const vhosts = [
           ...(node?.webservers?.nginx?.vhosts || []),
           ...(node?.webservers?.apache2?.vhosts || []),
         ]
         if (vhosts.length === 0) {
-          term.writeln("\x1b[90mBelum ada VHost terdeteksi pada node ini.\x1b[0m")
+          term.writeln(
+            "\x1b[90mBelum ada VHost terdeteksi pada node ini.\x1b[0m"
+          )
         } else {
           vhosts.forEach((v) => {
             term.writeln(
@@ -337,7 +497,7 @@ export function TerminalClient({
       }
       writeLocalPrompt()
     },
-    [nodes, writeLocalPrompt]
+    [nodes, profiles, writeLocalPrompt]
   )
 
   const enqueuePtyInput = React.useCallback((chunk: string) => {
@@ -371,7 +531,7 @@ export function TerminalClient({
     }, 12)
   }, [])
 
-  // Mount Xterm.js strictly in browser
+  // Mount Xterm.js strictly in browser (never unmount when toggling fullscreen)
   React.useEffect(() => {
     let disposed = false
     let resizeObserver: ResizeObserver | null = null
@@ -379,11 +539,13 @@ export function TerminalClient({
 
     const initTerminal = async () => {
       if (!terminalHostRef.current) return
-      const [{ Terminal }, { FitAddon }, { WebLinksAddon }] = await Promise.all([
-        import("@xterm/xterm"),
-        import("@xterm/addon-fit"),
-        import("@xterm/addon-web-links"),
-      ])
+      const [{ Terminal }, { FitAddon }, { WebLinksAddon }] = await Promise.all(
+        [
+          import("@xterm/xterm"),
+          import("@xterm/addon-fit"),
+          import("@xterm/addon-web-links"),
+        ]
+      )
 
       if (disposed || !terminalHostRef.current) return
 
@@ -434,15 +596,20 @@ export function TerminalClient({
       fitAddonRef.current = fitAddon
       setDimensions({ cols: term.cols, rows: term.rows })
 
-      // Initial SOC banner
-      term.writeln("\x1b[1;36m╔══════════════════════════════════════════════════════════════╗\x1b[0m")
-      term.writeln("\x1b[1;36m║  PASAX CLOUD SOC — WEB SSH TERMINAL (XTERM.JS ENGINE)       ║\x1b[0m")
-      term.writeln("\x1b[1;36m╚══════════════════════════════════════════════════════════════╝\x1b[0m")
       term.writeln(
-        `\x1b[90mOperator:\x1b[0m ${currentEmail} (${currentRole})  |  \x1b[90mScoped VPS:\x1b[0m ${nodes.length} node`
+        "\x1b[1;36m╔══════════════════════════════════════════════════════════════╗\x1b[0m"
       )
       term.writeln(
-        "\x1b[90mKetik 'help' untuk perintah lokal atau klik 'Hubungkan SSH' untuk shell VPS.\x1b[0m"
+        "\x1b[1;36m║  PASAX CLOUD SOC — WEB SSH TERMINAL (XTERM.JS ENGINE)       ║\x1b[0m"
+      )
+      term.writeln(
+        "\x1b[1;36m╚══════════════════════════════════════════════════════════════╝\x1b[0m"
+      )
+      term.writeln(
+        `\x1b[90mOperator:\x1b[0m ${currentEmail} (${currentRole})  |  \x1b[90mSaved SSH:\x1b[0m ${savedProfiles.length} profil`
+      )
+      term.writeln(
+        "\x1b[90mKetik 'help' untuk perintah lokal atau pilih profil tersimpan lalu klik 'Hubungkan SSH'.\x1b[0m"
       )
       term.write(`\r\n\x1b[38;5;39mpasax-local\x1b[0m:\x1b[38;5;245m~$\x1b[0m `)
 
@@ -467,31 +634,34 @@ export function TerminalClient({
             return
           }
           if (ch === "\u0003") {
-            // Ctrl+C
             localLineBufferRef.current = ""
             term.write("^C")
             writeLocalPrompt()
             return
           }
           if (ch === "\u000c") {
-            // Ctrl+L
             term.clear()
             writeLocalPrompt()
             return
           }
           if (ch === "\u007f" || ch === "\b") {
             if (localLineBufferRef.current.length > 0) {
-              localLineBufferRef.current = localLineBufferRef.current.slice(0, -1)
+              localLineBufferRef.current = localLineBufferRef.current.slice(
+                0,
+                -1
+              )
               term.write("\b \b")
             }
             continue
           }
           if (data === "\x1b[A") {
-            // ArrowUp
             const nextIdx = cmdHistoryIdxRef.current + 1
             if (nextIdx < cmdHistoryRef.current.length) {
               while (localLineBufferRef.current.length > 0) {
-                localLineBufferRef.current = localLineBufferRef.current.slice(0, -1)
+                localLineBufferRef.current = localLineBufferRef.current.slice(
+                  0,
+                  -1
+                )
                 term.write("\b \b")
               }
               cmdHistoryIdxRef.current = nextIdx
@@ -502,10 +672,12 @@ export function TerminalClient({
             return
           }
           if (data === "\x1b[B") {
-            // ArrowDown
             const prevIdx = cmdHistoryIdxRef.current - 1
             while (localLineBufferRef.current.length > 0) {
-              localLineBufferRef.current = localLineBufferRef.current.slice(0, -1)
+              localLineBufferRef.current = localLineBufferRef.current.slice(
+                0,
+                -1
+              )
               term.write("\b \b")
             }
             if (prevIdx >= 0) {
@@ -525,34 +697,6 @@ export function TerminalClient({
         }
       })
 
-      const syncResize = () => {
-        if (!fitAddonRef.current || !xtermRef.current) return
-        try {
-          fitAddonRef.current.fit()
-          const cols = xtermRef.current.cols
-          const rows = xtermRef.current.rows
-          setDimensions({ cols, rows })
-          if (
-            statusRef.current === "connected" &&
-            modeRef.current === "pty" &&
-            sessionIdRef.current
-          ) {
-            void fetch("/api/admin/terminal", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                action: "resize",
-                sessionId: sessionIdRef.current,
-                cols,
-                rows,
-              }),
-            }).catch(() => {})
-          }
-        } catch {
-          // ignore fit while hidden
-        }
-      }
-
       resizeObserver = new ResizeObserver(() => {
         syncResize()
       })
@@ -565,6 +709,7 @@ export function TerminalClient({
     return () => {
       disposed = true
       if (flushTimerRef.current) clearTimeout(flushTimerRef.current)
+      window.removeEventListener("resize", syncResize)
       resizeObserver?.disconnect()
       eventSourceRef.current?.close()
       termInstance?.dispose()
@@ -572,32 +717,244 @@ export function TerminalClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Update font size & refit
+  // Sync font size, body scroll lock, and terminal dimensions on fullscreen / font toggle
   React.useEffect(() => {
-    if (xtermRef.current && fitAddonRef.current) {
-      xtermRef.current.options.fontSize = fontSize
-      fitAddonRef.current.fit()
-      setDimensions({ cols: xtermRef.current.cols, rows: xtermRef.current.rows })
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = isFullscreen ? "hidden" : ""
     }
-  }, [fontSize, isFullscreen])
+    if (xtermRef.current) {
+      xtermRef.current.options.fontSize = fontSize
+    }
+    const rafId = requestAnimationFrame(() => syncResize())
+    const timerId = setTimeout(() => syncResize(), 70)
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearTimeout(timerId)
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = ""
+      }
+    }
+  }, [fontSize, isFullscreen, syncResize])
 
-  const handleSelectNode = (nodeId: string) => {
-    setSelectedNodeId(nodeId)
+  // Keep selected profile coherent if profiles list changes
+  React.useEffect(() => {
+    if (profiles.length === 0) {
+      setSelectedProfileId("")
+      return
+    }
+    if (!profiles.some((p) => p.id === selectedProfileId)) {
+      const next = profiles[0]
+      setSelectedProfileId(next.id)
+      setTransportOverride(next.transportMode)
+    }
+  }, [profiles, selectedProfileId])
+
+  const handleSelectSavedProfile = (profileId: string) => {
+    setSelectedProfileId(profileId)
+    setEphemeralSecret("")
+    setErrorMessage(null)
+    const found = profiles.find((p) => p.id === profileId)
+    if (found) {
+      setTransportOverride(found.transportMode)
+    }
+  }
+
+  const openAddForm = () => {
+    const baseNode =
+      nodes.find((n) => n.node_id === formNodeId) || nodes[0] || undefined
+    const isVBox = isVirtualBoxLikeNode(baseNode)
+    const nextUser = getDefaultUsername(baseNode, currentRole)
+    setEditingProfileId(null)
+    setFormNodeId(baseNode?.node_id || "")
+    setFormUsername(nextUser)
+    setFormHost(isVBox && !isVercelCloud ? "127.0.0.1" : baseNode?.ip_v4 || "")
+    setFormPort(
+      isVBox && !isVercelCloud ? "2222" : String(baseNode?.ssh_port || 22)
+    )
+    setFormLabel(baseNode ? `${baseNode.hostname} (${nextUser})` : "")
+    setFormTransportMode(isVercelCloud ? "command" : "pty")
+    setFormAuthMethod("password")
+    setFormPassword("")
+    setFormPrivateKey("")
+    setFormSaveSecret(true)
+    setFormAllowUnverifiedLocal(false)
+    setProfileFormError(null)
+    setShowProfileForm(true)
+  }
+
+  const openEditForm = (profile: SavedSshProfile) => {
+    setEditingProfileId(profile.id)
+    setFormNodeId(profile.nodeId || nodes[0]?.node_id || "")
+    setFormLabel(profile.label)
+    setFormHost(profile.host)
+    setFormPort(String(profile.port))
+    setFormUsername(profile.username)
+    setFormTransportMode(profile.transportMode)
+    setFormAuthMethod(profile.authMethod)
+    setFormPassword("")
+    setFormPrivateKey("")
+    setFormSaveSecret(profile.hasSecret)
+    setFormAllowUnverifiedLocal(false)
+    setProfileFormError(null)
+    setShowProfileForm(true)
+  }
+
+  const handleFormNodeChange = (nodeId: string) => {
+    setFormNodeId(nodeId)
     const node = nodes.find((n) => n.node_id === nodeId)
-    if (!node) return
+    if (!node || editingProfileId) return
     const isVBox = isVirtualBoxLikeNode(node)
-    setHost(isVBox && !isVercelCloud ? "127.0.0.1" : node.ip_v4)
-    setPort(isVBox && !isVercelCloud ? "2222" : String(node.ssh_port || 22))
-    setUsername(getDefaultUsername(node, currentRole))
+    const nextUser = getDefaultUsername(node, currentRole)
+    setFormHost(isVBox && !isVercelCloud ? "127.0.0.1" : node.ip_v4)
+    setFormPort(isVBox && !isVercelCloud ? "2222" : String(node.ssh_port || 22))
+    setFormUsername(nextUser)
+    setFormLabel(`${node.hostname} (${nextUser})`)
   }
 
   const applyVirtualBoxPreset = () => {
-    setHost("127.0.0.1")
-    setPort("2222")
-    if (currentRole === "Programmer") setUsername("programmer")
-    else if (currentRole === "DevOps") setUsername("maintainer")
-    else setUsername("roby")
+    const nextUser =
+      currentRole === "Programmer"
+        ? "programmer"
+        : currentRole === "DevOps"
+          ? "maintainer"
+          : "roby"
+    setFormHost("127.0.0.1")
+    setFormPort("2222")
+    setFormUsername(nextUser)
+    if (!editingProfileId) {
+      const node = nodes.find((n) => n.node_id === formNodeId)
+      setFormLabel(`${node?.hostname || "VirtualBox-VM"} (${nextUser})`)
+    }
+    setProfileFormError(null)
+  }
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setProfileFormError(null)
+    setProfileNotice(null)
+
+    if (!formNodeId) {
+      setProfileFormError("Pilih Server VPS terdaftar untuk konfigurasi ini.")
+      return
+    }
+    if (!formLabel.trim()) {
+      setProfileFormError("Nama / label konfigurasi wajib diisi.")
+      return
+    }
+    if (!formHost.trim() || !formUsername.trim()) {
+      setProfileFormError("Host / IP SSH dan Username wajib diisi.")
+      return
+    }
+    const isEdit = Boolean(editingProfileId)
+    const editingTarget = editingProfileId
+      ? profiles.find((p) => p.id === editingProfileId)
+      : undefined
+    const hasNewSecret =
+      formAuthMethod === "key"
+        ? formPrivateKey.trim().length > 0
+        : formPassword.length > 0
+
+    if (!isEdit && !hasNewSecret) {
+      setProfileFormError(
+        formAuthMethod === "key"
+          ? "Tempelkan Private Key SSH agar koneksi dapat diuji sebelum disimpan."
+          : "Masukkan Password SSH agar koneksi dapat diuji sebelum disimpan."
+      )
+      return
+    }
+    if (isEdit && !editingTarget?.hasSecret && !hasNewSecret) {
+      setProfileFormError(
+        "Profil ini belum menyimpan kredensial. Masukkan password/key untuk memverifikasi perubahan."
+      )
+      return
+    }
+
+    setIsSavingProfile(true)
+    try {
+      const res = await fetch("/api/admin/terminal/profiles", {
+        method: isEdit ? "PATCH" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...(isEdit ? { id: editingProfileId } : {}),
+          nodeId: formNodeId,
+          label: formLabel.trim(),
+          host: formHost.trim(),
+          port: Number(formPort || 22),
+          username: formUsername.trim(),
+          authMethod: formAuthMethod,
+          transportMode: formTransportMode,
+          password: formAuthMethod === "password" ? formPassword : undefined,
+          privateKey: formAuthMethod === "key" ? formPrivateKey : undefined,
+          saveSecret: formSaveSecret,
+          clearSecret: isEdit && !formSaveSecret,
+          allowUnverifiedLocal: formAllowUnverifiedLocal,
+        }),
+      })
+
+      const json = await res.json()
+      if (!res.ok || json.status !== "success" || !json.data) {
+        setProfileFormError(
+          json.message ||
+            "Koneksi SSH gagal diverifikasi sehingga konfigurasi tidak disimpan."
+        )
+        return
+      }
+
+      const saved = json.data as SavedSshProfile
+      setProfiles((prev) => {
+        if (isEdit) {
+          return prev.map((p) => (p.id === saved.id ? saved : p))
+        }
+        return [saved, ...prev]
+      })
+      setSelectedProfileId(saved.id)
+      setTransportOverride(saved.transportMode)
+      setShowProfileForm(false)
+      setEditingProfileId(null)
+      setFormPassword("")
+      setFormPrivateKey("")
+      setProfileNotice(
+        isEdit
+          ? `Konfigurasi "${saved.label}" berhasil diverifikasi dan diperbarui.`
+          : `Konfigurasi "${saved.label}" terverifikasi SSH dan tersimpan di database.`
+      )
+      xtermRef.current?.writeln(
+        `\r\n\x1b[32m[SAVED PROFILE]\x1b[0m ${saved.label} (${saved.username}@${saved.host}:${saved.port})`
+      )
+      writeLocalPrompt()
+    } catch (err: any) {
+      setProfileFormError(
+        err?.message || "Gagal menghubungi server untuk verifikasi SSH."
+      )
+    } finally {
+      setIsSavingProfile(false)
+    }
+  }
+
+  const handleDeleteProfile = async (profile: SavedSshProfile) => {
+    setDeletingProfileId(profile.id)
+    setProfileNotice(null)
     setErrorMessage(null)
+    try {
+      const res = await fetch(
+        `/api/admin/terminal/profiles?id=${encodeURIComponent(profile.id)}`,
+        { method: "DELETE" }
+      )
+      const json = await res.json()
+      if (!res.ok || json.status !== "success") {
+        setErrorMessage(json.message || "Gagal menghapus konfigurasi SSH.")
+        return
+      }
+      if (status === "connected" && selectedProfileId === profile.id) {
+        await handleDisconnect()
+      }
+      setProfiles((prev) => prev.filter((p) => p.id !== profile.id))
+      setProfileNotice(`Konfigurasi "${profile.label}" dihapus dari database.`)
+    } catch (err: any) {
+      setErrorMessage(err?.message || "Gagal menghapus konfigurasi SSH.")
+    } finally {
+      setDeletingProfileId(null)
+    }
   }
 
   const handleDisconnect = async () => {
@@ -616,27 +973,25 @@ export function TerminalClient({
     }
     setSessionId(null)
     setStatus("idle")
-    xtermRef.current?.writeln("\r\n\x1b[33m[DISCONNECTED] Sesi SSH ditutup oleh operator.\x1b[0m")
+    xtermRef.current?.writeln(
+      "\r\n\x1b[33m[DISCONNECTED] Sesi SSH ditutup oleh operator.\x1b[0m"
+    )
     statusRef.current = "idle"
     writeLocalPrompt()
   }
 
   const handleConnect = async (e?: React.FormEvent) => {
     e?.preventDefault()
-    if (!selectedNodeId) {
-      setErrorMessage("Tidak ada VPS Node yang tersedia untuk akun Anda.")
+    if (!selectedProfile) {
+      setErrorMessage(
+        "Pilih atau simpan terlebih dahulu konfigurasi SSH target yang terverifikasi."
+      )
       return
     }
-    if (!host.trim() || !username.trim()) {
-      setErrorMessage("Host SSH dan Username wajib diisi.")
-      return
-    }
-    if (authMethod === "password" && !password) {
-      setErrorMessage("Masukkan password SSH VPS tujuan.")
-      return
-    }
-    if (authMethod === "key" && !privateKey.trim()) {
-      setErrorMessage("Tempelkan SSH Private Key (PEM/OpenSSH).")
+    if (!selectedProfile.hasSecret && !ephemeralSecret.trim()) {
+      setErrorMessage(
+        "Konfigurasi ini tidak menyimpan password/key. Masukkan kredensial sementara di bawah untuk membuka sesi."
+      )
       return
     }
 
@@ -645,25 +1000,29 @@ export function TerminalClient({
     setErrorMessage(null)
     setStatus("connecting")
 
+    const activeTransport = transportOverride
+    modeRef.current = activeTransport
     const term = xtermRef.current
     term?.writeln(
-      `\r\n\x1b[36m[SSH] Menghubungkan ke ${username.trim()}@${host.trim()}:${port} (${transportMode.toUpperCase()})...\x1b[0m`
+      `\r\n\x1b[36m[SSH] Menghubungkan ke ${selectedProfile.username}@${selectedProfile.host}:${selectedProfile.port} [${selectedProfile.label}] (${activeTransport.toUpperCase()})...\x1b[0m`
     )
 
-    if (transportMode === "command") {
-      // Verify credentials cleanly with `whoami && hostname`
+    if (activeTransport === "command") {
       try {
         const res = await fetch("/api/admin/terminal", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             action: "exec",
-            nodeId: selectedNodeId,
-            host: host.trim(),
-            port: Number(port || 22),
-            username: username.trim(),
-            password: authMethod === "password" ? password : undefined,
-            privateKey: authMethod === "key" ? privateKey : undefined,
+            profileId: selectedProfile.id,
+            password:
+              selectedProfile.authMethod === "password" && ephemeralSecret
+                ? ephemeralSecret
+                : undefined,
+            privateKey:
+              selectedProfile.authMethod === "key" && ephemeralSecret
+                ? ephemeralSecret
+                : undefined,
             command: "whoami && hostname && uname -sr",
           }),
         })
@@ -699,12 +1058,15 @@ export function TerminalClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "connect",
-          nodeId: selectedNodeId,
-          host: host.trim(),
-          port: Number(port || 22),
-          username: username.trim(),
-          password: authMethod === "password" ? password : undefined,
-          privateKey: authMethod === "key" ? privateKey : undefined,
+          profileId: selectedProfile.id,
+          password:
+            selectedProfile.authMethod === "password" && ephemeralSecret
+              ? ephemeralSecret
+              : undefined,
+          privateKey:
+            selectedProfile.authMethod === "key" && ephemeralSecret
+              ? ephemeralSecret
+              : undefined,
           cols: term?.cols || dimensions.cols,
           rows: term?.rows || dimensions.rows,
         }),
@@ -724,7 +1086,9 @@ export function TerminalClient({
       sessionIdRef.current = sid
       setStatus("connected")
       statusRef.current = "connected"
-      term?.writeln(`\x1b[32m[SSH PTY LIVE]\x1b[0m Terhubung ke ${json.data.hostname}.`)
+      term?.writeln(
+        `\x1b[32m[SSH PTY LIVE]\x1b[0m Terhubung ke ${json.data.hostname}.`
+      )
 
       const es = new EventSource(
         `/api/admin/terminal?sessionId=${encodeURIComponent(sid)}`
@@ -782,12 +1146,12 @@ export function TerminalClient({
   const handleRunSnippet = (snippet: QuickSnippet) => {
     const term = xtermRef.current
     if (!term) return
-    if (status === "connected" && transportMode === "pty") {
+    if (status === "connected" && transportOverride === "pty") {
       enqueuePtyInput(`${snippet.command}\r`)
       term.focus()
       return
     }
-    if (status === "connected" && transportMode === "command") {
+    if (status === "connected" && transportOverride === "command") {
       term.write(snippet.command)
       void runLocalShellCommand(snippet.command)
       term.focus()
@@ -816,6 +1180,9 @@ export function TerminalClient({
     setTimeout(() => setCopiedOutput(false), 1800)
   }
 
+  const canAddMoreProfiles =
+    entitlement.allowed && profiles.length < entitlement.maxProfiles
+
   return (
     <div className="flex flex-col gap-5">
       {/* 1. Header & Status */}
@@ -838,21 +1205,33 @@ export function TerminalClient({
               }`}
             >
               {status === "connected"
-                ? `SSH LIVE • ${transportMode.toUpperCase()}`
+                ? `SSH LIVE • ${transportOverride.toUpperCase()}`
                 : status === "connecting"
                   ? "MENGHUBUNGKAN..."
                   : status === "error"
                     ? "KONEKSI GAGAL"
                     : "TELEMETRY SHELL READY"}
             </Badge>
+            <Badge
+              variant="outline"
+              className={`font-mono text-[11px] font-bold ${
+                entitlement.allowed
+                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                  : "border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+              }`}
+            >
+              <Database className="mr-1 size-3" />
+              {entitlement.allowed
+                ? `Paket ${entitlement.plan.toUpperCase()} • ${profiles.length}/${entitlement.maxProfiles} Profil`
+                : "Langganan Diperlukan"}
+            </Badge>
           </div>
           <p className="max-w-3xl font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
-            Akses konsol SSH Linux interaktif berbasis Xterm.js langsung dari browser
-            hanya ke server VPS yang menjadi hak akses akun{" "}
+            Simpan banyak konfigurasi SSH terverifikasi ke database akun{" "}
             <span className="font-mono font-semibold text-foreground">
               {currentEmail}
-            </span>
-            .
+            </span>{" "}
+            dan akses konsol Linux interaktif langsung dari browser.
           </p>
         </div>
 
@@ -885,9 +1264,10 @@ export function TerminalClient({
                   Belum Ada VPS Node Terdaftar di Akun Anda
                 </h2>
                 <p className="max-w-2xl font-sans text-xs leading-relaxed text-muted-foreground">
-                  Demi isolasi keamanan multi-tenant, Web Terminal SSH hanya mengizinkan
-                  koneksi ke node VPS milik Anda sendiri. Daftarkan VPS terlebih dahulu di
-                  halaman Server Nodes atau minta Admin menugaskan node ke akun Anda.
+                  Demi isolasi keamanan multi-tenant, Web Terminal SSH hanya
+                  mengizinkan koneksi ke node VPS milik Anda sendiri. Daftarkan
+                  VPS terlebih dahulu di halaman Server Nodes atau minta Admin
+                  menugaskan node ke akun Anda.
                 </p>
               </div>
             </div>
@@ -904,7 +1284,7 @@ export function TerminalClient({
         </Card>
       ) : null}
 
-      {/* 3. Connection Control Bar */}
+      {/* 3. Saved SSH Profiles Target Selector & Control Bar */}
       <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
         <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-4 py-3 sm:px-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -913,193 +1293,130 @@ export function TerminalClient({
               <CardTitle className="font-heading text-sm font-black tracking-tight text-foreground sm:text-base">
                 Konfigurasi Sesi SSH Target
               </CardTitle>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {selectedNode && isVirtualBoxLikeNode(selectedNode) && (
-                <button
-                  type="button"
-                  onClick={applyVirtualBoxPreset}
-                  className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-sky-600 transition-colors hover:bg-sky-500/20 dark:text-sky-400"
-                >
-                  <Sparkles className="size-3" />
-                  Preset VirtualBox NAT (127.0.0.1:2222)
-                </button>
-              )}
               <Badge
                 variant="outline"
                 className="border-border font-mono text-[10px] font-bold tracking-wider uppercase"
               >
                 <ShieldCheck className="mr-1 size-3 text-emerald-500" />
-                Tenant Scoped
+                Saved &amp; Verified Only ({profiles.length})
               </Badge>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {entitlement.allowed ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={showProfileForm ? "outline" : "default"}
+                  disabled={
+                    status === "connected" ||
+                    (!showProfileForm && !canAddMoreProfiles)
+                  }
+                  onClick={() => {
+                    if (showProfileForm) {
+                      setShowProfileForm(false)
+                      setEditingProfileId(null)
+                      setProfileFormError(null)
+                    } else {
+                      openAddForm()
+                    }
+                  }}
+                  className={
+                    showProfileForm
+                      ? "h-8 border-2 border-border font-mono text-xs font-bold shadow-[2px_2px_0px_0px_var(--border)]"
+                      : "h-8 border-2 border-border bg-main font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+                  }
+                >
+                  {showProfileForm ? (
+                    <>
+                      <X className="mr-1.5 size-3.5" />
+                      Tutup Form
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="mr-1.5 size-3.5" />
+                      Tambah Konfigurasi
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Link
+                  href="/billing"
+                  className={buttonVariants({
+                    size: "sm",
+                    className:
+                      "h-8 border-2 border-border bg-amber-400 font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)]",
+                  })}
+                >
+                  Aktifkan Langganan Pro
+                </Link>
+              )}
             </div>
           </div>
         </CardHeader>
 
-        <CardContent className="p-4 sm:p-5">
+        <CardContent className="space-y-4 p-4 sm:p-5">
+          {profileNotice && (
+            <div className="flex items-center gap-2 rounded-base border-2 border-emerald-500/40 bg-emerald-500/10 px-3 py-2 font-mono text-xs text-emerald-600 dark:text-emerald-400">
+              <CheckCircle2 className="size-4 shrink-0" />
+              <span>{profileNotice}</span>
+            </div>
+          )}
+
+          {!entitlement.allowed && entitlement.reason && (
+            <div className="rounded-base border-2 border-amber-500/50 bg-amber-500/10 px-3 py-2.5 font-sans text-xs text-amber-700 dark:text-amber-300">
+              {entitlement.reason}
+            </div>
+          )}
+
+          {/* Active Saved-Only Connection Selector */}
           <form onSubmit={handleConnect} className="space-y-4">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
-              {/* Target VPS Selector */}
-              <div className="space-y-1.5 lg:col-span-3">
+            <div className="grid grid-cols-1 items-end gap-3 lg:grid-cols-12">
+              <div className="space-y-1.5 lg:col-span-6">
                 <label className="block font-sans text-xs font-semibold text-foreground">
-                  Pilih Server VPS
+                  Pilih Server Target (Konfigurasi SSH Tersimpan &amp;
+                  Terverifikasi)
                 </label>
                 <select
-                  value={selectedNodeId}
-                  onChange={(e) => handleSelectNode(e.target.value)}
-                  disabled={status === "connected"}
+                  data-testid="saved-profile-select"
+                  value={selectedProfileId}
+                  onChange={(e) => handleSelectSavedProfile(e.target.value)}
+                  disabled={status === "connected" || profiles.length === 0}
                   className={selectClass}
                 >
-                  {nodes.length === 0 ? (
-                    <option value="">-- Belum ada VPS --</option>
+                  {profiles.length === 0 ? (
+                    <option value="">
+                      -- Belum ada konfigurasi SSH tersimpan --
+                    </option>
                   ) : (
-                    nodes.map((node) => (
-                      <option key={node.node_id} value={node.node_id}>
-                        {node.hostname} ({node.ip_v4})
+                    profiles.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label} — {p.username}@{p.host}:{p.port} (
+                        {p.transportMode.toUpperCase()})
                       </option>
                     ))
                   )}
                 </select>
               </div>
 
-              {/* Host */}
-              <div className="space-y-1.5 lg:col-span-2">
-                <label className="block font-sans text-xs font-semibold text-foreground">
-                  Host / IP SSH
-                </label>
-                <Input
-                  value={host}
-                  onChange={(e) => setHost(e.target.value)}
-                  placeholder="103.x.x.x / 127.0.0.1"
-                  disabled={status === "connected"}
-                  className={inputClass}
-                />
-              </div>
-
-              {/* Port */}
-              <div className="space-y-1.5 lg:col-span-2">
-                <label className="block font-sans text-xs font-semibold text-foreground">
-                  Port
-                </label>
-                <Input
-                  type="number"
-                  value={port}
-                  onChange={(e) => setPort(e.target.value)}
-                  min={1}
-                  max={65535}
-                  disabled={status === "connected"}
-                  className={`${inputClass} tabular-nums`}
-                />
-              </div>
-
-              {/* Username */}
-              <div className="space-y-1.5 lg:col-span-2">
-                <label className="block font-sans text-xs font-semibold text-foreground">
-                  Username SSH
-                </label>
-                <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="roby / programmer / root"
-                  disabled={status === "connected"}
-                  className={inputClass}
-                />
-              </div>
-
-              {/* Transport Mode */}
               <div className="space-y-1.5 lg:col-span-3">
                 <label className="block font-sans text-xs font-semibold text-foreground">
-                  Mode Transport
+                  Mode Transport Sesi
                 </label>
                 <select
-                  value={transportMode}
+                  value={transportOverride}
                   onChange={(e) =>
-                    setTransportMode(e.target.value as TerminalTransportMode)
+                    setTransportOverride(
+                      e.target.value as TerminalTransportMode
+                    )
                   }
-                  disabled={status === "connected"}
+                  disabled={status === "connected" || !selectedProfile}
                   className={selectClass}
                 >
                   <option value="pty">Interactive PTY (Live Stream)</option>
-                  <option value="command">Command Mode (Serverless-Safe)</option>
+                  <option value="command">
+                    Command Mode (Serverless-Safe)
+                  </option>
                 </select>
-              </div>
-            </div>
-
-            {/* Auth Credentials + Connect Action */}
-            <div className="grid grid-cols-1 items-end gap-3 lg:grid-cols-12">
-              <div className="space-y-1.5 lg:col-span-3">
-                <label className="block font-sans text-xs font-semibold text-foreground">
-                  Metode Otentikasi
-                </label>
-                <div className="grid grid-cols-2 gap-1.5 rounded-base border-2 border-border bg-muted/20 p-1">
-                  <button
-                    type="button"
-                    disabled={status === "connected"}
-                    onClick={() => setAuthMethod("password")}
-                    className={`flex items-center justify-center gap-1.5 rounded px-2 py-1.5 font-mono text-xs font-bold transition-colors ${
-                      authMethod === "password"
-                        ? "bg-main text-black"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Lock className="size-3" />
-                    Password
-                  </button>
-                  <button
-                    type="button"
-                    disabled={status === "connected"}
-                    onClick={() => setAuthMethod("key")}
-                    className={`flex items-center justify-center gap-1.5 rounded px-2 py-1.5 font-mono text-xs font-bold transition-colors ${
-                      authMethod === "key"
-                        ? "bg-main text-black"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <KeyRound className="size-3" />
-                    SSH Key
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 lg:col-span-6">
-                <label className="block font-sans text-xs font-semibold text-foreground">
-                  {authMethod === "password"
-                    ? "Password SSH (Ephemeral — Tidak Disimpan di Server)"
-                    : "Private Key OpenSSH / PEM"}
-                </label>
-                {authMethod === "password" ? (
-                  <div className="relative">
-                    <Input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Masukkan password SSH user VPS..."
-                      disabled={status === "connected"}
-                      className={`${inputClass} pr-10`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute inset-y-0 right-2.5 flex items-center text-muted-foreground hover:text-foreground"
-                      title={showPassword ? "Sembunyikan" : "Tampilkan"}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </button>
-                  </div>
-                ) : (
-                  <textarea
-                    rows={2}
-                    value={privateKey}
-                    onChange={(e) => setPrivateKey(e.target.value)}
-                    disabled={status === "connected"}
-                    placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"
-                    className="w-full rounded-base border-2 border-border bg-background p-2.5 font-mono text-xs text-foreground placeholder:text-muted-foreground focus:border-main focus:outline-hidden"
-                  />
-                )}
               </div>
 
               <div className="flex flex-wrap items-center gap-2 lg:col-span-3 lg:justify-end">
@@ -1115,7 +1432,8 @@ export function TerminalClient({
                 ) : (
                   <Button
                     type="submit"
-                    disabled={status === "connecting" || nodes.length === 0}
+                    data-testid="connect-ssh-btn"
+                    disabled={status === "connecting" || !selectedProfile}
                     className="h-9 w-full border-2 border-border bg-main font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] hover:translate-x-0.5 hover:translate-y-0.5 lg:w-auto"
                   >
                     {status === "connecting" ? (
@@ -1134,21 +1452,445 @@ export function TerminalClient({
               </div>
             </div>
 
+            {/* Saved Profile Cards Strip */}
+            {profiles.length > 0 && (
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+                {profiles.map((profile) => {
+                  const isActive = profile.id === selectedProfileId
+                  const linkedNode = nodes.find(
+                    (n) => n.node_id === profile.nodeId
+                  )
+                  return (
+                    <div
+                      key={profile.id}
+                      data-testid={`saved-profile-card-${profile.id}`}
+                      className={`flex flex-col justify-between gap-2.5 rounded-base border-2 p-3 transition-colors ${
+                        isActive
+                          ? "border-main bg-main/10 shadow-[2px_2px_0px_0px_var(--border)]"
+                          : "border-border bg-secondary-background/60 hover:border-foreground/40"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        disabled={status === "connected"}
+                        onClick={() => handleSelectSavedProfile(profile.id)}
+                        className="min-w-0 text-left disabled:opacity-70"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="truncate font-heading text-xs font-black text-foreground">
+                            {profile.label}
+                          </span>
+                          <Badge
+                            variant="outline"
+                            className={`shrink-0 font-mono text-[10px] font-bold ${
+                              profile.verifiedAt
+                                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                : "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400"
+                            }`}
+                          >
+                            {profile.verifiedAt ? "Verified" : "Local Preset"}
+                          </Badge>
+                        </div>
+                        <div className="mt-1 truncate font-mono text-[11px] text-muted-foreground">
+                          {profile.username}@{profile.host}:{profile.port}
+                        </div>
+                        <div className="mt-1.5 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
+                          <span className="rounded border border-border bg-background px-1.5 py-0.5">
+                            {linkedNode?.hostname || "VPS Node"}
+                          </span>
+                          <span className="rounded border border-border bg-background px-1.5 py-0.5">
+                            {profile.hasSecret
+                              ? "Secret Tersimpan"
+                              : "Secret Ephemeral"}
+                          </span>
+                          <span className="rounded border border-border bg-background px-1.5 py-0.5 uppercase">
+                            {profile.transportMode}
+                          </span>
+                        </div>
+                      </button>
+
+                      <div className="flex items-center justify-end gap-1.5 border-t border-border/60 pt-2">
+                        <button
+                          type="button"
+                          disabled={status === "connected"}
+                          onClick={() => openEditForm(profile)}
+                          className="inline-flex items-center gap-1 rounded border border-border bg-background px-2 py-1 font-mono text-[10px] font-semibold text-foreground hover:border-main disabled:opacity-50"
+                        >
+                          <Pencil className="size-3" />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          disabled={
+                            deletingProfileId === profile.id ||
+                            (status === "connected" && isActive)
+                          }
+                          onClick={() => void handleDeleteProfile(profile)}
+                          className="inline-flex items-center gap-1 rounded border border-rose-500/40 bg-rose-500/10 px-2 py-1 font-mono text-[10px] font-semibold text-rose-600 hover:bg-rose-500/20 disabled:opacity-50 dark:text-rose-400"
+                        >
+                          <Trash2 className="size-3" />
+                          {deletingProfileId === profile.id
+                            ? "Menghapus..."
+                            : "Hapus"}
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {/* Ephemeral credential prompt only if selected profile chose not to store secret */}
+            {selectedProfile && !selectedProfile.hasSecret && (
+              <div className="rounded-base border-2 border-amber-500/40 bg-amber-500/5 p-3">
+                <label className="mb-1.5 block font-sans text-xs font-semibold text-foreground">
+                  {selectedProfile.authMethod === "key"
+                    ? `Private Key SSH sementara untuk ${selectedProfile.label}`
+                    : `Password SSH sementara untuk ${selectedProfile.label} (tidak tersimpan di DB)`}
+                </label>
+                {selectedProfile.authMethod === "key" ? (
+                  <textarea
+                    rows={2}
+                    value={ephemeralSecret}
+                    onChange={(e) => setEphemeralSecret(e.target.value)}
+                    disabled={status === "connected"}
+                    placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"
+                    className="w-full rounded-base border-2 border-border bg-background p-2.5 font-mono text-xs text-foreground placeholder:text-muted-foreground focus:border-main focus:outline-hidden"
+                  />
+                ) : (
+                  <div className="relative">
+                    <Input
+                      type={showEphemeralSecret ? "text" : "password"}
+                      value={ephemeralSecret}
+                      onChange={(e) => setEphemeralSecret(e.target.value)}
+                      placeholder="Masukkan password SSH..."
+                      disabled={status === "connected"}
+                      className={`${inputClass} pr-10`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowEphemeralSecret((p) => !p)}
+                      className="absolute inset-y-0 right-2.5 flex items-center text-muted-foreground hover:text-foreground"
+                    >
+                      {showEphemeralSecret ? (
+                        <EyeOff className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {selectedProfile && selectedProfileNode && (
+              <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                <span className="font-mono">
+                  Target aktif:{" "}
+                  <strong className="text-foreground">
+                    {selectedProfile.username}@{selectedProfile.host}:
+                    {selectedProfile.port}
+                  </strong>
+                </span>
+                <span>•</span>
+                <span className="font-mono">
+                  Node: {selectedProfileNode.hostname} ({selectedProfileNode.os}
+                  )
+                </span>
+                {selectedProfile.verifiedAt && (
+                  <>
+                    <span>•</span>
+                    <span className="font-mono text-emerald-600 dark:text-emerald-400">
+                      Terverifikasi SSH
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+
             {errorMessage && (
               <div className="rounded-base border-2 border-rose-500/50 bg-rose-500/10 p-3 font-mono text-xs text-rose-500">
                 {errorMessage}
               </div>
             )}
-
-            {isVercelCloud && (
-              <div className="rounded-base border-2 border-sky-500/40 bg-sky-500/10 px-3 py-2 font-mono text-[11px] text-sky-700 dark:text-sky-300">
-                Catatan Runtime Cloud: Saat berjalan di Vercel Serverless, gunakan{" "}
-                <strong>Command Mode (Serverless-Safe)</strong> untuk VPS ber-IP publik.
-                Untuk mengakses VM VirtualBox lokal (<code>127.0.0.1:2222</code>), buka
-                Pasax Web dari host lokal Anda.
-              </div>
-            )}
           </form>
+
+          {/* Add / Edit SSH Configuration Drawer */}
+          {showProfileForm && (
+            <form
+              onSubmit={handleSaveProfile}
+              data-testid="ssh-profile-form"
+              className="space-y-4 rounded-base border-2 border-border bg-secondary-background/60 p-4"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/80 pb-2.5">
+                <div>
+                  <h3 className="font-heading text-sm font-black text-foreground">
+                    {editingProfileId
+                      ? "Edit & Verifikasi Ulang Konfigurasi SSH"
+                      : "Tambah & Verifikasi Konfigurasi SSH Baru"}
+                  </h3>
+                  <p className="font-sans text-xs text-muted-foreground">
+                    Konfigurasi diuji langsung ke VPS via SSH handshake dan
+                    hanya disimpan ke database jika verifikasi berhasil.
+                  </p>
+                </div>
+                {isVirtualBoxLikeNode(
+                  nodes.find((n) => n.node_id === formNodeId)
+                ) && (
+                  <button
+                    type="button"
+                    onClick={applyVirtualBoxPreset}
+                    className="inline-flex items-center gap-1.5 rounded-base border-2 border-border bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] font-bold text-sky-600 transition-colors hover:bg-sky-500/20 dark:text-sky-400"
+                  >
+                    <Sparkles className="size-3" />
+                    Preset VirtualBox NAT (127.0.0.1:2222)
+                  </button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-12">
+                <div className="space-y-1.5 lg:col-span-3">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Label Konfigurasi
+                  </label>
+                  <Input
+                    data-testid="profile-label-input"
+                    value={formLabel}
+                    onChange={(e) => setFormLabel(e.target.value)}
+                    placeholder="cth: VirtualBox Admin (roby)"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-3">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Server VPS Terdaftar
+                  </label>
+                  <select
+                    data-testid="profile-node-select"
+                    value={formNodeId}
+                    onChange={(e) => handleFormNodeChange(e.target.value)}
+                    className={selectClass}
+                  >
+                    {nodes.length === 0 ? (
+                      <option value="">-- Belum ada VPS --</option>
+                    ) : (
+                      nodes.map((node) => (
+                        <option key={node.node_id} value={node.node_id}>
+                          {node.hostname} ({node.ip_v4})
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-2">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Host / IP SSH
+                  </label>
+                  <Input
+                    data-testid="profile-host-input"
+                    value={formHost}
+                    onChange={(e) => setFormHost(e.target.value)}
+                    placeholder="103.x.x.x / 127.0.0.1"
+                    className={inputClass}
+                  />
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-1">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Port
+                  </label>
+                  <Input
+                    data-testid="profile-port-input"
+                    type="number"
+                    value={formPort}
+                    onChange={(e) => setFormPort(e.target.value)}
+                    min={1}
+                    max={65535}
+                    className={`${inputClass} tabular-nums`}
+                  />
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-3">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Username SSH &amp; Transport
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      data-testid="profile-username-input"
+                      value={formUsername}
+                      onChange={(e) => setFormUsername(e.target.value)}
+                      placeholder="roby / root"
+                      className={inputClass}
+                    />
+                    <select
+                      value={formTransportMode}
+                      onChange={(e) =>
+                        setFormTransportMode(
+                          e.target.value as TerminalTransportMode
+                        )
+                      }
+                      className={selectClass}
+                    >
+                      <option value="pty">PTY Live</option>
+                      <option value="command">Command</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 items-end gap-3 lg:grid-cols-12">
+                <div className="space-y-1.5 lg:col-span-3">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    Metode Otentikasi
+                  </label>
+                  <div className="grid grid-cols-2 gap-1.5 rounded-base border-2 border-border bg-background p-1">
+                    <button
+                      type="button"
+                      onClick={() => setFormAuthMethod("password")}
+                      className={`flex items-center justify-center gap-1.5 rounded px-2 py-1.5 font-mono text-xs font-bold transition-colors ${
+                        formAuthMethod === "password"
+                          ? "bg-main text-black"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <Lock className="size-3" />
+                      Password
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormAuthMethod("key")}
+                      className={`flex items-center justify-center gap-1.5 rounded px-2 py-1.5 font-mono text-xs font-bold transition-colors ${
+                        formAuthMethod === "key"
+                          ? "bg-main text-black"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <KeyRound className="size-3" />
+                      SSH Key
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 lg:col-span-6">
+                  <label className="block font-sans text-xs font-semibold text-foreground">
+                    {formAuthMethod === "password"
+                      ? editingProfileId
+                        ? "Password SSH (Kosongkan jika tetap gunakan secret tersimpan)"
+                        : "Password SSH"
+                      : "Private Key OpenSSH / PEM"}
+                  </label>
+                  {formAuthMethod === "password" ? (
+                    <div className="relative">
+                      <Input
+                        data-testid="profile-password-input"
+                        type={showFormPassword ? "text" : "password"}
+                        value={formPassword}
+                        onChange={(e) => setFormPassword(e.target.value)}
+                        placeholder={
+                          editingProfileId
+                            ? "Kosongkan jika tidak diubah..."
+                            : "Masukkan password SSH untuk uji koneksi..."
+                        }
+                        className={`${inputClass} pr-10`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowFormPassword((prev) => !prev)}
+                        className="absolute inset-y-0 right-2.5 flex items-center text-muted-foreground hover:text-foreground"
+                      >
+                        {showFormPassword ? (
+                          <EyeOff className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
+                      </button>
+                    </div>
+                  ) : (
+                    <textarea
+                      rows={2}
+                      value={formPrivateKey}
+                      onChange={(e) => setFormPrivateKey(e.target.value)}
+                      placeholder="-----BEGIN OPENSSH PRIVATE KEY-----"
+                      className="w-full rounded-base border-2 border-border bg-background p-2.5 font-mono text-xs text-foreground placeholder:text-muted-foreground focus:border-main focus:outline-hidden"
+                    />
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 lg:col-span-3 lg:justify-end">
+                  <Button
+                    type="submit"
+                    data-testid="save-ssh-profile-btn"
+                    disabled={isSavingProfile || nodes.length === 0}
+                    className="h-9 w-full border-2 border-border bg-emerald-400 font-mono text-xs font-bold text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-emerald-300 lg:w-auto"
+                  >
+                    {isSavingProfile ? (
+                      <>
+                        <RefreshCw className="mr-1.5 size-3.5 animate-spin" />
+                        Menguji &amp; Menyimpan...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-1.5 size-3.5" />
+                        {editingProfileId
+                          ? "Verifikasi & Perbarui"
+                          : "Uji Koneksi & Simpan"}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                <label className="inline-flex cursor-pointer items-center gap-2 font-sans">
+                  <input
+                    type="checkbox"
+                    checked={formSaveSecret}
+                    onChange={(e) => setFormSaveSecret(e.target.checked)}
+                    className="size-4 rounded border-border accent-main"
+                  />
+                  <span>
+                    Simpan kredensial terenkripsi di database (koneksi 1-klik)
+                  </span>
+                </label>
+
+                {isVercelCloud && isPrivateOrLocalHost(formHost) && (
+                  <label className="inline-flex cursor-pointer items-center gap-2 font-sans text-sky-600 dark:text-sky-400">
+                    <input
+                      type="checkbox"
+                      checked={formAllowUnverifiedLocal}
+                      onChange={(e) =>
+                        setFormAllowUnverifiedLocal(e.target.checked)
+                      }
+                      className="size-4 rounded border-border accent-sky-500"
+                    />
+                    <span>
+                      Simpan preset lokal tanpa verifikasi langsung dari Cloud
+                    </span>
+                  </label>
+                )}
+              </div>
+
+              {profileFormError && (
+                <div
+                  data-testid="profile-form-error"
+                  className="rounded-base border-2 border-rose-500/50 bg-rose-500/10 p-3 font-mono text-xs text-rose-500"
+                >
+                  {profileFormError}
+                </div>
+              )}
+            </form>
+          )}
+
+          {isVercelCloud && (
+            <div className="rounded-base border-2 border-sky-500/40 bg-sky-500/10 px-3 py-2 font-mono text-[11px] text-sky-700 dark:text-sky-300">
+              Catatan Runtime Cloud: Saat berjalan di Vercel Serverless, gunakan{" "}
+              <strong>Command Mode (Serverless-Safe)</strong> untuk VPS ber-IP
+              publik. Untuk mengakses VM VirtualBox lokal (
+              <code>127.0.0.1:2222</code>), buka Pasax Web dari host lokal Anda.
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -1171,29 +1913,52 @@ export function TerminalClient({
         ))}
       </div>
 
-      {/* 5. Xterm.js Interactive Canvas Frame */}
-      <Card
-        className={`overflow-hidden border-2 border-border bg-[#090d16] shadow-[4px_4px_0px_0px_var(--border)] ${
-          isFullscreen ? "fixed inset-3 z-50 flex flex-col" : ""
-        }`}
+      {/* 5. Xterm.js Interactive Canvas Frame (Single persistent container, never Card) */}
+      <div
+        data-testid="terminal-frame"
+        className={
+          isFullscreen
+            ? "fixed inset-0 z-[100] flex h-dvh w-screen flex-col overflow-hidden bg-[#090d16]"
+            : "flex flex-col overflow-hidden rounded-base border-2 border-border bg-[#090d16] shadow-[4px_4px_0px_0px_var(--border)]"
+        }
       >
         {/* Terminal Titlebar */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-slate-800 bg-slate-950 px-4 py-2.5">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b-2 border-slate-800 bg-slate-950 px-4 py-2.5">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex items-center gap-1.5">
+            <div className="flex shrink-0 items-center gap-1.5">
               <span className="size-2.5 rounded-full bg-rose-500" />
               <span className="size-2.5 rounded-full bg-amber-400" />
               <span className="size-2.5 rounded-full bg-emerald-500" />
             </div>
             <div className="min-w-0 truncate font-mono text-xs font-bold text-slate-200">
-              {status === "connected"
-                ? `${username}@${host}:${port} (${selectedNode?.hostname || "VPS"})`
-                : `pasax-xterm • ${selectedNode ? `${selectedNode.hostname} (${selectedNode.ip_v4})` : "Local Console"}`}
+              {status === "connected" && selectedProfile
+                ? `${selectedProfile.username}@${selectedProfile.host}:${selectedProfile.port} • ${selectedProfile.label}`
+                : selectedProfile
+                  ? `pasax-xterm • ${selectedProfile.label} (${selectedProfile.username}@${selectedProfile.host}:${selectedProfile.port})`
+                  : "pasax-xterm • Local Console"}
             </div>
+            {status === "connected" && (
+              <span className="hidden rounded border border-emerald-500/40 bg-emerald-500/15 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400 sm:inline-block">
+                LIVE
+              </span>
+            )}
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5">
-            <span className="hidden rounded border border-slate-700 bg-slate-900 px-2 py-0.5 font-mono text-[10px] text-slate-400 tabular-nums sm:inline-block">
+          <div className="flex shrink-0 flex-wrap items-center gap-1.5">
+            {isFullscreen && status === "connected" && (
+              <button
+                type="button"
+                onClick={handleDisconnect}
+                className="inline-flex items-center gap-1 rounded border border-rose-500/50 bg-rose-500/20 px-2.5 py-1 font-mono text-[11px] font-bold text-rose-300 hover:bg-rose-500/30"
+              >
+                <Unplug className="size-3.5" />
+                Putuskan
+              </button>
+            )}
+            <span
+              data-testid="terminal-dimensions"
+              className="hidden rounded border border-slate-700 bg-slate-900 px-2 py-0.5 font-mono text-[10px] text-slate-400 tabular-nums sm:inline-block"
+            >
               {dimensions.cols}x{dimensions.rows}
             </span>
             <button
@@ -1240,14 +2005,25 @@ export function TerminalClient({
             </button>
             <button
               type="button"
+              data-testid="toggle-fullscreen-btn"
               onClick={() => setIsFullscreen((v) => !v)}
               title={isFullscreen ? "Keluar Layar Penuh" : "Layar Penuh"}
-              className="rounded border border-slate-700 bg-slate-900 p-1.5 text-slate-300 hover:border-sky-500 hover:text-white"
+              className={`inline-flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[11px] font-bold transition-colors ${
+                isFullscreen
+                  ? "border-sky-400 bg-sky-500/20 text-sky-200 hover:bg-sky-500/30"
+                  : "border-slate-700 bg-slate-900 text-slate-300 hover:border-sky-500 hover:text-white"
+              }`}
             >
               {isFullscreen ? (
-                <Minimize2 className="size-3.5" />
+                <>
+                  <Minimize2 className="size-3.5" />
+                  <span>Keluar Layar Penuh</span>
+                </>
               ) : (
-                <Maximize2 className="size-3.5" />
+                <>
+                  <Maximize2 className="size-3.5" />
+                  <span className="hidden sm:inline">Layar Penuh</span>
+                </>
               )}
             </button>
           </div>
@@ -1256,7 +2032,7 @@ export function TerminalClient({
         {/* Xterm.js Container */}
         <div
           className={`w-full overflow-hidden bg-[#090d16] p-2.5 sm:p-3 ${
-            isFullscreen ? "flex-1" : "h-[430px] sm:h-[490px]"
+            isFullscreen ? "min-h-0 flex-1" : "h-[430px] sm:h-[490px]"
           }`}
         >
           <div
@@ -1265,7 +2041,7 @@ export function TerminalClient({
             className="h-full w-full"
           />
         </div>
-      </Card>
+      </div>
     </div>
   )
 }

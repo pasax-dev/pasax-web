@@ -16,6 +16,8 @@ import { SessionProvider } from "@/components/auth/session-provider"
 import { SearchProvider } from "@/components/search/search-provider"
 import { siteConfig } from "@/config/site"
 
+const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('theme')||'dark';var t=s==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):s;var r=document.documentElement;r.classList.remove('light','dark');if(t==='light'||t==='dark'){r.classList.add(t);r.style.colorScheme=t;}}catch(e){document.documentElement.classList.add('dark');}})();`
+
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-heading",
@@ -127,6 +129,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-background font-sans text-foreground antialiased selection:bg-main selection:text-main-foreground",

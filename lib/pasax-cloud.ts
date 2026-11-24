@@ -1,3 +1,20 @@
+export interface SavedSshProfile {
+  id: string
+  ownerEmail: string
+  nodeId: string | null
+  label: string
+  host: string
+  port: number
+  username: string
+  authMethod: "password" | "key"
+  transportMode: "pty" | "command"
+  hasSecret: boolean
+  verifiedAt?: string | null
+  lastConnectedAt?: string | null
+  createdAt?: string
+  updatedAt?: string
+}
+
 import { NodeTelemetry, ThreatEvent, pasaxStore, VHostInfo } from "./store"
 
 const DEFAULT_API_URL = "https://pasax-service.vercel.app"
@@ -315,6 +332,134 @@ export const pasaxCloud = {
     return {
       rate: source === "USD" && target === "IDR" ? 18290.0 : 1 / 18290.0,
       timestamp: new Date().toISOString(),
+    }
+  },
+
+
+  async fetchSshProfiles(ownerEmail: string): Promise<SavedSshProfile[]> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/v1/ssh-profiles?ownerEmail=${encodeURIComponent(ownerEmail.toLowerCase().trim())}`,
+        {
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+          next: { revalidate: 0 },
+        }
+      )
+      if (res.ok) {
+        const json = await res.json()
+        if (Array.isArray(json.data)) {
+          return json.data
+        }
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to fetch SSH profiles:", err)
+    }
+    return []
+  },
+
+  async createSshProfile(payload: {
+    ownerEmail: string
+    nodeId?: string | null
+    label: string
+    host: string
+    port: number
+    username: string
+    authMethod: "password" | "key"
+    transportMode: "pty" | "command"
+    encryptedSecret?: string | null
+    verifiedAt?: string | null
+  }): Promise<{ ok: boolean; data?: SavedSshProfile; message?: string }> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/ssh-profiles`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      })
+      const json = await res.json().catch(() => null)
+      if (res.ok && json?.data) {
+        return { ok: true, data: json.data }
+      }
+      return { ok: false, message: json?.message || "Gagal menyimpan profil SSH ke database." }
+    } catch (err: any) {
+      return { ok: false, message: err?.message || "Cloud API unreachable." }
+    }
+  },
+
+  async updateSshProfile(
+    id: string,
+    payload: {
+      ownerEmail: string
+      nodeId?: string | null
+      label?: string
+      host?: string
+      port?: number
+      username?: string
+      authMethod?: "password" | "key"
+      transportMode?: "pty" | "command"
+      encryptedSecret?: string | null
+      clearSecret?: boolean
+      verifiedAt?: string | null
+      lastConnectedAt?: string | null
+    }
+  ): Promise<{ ok: boolean; data?: SavedSshProfile; message?: string }> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/ssh-profiles/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      })
+      const json = await res.json().catch(() => null)
+      if (res.ok && json?.data) {
+        return { ok: true, data: json.data }
+      }
+      return { ok: false, message: json?.message || "Gagal memperbarui profil SSH." }
+    } catch (err: any) {
+      return { ok: false, message: err?.message || "Cloud API unreachable." }
+    }
+  },
+
+  async resolveSshProfile(
+    id: string,
+    ownerEmail: string
+  ): Promise<(SavedSshProfile & { encryptedSecret?: string | null }) | null> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/v1/ssh-profiles/${encodeURIComponent(id)}/resolve`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ ownerEmail: ownerEmail.toLowerCase().trim() }),
+        }
+      )
+      if (res.ok) {
+        const json = await res.json()
+        return json?.data || null
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to resolve SSH profile:", err)
+    }
+    return null
+  },
+
+  async deleteSshProfile(id: string, ownerEmail: string): Promise<boolean> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(
+        `${apiUrl}/api/v1/ssh-profiles/${encodeURIComponent(id)}?ownerEmail=${encodeURIComponent(ownerEmail.toLowerCase().trim())}`,
+        {
+          method: "DELETE",
+          headers: { Accept: "application/json" },
+        }
+      )
+      return res.ok
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to delete SSH profile:", err)
+      return false
     }
   },
 };

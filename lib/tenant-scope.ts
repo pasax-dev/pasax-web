@@ -183,3 +183,66 @@ export function canManageTargetUser(
       u.email.toLowerCase() === targetUserIdOrEmail.toLowerCase()
   )
 }
+
+export function getSshProfileEntitlement(ctx: SessionContext): {
+  allowed: boolean
+  plan: string
+  maxProfiles: number
+  reason?: string
+} {
+  if (ctx.role === "Superadmin") {
+    return { allowed: true, plan: "enterprise", maxProfiles: 100 }
+  }
+
+  if (!ctx.user.isActive) {
+    return {
+      allowed: false,
+      plan: ctx.user.plan,
+      maxProfiles: 0,
+      reason: "Akun Anda sedang dinonaktifkan.",
+    }
+  }
+
+  const allKeys = pasaxStore.getLicenseKeys()
+  const ownerEmail = ctx.user.createdBy?.toLowerCase() || ctx.email
+  const relatedKeys = allKeys.filter(
+    (k) =>
+      k.userId === ctx.user.id ||
+      k.userEmail.toLowerCase() === ctx.email ||
+      k.userEmail.toLowerCase() === ownerEmail
+  )
+
+  if (relatedKeys.length > 0) {
+    const hasValidKey = relatedKeys.some(
+      (k) =>
+        k.isActive &&
+        !k.isExpired &&
+        k.subscriptionStatus !== "expired" &&
+        k.subscriptionStatus !== "cancelled"
+    )
+    if (!hasValidKey) {
+      return {
+        allowed: false,
+        plan: ctx.user.plan,
+        maxProfiles: 0,
+        reason:
+          "Masa percobaan atau langganan Anda telah berakhir. Perbarui paket Pro/Enterprise untuk menyimpan konfigurasi SSH.",
+      }
+    }
+  }
+
+  if (ctx.user.plan === "enterprise") {
+    return { allowed: true, plan: "enterprise", maxProfiles: 100 }
+  }
+  if (ctx.user.plan === "pro") {
+    return { allowed: true, plan: "pro", maxProfiles: 25 }
+  }
+
+  return {
+    allowed: false,
+    plan: ctx.user.plan,
+    maxProfiles: 0,
+    reason:
+      "Simpan banyak konfigurasi SSH hanya tersedia untuk pelanggan Pro (termasuk 14 Hari Free Trial) & Enterprise.",
+  }
+}

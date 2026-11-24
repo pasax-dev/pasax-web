@@ -106,7 +106,7 @@ export function AdminTemplate({
           <SiteHeader breadcrumbs={breadcrumbs} />
         )}
 
-        <div className="relative z-10 flex flex-1 flex-col gap-5 p-4 sm:p-5 lg:p-6">
+        <div className="relative flex flex-1 flex-col gap-5 p-4 sm:p-5 lg:p-6">
           {children}
         </div>
       </SidebarInset>

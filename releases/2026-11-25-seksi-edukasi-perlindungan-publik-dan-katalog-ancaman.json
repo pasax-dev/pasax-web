@@ -6,12 +6,12 @@
     "url": "https://pasax.web.id"
   },
   "title": {
-    "id": "Peluncuran Seksi Publik Penanganan Ancaman, Model Evaluasi 14 Hari, dan Pengujian Otomatis",
-    "en": "Launch of Public Threat Defense Catalog, 14-Day Evaluation Model, and Automated Verification"
+    "id": "Katalog Ancaman, Isolasi Multi-Akun, dan Terminal Web Multi-Konfigurasi",
+    "en": "Threat Catalog, Multi-Account Isolation & Multi-Config Web Terminal"
   },
   "body": {
-    "id": "Menambahkan seksi interaktif komprehensif pada beranda publik yang merinci 12 vektor ancaman nyata yang ditangani secara otomatis oleh Pasak, memperbarui model langganan menjadi 2 paket utama dengan masa evaluasi uji coba 14 hari berfitur penuh, serta menghadirkan rangkaian pengujian otomatis antarmuka untuk menjamin kestabilan seluruh alur operasional pengguna.",
-    "en": "Introduced a comprehensive interactive section on the public homepage detailing 12 real-world threat vectors automatically mitigated by Pasak, transitioned to a streamlined 2-tier subscription model featuring full 14-day evaluation access, and delivered automated end-to-end interface verification across all operational workflows."
+    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, serta fitur Konsol Terminal Server di peramban yang mendukung penyimpanan banyak konfigurasi terverifikasi dan mode layar penuh penuh.",
+    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, and a browser-based Server Terminal supporting multiple saved verified access profiles and clean fullscreen mode."
   },
   "items": [
     {
@@ -21,8 +21,8 @@
     },
     {
       "type": "new",
-      "id": "Filter Kategori & Matriks Komparasi Langsung: Pengguna dapat memfilter vektor proteksi berdasarkan domain (Aplikasi Web L7, Kernel L3/L4, Integritas Berkas FIM, dan Armada SOC) serta beralih ke tabel perbandingan langsung.",
-      "en": "Category Filters & Live Comparison Matrix: Users can filter defense vectors across domains (Web L7, Kernel L3/L4, Filesystem FIM, and Fleet SOC) and switch seamlessly to a direct tabular comparison."
+      "id": "Filter Kategori & Matriks Komparasi Langsung: Pengguna dapat memfilter vektor proteksi berdasarkan domain (Aplikasi Web, Kernel Jaringan, Integritas Berkas, dan Armada) serta beralih ke tabel perbandingan langsung.",
+      "en": "Category Filters & Live Comparison Matrix: Users can filter defense vectors across protection domains and switch seamlessly to a direct comparison matrix."
     },
     {
       "type": "new",
@@ -30,14 +30,34 @@
       "en": "2-Tier Pricing & 14-Day Pro Trial: Streamlined plans into 2 primary tiers featuring full 14-day Pro evaluation access and a user-friendly grace period observation mode upon trial conclusion."
     },
     {
+      "type": "new",
+      "id": "Terminal Web Server & Multi-Konfigurasi Tersimpan: Pelanggan aktif dapat menguji, menyimpan, mengubah, dan menghapus lebih dari satu profil akses server ke akun mereka; pilihan target terminal hanya menampilkan konfigurasi yang berhasil diverifikasi.",
+      "en": "Browser Server Terminal & Multiple Saved Profiles: Active subscribers can test, save, update, and remove multiple server access configurations per account, with target selectors listing only verified saved profiles."
+    },
+    {
+      "type": "security",
+      "id": "Isolasi Data Akun & Tim Pengelola: Memastikan setiap pengguna yang masuk—termasuk akun delegasi yang dibuat admin—hanya mengakses informasi server, pengguna, lisensi, dan insiden miliknya sendiri.",
+      "en": "Strict Account & Delegated Team Isolation: Ensures every signed-in user—including admin-provisioned team members—sees and manages only their own assigned servers, licenses, users, and security events."
+    },
+    {
       "type": "improvement",
-      "id": "Rangkaian Pengujian Otomatis Antarmuka Pengguna: Menambahkan validasi skenario pengujian komprehensif yang memverifikasi seluruh siklus akun (evaluasi, multi-server, kepatuhan kedaulatan data, hingga masa tenggang) secara otomatis dan konsisten.",
-      "en": "Automated Interface Verification Suite: Added comprehensive test automation validating all operational user states (trial, multi-server clusters, sovereign data compliance, and grace period) with end-to-end reliability."
+      "id": "Penyeragaman Alamat Portal Resmi & Penyempurnaan Antarmuka Pengelola: Mengganti seluruh rujukan alamat layanan ke https://pasax.web.id serta merapikan modal pendaftaran pengguna baru, navigasi atas, dan tabel responsif.",
+      "en": "Official Portal URL Unification & Admin UI Refinement: Migrated all service links to https://pasax.web.id and polished registration modals, header breadcrumbs, and responsive administration tables."
+    },
+    {
+      "type": "improvement",
+      "id": "Rangkaian Pengujian Otomatis Antarmuka Pengguna: Menambahkan validasi skenario pengujian menyeluruh yang memverifikasi siklus akun, isolasi data, serta kestabilan tampilan lintas ukuran layar.",
+      "en": "Automated Interface Verification Suite: Added comprehensive end-to-end validation covering account lifecycles, tenant data isolation, and responsive visual stability."
     },
     {
       "type": "fix",
-      "id": "Penyempurnaan Semantik Elemen Tombol Antarmuka: Menyelaraskan komponen tombol pada panel pengelolaan server untuk memastikan interaksi antarmuka yang mulus tanpa peringatan konsol peramban.",
-      "en": "Interface Button Semantics Refinement: Aligned button primitives across server management tables to ensure seamless user interactions and clean browser console execution."
+      "id": "Perbaikan Layar Penuh Konsol Terminal & Kestabilan Tema: Memperbaiki tampilan layar penuh terminal agar mengisi seluruh bidang layar di atas bilah menu, serta memperbaiki pintasan dan pemuatan tema agar bebas galat konsol peramban.",
+      "en": "Terminal Fullscreen Layout & Theme Stability Fix: Fixed terminal fullscreen mode to span the entire viewport cleanly above navigation chrome, and resolved theme initialization and hotkey handling for error-free browsing."
+    },
+    {
+      "type": "fix",
+      "id": "Penyempurnaan Semantik Elemen Tombol Antarmuka: Menyelaraskan komponen tombol pada panel pengelolaan server untuk memastikan interaksi antarmuka yang mulus.",
+      "en": "Interface Button Semantics Refinement: Aligned interactive button elements across server management panels for smooth user interactions."
     }
   ]
 }
