@@ -35,30 +35,6 @@ export interface AdminTemplateProps {
   headerExtra?: React.ReactNode
 }
 
-/**
- * AdminTemplate - Template dasar halaman admin dengan arsitektur resmi shadcn UI (sidebar-07).
- *
- * Contoh penggunaan:
- * ```tsx
- * export default function Page() {
- *   return (
- *     <AdminTemplate
- *       breadcrumbs={[
- *         { title: "Fleet Management", href: "/dashboard#business" },
- *         { title: "Data Fetching" },
- *       ]}
- *     >
- *       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
- *         <div className="aspect-video rounded-xl bg-muted/50" />
- *         <div className="aspect-video rounded-xl bg-muted/50" />
- *         <div className="aspect-video rounded-xl bg-muted/50" />
- *       </div>
- *       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
- *     </AdminTemplate>
- *   )
- * }
- * ```
- */
 export function AdminTemplate({
   breadcrumbs,
   user,
@@ -74,7 +50,7 @@ export function AdminTemplate({
         {/* Subtle Cyber Tactical Grid Pattern & Ambient Radial Glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#0099ff1f_1.2px,transparent_1.2px)] [background-size:24px_24px] dark:bg-[radial-gradient(#38bdf826_1.2px,transparent_1.2px)] opacity-90"
+          className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#0099ff1f_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-90 dark:bg-[radial-gradient(#38bdf826_1.2px,transparent_1.2px)]"
         />
         <div
           aria-hidden="true"
@@ -82,40 +58,55 @@ export function AdminTemplate({
         />
 
         {headerExtra ? (
-          <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b-2 border-border bg-background/80 px-4 font-sans backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:px-6">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
+          <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-3 border-b-2 border-border bg-background/85 px-4 font-sans backdrop-blur-md transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 lg:px-6">
+            <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden">
+              <SidebarTrigger className="-ml-1 shrink-0" />
               <Separator
                 orientation="vertical"
-                className="mr-2 data-[orientation=vertical]:h-4"
+                className="mr-1 shrink-0 data-[orientation=vertical]:h-4"
               />
-              <Breadcrumb>
-                <BreadcrumbList>
+              <Breadcrumb className="min-w-0 flex-1 overflow-hidden">
+                <BreadcrumbList className="flex-nowrap items-center overflow-hidden whitespace-nowrap">
                   {breadcrumbs?.map((crumb, idx) => {
                     const isLast = idx === breadcrumbs.length - 1
                     return (
                       <React.Fragment key={crumb.title}>
-                        <BreadcrumbItem className={!isLast ? "hidden md:block" : ""}>
+                        <BreadcrumbItem
+                          className={
+                            !isLast
+                              ? "hidden min-w-0 sm:inline-flex"
+                              : "min-w-0"
+                          }
+                        >
                           {isLast || !crumb.href ? (
-                            <BreadcrumbPage>{crumb.title}</BreadcrumbPage>
+                            <BreadcrumbPage className="max-w-[200px] truncate font-semibold">
+                              {crumb.title}
+                            </BreadcrumbPage>
                           ) : (
-                            <BreadcrumbLink href={crumb.href}>{crumb.title}</BreadcrumbLink>
+                            <BreadcrumbLink
+                              href={crumb.href}
+                              className="max-w-[160px] truncate font-medium"
+                            >
+                              {crumb.title}
+                            </BreadcrumbLink>
                           )}
                         </BreadcrumbItem>
-                        {!isLast && <BreadcrumbSeparator className="hidden md:block" />}
+                        {!isLast && (
+                          <BreadcrumbSeparator className="hidden shrink-0 sm:block" />
+                        )}
                       </React.Fragment>
                     )
                   })}
                 </BreadcrumbList>
               </Breadcrumb>
             </div>
-            {headerExtra}
+            <div className="shrink-0">{headerExtra}</div>
           </header>
         ) : (
           <SiteHeader breadcrumbs={breadcrumbs} />
         )}
 
-        <div className="relative z-10 flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="relative z-10 flex flex-1 flex-col gap-5 p-4 sm:p-5 lg:p-6">
           {children}
         </div>
       </SidebarInset>

@@ -418,7 +418,7 @@ export function UserTenantPortal({
       {/* 2. SEMUA DATA TERHUBUNG (APLIKASI WEB & VPS NODES)            */}
       {/* ------------------------------------------------------------- */}
       <div
-        className={`grid gap-6 lg:grid-cols-2 ${isExpired ? "pointer-events-none opacity-60 select-none" : ""}`}
+        className={`grid gap-6 2xl:grid-cols-2 ${isExpired ? "pointer-events-none opacity-60 select-none" : ""}`}
       >
         {/* Card: Aplikasi Web Laravel Terhubung */}
         <Card className="border-2 border-border shadow-[4px_4px_0px_0px_var(--border)]">

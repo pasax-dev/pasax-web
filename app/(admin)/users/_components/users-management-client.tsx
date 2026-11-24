@@ -5,13 +5,7 @@ import Link from "next/link"
 import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -24,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -36,8 +31,6 @@ import {
   Search,
   Edit,
   Trash2,
-  Copy,
-  Check,
   CheckCircle2,
   AlertCircle,
   Building2,
@@ -45,12 +38,9 @@ import {
   Mail,
   Filter,
   RefreshCw,
-  Key,
-  Layers,
-  Power,
-  ChevronRight,
   HardDrive,
   Shield,
+  Power,
 } from "lucide-react"
 import { ManagedUser, NodeTelemetry } from "@/lib/store"
 
@@ -61,13 +51,20 @@ interface UsersManagementClientProps {
   currentEmail?: string
 }
 
+const modalInputClass =
+  "h-10 w-full rounded-base border-2 border-border bg-background px-3 font-mono text-xs text-foreground placeholder:text-muted-foreground focus-visible:border-main focus-visible:ring-0"
+const modalSelectClass =
+  "h-10 w-full rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold text-foreground focus:border-main focus:outline-hidden"
+const modalLabelClass = "block font-sans text-xs font-semibold text-foreground"
+
 export function UsersManagementClient({
   initialUsers = [],
   initialNodes = [],
   currentRole = "Admin",
   currentEmail = "",
 }: UsersManagementClientProps) {
-  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
+  const isAdminOrSuperadmin =
+    currentRole === "Superadmin" || currentRole === "Admin"
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [nodes, setNodes] = React.useState<NodeTelemetry[]>(initialNodes)
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -75,20 +72,28 @@ export function UsersManagementClient({
   const [planFilter, setPlanFilter] = React.useState<string>("all")
   const [statusFilter, setStatusFilter] = React.useState<string>("all")
   const [isLoading, setIsLoading] = React.useState(false)
-  const [copiedKey, setCopiedKey] = React.useState<string | null>(null)
 
   // Dialog States
   const [isCreateOpen, setIsCreateOpen] = React.useState(false)
   const [isEditOpen, setIsEditOpen] = React.useState(false)
   const [isAssignOpen, setIsAssignOpen] = React.useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
-  const [selectedUser, setSelectedUser] = React.useState<ManagedUser | null>(null)
+  const [selectedUser, setSelectedUser] = React.useState<ManagedUser | null>(
+    null
+  )
 
   // Form States for Create/Edit
   const [formData, setFormData] = React.useState<{
     name: string
     email: string
-    role: "Superadmin" | "Admin" | "User" | "Support" | "Teknis" | "Programmer" | "DevOps"
+    role:
+      | "Superadmin"
+      | "Admin"
+      | "User"
+      | "Support"
+      | "Teknis"
+      | "Programmer"
+      | "DevOps"
     plan: "free" | "pro" | "enterprise"
     serverQuota: number
     organization: string
@@ -97,7 +102,7 @@ export function UsersManagementClient({
   }>({
     name: "",
     email: "",
-    role: "Admin", // Default is Admin per requirement
+    role: "Admin",
     plan: "pro",
     serverQuota: 10,
     organization: "",
@@ -107,12 +112,6 @@ export function UsersManagementClient({
 
   const [formError, setFormError] = React.useState<string | null>(null)
   const [formSuccess, setFormSuccess] = React.useState<string | null>(null)
-
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopiedKey(text)
-    setTimeout(() => setCopiedKey(null), 2000)
-  }
 
   // Refresh data from API
   const refreshData = async () => {
@@ -367,49 +366,134 @@ export function UsersManagementClient({
   // Aggregate stats
   const totalUsers = users.length
   const activeUsers = users.filter((u) => u.isActive).length
-  const totalAssignedNodes = users.reduce((acc, u) => acc + (u.assignedNodeIds?.length || 0), 0)
+  const totalAssignedNodes = users.reduce(
+    (acc, u) => acc + (u.assignedNodeIds?.length || 0),
+    0
+  )
   const totalQuota = users.reduce((acc, u) => acc + (u.serverQuota || 0), 0)
 
+  const renderNodeSelector = (helperText: string, labelPrefix: string) => (
+    <div className="space-y-2.5 border-t border-border/70 pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className={modalLabelClass}>
+          {labelPrefix} ({formData.assignedNodeIds.length} dipilih)
+        </span>
+        <span className="font-mono text-[11px] text-muted-foreground">
+          {helperText}
+        </span>
+      </div>
+
+      {nodes.length === 0 ? (
+        <div className="rounded-base border-2 border-dashed border-border bg-muted/15 p-3 font-sans text-xs text-muted-foreground">
+          Belum ada VPS terdaftar di armada.
+        </div>
+      ) : (
+        <div className="grid max-h-44 grid-cols-1 gap-2.5 overflow-y-auto rounded-base border-2 border-border bg-muted/15 p-2.5 sm:grid-cols-2">
+          {nodes.map((node) => {
+            const isSelected = formData.assignedNodeIds.includes(node.node_id)
+            return (
+              <button
+                type="button"
+                key={node.node_id}
+                onClick={() => toggleNodeSelection(node.node_id)}
+                className={`flex w-full items-center justify-between gap-2 rounded-base border-2 p-2.5 text-left font-mono text-xs transition-all ${
+                  isSelected
+                    ? "border-main bg-main/15 text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+                    : "border-border/60 bg-background/70 text-muted-foreground hover:border-border hover:text-foreground"
+                }`}
+              >
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span
+                    className={`flex size-4 shrink-0 items-center justify-center rounded-sm border-2 text-[10px] font-black ${
+                      isSelected
+                        ? "border-border bg-main text-black"
+                        : "border-border bg-background"
+                    }`}
+                  >
+                    {isSelected ? "✓" : ""}
+                  </span>
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate font-bold text-foreground">
+                      {node.hostname}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground tabular-nums">
+                      {node.ip_v4}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span
+                    className={`size-2 rounded-full ${
+                      node.status === "ONLINE"
+                        ? "bg-emerald-500"
+                        : "bg-muted-foreground"
+                    }`}
+                  />
+                  <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
+                    {node.os.split(" ")[0]}
+                  </Badge>
+                </div>
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+
   return (
-    <div className="flex flex-col gap-6 py-2">
+    <div className="flex flex-col gap-6">
       {/* 1. Header & Quick Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="font-heading text-2xl font-black tracking-tight text-balance text-foreground sm:text-3xl">
               Manajemen Tim VPS &amp; Pengguna
             </h1>
-            <Badge variant="outline" className="border-main/50 bg-main/10 text-main font-mono text-xs">
+            <Badge
+              variant="outline"
+              className="border-main/50 bg-main/10 font-mono text-[11px] font-bold tracking-wider text-main"
+            >
               FLEET &amp; TEAM ACCESS
             </Badge>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
+          <p className="max-w-2xl font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
             {isAdminOrSuperadmin ? (
               <>
-                Sebagai {currentRole}, Anda hanya melihat akun Anda sendiri serta tim (<strong>Programmer L7</strong> &amp; <strong>Server Maintainer</strong>) yang Anda buat.
+                Sebagai{" "}
+                <strong className="text-foreground">{currentRole}</strong>, Anda
+                melihat akun Anda sendiri serta tim (
+                <strong className="text-foreground">Programmer L7</strong> &amp;{" "}
+                <strong className="text-foreground">Server Maintainer</strong>)
+                yang Anda delegasikan.
               </>
             ) : (
-              <>Menampilkan informasi akun Anda serta penugasan node VPS yang diberikan oleh Admin armada.</>
+              <>
+                Menampilkan informasi akun Anda serta penugasan node VPS yang
+                diberikan oleh Admin armada.
+              </>
             )}
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={refreshData}
             disabled={isLoading}
-            className="border-2 font-mono text-xs"
+            className="h-9 border-2 font-mono text-xs whitespace-nowrap"
           >
-            <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`}
+            />
             Sinkronkan
           </Button>
           {isAdminOrSuperadmin && (
             <Button
               size="sm"
               onClick={openCreateDialog}
-              className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+              className="h-9 border-2 bg-main font-heading text-xs font-black whitespace-nowrap text-black shadow-[3px_3px_0px_0px_var(--border)] hover:bg-main/90"
             >
               <Plus className="mr-1.5 size-4 stroke-[3]" />
               Tambah Anggota Tim / VPS
@@ -418,21 +502,30 @@ export function UsersManagementClient({
         </div>
       </div>
 
-            {/* Otoritas Admin & Panduan Peran Banner */}
-      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 sm:p-5 shadow-[4px_4px_0px_0px_var(--border)]">
+      {/* Otoritas Admin & Panduan Peran Banner */}
+      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 shadow-[4px_4px_0px_0px_var(--border)] sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1 max-w-2xl">
+          <div className="max-w-2xl space-y-1">
             <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-              <ShieldCheck className="size-4.5 text-main" />
-              <span>Otoritas Administrator: Manajemen Tim Programmer &amp; Server Maintainer</span>
+              <ShieldCheck className="size-4.5 shrink-0 text-main" />
+              <span>
+                Otoritas Administrator: Manajemen Tim Programmer &amp; Server
+                Maintainer
+              </span>
             </div>
-            <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-              Setiap user yang mendaftar mandiri otomatis berstatus <strong>Admin</strong> dengan wewenang mengawasi <strong>SEMUA node VPS</strong>.
-              Admin dapat mendelegasikan tugas dengan membuatkan user khusus untuk tim programmer aplikasi atau teknisi maintainer VPS.
+            <p className="font-sans text-xs leading-relaxed text-pretty text-muted-foreground">
+              Setiap user yang mendaftar mandiri otomatis berstatus{" "}
+              <strong>Admin</strong> dengan wewenang mengawasi{" "}
+              <strong>SEMUA node VPS</strong>. Admin dapat mendelegasikan tugas
+              dengan membuatkan user khusus untuk tim programmer aplikasi atau
+              teknisi maintainer VPS.
             </p>
           </div>
-          <Link href="/permissions">
-            <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)] shrink-0">
+          <Link href="/permissions" className="shrink-0">
+            <Button
+              variant="outline"
+              className="gap-1.5 border-2 font-heading text-xs font-bold whitespace-nowrap shadow-[2px_2px_0px_0px_var(--border)]"
+            >
               <Shield className="size-3.5" />
               <span>Lihat Matriks Hak Akses Peran</span>
             </Button>
@@ -444,14 +537,16 @@ export function UsersManagementClient({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TOTAL PENGGUNA</span>
-              <Users className="size-4 text-main" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TOTAL PENGGUNA
+              </span>
+              <Users className="size-4 shrink-0 text-main" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-foreground">
+            <div className="mt-2 font-mono text-2xl font-black text-foreground tabular-nums">
               {totalUsers}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground tabular-nums">
               {activeUsers} akun operator aktif
             </p>
           </CardContent>
@@ -459,14 +554,16 @@ export function UsersManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">PENUGASAN VPS</span>
-              <Server className="size-4 text-emerald-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                PENUGASAN VPS
+              </span>
+              <Server className="size-4 shrink-0 text-emerald-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">
+            <div className="mt-2 font-mono text-2xl font-black text-emerald-500 tabular-nums">
               {totalAssignedNodes}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Hubungan Node &harr; User terjalin
             </p>
           </CardContent>
@@ -474,14 +571,16 @@ export function UsersManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TOTAL KUOTA ARMADA</span>
-              <HardDrive className="size-4 text-sky-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TOTAL KUOTA ARMADA
+              </span>
+              <HardDrive className="size-4 shrink-0 text-sky-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-sky-500">
+            <div className="mt-2 font-mono text-2xl font-black text-sky-500 tabular-nums">
               {totalQuota}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Maksimum slot VPS dialokasikan
             </p>
           </CardContent>
@@ -489,14 +588,16 @@ export function UsersManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">DEFAULT ROLE</span>
-              <ShieldCheck className="size-4 text-amber-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                DEFAULT ROLE
+              </span>
+              <ShieldCheck className="size-4 shrink-0 text-amber-500" />
             </div>
             <div className="mt-2 font-mono text-2xl font-black text-amber-500">
               ADMIN
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Otomatis diberikan ke registran baru
             </p>
           </CardContent>
@@ -508,12 +609,12 @@ export function UsersManagementClient({
         <CardContent className="p-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari berdasarkan nama, email, instansi, atau no telepon..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 font-mono text-xs"
+                className="h-9 border-2 border-border bg-background pl-9 font-mono text-xs"
               />
             </div>
 
@@ -533,7 +634,7 @@ export function UsersManagementClient({
                 <option value="Superadmin">Superadmin</option>
                 <option value="Admin">Admin (Fleet Owner)</option>
                 <option value="Programmer">Programmer (App L7)</option>
-                <option value="DevOps">DevOps (Server Maintainer L3/L4)</option>
+                <option value="DevOps">DevOps (Maintainer L3/L4)</option>
                 <option value="Teknis">Teknis</option>
                 <option value="Support">Support</option>
                 <option value="User">User (Viewer)</option>
@@ -568,12 +669,13 @@ export function UsersManagementClient({
 
       {/* 4. Table of Users */}
       <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
-        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-6 py-4">
-          <div className="flex items-center justify-between">
+        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Users className="size-5 text-main" />
-              <CardTitle className="font-heading text-lg font-black text-foreground">
-                Daftar Pemegang VPS &amp; Operator Armada ({filteredUsers.length})
+              <CardTitle className="font-heading text-lg font-black text-foreground tabular-nums">
+                Daftar Pemegang VPS &amp; Operator Armada (
+                {filteredUsers.length})
               </CardTitle>
             </div>
             <span className="font-mono text-xs text-muted-foreground">
@@ -586,107 +688,149 @@ export function UsersManagementClient({
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-border bg-muted/30">
-                  <TableHead className="font-mono text-xs font-bold text-foreground">OPERATOR / PENGGUNA</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">ROLE &amp; PAKET</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">INSTANSI &amp; KONTAK</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">VPS YANG DITANGANI</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground text-center">KUOTA</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground text-center">STATUS</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground text-right">AKSI</TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    OPERATOR / PENGGUNA
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    ROLE &amp; PAKET
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    INSTANSI &amp; KONTAK
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    VPS YANG DITANGANI
+                  </TableHead>
+                  <TableHead className="px-3 text-center font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    KUOTA
+                  </TableHead>
+                  <TableHead className="px-3 text-center font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    STATUS
+                  </TableHead>
+                  <TableHead className="px-3 text-right font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    AKSI
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="py-8 text-center font-mono text-xs text-muted-foreground">
+                    <TableCell
+                      colSpan={7}
+                      className="py-8 text-center font-mono text-xs text-muted-foreground"
+                    >
                       Tidak ada pengguna yang cocok dengan kriteria pencarian.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredUsers.map((u) => {
                     const assignedNodeList = nodes.filter(
-                      (n) => u.assignedNodeIds?.includes(n.node_id) || n.assignedUserIds?.includes(u.id)
+                      (n) =>
+                        u.assignedNodeIds?.includes(n.node_id) ||
+                        n.assignedUserIds?.includes(u.id)
                     )
 
                     return (
-                      <TableRow key={u.id} className="border-b border-border/60 hover:bg-muted/10 transition-colors">
+                      <TableRow
+                        key={u.id}
+                        className="border-b border-border/60 transition-colors hover:bg-muted/10"
+                      >
                         {/* 1. Name & Email */}
-                        <TableCell className="font-mono">
+                        <TableCell className="max-w-[240px] px-3 py-3 font-mono whitespace-normal">
                           <div className="flex flex-col">
-                            <span className="font-heading font-black text-foreground text-sm flex items-center gap-1.5 flex-wrap">
-                              {u.name}
+                            <span className="flex flex-wrap items-center gap-1.5 font-heading text-sm font-black text-foreground">
+                              <span className="truncate">{u.name}</span>
                               {u.role === "Superadmin" && (
-                                <span title="Superadministrator Utama" className="text-amber-500 text-xs">👑</span>
+                                <span
+                                  title="Superadministrator Utama"
+                                  className="text-xs text-amber-500"
+                                >
+                                  👑
+                                </span>
                               )}
                               {u.email === "admin@virtualbox.com" && (
-                                <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500 text-[10px] font-bold py-0 px-1.5">
-                                  👑 Admin VPS VirtualBox
+                                <Badge className="border border-amber-500 bg-amber-500/20 px-1.5 py-0 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                                  👑 Admin VPS
                                 </Badge>
                               )}
                             </span>
-                            <span className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                              <Mail className="size-3" />
-                              {u.email}
+                            <span className="mt-0.5 flex items-center gap-1 truncate text-xs text-muted-foreground">
+                              <Mail className="size-3 shrink-0" />
+                              <span className="truncate">{u.email}</span>
                             </span>
                             {u.createdBy && (
-                              <span className="text-[10px] text-sky-600 dark:text-sky-400 font-medium flex items-center gap-1 mt-0.5">
-                                👶 Dibuat oleh Admin: <code>{u.createdBy}</code>
+                              <span className="mt-0.5 flex items-center gap-1 truncate text-[10px] font-medium text-sky-600 dark:text-sky-400">
+                                <span className="shrink-0">Oleh:</span>
+                                <code className="truncate">{u.createdBy}</code>
                               </span>
                             )}
-                            <span className="text-[10px] text-muted-foreground/80 mt-0.5">
-                              ID: <code className="bg-muted px-1 py-0.5 rounded">{u.id}</code>
+                            <span className="mt-0.5 text-[10px] text-muted-foreground/80">
+                              ID:{" "}
+                              <code className="rounded bg-muted px-1 py-0.5">
+                                {u.id}
+                              </code>
                             </span>
                           </div>
                         </TableCell>
 
                         {/* 2. Role & Plan */}
-                        <TableCell>
-                          <div className="flex flex-col gap-1 items-start">
+                        <TableCell className="px-3 py-3">
+                          <div className="flex flex-col items-start gap-1">
                             <Badge
-                              className={`font-mono text-[10px] font-bold ${
+                              className={`font-mono text-[10px] font-bold tracking-wider ${
                                 u.role === "Superadmin"
-                                  ? "bg-amber-500 text-black border-amber-600"
+                                  ? "border-amber-600 bg-amber-500 text-black"
                                   : u.role === "Admin"
-                                  ? "bg-main text-black border-main"
-                                  : u.role === "Programmer"
-                                  ? "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500"
-                                  : u.role === "DevOps"
-                                  ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500"
-                                  : "bg-muted text-foreground border-border"
+                                    ? "border-main bg-main text-black"
+                                    : u.role === "Programmer"
+                                      ? "border-purple-500 bg-purple-500/20 text-purple-700 dark:text-purple-300"
+                                      : u.role === "DevOps"
+                                        ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                                        : "border-border bg-muted text-foreground"
                               }`}
                             >
-                              {u.role === "DevOps" ? "SERVER MAINTAINER" : u.role === "Programmer" ? "PROGRAMMER L7" : u.role.toUpperCase()}
+                              {u.role === "DevOps"
+                                ? "MAINTAINER"
+                                : u.role === "Programmer"
+                                  ? "PROGRAMMER L7"
+                                  : u.role.toUpperCase()}
                             </Badge>
 
-                            <Badge variant="outline" className="font-mono text-[10px] uppercase border-border">
+                            <Badge
+                              variant="outline"
+                              className="border-border font-mono text-[10px] tracking-wider uppercase"
+                            >
                               {u.plan} TIER
                             </Badge>
                           </div>
                         </TableCell>
 
                         {/* 3. Organization & Phone */}
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="max-w-[165px] px-3 py-3 font-mono text-xs whitespace-normal">
                           <div className="flex flex-col gap-0.5">
                             {u.organization ? (
-                              <span className="font-semibold text-foreground flex items-center gap-1">
-                                <Building2 className="size-3 text-muted-foreground" />
-                                {u.organization}
+                              <span className="flex items-center gap-1 truncate font-semibold text-foreground">
+                                <Building2 className="size-3 shrink-0 text-muted-foreground" />
+                                <span className="truncate">
+                                  {u.organization}
+                                </span>
                               </span>
                             ) : (
-                              <span className="text-muted-foreground italic">Mandiri / Personal</span>
+                              <span className="text-muted-foreground italic">
+                                Mandiri / Personal
+                              </span>
                             )}
                             {u.phone ? (
-                              <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                                <Phone className="size-3" />
-                                {u.phone}
+                              <span className="flex items-center gap-1 text-[11px] text-muted-foreground tabular-nums">
+                                <Phone className="size-3 shrink-0" />
+                                <span>{u.phone}</span>
                               </span>
                             ) : null}
                           </div>
                         </TableCell>
 
                         {/* 4. Assigned VPS Nodes */}
-                        <TableCell>
-                          <div className="flex flex-col gap-1.5 max-w-[280px]">
+                        <TableCell className="max-w-[220px] px-3 py-3 whitespace-normal">
+                          <div className="flex flex-col gap-1.5">
                             {assignedNodeList.length === 0 ? (
                               <span className="font-mono text-[11px] text-muted-foreground italic">
                                 Belum ada VPS ditugaskan
@@ -697,7 +841,7 @@ export function UsersManagementClient({
                                   <Badge
                                     key={node.node_id}
                                     variant="outline"
-                                    className={`font-mono text-[10px] px-1.5 py-0.5 flex items-center gap-1 border-2 ${
+                                    className={`flex items-center gap-1 border-2 px-1.5 py-0.5 font-mono text-[10px] ${
                                       node.status === "ONLINE"
                                         ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                         : "border-border bg-background text-muted-foreground"
@@ -705,11 +849,15 @@ export function UsersManagementClient({
                                   >
                                     <span
                                       className={`size-1.5 rounded-full ${
-                                        node.status === "ONLINE" ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"
+                                        node.status === "ONLINE"
+                                          ? "animate-pulse bg-emerald-500"
+                                          : "bg-muted-foreground"
                                       }`}
                                     />
                                     <span>{node.hostname}</span>
-                                    <span className="text-muted-foreground text-[9px]">({node.ip_v4})</span>
+                                    <span className="text-[9px] text-muted-foreground tabular-nums">
+                                      ({node.ip_v4})
+                                    </span>
                                   </Badge>
                                 ))}
                               </div>
@@ -718,21 +866,25 @@ export function UsersManagementClient({
                             {isAdminOrSuperadmin && (
                               <button
                                 onClick={() => openAssignDialog(u)}
-                                className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
+                                className="flex w-fit items-center gap-1 font-mono text-[10px] font-bold text-main hover:underline"
                               >
                                 <Server className="size-3" />
-                                <span>{assignedNodeList.length > 0 ? "Kelola Penugasan VPS" : "+ Tugaskan VPS"}</span>
+                                <span>
+                                  {assignedNodeList.length > 0
+                                    ? "Kelola Penugasan VPS"
+                                    : "+ Tugaskan VPS"}
+                                </span>
                               </button>
                             )}
                           </div>
                         </TableCell>
 
                         {/* 5. Quota */}
-                        <TableCell className="text-center font-mono">
-                          <span className="font-bold text-foreground text-xs">
+                        <TableCell className="px-3 py-3 text-center font-mono">
+                          <span className="text-xs font-bold text-foreground tabular-nums">
                             {assignedNodeList.length} / {u.serverQuota}
                           </span>
-                          <div className="w-16 h-1.5 bg-muted rounded-full mx-auto mt-1 overflow-hidden">
+                          <div className="mx-auto mt-1 h-1.5 w-14 overflow-hidden rounded-full bg-muted">
                             <div
                               className="h-full bg-main"
                               style={{
@@ -743,15 +895,19 @@ export function UsersManagementClient({
                         </TableCell>
 
                         {/* 6. Status Toggle */}
-                        <TableCell className="text-center">
+                        <TableCell className="px-3 py-3 text-center">
                           {isAdminOrSuperadmin ? (
                             <button
                               onClick={() => handleToggleStatus(u)}
-                              title={u.isActive ? "Klik untuk nonaktifkan" : "Klik untuk aktifkan"}
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border transition-colors ${
+                              title={
                                 u.isActive
-                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/20"
-                                  : "bg-rose-500/10 text-rose-500 border-rose-500/40 hover:bg-rose-500/20"
+                                  ? "Klik untuk nonaktifkan"
+                                  : "Klik untuk aktifkan"
+                              }
+                              className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] font-bold transition-colors ${
+                                u.isActive
+                                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 dark:text-emerald-400"
+                                  : "border-rose-500/40 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20"
                               }`}
                             >
                               <Power className="size-2.5" />
@@ -759,10 +915,10 @@ export function UsersManagementClient({
                             </button>
                           ) : (
                             <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
+                              className={`inline-flex items-center gap-1 rounded border px-2 py-0.5 font-mono text-[10px] font-bold ${
                                 u.isActive
-                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
-                                  : "bg-rose-500/10 text-rose-500 border-rose-500/40"
+                                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                                  : "border-rose-500/40 bg-rose-500/10 text-rose-500"
                               }`}
                             >
                               <Power className="size-2.5" />
@@ -772,7 +928,7 @@ export function UsersManagementClient({
                         </TableCell>
 
                         {/* 7. Actions */}
-                        <TableCell className="text-right">
+                        <TableCell className="px-3 py-3 text-right">
                           {isAdminOrSuperadmin ? (
                             <div className="flex items-center justify-end gap-1">
                               <Button
@@ -784,7 +940,8 @@ export function UsersManagementClient({
                               >
                                 <Edit className="size-3.5" />
                               </Button>
-                              {u.email.toLowerCase() !== currentEmail.toLowerCase() && (
+                              {u.email.toLowerCase() !==
+                                currentEmail.toLowerCase() && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
@@ -797,7 +954,9 @@ export function UsersManagementClient({
                               )}
                             </div>
                           ) : (
-                            <span className="font-mono text-[10px] text-muted-foreground">Hanya baca</span>
+                            <span className="font-mono text-[10px] text-muted-foreground">
+                              Hanya baca
+                            </span>
                           )}
                         </TableCell>
                       </TableRow>
@@ -812,15 +971,21 @@ export function UsersManagementClient({
 
       {/* 5. MODAL: TAMBAH PEMEGANG VPS BARU */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-xl border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
-              <Plus className="size-5 text-main" />
-              <span>Daftarkan Pengguna Pemegang VPS Baru</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Pengguna yang didaftarkan akan memiliki akses peran <strong>Admin</strong> secara default dan dapat ditugaskan untuk mengelola satu atau beberapa VPS armada.
-            </DialogDescription>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Plus className="size-5 stroke-[2.5]" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>Daftarkan Pengguna Pemegang VPS Baru</DialogTitle>
+                <DialogDescription className="mt-1">
+                  Pengguna baru otomatis berstatus <strong>Admin</strong> secara
+                  default (atau sesuaikan peran tim) dan dapat langsung
+                  ditugaskan ke node VPS armada.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
           {formError && (
@@ -837,81 +1002,96 @@ export function UsersManagementClient({
             </div>
           )}
 
-          <form onSubmit={handleCreateSubmit} className="space-y-4 pt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleCreateSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Nama Lengkap Operator *</label>
+                <label className={modalLabelClass}>
+                  Nama Lengkap Operator <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   placeholder="Misal: Indra Setiawan"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Email Operator *</label>
+                <label className={modalLabelClass}>
+                  Email Operator <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   type="email"
                   required
                   placeholder="operator@instansi.id"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Instansi / Organisasi</label>
+                <label className={modalLabelClass}>Instansi / Organisasi</label>
                 <Input
                   placeholder="Misal: Diskominfo Daerah / Fintech"
                   value={formData.organization}
-                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, organization: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Nomor Telepon / WA</label>
+                <label className={modalLabelClass}>Nomor Telepon / WA</label>
                 <Input
                   placeholder="+62 812-xxxx-xxxx"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Peran (Default: Admin)</label>
+                <label className={modalLabelClass}>Peran Akses</label>
                 <select
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value as any })
+                  }
+                  className={modalSelectClass}
                 >
-                  <option value="Admin">Admin (Co-Admin / Fleet Owner)</option>
-                  <option value="Programmer">Programmer (Web Developer L7 - Rute & Integrasi WAF)</option>
-                  <option value="DevOps">DevOps (Server Maintainer - VPS & Kernel L3/L4)</option>
-                  <option value="Teknis">Teknis (Operator Teknis SOC)</option>
-                  <option value="Support">Support (Layanan Bantuan)</option>
-                  <option value="User">User (Viewer / Observer)</option>
+                  <option value="Admin">Admin — Fleet Owner</option>
+                  <option value="Programmer">Programmer — App L7</option>
+                  <option value="DevOps">DevOps — Maintainer L3/L4</option>
+                  <option value="Teknis">Teknis — Operator SOC</option>
+                  <option value="Support">Support — Layanan Bantuan</option>
+                  <option value="User">User — Observer</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Paket Berlangganan</label>
+                <label className={modalLabelClass}>Paket Lisensi</label>
                 <select
                   value={formData.plan}
                   onChange={(e) => {
                     const plan = e.target.value as any
-                    const quota = plan === "enterprise" ? 100 : plan === "pro" ? 10 : 1
+                    const quota =
+                      plan === "enterprise" ? 100 : plan === "pro" ? 10 : 1
                     setFormData({ ...formData, plan, serverQuota: quota })
                   }}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  className={modalSelectClass}
                 >
                   <option value="free">Starter (1 Node)</option>
                   <option value="pro">Pro Fleet (10 Nodes)</option>
@@ -920,83 +1100,66 @@ export function UsersManagementClient({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Batas Kuota VPS</label>
+                <label className={modalLabelClass}>Kuota VPS</label>
                 <Input
                   type="number"
                   min="1"
                   max="500"
                   value={formData.serverQuota}
-                  onChange={(e) => setFormData({ ...formData, serverQuota: parseInt(e.target.value) || 1 })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      serverQuota: parseInt(e.target.value) || 1,
+                    })
+                  }
+                  className={`${modalInputClass} tabular-nums`}
                 />
               </div>
             </div>
 
-            {/* Multi-select VPS Assignment */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <label className="font-heading text-xs font-bold flex items-center justify-between">
-                <span>Tugaskan VPS Langsung ({formData.assignedNodeIds.length} dipilih)</span>
-                <span className="font-mono text-[10px] text-muted-foreground">1 VPS bisa dimiliki banyak user</span>
-              </label>
+            {renderNodeSelector(
+              "1 VPS bisa ditugaskan ke banyak user",
+              "Tugaskan VPS Langsung"
+            )}
 
-              {nodes.length === 0 ? (
-                <p className="font-mono text-xs text-muted-foreground italic">Belum ada VPS terdaftar di armada.</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border-2 rounded-base bg-muted/10">
-                  {nodes.map((node) => {
-                    const isSelected = formData.assignedNodeIds.includes(node.node_id)
-                    return (
-                      <div
-                        key={node.node_id}
-                        onClick={() => toggleNodeSelection(node.node_id)}
-                        className={`cursor-pointer flex items-center justify-between p-2 rounded border-2 transition-all font-mono text-xs ${
-                          isSelected
-                            ? "border-main bg-main/15 text-foreground font-bold"
-                            : "border-border/60 hover:border-border text-muted-foreground"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            readOnly
-                            className="size-3.5 accent-main"
-                          />
-                          <div className="flex flex-col">
-                            <span className="text-foreground">{node.hostname}</span>
-                            <span className="text-[10px] text-muted-foreground">{node.ip_v4}</span>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-[9px]">
-                          {node.os.split(" ")[0]}
-                        </Badge>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsCreateOpen(false)}>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsCreateOpen(false)}
+                className="h-9 border-2 font-sans text-xs font-bold"
+              >
                 Batal
               </Button>
-              <Button type="submit" className="bg-main text-black font-heading font-black">
+              <Button
+                type="submit"
+                className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+              >
                 Simpan &amp; Terbitkan Kunci Lisensi
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* 6. MODAL: EDIT PENGGUNA */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-xl border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
-              <Edit className="size-5 text-main" />
-              <span>Perbarui Profil &amp; Penugasan VPS Operator</span>
-            </DialogTitle>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Edit className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Perbarui Profil &amp; Penugasan VPS Operator
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Sesuaikan peran akses, paket lisensi, batas kuota, serta node
+                  VPS yang dikelola oleh operator.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
           {formError && (
@@ -1013,73 +1176,89 @@ export function UsersManagementClient({
             </div>
           )}
 
-          <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Nama Lengkap *</label>
+                <label className={modalLabelClass}>
+                  Nama Lengkap <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Email Operator *</label>
+                <label className={modalLabelClass}>
+                  Email Operator <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Instansi / Organisasi</label>
+                <label className={modalLabelClass}>Instansi / Organisasi</label>
                 <Input
                   value={formData.organization}
-                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, organization: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Nomor Telepon</label>
+                <label className={modalLabelClass}>Nomor Telepon</label>
                 <Input
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-3">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Peran Akses</label>
+                <label className={modalLabelClass}>Peran Akses</label>
                 <select
                   value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value as any })
+                  }
+                  className={modalSelectClass}
                 >
-                  <option value="Admin">Admin (Co-Admin / Fleet Owner)</option>
-                  <option value="Programmer">Programmer (Web Developer L7 - Rute & Integrasi WAF)</option>
-                  <option value="DevOps">DevOps (Server Maintainer - VPS & Kernel L3/L4)</option>
-                  <option value="Teknis">Teknis (Operator Teknis SOC)</option>
-                  <option value="Support">Support (Layanan Bantuan)</option>
-                  <option value="User">User (Viewer / Observer)</option>
+                  <option value="Admin">Admin — Fleet Owner</option>
+                  <option value="Programmer">Programmer — App L7</option>
+                  <option value="DevOps">DevOps — Maintainer L3/L4</option>
+                  <option value="Teknis">Teknis — Operator SOC</option>
+                  <option value="Support">Support — Layanan Bantuan</option>
+                  <option value="User">User — Observer</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Paket Lisensi</label>
+                <label className={modalLabelClass}>Paket Lisensi</label>
                 <select
                   value={formData.plan}
-                  onChange={(e) => setFormData({ ...formData, plan: e.target.value as any })}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  onChange={(e) =>
+                    setFormData({ ...formData, plan: e.target.value as any })
+                  }
+                  className={modalSelectClass}
                 >
                   <option value="free">Starter</option>
                   <option value="pro">Pro Fleet</option>
@@ -1088,154 +1267,168 @@ export function UsersManagementClient({
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Batas Kuota VPS</label>
+                <label className={modalLabelClass}>Kuota VPS</label>
                 <Input
                   type="number"
                   min="1"
                   value={formData.serverQuota}
-                  onChange={(e) => setFormData({ ...formData, serverQuota: parseInt(e.target.value) || 1 })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      serverQuota: parseInt(e.target.value) || 1,
+                    })
+                  }
+                  className={`${modalInputClass} tabular-nums`}
                 />
               </div>
             </div>
 
-            {/* Multi-select VPS Assignment */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <label className="font-heading text-xs font-bold flex items-center justify-between">
-                <span>Daftar VPS yang Ditugaskan ({formData.assignedNodeIds.length} node)</span>
-                <span className="font-mono text-[10px] text-muted-foreground">Pilih VPS yang dipegang pengguna ini</span>
-              </label>
+            {renderNodeSelector(
+              "Pilih VPS yang dipegang pengguna ini",
+              "Daftar VPS yang Ditugaskan"
+            )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border-2 rounded-base bg-muted/10">
-                {nodes.map((node) => {
-                  const isSelected = formData.assignedNodeIds.includes(node.node_id)
-                  return (
-                    <div
-                      key={node.node_id}
-                      onClick={() => toggleNodeSelection(node.node_id)}
-                      className={`cursor-pointer flex items-center justify-between p-2 rounded border-2 transition-all font-mono text-xs ${
-                        isSelected
-                          ? "border-main bg-main/15 text-foreground font-bold"
-                          : "border-border/60 hover:border-border text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          readOnly
-                          className="size-3.5 accent-main"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-foreground">{node.hostname}</span>
-                          <span className="text-[10px] text-muted-foreground">{node.ip_v4}</span>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-[9px]">
-                        {node.status}
-                      </Badge>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditOpen(false)}
+                className="h-9 border-2 font-sans text-xs font-bold"
+              >
                 Batal
               </Button>
-              <Button type="submit" className="bg-main text-black font-heading font-black">
+              <Button
+                type="submit"
+                className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+              >
                 Simpan Perubahan
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* 7. MODAL: KELOLA PENUGASAN VPS CEPAT */}
       <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
-        <DialogContent className="max-w-md border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-base font-black text-foreground flex items-center gap-2">
-              <Server className="size-4 text-main" />
-              <span>Penugasan VPS untuk {selectedUser?.name}</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Centang VPS yang akan dikelola oleh operator ini. Satu VPS bisa ditangani oleh beberapa operator sekaligus.
-            </DialogDescription>
+        <DialogContent className="max-w-lg">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Server className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Penugasan VPS untuk {selectedUser?.name}
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Centang VPS yang akan dikelola oleh operator ini. Satu VPS
+                  dapat ditangani oleh beberapa operator sekaligus.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <div className="space-y-2 py-2 max-h-60 overflow-y-auto">
+          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
             {nodes.map((node) => {
               const isSelected = formData.assignedNodeIds.includes(node.node_id)
               return (
-                <div
+                <button
+                  type="button"
                   key={node.node_id}
                   onClick={() => toggleNodeSelection(node.node_id)}
-                  className={`cursor-pointer flex items-center justify-between p-2.5 rounded-base border-2 transition-all font-mono text-xs ${
+                  className={`flex w-full items-center justify-between gap-2 rounded-base border-2 p-3 text-left font-mono text-xs transition-all ${
                     isSelected
-                      ? "border-main bg-main/15 text-foreground font-bold"
-                      : "border-border hover:border-border/80"
+                      ? "border-main bg-main/15 text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+                      : "border-border bg-background hover:border-border/80"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      readOnly
-                      className="size-4 accent-main"
-                    />
-                    <div>
-                      <div className="font-heading font-black">{node.hostname}</div>
-                      <div className="text-[11px] text-muted-foreground">{node.ip_v4} • {node.os}</div>
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span
+                      className={`flex size-4 shrink-0 items-center justify-center rounded-sm border-2 text-[10px] font-black ${
+                        isSelected
+                          ? "border-border bg-main text-black"
+                          : "border-border bg-background"
+                      }`}
+                    >
+                      {isSelected ? "✓" : ""}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate font-heading font-black">
+                        {node.hostname}
+                      </div>
+                      <div className="truncate text-[11px] text-muted-foreground tabular-nums">
+                        {node.ip_v4} &bull; {node.os}
+                      </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="shrink-0 text-[10px]">
                     {node.status}
                   </Badge>
-                </div>
+                </button>
               )
             })}
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-border">
-            <Button variant="outline" size="sm" onClick={() => setIsAssignOpen(false)}>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAssignOpen(false)}
+              className="h-9 border-2 font-sans text-xs font-bold"
+            >
               Batal
             </Button>
-            <Button size="sm" onClick={handleAssignSubmit} className="bg-main text-black font-heading font-black">
+            <Button
+              size="sm"
+              onClick={handleAssignSubmit}
+              className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+            >
               Terapkan Penugasan
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* 8. MODAL: KONFIRMASI HAPUS PENGGUNA */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="max-w-md border-2 border-destructive/40">
+        <DialogContent className="max-w-md border-destructive/60">
           <DialogHeader>
-            <DialogTitle className="font-heading text-base font-black text-destructive flex items-center gap-2">
-              <AlertCircle className="size-5" />
-              <span>Konfirmasi Hapus Pengguna</span>
+            <div className="mb-1 flex size-10 items-center justify-center rounded-base border-2 border-border bg-destructive/15 text-destructive shadow-[2px_2px_0px_0px_var(--border)]">
+              <AlertCircle className="size-5 stroke-[2.5]" />
+            </div>
+            <DialogTitle className="text-destructive">
+              Konfirmasi Hapus Pengguna
             </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Apakah Anda yakin ingin menghapus akun <strong>{selectedUser?.name}</strong> ({selectedUser?.email})?
-              Semua penugasan VPS dan token lisensi yang terkait akan dinonaktifkan. Tindakan ini tidak dapat dibatalkan.
+            <DialogDescription>
+              Apakah Anda yakin ingin menghapus akun{" "}
+              <strong className="text-foreground">{selectedUser?.name}</strong>{" "}
+              (
+              <span className="font-mono text-foreground">
+                {selectedUser?.email}
+              </span>
+              )? Semua penugasan VPS dan token lisensi yang terkait akan
+              dinonaktifkan. Tindakan ini tidak dapat dibatalkan.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" size="sm" onClick={() => setIsDeleteOpen(false)}>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsDeleteOpen(false)}
+              className="h-9 border-2 font-sans text-xs font-bold"
+            >
               Batal
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={handleDeleteSubmit}
-              className="font-heading font-black"
+              className="h-9 border-2 border-border font-heading text-xs font-black shadow-[2px_2px_0px_0px_var(--border)]"
             >
               Hapus Akun Pengguna
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

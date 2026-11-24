@@ -32,15 +32,11 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
-  ArrowRight,
   Sparkles,
   Layers,
   Terminal,
   Activity,
-  UserCheck,
   Eye,
-  Settings,
-  HelpCircle,
 } from "lucide-react"
 
 interface PermissionsClientProps {
@@ -113,7 +109,8 @@ const roleDetails: Record<RoleTab, RoleDetail> = {
     id: "programmer",
     title: "Programmer Aplikasi (Web Developer L7)",
     badgeText: "AKSES LAYER APLIKASI",
-    badgeColor: "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500",
+    badgeColor:
+      "bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500",
     targetUser: "Programmer / Developer yang Membangun & Mengelola Web di VPS",
     philosophy:
       "Dibuatkan oleh Admin untuk menangani kode aplikasi, integrasi REST API, framework web (Laravel, Express, dsb), penanganan celah keamanan L7 (SQLi/XSS/RCE), dan simulasi kerentanan.",
@@ -160,8 +157,10 @@ const roleDetails: Record<RoleTab, RoleDetail> = {
     id: "devops",
     title: "Server Maintainer (DevOps / Linux SysAdmin L3/L4)",
     badgeText: "AKSES INFRASTRUKTUR & KERNEL",
-    badgeColor: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500",
-    targetUser: "Teknisi / SysAdmin yang Merawat OS, Nginx, & Keamanan Kernel VPS",
+    badgeColor:
+      "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500",
+    targetUser:
+      "Teknisi / SysAdmin yang Merawat OS, Nginx, & Keamanan Kernel VPS",
     philosophy:
       "Dibuatkan oleh Admin untuk memastikan server Linux tetap sehat, daemon Sentinel berjalan prima, aturan firewall kernel aktif, serta mengawasi peringatan integritas berkas (FIM).",
     scope: "Node VPS yang Ditugaskan oleh Admin (atau Semua Infra)",
@@ -203,7 +202,8 @@ const roleDetails: Record<RoleTab, RoleDetail> = {
     id: "support",
     title: "Staff Teknis & Pengawas Operasional (Support SOC)",
     badgeText: "AKSES OPERASIONAL TELEMETRI",
-    badgeColor: "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500",
+    badgeColor:
+      "bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500",
     targetUser: "Operator Pengawas yang Bertugas Memantau Layanan Harian",
     philosophy:
       "Bertugas memantau telemetri insiden, memeriksa sertifikat domain SSL, serta memberikan pendampingan teknis jika terjadi anomali pada aplikasi.",
@@ -250,7 +250,6 @@ interface MatrixRow {
 }
 
 const matrixData: MatrixRow[] = [
-  // 1. Armada VPS Monitoring
   {
     category: "Armada VPS & Node Monitoring",
     feature: "Monitoring SEMUA Node VPS Armada",
@@ -287,8 +286,6 @@ const matrixData: MatrixRow[] = [
     support: "NO",
     note: "Menentukan user mana yang bertanggung jawab atas VPS tertentu.",
   },
-
-  // 2. Manajemen Pengguna & Tim
   {
     category: "Manajemen Tim & Pengguna",
     feature: "Membuat Akun Anggota Tim (Programmer & DevOps)",
@@ -316,8 +313,6 @@ const matrixData: MatrixRow[] = [
     support: "LIMITED",
     note: "Admin melihat profil lengkap, tim hanya melihat kontak relevan.",
   },
-
-  // 3. Keamanan Aplikasi L7 (WAF)
   {
     category: "Keamanan Aplikasi Web L7 (WAF)",
     feature: "Lihat Log Serangan L7 (SQLi, XSS, RCE, CSRF)",
@@ -345,8 +340,6 @@ const matrixData: MatrixRow[] = [
     support: "LIMITED",
     note: "Menguji efektivitas penolakan serangan secara mandiri di browser.",
   },
-
-  // 4. Keamanan Kernel L3/L4 & File Integrity (FIM)
   {
     category: "Keamanan Kernel L3/L4 & FIM",
     feature: "Monitoring Beban CPU, RAM, Disk, Uptime Hardware",
@@ -383,8 +376,6 @@ const matrixData: MatrixRow[] = [
     support: "NO",
     note: "Menyuntikkan alamat IP penyerang langsung ke firewall kernel.",
   },
-
-  // 5. Lisensi, Kuota, & Bisnis
   {
     category: "Lisensi, Kuota, & Bisnis",
     feature: "Melihat Token Lisensi Master (psk_live_...)",
@@ -439,33 +430,40 @@ export function PermissionsClient({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-user-count={userCount}>
       {/* 1. Header Banner */}
       <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-6 shadow-[6px_6px_0px_0px_var(--border)] sm:p-8">
         <div className="pointer-events-none absolute -right-6 -bottom-6 font-mono text-8xl font-black text-foreground/[0.03] select-none">
           ROLES
         </div>
 
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="space-y-2 max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-main px-2.5 py-0.5 font-mono text-[11px] font-black text-black">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-3xl min-w-0 flex-1 space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-base border-2 border-border bg-main px-2.5 py-0.5 font-mono text-[11px] font-black tracking-wider text-black">
               <ShieldCheck className="size-3.5" />
               <span>ARSITEKTUR OTORITAS BERJENJANG PASAX</span>
             </div>
-            <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+            <h1 className="font-heading text-2xl font-black tracking-tight text-balance text-foreground sm:text-3xl">
               Matriks Hak Akses &amp; Kemampuan Peran
             </h1>
-            <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-              Di Pasak Suite, <strong>setiap pengguna yang mendaftar mandiri otomatis berstatus Admin</strong>.
-              Sebagai Admin, Anda dapat <strong>memonitor SELURUH node VPS</strong> yang ada dalam armada Anda,
-              serta <strong>membuatkan akun untuk tim programmer dan maintainer server</strong> dengan wewenang
-              yang terisolasi secara presisi.
+            <p className="font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
+              Di Pasak Suite,{" "}
+              <strong>
+                setiap pengguna yang mendaftar mandiri otomatis berstatus Admin
+              </strong>
+              . Sebagai Admin, Anda dapat{" "}
+              <strong>memonitor SELURUH node VPS</strong> yang ada dalam armada
+              Anda, serta{" "}
+              <strong>
+                membuatkan akun untuk tim programmer dan maintainer server
+              </strong>{" "}
+              dengan wewenang yang terisolasi secara presisi.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
             <Link href="/users">
-              <Button className="font-heading text-xs font-bold gap-1.5 shadow-[3px_3px_0px_0px_var(--border)]">
+              <Button className="gap-1.5 font-heading text-xs font-bold whitespace-nowrap shadow-[3px_3px_0px_0px_var(--border)]">
                 <Users className="size-4" />
                 <span>Kelola Tim &amp; Pengguna</span>
               </Button>
@@ -473,7 +471,7 @@ export function PermissionsClient({
             <Link href="/node">
               <Button
                 variant="outline"
-                className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[3px_3px_0px_0px_var(--border)]"
+                className="gap-1.5 border-2 font-heading text-xs font-bold whitespace-nowrap tabular-nums shadow-[3px_3px_0px_0px_var(--border)]"
               >
                 <Server className="size-4" />
                 <span>Monitor Semua Node ({nodeCount})</span>
@@ -490,7 +488,9 @@ export function PermissionsClient({
             </span>
             <div>
               <div className="font-bold text-foreground">User Baru = Admin</div>
-              <div className="text-[11px] text-muted-foreground">Pendaftaran mandiri otomatis menjadi Admin</div>
+              <div className="font-sans text-[11px] text-muted-foreground">
+                Pendaftaran mandiri otomatis menjadi Admin
+              </div>
             </div>
           </div>
 
@@ -499,8 +499,12 @@ export function PermissionsClient({
               2
             </span>
             <div>
-              <div className="font-bold text-foreground">Delegasi Tim Terisolasi</div>
-              <div className="text-[11px] text-muted-foreground">Admin membuat akun Programmer &amp; Maintainer</div>
+              <div className="font-bold text-foreground">
+                Delegasi Tim Terisolasi
+              </div>
+              <div className="font-sans text-[11px] text-muted-foreground">
+                Admin membuat akun Programmer &amp; Maintainer
+              </div>
             </div>
           </div>
 
@@ -509,8 +513,12 @@ export function PermissionsClient({
               3
             </span>
             <div>
-              <div className="font-bold text-foreground">Kendali Penuh Node VPS</div>
-              <div className="text-[11px] text-muted-foreground">Admin mengawasi semua server tanpa batas</div>
+              <div className="font-bold text-foreground">
+                Kendali Penuh Node VPS
+              </div>
+              <div className="font-sans text-[11px] text-muted-foreground">
+                Admin mengawasi semua server tanpa batas
+              </div>
             </div>
           </div>
         </div>
@@ -521,17 +529,19 @@ export function PermissionsClient({
         <CardHeader className="border-b-2 border-border/80 bg-muted/20 pb-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <CardTitle className="font-heading text-lg font-black flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 font-heading text-lg font-black">
                 <Sparkles className="size-5 text-main" />
                 <span>Eksplorasi Kemampuan Peran (Role Explorer)</span>
               </CardTitle>
               <CardDescription className="font-sans text-xs">
-                Pilih peran di bawah ini untuk melihat detail apa yang bisa dilakukan dan apa yang dibatasi di web Pasak:
+                Pilih peran di bawah ini untuk melihat detail apa yang bisa
+                dilakukan dan apa yang dibatasi di web Pasak:
               </CardDescription>
             </div>
 
             <div className="font-mono text-xs text-muted-foreground">
-              Peran Anda saat ini: <Badge className="font-bold ml-1">{currentRole}</Badge>
+              Peran Anda saat ini:{" "}
+              <Badge className="ml-1 font-bold">{currentRole}</Badge>
             </div>
           </div>
 
@@ -541,7 +551,7 @@ export function PermissionsClient({
               onClick={() => setActiveTab("admin")}
               className={`flex items-center gap-2 rounded-base border-2 px-3.5 py-2 font-mono text-xs font-bold transition-all ${
                 activeTab === "admin"
-                  ? "border-border bg-main text-black shadow-[3px_3px_0px_0px_var(--border)] -translate-y-0.5"
+                  ? "-translate-y-0.5 border-border bg-main text-black shadow-[3px_3px_0px_0px_var(--border)]"
                   : "border-border/60 bg-background text-muted-foreground hover:bg-muted/30"
               }`}
             >
@@ -553,7 +563,7 @@ export function PermissionsClient({
               onClick={() => setActiveTab("programmer")}
               className={`flex items-center gap-2 rounded-base border-2 px-3.5 py-2 font-mono text-xs font-bold transition-all ${
                 activeTab === "programmer"
-                  ? "border-purple-600 bg-purple-500/20 text-purple-700 dark:text-purple-300 shadow-[3px_3px_0px_0px_var(--border)] -translate-y-0.5"
+                  ? "-translate-y-0.5 border-purple-600 bg-purple-500/20 text-purple-700 shadow-[3px_3px_0px_0px_var(--border)] dark:text-purple-300"
                   : "border-border/60 bg-background text-muted-foreground hover:bg-muted/30"
               }`}
             >
@@ -565,7 +575,7 @@ export function PermissionsClient({
               onClick={() => setActiveTab("devops")}
               className={`flex items-center gap-2 rounded-base border-2 px-3.5 py-2 font-mono text-xs font-bold transition-all ${
                 activeTab === "devops"
-                  ? "border-emerald-600 bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shadow-[3px_3px_0px_0px_var(--border)] -translate-y-0.5"
+                  ? "-translate-y-0.5 border-emerald-600 bg-emerald-500/20 text-emerald-700 shadow-[3px_3px_0px_0px_var(--border)] dark:text-emerald-300"
                   : "border-border/60 bg-background text-muted-foreground hover:bg-muted/30"
               }`}
             >
@@ -577,7 +587,7 @@ export function PermissionsClient({
               onClick={() => setActiveTab("support")}
               className={`flex items-center gap-2 rounded-base border-2 px-3.5 py-2 font-mono text-xs font-bold transition-all ${
                 activeTab === "support"
-                  ? "border-amber-600 bg-amber-500/20 text-amber-700 dark:text-amber-300 shadow-[3px_3px_0px_0px_var(--border)] -translate-y-0.5"
+                  ? "-translate-y-0.5 border-amber-600 bg-amber-500/20 text-amber-700 shadow-[3px_3px_0px_0px_var(--border)] dark:text-amber-300"
                   : "border-border/60 bg-background text-muted-foreground hover:bg-muted/30"
               }`}
             >
@@ -591,8 +601,10 @@ export function PermissionsClient({
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Left: Role Overview */}
             <div className="space-y-4 rounded-base border-2 border-border bg-muted/10 p-5">
-              <div className="flex items-center justify-between">
-                <Badge className={`font-mono text-xs font-black ${selectedRole.badgeColor}`}>
+              <div className="flex items-center justify-between gap-2">
+                <Badge
+                  className={`font-mono text-xs font-black tracking-wider ${selectedRole.badgeColor}`}
+                >
                   {selectedRole.badgeText}
                 </Badge>
                 <span className="font-mono text-[10px] text-muted-foreground uppercase">
@@ -609,18 +621,24 @@ export function PermissionsClient({
                 </div>
               </div>
 
-              <p className="font-sans text-xs text-muted-foreground leading-relaxed border-t border-dashed border-border/80 pt-3">
+              <p className="border-t border-dashed border-border/80 pt-3 font-sans text-xs leading-relaxed text-pretty text-muted-foreground">
                 {selectedRole.philosophy}
               </p>
 
               <div className="space-y-2 border-t border-dashed border-border/80 pt-3 font-mono text-xs">
-                <div className="flex justify-between">
+                <div className="flex justify-between gap-2">
                   <span className="text-muted-foreground">Jangkauan VPS:</span>
-                  <span className="font-bold text-foreground text-right">{selectedRole.accessScopeText}</span>
+                  <span className="text-right font-bold text-foreground">
+                    {selectedRole.accessScopeText}
+                  </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status Akses Web:</span>
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">Aktif &amp; Terverifikasi</span>
+                <div className="flex justify-between gap-2">
+                  <span className="text-muted-foreground">
+                    Status Akses Web:
+                  </span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                    Aktif &amp; Terverifikasi
+                  </span>
                 </div>
               </div>
             </div>
@@ -648,7 +666,7 @@ export function PermissionsClient({
                           <div className="font-heading text-xs font-bold text-foreground">
                             {item.title}
                           </div>
-                          <div className="mt-0.5 text-[11px] text-muted-foreground leading-snug">
+                          <div className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
                             {item.desc}
                           </div>
                         </div>
@@ -680,7 +698,7 @@ export function PermissionsClient({
                         <div className="font-heading text-xs font-bold text-foreground">
                           {item.title}
                         </div>
-                        <div className="mt-0.5 text-[11px] text-muted-foreground leading-snug">
+                        <div className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
                           {item.desc}
                         </div>
                       </div>
@@ -694,8 +712,10 @@ export function PermissionsClient({
                       <ShieldCheck className="size-4 text-emerald-500" />
                       <span>Kewenangan Penuh Pemilik Armada</span>
                     </div>
-                    <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-                      Admin memegang kunci master organisasi dan memiliki wewenang tak terbatas di dalam seluruh kluster server yang ia daftarkan.
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      Admin memegang kunci master organisasi dan memiliki
+                      wewenang tak terbatas di dalam seluruh kluster server yang
+                      ia daftarkan.
                     </p>
                   </div>
                 )}
@@ -707,25 +727,26 @@ export function PermissionsClient({
 
       {/* 3. Comprehensive Comparison Matrix Table */}
       <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
-        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-6 py-4">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-5 py-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <CardTitle className="font-heading text-lg font-black flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 font-heading text-lg font-black">
                 <Layers className="size-5 text-main" />
                 <span>Matriks Perbandingan Wewenang Lengkap</span>
               </CardTitle>
               <CardDescription className="font-sans text-xs">
-                Tabel rinci perbandingan kapabilitas operasional seluruh peran di dalam konsol Pasak Suite:
+                Tabel rinci perbandingan kapabilitas operasional seluruh peran
+                di dalam konsol Pasak Suite:
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2 font-mono text-xs">
-              <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
+            <div className="flex shrink-0 items-center gap-3 font-mono text-xs">
+              <span className="flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
                 <CheckCircle2 className="size-3.5" /> Bisa
               </span>
-              <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-bold">
+              <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
                 <AlertTriangle className="size-3.5" /> Terbatas
               </span>
-              <span className="flex items-center gap-1 text-destructive font-bold">
+              <span className="flex items-center gap-1 font-bold text-destructive">
                 <XCircle className="size-3.5" /> Dibatasi
               </span>
             </div>
@@ -737,54 +758,58 @@ export function PermissionsClient({
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-border bg-muted/30">
-                  <TableHead className="font-mono text-xs font-black text-foreground">FITUR &amp; KAPABILITAS</TableHead>
-                  <TableHead className="font-mono text-xs font-black text-foreground text-center">
-                    ADMIN (OWNER)
+                  <TableHead className="px-3 font-mono text-[11px] font-black tracking-wider text-foreground">
+                    FITUR &amp; KAPABILITAS
                   </TableHead>
-                  <TableHead className="font-mono text-xs font-black text-foreground text-center">
-                    PROGRAMMER (L7)
+                  <TableHead className="px-2.5 text-center font-mono text-[11px] font-black tracking-wider text-foreground">
+                    ADMIN
                   </TableHead>
-                  <TableHead className="font-mono text-xs font-black text-foreground text-center">
-                    MAINTAINER (L3/L4)
+                  <TableHead className="px-2.5 text-center font-mono text-[11px] font-black tracking-wider text-foreground">
+                    PROGRAMMER
                   </TableHead>
-                  <TableHead className="font-mono text-xs font-black text-foreground text-center">
+                  <TableHead className="px-2.5 text-center font-mono text-[11px] font-black tracking-wider text-foreground">
+                    MAINTAINER
+                  </TableHead>
+                  <TableHead className="px-2.5 text-center font-mono text-[11px] font-black tracking-wider text-foreground">
                     SUPPORT
                   </TableHead>
-                  <TableHead className="font-mono text-xs font-black text-foreground">CATATAN OPERASIONAL</TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-black tracking-wider text-foreground">
+                    CATATAN OPERASIONAL
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {matrixData.map((row, idx) => (
                   <TableRow
                     key={idx}
-                    className="border-b border-border/60 hover:bg-muted/10 transition-colors"
+                    className="border-b border-border/60 transition-colors hover:bg-muted/10"
                   >
-                    <TableCell className="font-mono text-xs font-semibold text-foreground">
+                    <TableCell className="max-w-[260px] px-3 py-3 font-mono text-xs font-semibold whitespace-normal text-foreground">
                       <div className="flex flex-col">
                         <span>{row.feature}</span>
-                        <span className="text-[10px] text-muted-foreground font-normal">
+                        <span className="text-[10px] font-normal text-muted-foreground">
                           {row.category}
                         </span>
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-2.5 py-3 text-center">
                       {renderStatusIcon(row.admin)}
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-2.5 py-3 text-center">
                       {renderStatusIcon(row.programmer)}
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-2.5 py-3 text-center">
                       {renderStatusIcon(row.devops)}
                     </TableCell>
 
-                    <TableCell className="text-center">
+                    <TableCell className="px-2.5 py-3 text-center">
                       {renderStatusIcon(row.support)}
                     </TableCell>
 
-                    <TableCell className="font-mono text-[11px] text-muted-foreground">
+                    <TableCell className="max-w-[260px] px-3 py-3 font-sans text-xs whitespace-normal text-muted-foreground">
                       {row.note}
                     </TableCell>
                   </TableRow>
@@ -799,7 +824,9 @@ export function PermissionsClient({
       <Card className="border-2 border-border bg-card p-6 shadow-[4px_4px_0px_0px_var(--border)]">
         <div className="flex items-center gap-2 font-heading text-base font-black text-foreground">
           <Terminal className="size-5 text-main" />
-          <span>Skenario Nyata: Kolaborasi Admin, Programmer, dan Server Maintainer</span>
+          <span>
+            Skenario Nyata: Kolaborasi Admin, Programmer, dan Server Maintainer
+          </span>
         </div>
         <p className="mt-1 font-sans text-xs text-muted-foreground">
           Bagaimana alur kerja tim sehari-hari di Pasak Suite:
@@ -807,34 +834,58 @@ export function PermissionsClient({
 
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-4">
           <div className="relative rounded-base border-2 border-border bg-background p-4 font-sans">
-            <div className="font-mono text-xs font-black text-main">LANGKAH 1</div>
-            <div className="mt-1 font-heading text-xs font-bold text-foreground">Admin Mendaftar Mandiri</div>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              User mendaftar di Pasak, otomatis mendapatkan role <strong>Admin</strong>, lisensi Pro Trial 14 Hari, dan kuota hingga 10 VPS.
+            <div className="font-mono text-xs font-black text-main">
+              LANGKAH 1
+            </div>
+            <div className="mt-1 font-heading text-xs font-bold text-foreground">
+              Admin Mendaftar Mandiri
+            </div>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              User mendaftar di Pasak, otomatis mendapatkan role{" "}
+              <strong>Admin</strong>, lisensi Pro Trial 14 Hari, dan kuota
+              hingga 10 VPS.
             </p>
           </div>
 
           <div className="relative rounded-base border-2 border-border bg-background p-4 font-sans">
-            <div className="font-mono text-xs font-black text-main">LANGKAH 2</div>
-            <div className="mt-1 font-heading text-xs font-bold text-foreground">Admin Daftarkan VPS Node</div>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Admin menjalankan perintah instalasi satu baris agen Sentinel di VPS host (misal Ubuntu VPS 127.0.0.1:2222). Node otomatis terhubung.
+            <div className="font-mono text-xs font-black text-main">
+              LANGKAH 2
+            </div>
+            <div className="mt-1 font-heading text-xs font-bold text-foreground">
+              Admin Daftarkan VPS Node
+            </div>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              Admin menjalankan perintah instalasi satu baris agen Sentinel di
+              VPS host (misal Ubuntu VPS 127.0.0.1:2222). Node otomatis
+              terhubung.
             </p>
           </div>
 
           <div className="relative rounded-base border-2 border-border bg-background p-4 font-sans">
-            <div className="font-mono text-xs font-black text-main">LANGKAH 3</div>
-            <div className="mt-1 font-heading text-xs font-bold text-foreground">Admin Membuat Akun Tim</div>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Admin membuka halaman <strong>Tim &amp; Pengguna</strong>, menambahkan akun Programmer (Budi) dan Maintainer (Ahmad), lalu menugaskan VPS terkait.
+            <div className="font-mono text-xs font-black text-main">
+              LANGKAH 3
+            </div>
+            <div className="mt-1 font-heading text-xs font-bold text-foreground">
+              Admin Membuat Akun Tim
+            </div>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              Admin membuka halaman <strong>Tim &amp; Pengguna</strong>,
+              menambahkan akun Programmer (Budi) dan Maintainer (Ahmad), lalu
+              menugaskan VPS terkait.
             </p>
           </div>
 
           <div className="relative rounded-base border-2 border-border bg-background p-4 font-sans">
-            <div className="font-mono text-xs font-black text-main">LANGKAH 4</div>
-            <div className="mt-1 font-heading text-xs font-bold text-foreground">Kolaborasi &amp; Monitoring</div>
-            <p className="mt-1 text-[11px] text-muted-foreground">
-              Programmer memantau WAF &amp; aplikasi, Maintainer memantau performa kernel &amp; nftables, dan Admin memonitor <strong>SEMUA node VPS</strong> secara komprehensif.
+            <div className="font-mono text-xs font-black text-main">
+              LANGKAH 4
+            </div>
+            <div className="mt-1 font-heading text-xs font-bold text-foreground">
+              Kolaborasi &amp; Monitoring
+            </div>
+            <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              Programmer memantau WAF &amp; aplikasi, Maintainer memantau
+              performa kernel &amp; nftables, dan Admin memonitor{" "}
+              <strong>SEMUA node VPS</strong> secara komprehensif.
             </p>
           </div>
         </div>

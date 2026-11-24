@@ -4,7 +4,14 @@ import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import {
   Globe,
@@ -17,8 +24,6 @@ import {
   ExternalLink,
   Copy,
   Check,
-  Clock,
-  Layers,
 } from "lucide-react"
 import { NodeTelemetry, VHostInfo } from "@/lib/store"
 
@@ -72,7 +77,6 @@ export function VHostsClient({
     const list: EnrichedVHost[] = []
 
     for (const node of nodes) {
-      // Nginx vhosts
       if (node.webservers?.nginx?.vhosts) {
         for (const vhost of node.webservers.nginx.vhosts) {
           list.push({
@@ -86,7 +90,6 @@ export function VHostsClient({
         }
       }
 
-      // Apache2 vhosts
       if (node.webservers?.apache2?.vhosts) {
         for (const vhost of node.webservers.apache2.vhosts) {
           list.push({
@@ -125,23 +128,29 @@ export function VHostsClient({
 
   const totalVHosts = allVHosts.length
   const validSslCount = allVHosts.filter((v) => v.ssl_status === "valid").length
-  const expiringSslCount = allVHosts.filter((v) => v.ssl_status === "expiring_soon").length
+  const expiringSslCount = allVHosts.filter(
+    (v) => v.ssl_status === "expiring_soon"
+  ).length
 
   return (
-    <div className="flex flex-col gap-6 py-2">
+    <div className="flex flex-col gap-6" data-role={currentRole}>
       {/* 1. Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="font-heading text-2xl font-black tracking-tight text-balance text-foreground sm:text-3xl">
               Virtual Hosts &amp; SSL Reconnaissance
             </h1>
-            <Badge variant="outline" className="border-sky-500/50 bg-sky-500/10 text-sky-500 font-mono text-xs">
+            <Badge
+              variant="outline"
+              className="border-sky-500/50 bg-sky-500/10 font-mono text-[11px] font-bold tracking-wider text-sky-500"
+            >
               TLS / HTTP DISCOVERY
             </Badge>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Pemindaian otomatis domain, konfigurasi reverse proxy upstream, dan masa aktif sertifikat SSL pada armada VPS.
+          <p className="max-w-2xl font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
+            Pemindaian otomatis domain, konfigurasi reverse proxy upstream, dan
+            masa aktif sertifikat SSL pada armada VPS.
           </p>
         </div>
 
@@ -150,9 +159,11 @@ export function VHostsClient({
           size="sm"
           onClick={refreshData}
           disabled={isLoading}
-          className="border-2 font-mono text-xs"
+          className="h-9 shrink-0 border-2 font-mono text-xs whitespace-nowrap"
         >
-          <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshCw
+            className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`}
+          />
           Sinkronkan
         </Button>
       </div>
@@ -161,45 +172,69 @@ export function VHostsClient({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TOTAL VHOST / DOMAIN</span>
-              <Globe className="size-4 text-main" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TOTAL VHOST / DOMAIN
+              </span>
+              <Globe className="size-4 shrink-0 text-main" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-foreground">{totalVHosts}</div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">Terdeteksi di Nginx &amp; Apache</p>
+            <div className="mt-2 font-mono text-2xl font-black text-foreground tabular-nums">
+              {totalVHosts}
+            </div>
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
+              Terdeteksi di Nginx &amp; Apache
+            </p>
           </CardContent>
         </Card>
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">SSL AKTIF &amp; VALID</span>
-              <ShieldCheck className="size-4 text-emerald-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                SSL AKTIF &amp; VALID
+              </span>
+              <ShieldCheck className="size-4 shrink-0 text-emerald-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">{validSslCount}</div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">Enkripsi TLS 1.3 Terjamin</p>
+            <div className="mt-2 font-mono text-2xl font-black text-emerald-500 tabular-nums">
+              {validSslCount}
+            </div>
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
+              Enkripsi TLS 1.3 Terjamin
+            </p>
           </CardContent>
         </Card>
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">SEGERA KEDALUWARSA</span>
-              <ShieldAlert className="size-4 text-amber-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                SEGERA KEDALUWARSA
+              </span>
+              <ShieldAlert className="size-4 shrink-0 text-amber-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-amber-500">{expiringSslCount}</div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">&lt; 30 hari tersisa</p>
+            <div className="mt-2 font-mono text-2xl font-black text-amber-500 tabular-nums">
+              {expiringSslCount}
+            </div>
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
+              &lt; 30 hari tersisa
+            </p>
           </CardContent>
         </Card>
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">AUTO RECON</span>
-              <Server className="size-4 text-sky-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                AUTO RECON
+              </span>
+              <Server className="size-4 shrink-0 text-sky-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-sky-500">LIVE</div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">Sentinel Daemon Scanner</p>
+            <div className="mt-2 font-mono text-2xl font-black text-sky-500">
+              LIVE
+            </div>
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
+              Sentinel Daemon Scanner
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -209,12 +244,12 @@ export function VHostsClient({
         <CardContent className="p-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari berdasarkan nama domain, hostname VPS, IP, upstream, atau path root..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 font-mono text-xs"
+                className="h-9 border-2 border-border bg-background pl-9 font-mono text-xs"
               />
             </div>
 
@@ -224,7 +259,6 @@ export function VHostsClient({
                 <span>Filter:</span>
               </div>
 
-              {/* SSL Filter */}
               <select
                 value={sslFilter}
                 onChange={(e) => setSslFilter(e.target.value)}
@@ -236,7 +270,6 @@ export function VHostsClient({
                 <option value="expired">Kedaluwarsa / None</option>
               </select>
 
-              {/* Web Engine Filter */}
               <select
                 value={engineFilter}
                 onChange={(e) => setEngineFilter(e.target.value)}
@@ -253,10 +286,12 @@ export function VHostsClient({
 
       {/* 4. Table */}
       <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
-        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-6 py-4">
-          <CardTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
+        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-5 py-4">
+          <CardTitle className="flex items-center gap-2 font-heading text-lg font-black text-foreground tabular-nums">
             <Globe className="size-5 text-main" />
-            <span>Virtual Hosts &amp; Domain Terdeteksi ({filteredVHosts.length})</span>
+            <span>
+              Virtual Hosts &amp; Domain Terdeteksi ({filteredVHosts.length})
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -264,97 +299,131 @@ export function VHostsClient({
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-border bg-muted/30">
-                  <TableHead className="font-mono text-xs font-bold text-foreground">DOMAIN HOST</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">VPS SERVER</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">WEB ENGINE</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">STATUS SSL</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">UPSTREAM PROXY</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground text-right">AKSI</TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    DOMAIN HOST
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    VPS SERVER
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    WEB ENGINE
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    STATUS SSL
+                  </TableHead>
+                  <TableHead className="px-3 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    UPSTREAM PROXY
+                  </TableHead>
+                  <TableHead className="px-3 text-right font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    AKSI
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredVHosts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center font-mono text-xs text-muted-foreground">
-                      Tidak ada virtual host yang cocok dengan kriteria pencarian.
+                    <TableCell
+                      colSpan={6}
+                      className="py-8 text-center font-mono text-xs text-muted-foreground"
+                    >
+                      Tidak ada virtual host yang cocok dengan kriteria
+                      pencarian.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredVHosts.map((vhost, idx) => {
                     const daysRemaining = vhost.ssl_expires_at
-                      ? Math.floor((vhost.ssl_expires_at - Math.floor(Date.now() / 1000)) / 86400)
+                      ? Math.floor(
+                          (vhost.ssl_expires_at -
+                            Math.floor(Date.now() / 1000)) /
+                            86400
+                        )
                       : null
 
                     return (
-                      <TableRow key={`${vhost.nodeId}-${vhost.domain}-${idx}`} className="border-b border-border/60 hover:bg-muted/10 transition-colors">
-                        <TableCell className="font-mono text-xs">
+                      <TableRow
+                        key={`${vhost.nodeId}-${vhost.domain}-${idx}`}
+                        className="border-b border-border/60 transition-colors hover:bg-muted/10"
+                      >
+                        <TableCell className="max-w-[240px] px-3 py-3 font-mono text-xs whitespace-normal">
                           <div className="flex flex-col">
                             <a
                               href={`https://${vhost.domain}`}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-heading font-black text-foreground hover:text-main flex items-center gap-1"
+                              className="flex items-center gap-1 font-heading font-black text-foreground hover:text-main"
                             >
-                              <span>{vhost.domain}</span>
-                              <ExternalLink className="size-3 text-muted-foreground" />
+                              <span className="truncate">{vhost.domain}</span>
+                              <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
                             </a>
                             {vhost.root && (
-                              <span className="text-[10px] text-muted-foreground/80 mt-0.5 truncate max-w-xs">
+                              <span className="mt-0.5 truncate text-[10px] text-muted-foreground/80">
                                 Root: {vhost.root}
                               </span>
                             )}
                           </div>
                         </TableCell>
 
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="px-3 py-3 font-mono text-xs">
                           <div className="flex flex-col">
-                            <span className="font-semibold text-foreground">{vhost.nodeHostname}</span>
-                            <span className="text-[11px] text-muted-foreground">{vhost.nodeIp}</span>
+                            <span className="font-semibold text-foreground">
+                              {vhost.nodeHostname}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground tabular-nums">
+                              {vhost.nodeIp}
+                            </span>
                           </div>
                         </TableCell>
 
-                        <TableCell className="font-mono text-xs">
-                          <Badge variant="outline" className="border-border uppercase text-[10px] font-bold">
+                        <TableCell className="px-3 py-3 font-mono text-xs">
+                          <Badge
+                            variant="outline"
+                            className="border-border text-[10px] font-bold uppercase"
+                          >
                             {vhost.engine} {vhost.engineVersion || ""}
                           </Badge>
                         </TableCell>
 
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="px-3 py-3 font-mono text-xs">
                           <div className="flex flex-col gap-0.5">
                             <Badge
-                              className={`font-mono text-[9px] font-bold w-fit ${
+                              className={`w-fit font-mono text-[9px] font-bold ${
                                 vhost.ssl_status === "valid"
-                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
+                                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                   : vhost.ssl_status === "expiring_soon"
-                                  ? "bg-amber-500/10 text-amber-500 border-amber-500/40"
-                                  : "bg-muted text-muted-foreground border-border"
+                                    ? "border-amber-500/40 bg-amber-500/10 text-amber-500"
+                                    : "border-border bg-muted text-muted-foreground"
                               }`}
                             >
                               {vhost.ssl_status === "valid"
                                 ? "SSL AKTIF"
                                 : vhost.ssl_status === "expiring_soon"
-                                ? "SEGERA HABIS"
-                                : "TIDAK ADA"}
+                                  ? "SEGERA HABIS"
+                                  : "TIDAK ADA"}
                             </Badge>
                             {daysRemaining !== null && (
-                              <span className="text-[10px] text-muted-foreground">
-                                {daysRemaining > 0 ? `${daysRemaining} hari tersisa` : "Kedaluwarsa"}
+                              <span className="text-[10px] text-muted-foreground tabular-nums">
+                                {daysRemaining > 0
+                                  ? `${daysRemaining} hari tersisa`
+                                  : "Kedaluwarsa"}
                               </span>
                             )}
                           </div>
                         </TableCell>
 
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="px-3 py-3 font-mono text-xs">
                           {vhost.upstream ? (
-                            <code className="bg-muted px-1.5 py-0.5 rounded text-[11px] text-foreground">
+                            <code className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-foreground">
                               {vhost.upstream}
                             </code>
                           ) : (
-                            <span className="text-muted-foreground italic text-[11px]">Direct Static Root</span>
+                            <span className="text-[11px] text-muted-foreground italic">
+                              Direct Static Root
+                            </span>
                           )}
                         </TableCell>
 
-                        <TableCell className="text-right">
+                        <TableCell className="px-3 py-3 text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button
                               variant="ghost"
@@ -373,7 +442,13 @@ export function VHostsClient({
                               variant="ghost"
                               size="icon"
                               nativeButton={false}
-                              render={<a href={`https://${vhost.domain}`} target="_blank" rel="noreferrer" />}
+                              render={
+                                <a
+                                  href={`https://${vhost.domain}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                />
+                              }
                               title="Buka Website"
                               className="size-8 text-sky-500"
                             >

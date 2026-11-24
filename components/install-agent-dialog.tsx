@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { Terminal, Copy, Check, ShieldCheck, CheckCircle2 } from "lucide-react"
+import { Terminal, Copy, Check, CheckCircle2 } from "lucide-react"
 
 export function InstallAgentDialog({
   triggerButton,
@@ -31,41 +31,50 @@ export function InstallAgentDialog({
 
   return (
     <Dialog>
-      <DialogTrigger render={
-        triggerButton ? (
-          (triggerButton as any)
-        ) : (
-          <Button variant="default" className="font-bold">
-            <Terminal className="size-4 mr-1.5" />
-            + Deploy Sentinel Agent
-          </Button>
-        )
-      } />
-      <DialogContent className="max-w-xl border-2 border-border shadow-shadow">
-        <DialogHeader>
-          <div className="flex items-center gap-2 mb-1">
-            <Badge variant="secondary" className="font-mono">v1.2.0</Badge>
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+      <DialogTrigger
+        render={
+          triggerButton ? (
+            (triggerButton as any)
+          ) : (
+            <Button
+              variant="default"
+              size="sm"
+              className="h-8 shrink-0 px-2.5 text-xs font-bold whitespace-nowrap"
+            >
+              <Terminal className="mr-1.5 size-3.5 shrink-0" />
+              <span className="hidden 2xl:inline">+ Deploy Sentinel Agent</span>
+              <span className="2xl:hidden">+ Deploy Agent</span>
+            </Button>
+          )
+        }
+      />
+      <DialogContent className="max-w-xl">
+        <DialogHeader className="border-b border-border/70 pb-4">
+          <div className="mb-1 flex items-center gap-2">
+            <Badge variant="secondary" className="font-mono text-[10px]">
+              v1.2.0
+            </Badge>
+            <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
               Zero-Hassle Installation
             </span>
           </div>
-          <DialogTitle className="text-xl font-heading">
+          <DialogTitle className="font-heading text-lg font-black sm:text-xl">
             Deploy Pasax Sentinel to your Linux Host
           </DialogTitle>
-          <DialogDescription className="text-sm text-foreground/80">
-            Run this single command on your Ubuntu, Debian, or RHEL server as root. The agent will auto-discover Nginx/Apache vhosts, mount the Unix Domain Socket, and start real-time FIM.
+          <DialogDescription>
+            Run this single command on your Ubuntu, Debian, or RHEL server as
+            root. The agent will auto-discover Nginx/Apache vhosts, mount the
+            Unix Domain Socket, and start real-time FIM.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-3 my-2">
+        <div className="flex flex-col gap-3">
           <div className="relative rounded-base border-2 border-border bg-black p-4 font-mono text-xs text-green-400 shadow-shadow">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-neutral-800 text-neutral-400 text-[11px]">
+            <div className="mb-2 flex items-center justify-between border-b border-neutral-800 pb-2 text-[11px] text-neutral-400">
               <span>bash (root / sudo)</span>
               <span>outbound: port 443 only</span>
             </div>
-            <p className="break-all select-all leading-relaxed">
-              {installCmd}
-            </p>
+            <p className="leading-relaxed break-all select-all">{installCmd}</p>
             <Button
               size="sm"
               variant={copied ? "neutral" : "default"}
@@ -74,43 +83,58 @@ export function InstallAgentDialog({
             >
               {copied ? (
                 <>
-                  <Check className="size-4 mr-1.5 text-green-600" />
+                  <Check className="mr-1.5 size-4 text-green-600" />
                   Copied to Clipboard!
                 </>
               ) : (
                 <>
-                  <Copy className="size-4 mr-1.5" />
+                  <Copy className="mr-1.5 size-4" />
                   Copy Installation Command
                 </>
               )}
             </Button>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 mt-2">
-            <div className="p-2.5 rounded-base border-2 border-border bg-background text-xs">
-              <div className="font-bold mb-0.5 flex items-center gap-1">
-                <CheckCircle2 className="size-3.5 text-green-600" /> No Open Ports
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+            <div className="rounded-base border-2 border-border bg-card p-3 text-xs">
+              <div className="mb-0.5 flex items-center gap-1.5 font-bold text-foreground">
+                <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                <span>No Open Ports</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">Egress-only telemetry over mTLS</p>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                Egress-only telemetry over mTLS
+              </p>
             </div>
-            <div className="p-2.5 rounded-base border-2 border-border bg-background text-xs">
-              <div className="font-bold mb-0.5 flex items-center gap-1">
-                <CheckCircle2 className="size-3.5 text-green-600" /> Low Footprint
+            <div className="rounded-base border-2 border-border bg-card p-3 text-xs">
+              <div className="mb-0.5 flex items-center gap-1.5 font-bold text-foreground">
+                <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                <span>Low Footprint</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">&lt;20MB RAM, single Go static binary</p>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                &lt;20MB RAM, single Go static binary
+              </p>
             </div>
-            <div className="p-2.5 rounded-base border-2 border-border bg-background text-xs">
-              <div className="font-bold mb-0.5 flex items-center gap-1">
-                <CheckCircle2 className="size-3.5 text-green-600" /> Kernel Firewall
+            <div className="rounded-base border-2 border-border bg-card p-3 text-xs">
+              <div className="mb-0.5 flex items-center gap-1.5 font-bold text-foreground">
+                <CheckCircle2 className="size-3.5 shrink-0 text-emerald-500" />
+                <span>Kernel Firewall</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">Native nftables & iptables offloading</p>
+              <p className="text-[11px] leading-snug text-muted-foreground">
+                Native nftables &amp; iptables offloading
+              </p>
             </div>
           </div>
         </div>
 
-        <DialogFooter className="mt-4">
-          <p className="text-[11px] text-muted-foreground self-center mr-auto">
-            Need Docker or Ansible playbook? <a href="#" className="underline font-bold">View Docs</a>
+        <DialogFooter>
+          <p className="mr-auto self-center text-[11px] text-muted-foreground">
+            Need Docker or Ansible playbook?{" "}
+            <a
+              href="/docs"
+              className="font-bold underline hover:text-foreground"
+            >
+              View Docs
+            </a>
           </p>
         </DialogFooter>
       </DialogContent>

@@ -5,13 +5,7 @@ import Link from "next/link"
 import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
@@ -24,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -42,18 +37,13 @@ import {
   AlertCircle,
   RefreshCw,
   Terminal,
-  Activity,
   Globe,
   Filter,
-  Layers,
-  Cpu,
-  HardDrive,
   Clock,
   LayoutGrid,
   List,
   Power,
   ShieldAlert,
-  Tag,
 } from "lucide-react"
 import { ManagedUser, NodeTelemetry } from "@/lib/store"
 
@@ -63,12 +53,19 @@ interface NodesManagementClientProps {
   currentRole?: string
 }
 
+const modalInputClass =
+  "h-10 w-full rounded-base border-2 border-border bg-background px-3 font-mono text-xs text-foreground placeholder:text-muted-foreground focus-visible:border-main focus-visible:ring-0"
+const modalSelectClass =
+  "h-10 w-full rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold text-foreground focus:border-main focus:outline-hidden"
+const modalLabelClass = "block font-sans text-xs font-semibold text-foreground"
+
 export function NodesManagementClient({
   initialNodes = [],
   initialUsers = [],
   currentRole = "Admin",
 }: NodesManagementClientProps) {
-  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
+  const isAdminOrSuperadmin =
+    currentRole === "Superadmin" || currentRole === "Admin"
   const [nodes, setNodes] = React.useState<NodeTelemetry[]>(initialNodes)
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -84,7 +81,9 @@ export function NodesManagementClient({
   const [isAssignUsersOpen, setIsAssignUsersOpen] = React.useState(false)
   const [isInstallGuideOpen, setIsInstallGuideOpen] = React.useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
-  const [selectedNode, setSelectedNode] = React.useState<NodeTelemetry | null>(null)
+  const [selectedNode, setSelectedNode] = React.useState<NodeTelemetry | null>(
+    null
+  )
 
   // Form State
   const [formData, setFormData] = React.useState<{
@@ -355,7 +354,8 @@ export function NodesManagementClient({
 
       const matchStatus = statusFilter === "all" || n.status === statusFilter
 
-      const assignedIds = n.assignedUserIds || (n.project_id ? [n.project_id] : [])
+      const assignedIds =
+        n.assignedUserIds || (n.project_id ? [n.project_id] : [])
       const matchUser = userFilter === "all" || assignedIds.includes(userFilter)
 
       return matchSearch && matchStatus && matchUser
@@ -368,40 +368,107 @@ export function NodesManagementClient({
   const tamperedNodes = nodes.filter((n) => n.status === "TAMPERED").length
   const offlineNodes = nodes.filter((n) => n.status === "OFFLINE").length
 
+  const renderUserSelector = (labelText: string, hintText: string) => (
+    <div className="space-y-2.5 border-t border-border/70 pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className={modalLabelClass}>
+          {labelText} ({formData.assignedUserIds.length} user dipilih)
+        </span>
+        <span className="font-mono text-[11px] text-muted-foreground">
+          {hintText}
+        </span>
+      </div>
+
+      {users.length === 0 ? (
+        <div className="rounded-base border-2 border-dashed border-border bg-muted/15 p-3 font-sans text-xs text-muted-foreground">
+          Belum ada user terdaftar.
+        </div>
+      ) : (
+        <div className="grid max-h-44 grid-cols-1 gap-2.5 overflow-y-auto rounded-base border-2 border-border bg-muted/15 p-2.5 sm:grid-cols-2">
+          {users.map((user) => {
+            const isSelected = formData.assignedUserIds.includes(user.id)
+            return (
+              <button
+                type="button"
+                key={user.id}
+                onClick={() => toggleUserSelection(user.id)}
+                className={`flex w-full items-center justify-between gap-2 rounded-base border-2 p-2.5 text-left font-mono text-xs transition-all ${
+                  isSelected
+                    ? "border-main bg-main/15 text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+                    : "border-border/60 bg-background/70 text-muted-foreground hover:border-border hover:text-foreground"
+                }`}
+              >
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span
+                    className={`flex size-4 shrink-0 items-center justify-center rounded-sm border-2 text-[10px] font-black ${
+                      isSelected
+                        ? "border-border bg-main text-black"
+                        : "border-border bg-background"
+                    }`}
+                  >
+                    {isSelected ? "✓" : ""}
+                  </span>
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate font-bold text-foreground">
+                      {user.name}
+                    </span>
+                    <span className="truncate text-[11px] text-muted-foreground">
+                      {user.email}
+                    </span>
+                  </div>
+                </div>
+                <Badge variant="outline" className="shrink-0 text-[9px]">
+                  {user.role}
+                </Badge>
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+
   return (
-    <div className="flex flex-col gap-6 py-2">
+    <div className="flex flex-col gap-6">
       {/* 1. Header & Quick Actions */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="font-heading text-2xl font-black tracking-tight text-balance text-foreground sm:text-3xl">
               Daftar VPS &amp; Node Sentinel
             </h1>
-            <Badge variant="outline" className="border-emerald-500/50 bg-emerald-500/10 text-emerald-500 font-mono text-xs">
+            <Badge
+              variant="outline"
+              className="border-emerald-500/50 bg-emerald-500/10 font-mono text-[11px] font-bold tracking-wider text-emerald-500"
+            >
               FLEET CLUSTER
             </Badge>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Daftarkan dan awasi server VPS Linux yang diproteksi oleh daemon Sentinel Pasax. Setiap VPS dapat dikelola oleh satu atau banyak user.
+          <p className="max-w-2xl font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
+            Daftarkan dan awasi server VPS Linux yang diproteksi oleh daemon
+            Sentinel Pasax. Setiap VPS dapat dikelola oleh satu atau banyak
+            user.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={refreshData}
             disabled={isLoading}
-            className="border-2 font-mono text-xs"
+            className="h-9 border-2 font-mono text-xs whitespace-nowrap"
           >
-            <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`}
+            />
             Sinkronkan
           </Button>
           {isAdminOrSuperadmin && (
             <Button
               size="sm"
               onClick={openRegisterDialog}
-              className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+              className="h-9 border-2 bg-main font-heading text-xs font-black whitespace-nowrap text-black shadow-[3px_3px_0px_0px_var(--border)] hover:bg-main/90"
             >
               <Plus className="mr-1.5 size-4 stroke-[3]" />
               Daftarkan VPS Baru
@@ -410,39 +477,48 @@ export function NodesManagementClient({
         </div>
       </div>
 
-            {/* Otoritas Monitoring Admin Banner */}
-      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 sm:p-5 shadow-[4px_4px_0px_0px_var(--border)]">
+      {/* Otoritas Monitoring Admin Banner */}
+      <div className="relative overflow-hidden rounded-base border-2 border-border bg-card p-4 shadow-[4px_4px_0px_0px_var(--border)] sm:p-5">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1 max-w-2xl">
+          <div className="max-w-2xl space-y-1">
             <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
-              <ShieldCheck className="size-4.5 text-main" />
+              <ShieldCheck className="size-4.5 shrink-0 text-main" />
               <span>
                 {isAdminOrSuperadmin
                   ? `Monitoring Armada VPS Milik Anda (${currentRole} View)`
                   : `Monitoring Node VPS yang Ditugaskan (${currentRole} View)`}
               </span>
             </div>
-            <p className="font-sans text-xs text-muted-foreground leading-relaxed">
+            <p className="font-sans text-xs leading-relaxed text-pretty text-muted-foreground">
               {isAdminOrSuperadmin ? (
                 <>
-                  Anda memantau <strong>node VPS milik akun Anda</strong> serta penugasan untuk tim <strong>Programmer Aplikasi</strong> dan <strong>Server Maintainer (DevOps)</strong> yang Anda buat.
+                  Anda memantau <strong>node VPS milik akun Anda</strong> serta
+                  penugasan untuk tim <strong>Programmer Aplikasi</strong> dan{" "}
+                  <strong>Server Maintainer (DevOps)</strong> yang Anda buat.
                 </>
               ) : (
                 <>
-                  Anda memantau <strong>node VPS yang ditugaskan</strong> kepada akun Anda oleh Admin armada.
+                  Anda memantau <strong>node VPS yang ditugaskan</strong> kepada
+                  akun Anda oleh Admin armada.
                 </>
               )}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
             <Link href="/users">
-              <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)]">
+              <Button
+                variant="outline"
+                className="gap-1.5 border-2 font-heading text-xs font-bold whitespace-nowrap shadow-[2px_2px_0px_0px_var(--border)]"
+              >
                 <Users className="size-3.5" />
                 <span>Kelola Tim VPS</span>
               </Button>
             </Link>
             <Link href="/permissions">
-              <Button variant="outline" className="font-heading text-xs font-bold gap-1.5 border-2 shadow-[2px_2px_0px_0px_var(--border)]">
+              <Button
+                variant="outline"
+                className="gap-1.5 border-2 font-heading text-xs font-bold whitespace-nowrap shadow-[2px_2px_0px_0px_var(--border)]"
+              >
                 <ShieldCheck className="size-3.5" />
                 <span>Matriks Hak Akses Peran</span>
               </Button>
@@ -455,14 +531,16 @@ export function NodesManagementClient({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TOTAL VPS TERDAFTAR</span>
-              <Server className="size-4 text-main" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TOTAL VPS TERDAFTAR
+              </span>
+              <Server className="size-4 shrink-0 text-main" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-foreground">
+            <div className="mt-2 font-mono text-2xl font-black text-foreground tabular-nums">
               {totalNodes}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Node Linux dalam armada
             </p>
           </CardContent>
@@ -470,14 +548,16 @@ export function NodesManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">ONLINE &amp; TERLINDUNGI</span>
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                ONLINE &amp; TERLINDUNGI
+              </span>
+              <span className="size-2 shrink-0 animate-pulse rounded-full bg-emerald-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">
+            <div className="mt-2 font-mono text-2xl font-black text-emerald-500 tabular-nums">
               {onlineNodes}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Kernel firewall aktif
             </p>
           </CardContent>
@@ -485,14 +565,16 @@ export function NodesManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TAMPERED / PERINGATAN</span>
-              <ShieldAlert className="size-4 text-rose-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TAMPERED / PERINGATAN
+              </span>
+              <ShieldAlert className="size-4 shrink-0 text-rose-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-rose-500">
+            <div className="mt-2 font-mono text-2xl font-black text-rose-500 tabular-nums">
               {tamperedNodes}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Deteksi integritas file (FIM)
             </p>
           </CardContent>
@@ -500,14 +582,16 @@ export function NodesManagementClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">OFFLINE / TIDAK AKTIF</span>
-              <Power className="size-4 text-muted-foreground" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                OFFLINE / TIDAK AKTIF
+              </span>
+              <Power className="size-4 shrink-0 text-muted-foreground" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-muted-foreground">
+            <div className="mt-2 font-mono text-2xl font-black text-muted-foreground tabular-nums">
               {offlineNodes}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Perlu inspeksi daemon
             </p>
           </CardContent>
@@ -519,12 +603,12 @@ export function NodesManagementClient({
         <CardContent className="p-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari berdasarkan hostname, IP publik, OS, ID node, atau tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 font-mono text-xs"
+                className="h-9 border-2 border-border bg-background pl-9 font-mono text-xs"
               />
             </div>
 
@@ -550,7 +634,7 @@ export function NodesManagementClient({
               <select
                 value={userFilter}
                 onChange={(e) => setUserFilter(e.target.value)}
-                className="h-9 rounded-base border-2 border-border bg-background px-2.5 font-mono text-xs font-semibold focus:border-main focus:outline-hidden max-w-[180px] truncate"
+                className="h-9 max-w-[180px] truncate rounded-base border-2 border-border bg-background px-2.5 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
               >
                 <option value="all">Semua Pemegang VPS</option>
                 {users.map((u) => (
@@ -561,17 +645,19 @@ export function NodesManagementClient({
               </select>
 
               {/* View Toggle */}
-              <div className="flex items-center rounded-base border-2 border-border p-0.5 bg-muted/20">
+              <div className="flex items-center rounded-base border-2 border-border bg-muted/20 p-0.5">
                 <button
+                  type="button"
                   onClick={() => setViewMode("table")}
-                  className={`p-1.5 rounded ${viewMode === "table" ? "bg-main text-black" : "text-muted-foreground"}`}
+                  className={`rounded p-1.5 ${viewMode === "table" ? "bg-main text-black" : "text-muted-foreground"}`}
                   title="Tampilan Tabel"
                 >
                   <List className="size-3.5" />
                 </button>
                 <button
+                  type="button"
                   onClick={() => setViewMode("grid")}
-                  className={`p-1.5 rounded ${viewMode === "grid" ? "bg-main text-black" : "text-muted-foreground"}`}
+                  className={`rounded p-1.5 ${viewMode === "grid" ? "bg-main text-black" : "text-muted-foreground"}`}
                   title="Tampilan Grid Card"
                 >
                   <LayoutGrid className="size-3.5" />
@@ -585,11 +671,11 @@ export function NodesManagementClient({
       {/* 4. Display: Table View or Grid View */}
       {viewMode === "table" ? (
         <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
-          <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-6 py-4">
-            <div className="flex items-center justify-between">
+          <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-5 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <Server className="size-5 text-main" />
-                <CardTitle className="font-heading text-lg font-black text-foreground">
+                <CardTitle className="font-heading text-lg font-black text-foreground tabular-nums">
                   Armada Node VPS Terdaftar ({filteredNodes.length})
                 </CardTitle>
               </div>
@@ -603,43 +689,71 @@ export function NodesManagementClient({
               <Table>
                 <TableHeader>
                   <TableRow className="border-b-2 border-border bg-muted/30">
-                    <TableHead className="font-mono text-xs font-bold text-foreground">HOSTNAME &amp; IP</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground">STATUS</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground">PEMEGANG VPS (USERS)</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground">OS &amp; WEBSERVER</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground text-center">TELEMETRI</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground">KLUSTER / TAGS</TableHead>
-                    <TableHead className="font-mono text-xs font-bold text-foreground text-right">AKSI</TableHead>
+                    <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      HOSTNAME &amp; IP
+                    </TableHead>
+                    <TableHead className="px-2 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      STATUS
+                    </TableHead>
+                    <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      PEMEGANG VPS
+                    </TableHead>
+                    <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      OS &amp; WEB
+                    </TableHead>
+                    <TableHead className="px-2 text-center font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      TELEMETRI
+                    </TableHead>
+                    <TableHead className="px-2 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      TAGS
+                    </TableHead>
+                    <TableHead className="px-2.5 text-right font-mono text-[11px] font-bold tracking-wider text-foreground">
+                      AKSI
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredNodes.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="py-8 text-center font-mono text-xs text-muted-foreground">
+                      <TableCell
+                        colSpan={7}
+                        className="py-8 text-center font-mono text-xs text-muted-foreground"
+                      >
                         Tidak ada VPS yang cocok dengan kriteria pencarian.
                       </TableCell>
                     </TableRow>
                   ) : (
                     filteredNodes.map((node) => {
-                      const assignedUserIds = node.assignedUserIds || (node.project_id ? [node.project_id] : [])
+                      const assignedUserIds =
+                        node.assignedUserIds ||
+                        (node.project_id ? [node.project_id] : [])
                       const assignedUsers = users.filter(
-                        (u) => assignedUserIds.includes(u.id) || u.assignedNodeIds?.includes(node.node_id)
+                        (u) =>
+                          assignedUserIds.includes(u.id) ||
+                          u.assignedNodeIds?.includes(node.node_id)
                       )
 
-                      const nginxVhosts = node.webservers?.nginx?.vhosts?.length || 0
-                      const apacheVhosts = node.webservers?.apache2?.vhosts?.length || 0
+                      const nginxVhosts =
+                        node.webservers?.nginx?.vhosts?.length || 0
+                      const apacheVhosts =
+                        node.webservers?.apache2?.vhosts?.length || 0
                       const totalVhosts = nginxVhosts + apacheVhosts
 
                       return (
-                        <TableRow key={node.node_id} className="border-b border-border/60 hover:bg-muted/10 transition-colors">
+                        <TableRow
+                          key={node.node_id}
+                          className="border-b border-border/60 transition-colors hover:bg-muted/10"
+                        >
                           {/* 1. Hostname & IP */}
-                          <TableCell className="font-mono">
+                          <TableCell className="max-w-[155px] px-2.5 py-2.5 font-mono whitespace-normal">
                             <div className="flex flex-col">
-                              <span className="font-heading font-black text-foreground text-sm flex items-center gap-1.5">
+                              <span className="truncate font-heading text-sm font-black text-foreground">
                                 {node.hostname}
                               </span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-xs text-foreground font-semibold">{node.ip_v4}</span>
+                              <div className="mt-0.5 flex items-center gap-1.5">
+                                <span className="text-xs font-semibold text-foreground tabular-nums">
+                                  {node.ip_v4}
+                                </span>
                                 <button
                                   onClick={() => handleCopy(node.ip_v4)}
                                   title="Salin IP"
@@ -651,36 +765,39 @@ export function NodesManagementClient({
                                     <Copy className="size-3" />
                                   )}
                                 </button>
-                                <span className="text-[10px] text-muted-foreground">
+                                <span className="text-[10px] text-muted-foreground tabular-nums">
                                   :{node.ssh_port || 22}
                                 </span>
                               </div>
-                              <span className="text-[10px] text-muted-foreground/80 mt-0.5">
-                                ID: <code className="bg-muted px-1 py-0.5 rounded">{node.node_id}</code>
+                              <span className="mt-0.5 truncate text-[10px] text-muted-foreground/80">
+                                ID:{" "}
+                                <code className="rounded bg-muted px-1 py-0.5">
+                                  {node.node_id}
+                                </code>
                               </span>
                             </div>
                           </TableCell>
 
                           {/* 2. Status */}
-                          <TableCell>
+                          <TableCell className="px-2 py-2.5">
                             <div className="flex items-center gap-1.5">
                               <span
                                 className={`size-2 rounded-full ${
                                   node.status === "ONLINE"
-                                    ? "bg-emerald-500 animate-pulse"
+                                    ? "animate-pulse bg-emerald-500"
                                     : node.status === "TAMPERED"
-                                    ? "bg-rose-500 animate-pulse"
-                                    : "bg-muted-foreground"
+                                      ? "animate-pulse bg-rose-500"
+                                      : "bg-muted-foreground"
                                 }`}
                               />
                               <Badge
                                 variant="outline"
-                                className={`font-mono text-[10px] font-bold ${
+                                className={`font-mono text-[10px] font-bold tracking-wider ${
                                   node.status === "ONLINE"
                                     ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                                     : node.status === "TAMPERED"
-                                    ? "border-rose-500/50 bg-rose-500/10 text-rose-500"
-                                    : "border-border bg-muted/40 text-muted-foreground"
+                                      ? "border-rose-500/50 bg-rose-500/10 text-rose-500"
+                                      : "border-border bg-muted/40 text-muted-foreground"
                                 }`}
                               >
                                 {node.status}
@@ -689,11 +806,11 @@ export function NodesManagementClient({
                           </TableCell>
 
                           {/* 3. Pemegang VPS (Multi-user) */}
-                          <TableCell>
-                            <div className="flex flex-col gap-1.5 max-w-[240px]">
+                          <TableCell className="max-w-[180px] px-2.5 py-2.5 whitespace-normal">
+                            <div className="flex flex-col gap-1.5">
                               {assignedUsers.length === 0 ? (
                                 <span className="font-mono text-[11px] text-muted-foreground italic">
-                                  Belum ada pemegang ditugaskan
+                                  Belum ada pemegang
                                 </span>
                               ) : (
                                 <div className="flex flex-wrap gap-1">
@@ -701,17 +818,19 @@ export function NodesManagementClient({
                                     <Badge
                                       key={user.id}
                                       variant="outline"
-                                      className={`font-mono text-[10px] px-2 py-0.5 flex items-center gap-1 border-2 ${
+                                      className={`flex items-center gap-1 border-2 px-1.5 py-0.5 font-mono text-[10px] ${
                                         user.role === "Programmer"
                                           ? "border-purple-500/50 bg-purple-500/10 text-purple-700 dark:text-purple-300"
                                           : user.role === "DevOps"
-                                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                                          : "border-main/50 bg-main/10 text-foreground"
+                                            ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                                            : "border-main/50 bg-main/10 text-foreground"
                                       }`}
                                     >
                                       <Users className="size-2.5" />
                                       <span>{user.name.split(" ")[0]}</span>
-                                      <span className="text-[9px] font-bold">({user.role})</span>
+                                      <span className="text-[9px] font-bold">
+                                        ({user.role})
+                                      </span>
                                     </Badge>
                                   ))}
                                 </div>
@@ -720,47 +839,78 @@ export function NodesManagementClient({
                               {isAdminOrSuperadmin && (
                                 <button
                                   onClick={() => openAssignUsersDialog(node)}
-                                  className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
+                                  className="flex w-fit items-center gap-1 font-mono text-[10px] font-bold text-main hover:underline"
                                 >
                                   <Users className="size-3" />
-                                  <span>{assignedUsers.length > 0 ? "Atur Pemegang VPS" : "+ Tugaskan Pengguna"}</span>
+                                  <span>
+                                    {assignedUsers.length > 0
+                                      ? "Atur Pemegang VPS"
+                                      : "+ Tugaskan Pengguna"}
+                                  </span>
                                 </button>
                               )}
                             </div>
                           </TableCell>
 
                           {/* 4. OS & Webserver */}
-                          <TableCell className="font-mono text-xs">
+                          <TableCell className="max-w-[140px] px-2.5 py-2.5 font-mono text-xs whitespace-normal">
                             <div className="flex flex-col gap-0.5">
-                              <span className="font-semibold text-foreground">{node.os}</span>
-                              <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                                <Globe className="size-3" />
-                                {totalVhosts > 0 ? `${totalVhosts} VHost aktif (Nginx/Apache)` : "Webserver auto-recon"}
+                              <span className="truncate font-semibold text-foreground">
+                                {node.os}
+                              </span>
+                              <span className="flex items-center gap-1 truncate text-[11px] text-muted-foreground">
+                                <Globe className="size-3 shrink-0" />
+                                <span className="truncate">
+                                  {totalVhosts > 0
+                                    ? `${totalVhosts} VHost aktif`
+                                    : "Webserver auto-recon"}
+                                </span>
                               </span>
                             </div>
                           </TableCell>
 
                           {/* 5. Telemetri */}
-                          <TableCell className="text-center font-mono text-xs">
-                            <div className="flex flex-col gap-1 items-center">
-                              <div className="flex items-center gap-2 text-[11px]">
-                                <span className="text-muted-foreground">CPU:</span>
-                                <span className="font-bold text-foreground">{node.cpu_used_percent}%</span>
-                                <span className="text-muted-foreground">RAM:</span>
-                                <span className="font-bold text-foreground">{node.memory_used_percent}%</span>
+                          <TableCell className="px-2 py-2.5 text-center font-mono text-xs">
+                            <div className="flex flex-col items-center gap-1">
+                              <div className="flex items-center gap-1.5 text-[11px] tabular-nums">
+                                <span className="text-muted-foreground">
+                                  CPU:
+                                </span>
+                                <span className="font-bold text-foreground">
+                                  {node.cpu_used_percent}%
+                                </span>
+                                <span className="text-muted-foreground">
+                                  RAM:
+                                </span>
+                                <span className="font-bold text-foreground">
+                                  {node.memory_used_percent}%
+                                </span>
                               </div>
-                              <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <span className="flex items-center gap-1 text-[10px] text-muted-foreground tabular-nums">
                                 <Clock className="size-2.5" />
-                                Up: {Math.floor(node.uptime_seconds / 86400)}h {Math.floor((node.uptime_seconds % 86400) / 3600)}j
+                                Up: {Math.floor(
+                                  node.uptime_seconds / 86400
+                                )}h{" "}
+                                {Math.floor(
+                                  (node.uptime_seconds % 86400) / 3600
+                                )}
+                                j
                               </span>
                             </div>
                           </TableCell>
 
                           {/* 6. Tags */}
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1 max-w-[150px]">
-                              {(node.tags && node.tags.length > 0 ? node.tags : ["Production"]).map((tag) => (
-                                <Badge key={tag} variant="outline" className="font-mono text-[9px] px-1.5 py-0 border-border">
+                          <TableCell className="max-w-[100px] px-2 py-2.5 whitespace-normal">
+                            <div className="flex flex-wrap gap-1">
+                              {(node.tags && node.tags.length > 0
+                                ? node.tags
+                                : ["Production"]
+                              ).map((tag) => (
+                                <Badge
+                                  key={tag}
+                                  variant="outline"
+                                  className="border-border px-1.5 py-0 font-mono text-[9px]"
+                                >
                                   {tag}
                                 </Badge>
                               ))}
@@ -768,14 +918,14 @@ export function NodesManagementClient({
                           </TableCell>
 
                           {/* 7. Actions */}
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
+                          <TableCell className="px-2.5 py-2.5 text-right">
+                            <div className="flex items-center justify-end gap-0.5">
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => openInstallGuide(node)}
                                 title="Script Pasang Agen Sentinel"
-                                className="size-8 text-sky-500 hover:text-sky-600 hover:bg-sky-500/10"
+                                className="size-7 text-sky-500 hover:bg-sky-500/10 hover:text-sky-600"
                               >
                                 <Terminal className="size-3.5" />
                               </Button>
@@ -786,7 +936,7 @@ export function NodesManagementClient({
                                     size="icon"
                                     onClick={() => openEditDialog(node)}
                                     title="Edit VPS"
-                                    className="size-8"
+                                    className="size-7"
                                   >
                                     <Edit className="size-3.5" />
                                   </Button>
@@ -795,7 +945,7 @@ export function NodesManagementClient({
                                     size="icon"
                                     onClick={() => openDeleteDialog(node)}
                                     title="Hapus VPS"
-                                    className="size-8 text-destructive hover:bg-destructive/10"
+                                    className="size-7 text-destructive hover:bg-destructive/10"
                                   >
                                     <Trash2 className="size-3.5" />
                                   </Button>
@@ -814,34 +964,42 @@ export function NodesManagementClient({
         </Card>
       ) : (
         /* GRID VIEW */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filteredNodes.map((node) => {
-            const assignedUserIds = node.assignedUserIds || (node.project_id ? [node.project_id] : [])
+            const assignedUserIds =
+              node.assignedUserIds || (node.project_id ? [node.project_id] : [])
             const assignedUsers = users.filter(
-              (u) => assignedUserIds.includes(u.id) || u.assignedNodeIds?.includes(node.node_id)
+              (u) =>
+                assignedUserIds.includes(u.id) ||
+                u.assignedNodeIds?.includes(node.node_id)
             )
 
             return (
-              <Card key={node.node_id} className="border-2 shadow-[3px_3px_0px_0px_var(--border)] flex flex-col justify-between">
-                <CardHeader className="pb-3 border-b border-border/80 bg-muted/10">
-                  <div className="flex items-start justify-between">
-                    <div>
+              <Card
+                key={node.node_id}
+                className="flex flex-col justify-between border-2 shadow-[3px_3px_0px_0px_var(--border)]"
+              >
+                <CardHeader className="border-b border-border/80 bg-muted/10 pb-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`size-2.5 rounded-full ${
+                          className={`size-2.5 shrink-0 rounded-full ${
                             node.status === "ONLINE"
-                              ? "bg-emerald-500 animate-pulse"
+                              ? "animate-pulse bg-emerald-500"
                               : node.status === "TAMPERED"
-                              ? "bg-rose-500 animate-pulse"
-                              : "bg-muted-foreground"
+                                ? "animate-pulse bg-rose-500"
+                                : "bg-muted-foreground"
                           }`}
                         />
-                        <CardTitle className="font-heading text-base font-black text-foreground">
+                        <CardTitle className="truncate font-heading text-base font-black text-foreground">
                           {node.hostname}
                         </CardTitle>
                       </div>
-                      <div className="flex items-center gap-1 mt-1 font-mono text-xs text-muted-foreground">
-                        <span>{node.ip_v4}:{node.ssh_port || 22}</span>
+                      <div className="mt-1 flex items-center gap-1 font-mono text-xs text-muted-foreground tabular-nums">
+                        <span>
+                          {node.ip_v4}:{node.ssh_port || 22}
+                        </span>
                         <button
                           onClick={() => handleCopy(node.ip_v4)}
                           className="hover:text-foreground"
@@ -857,7 +1015,7 @@ export function NodesManagementClient({
 
                     <Badge
                       variant="outline"
-                      className={`font-mono text-[10px] font-bold ${
+                      className={`shrink-0 font-mono text-[10px] font-bold ${
                         node.status === "ONLINE"
                           ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                           : "border-border text-muted-foreground"
@@ -868,30 +1026,42 @@ export function NodesManagementClient({
                   </div>
                 </CardHeader>
 
-                <CardContent className="p-4 space-y-3 flex-1 font-mono text-xs">
+                <CardContent className="flex-1 space-y-3 p-4 font-mono text-xs">
                   <div>
-                    <span className="text-[11px] text-muted-foreground">Sistem Operasi:</span>
-                    <p className="font-semibold text-foreground text-xs">{node.os}</p>
+                    <span className="text-[11px] text-muted-foreground">
+                      Sistem Operasi:
+                    </span>
+                    <p className="text-xs font-semibold text-foreground">
+                      {node.os}
+                    </p>
                   </div>
 
                   <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[11px] text-muted-foreground">Pemegang VPS:</span>
+                    <div className="mb-1 flex items-center justify-between">
+                      <span className="text-[11px] text-muted-foreground">
+                        Pemegang VPS:
+                      </span>
                       {isAdminOrSuperadmin && (
                         <button
                           onClick={() => openAssignUsersDialog(node)}
-                          className="text-[10px] text-main hover:underline font-bold"
+                          className="text-[10px] font-bold text-main hover:underline"
                         >
                           + Atur Pemegang
                         </button>
                       )}
                     </div>
                     {assignedUsers.length === 0 ? (
-                      <span className="text-muted-foreground italic text-[11px]">Belum ada pemegang</span>
+                      <span className="text-[11px] text-muted-foreground italic">
+                        Belum ada pemegang
+                      </span>
                     ) : (
                       <div className="flex flex-wrap gap-1">
                         {assignedUsers.map((u) => (
-                          <Badge key={u.id} variant="outline" className="text-[10px] border-main/50 bg-main/10 text-foreground">
+                          <Badge
+                            key={u.id}
+                            variant="outline"
+                            className="border-main/50 bg-main/10 text-[10px] text-foreground"
+                          >
                             {u.name.split(" ")[0]} ({u.role})
                           </Badge>
                         ))}
@@ -899,32 +1069,44 @@ export function NodesManagementClient({
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border">
-                    <div className="p-2 rounded bg-muted/20 border border-border/60">
-                      <span className="text-[10px] text-muted-foreground">CPU Usage</span>
-                      <div className="font-bold text-foreground text-sm">{node.cpu_used_percent}%</div>
+                  <div className="grid grid-cols-2 gap-2 border-t border-border pt-2">
+                    <div className="rounded border border-border/60 bg-muted/20 p-2">
+                      <span className="text-[10px] text-muted-foreground">
+                        CPU Usage
+                      </span>
+                      <div className="text-sm font-bold text-foreground tabular-nums">
+                        {node.cpu_used_percent}%
+                      </div>
                     </div>
-                    <div className="p-2 rounded bg-muted/20 border border-border/60">
-                      <span className="text-[10px] text-muted-foreground">RAM Usage</span>
-                      <div className="font-bold text-foreground text-sm">{node.memory_used_percent}%</div>
+                    <div className="rounded border border-border/60 bg-muted/20 p-2">
+                      <span className="text-[10px] text-muted-foreground">
+                        RAM Usage
+                      </span>
+                      <div className="text-sm font-bold text-foreground tabular-nums">
+                        {node.memory_used_percent}%
+                      </div>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-1 pt-1">
                     {(node.tags || ["Production"]).map((t) => (
-                      <Badge key={t} variant="outline" className="text-[9px] border-border">
+                      <Badge
+                        key={t}
+                        variant="outline"
+                        className="border-border text-[9px]"
+                      >
                         {t}
                       </Badge>
                     ))}
                   </div>
                 </CardContent>
 
-                <div className="p-3 border-t border-border bg-muted/20 flex items-center justify-between">
+                <div className="flex items-center justify-between border-t border-border bg-muted/20 p-3">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => openInstallGuide(node)}
-                    className="font-mono text-xs text-sky-500 border-sky-500/40 hover:bg-sky-500/10"
+                    className="border-sky-500/40 font-mono text-xs text-sky-500 hover:bg-sky-500/10"
                   >
                     <Terminal className="mr-1.5 size-3" />
                     Pasang Agen
@@ -959,15 +1141,23 @@ export function NodesManagementClient({
 
       {/* 5. MODAL: DAFTARKAN VPS BARU */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="max-w-xl border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
-              <Plus className="size-5 text-main" />
-              <span>Daftarkan Server VPS Baru ke Armada SOC</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Masukkan spesifikasi VPS Linux target dan tentukan operator pemegang server ini. Satu VPS dapat ditugaskan ke beberapa user sekaligus.
-            </DialogDescription>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Plus className="size-5 stroke-[2.5]" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Daftarkan Server VPS Baru ke Armada SOC
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Masukkan spesifikasi VPS Linux target dan tentukan operator
+                  pemegang server ini. Satu VPS dapat ditugaskan ke beberapa
+                  user sekaligus.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
           {formError && (
@@ -984,144 +1174,153 @@ export function NodesManagementClient({
             </div>
           )}
 
-          <form onSubmit={handleRegisterSubmit} className="space-y-4 pt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleRegisterSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Hostname VPS Server *</label>
+                <label className={modalLabelClass}>
+                  Hostname VPS Server <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   placeholder="Misal: prod-vps-sg01"
                   value={formData.hostname}
-                  onChange={(e) => setFormData({ ...formData, hostname: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, hostname: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">IP Publik IPv4 *</label>
+                <label className={modalLabelClass}>
+                  IP Publik IPv4 <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   placeholder="Misal: 203.0.113.195"
                   value={formData.ip_v4}
-                  onChange={(e) => setFormData({ ...formData, ip_v4: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, ip_v4: e.target.value })
+                  }
+                  className={`${modalInputClass} tabular-nums`}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-3">
               <div className="space-y-1.5 sm:col-span-2">
-                <label className="font-heading text-xs font-bold">Distro Linux / OS</label>
+                <label className={modalLabelClass}>Distro Linux / OS</label>
                 <select
                   value={formData.os}
-                  onChange={(e) => setFormData({ ...formData, os: e.target.value })}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  onChange={(e) =>
+                    setFormData({ ...formData, os: e.target.value })
+                  }
+                  className={modalSelectClass}
                 >
-                  <option value="Ubuntu 24.04 LTS (Noble)">Ubuntu 24.04 LTS (Noble)</option>
-                  <option value="Ubuntu 22.04 LTS (Jammy)">Ubuntu 22.04 LTS (Jammy)</option>
-                  <option value="Debian 12 (Bookworm)">Debian 12 (Bookworm)</option>
-                  <option value="Debian 11 (Bullseye)">Debian 11 (Bullseye)</option>
-                  <option value="RHEL / Rocky Linux 9">RHEL / Rocky Linux 9</option>
+                  <option value="Ubuntu 24.04 LTS (Noble)">
+                    Ubuntu 24.04 LTS (Noble)
+                  </option>
+                  <option value="Ubuntu 22.04 LTS (Jammy)">
+                    Ubuntu 22.04 LTS (Jammy)
+                  </option>
+                  <option value="Debian 12 (Bookworm)">
+                    Debian 12 (Bookworm)
+                  </option>
+                  <option value="Debian 11 (Bullseye)">
+                    Debian 11 (Bullseye)
+                  </option>
+                  <option value="RHEL / Rocky Linux 9">
+                    RHEL / Rocky Linux 9
+                  </option>
                   <option value="Alpine Linux 3.19">Alpine Linux 3.19</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">SSH Port</label>
+                <label className={modalLabelClass}>SSH Port</label>
                 <Input
                   type="number"
                   value={formData.ssh_port}
-                  onChange={(e) => setFormData({ ...formData, ssh_port: parseInt(e.target.value) || 22 })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      ssh_port: parseInt(e.target.value) || 22,
+                    })
+                  }
+                  className={`${modalInputClass} tabular-nums`}
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="font-heading text-xs font-bold">Tags / Kluster Lingkungan (pisahkan dengan koma)</label>
-              <Input
-                placeholder="Production, Singapore, Edge-WAF"
-                value={rawTagInput}
-                onChange={(e) => setRawTagInput(e.target.value)}
-                className="font-mono text-xs"
-              />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className={modalLabelClass}>
+                  Tags / Kluster (pisahkan koma)
+                </label>
+                <Input
+                  placeholder="Production, Singapore, Edge-WAF"
+                  value={rawTagInput}
+                  onChange={(e) => setRawTagInput(e.target.value)}
+                  className={modalInputClass}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className={modalLabelClass}>Catatan / Deskripsi</label>
+                <Input
+                  placeholder="Misal: Kluster utama server aplikasi"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className={modalInputClass}
+                />
+              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="font-heading text-xs font-bold">Catatan / Deskripsi Node</label>
-              <Input
-                placeholder="Misal: Kluster utama server aplikasi pembayaran"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="font-mono text-xs"
-              />
-            </div>
+            {renderUserSelector(
+              "Pilih Pemegang VPS",
+              "Centang semua user yang berhak mengelola"
+            )}
 
-            {/* Multi-select Users Assignment */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <label className="font-heading text-xs font-bold flex items-center justify-between">
-                <span>Pilih Pemegang VPS ({formData.assignedUserIds.length} user dipilih)</span>
-                <span className="font-mono text-[10px] text-muted-foreground">Centang semua user yang berhak mengelola</span>
-              </label>
-
-              {users.length === 0 ? (
-                <p className="font-mono text-xs text-muted-foreground italic">Belum ada user terdaftar.</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border-2 rounded-base bg-muted/10">
-                  {users.map((user) => {
-                    const isSelected = formData.assignedUserIds.includes(user.id)
-                    return (
-                      <div
-                        key={user.id}
-                        onClick={() => toggleUserSelection(user.id)}
-                        className={`cursor-pointer flex items-center justify-between p-2 rounded border-2 transition-all font-mono text-xs ${
-                          isSelected
-                            ? "border-main bg-main/15 text-foreground font-bold"
-                            : "border-border/60 hover:border-border text-muted-foreground"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            readOnly
-                            className="size-3.5 accent-main"
-                          />
-                          <div className="flex flex-col">
-                            <span className="text-foreground">{user.name}</span>
-                            <span className="text-[10px] text-muted-foreground">{user.email}</span>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-[9px]">
-                          {user.role}
-                        </Badge>
-                      </div>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsRegisterOpen(false)}>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsRegisterOpen(false)}
+                className="h-9 border-2 font-sans text-xs font-bold"
+              >
                 Batal
               </Button>
-              <Button type="submit" className="bg-main text-black font-heading font-black">
+              <Button
+                type="submit"
+                className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+              >
                 Daftarkan VPS ke Armada
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* 6. MODAL: EDIT VPS NODE */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-xl border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
-              <Edit className="size-5 text-main" />
-              <span>Perbarui Konfigurasi VPS &amp; Pemegang</span>
-            </DialogTitle>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Edit className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Perbarui Konfigurasi VPS &amp; Pemegang
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Sesuaikan identitas jaringan, status operasional, tag kluster,
+                  dan anggota tim yang berhak mengakses node ini.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
           {formError && (
@@ -1138,45 +1337,57 @@ export function NodesManagementClient({
             </div>
           )}
 
-          <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Hostname *</label>
+                <label className={modalLabelClass}>
+                  Hostname <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   value={formData.hostname}
-                  onChange={(e) => setFormData({ ...formData, hostname: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, hostname: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">IP Publik IPv4 *</label>
+                <label className={modalLabelClass}>
+                  IP Publik IPv4 <span className="text-rose-500">*</span>
+                </label>
                 <Input
                   required
                   value={formData.ip_v4}
-                  onChange={(e) => setFormData({ ...formData, ip_v4: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, ip_v4: e.target.value })
+                  }
+                  className={`${modalInputClass} tabular-nums`}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 items-end gap-4 sm:grid-cols-3">
               <div className="space-y-1.5 sm:col-span-2">
-                <label className="font-heading text-xs font-bold">Distro Linux / OS</label>
+                <label className={modalLabelClass}>Distro Linux / OS</label>
                 <Input
                   value={formData.os}
-                  onChange={(e) => setFormData({ ...formData, os: e.target.value })}
-                  className="font-mono text-xs"
+                  onChange={(e) =>
+                    setFormData({ ...formData, os: e.target.value })
+                  }
+                  className={modalInputClass}
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="font-heading text-xs font-bold">Status Node</label>
+                <label className={modalLabelClass}>Status Node</label>
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                  className="w-full h-10 rounded-base border-2 border-border bg-background px-3 font-mono text-xs font-semibold focus:border-main focus:outline-hidden"
+                  onChange={(e) =>
+                    setFormData({ ...formData, status: e.target.value as any })
+                  }
+                  className={modalSelectClass}
                 >
                   <option value="ONLINE">ONLINE</option>
                   <option value="TAMPERED">TAMPERED</option>
@@ -1185,158 +1396,169 @@ export function NodesManagementClient({
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="font-heading text-xs font-bold">Tags / Kluster</label>
-              <Input
-                value={rawTagInput}
-                onChange={(e) => setRawTagInput(e.target.value)}
-                className="font-mono text-xs"
-              />
-            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-1.5">
+                <label className={modalLabelClass}>Tags / Kluster</label>
+                <Input
+                  value={rawTagInput}
+                  onChange={(e) => setRawTagInput(e.target.value)}
+                  className={modalInputClass}
+                />
+              </div>
 
-            <div className="space-y-1.5">
-              <label className="font-heading text-xs font-bold">Catatan / Deskripsi</label>
-              <Input
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="font-mono text-xs"
-              />
-            </div>
-
-            {/* Multi-select Users Assignment */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <label className="font-heading text-xs font-bold flex items-center justify-between">
-                <span>Pemegang VPS ({formData.assignedUserIds.length} user dipilih)</span>
-                <span className="font-mono text-[10px] text-muted-foreground">Centang user yang berhak</span>
-              </label>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto p-2 border-2 rounded-base bg-muted/10">
-                {users.map((user) => {
-                  const isSelected = formData.assignedUserIds.includes(user.id)
-                  return (
-                    <div
-                      key={user.id}
-                      onClick={() => toggleUserSelection(user.id)}
-                      className={`cursor-pointer flex items-center justify-between p-2 rounded border-2 transition-all font-mono text-xs ${
-                        isSelected
-                          ? "border-main bg-main/15 text-foreground font-bold"
-                          : "border-border/60 hover:border-border text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          readOnly
-                          className="size-3.5 accent-main"
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-foreground">{user.name}</span>
-                          <span className="text-[10px] text-muted-foreground">{user.email}</span>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="text-[9px]">
-                        {user.role}
-                      </Badge>
-                    </div>
-                  )
-                })}
+              <div className="space-y-1.5">
+                <label className={modalLabelClass}>Catatan / Deskripsi</label>
+                <Input
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className={modalInputClass}
+                />
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>
+            {renderUserSelector(
+              "Pemegang VPS",
+              "Centang user yang berhak mengelola"
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEditOpen(false)}
+                className="h-9 border-2 font-sans text-xs font-bold"
+              >
                 Batal
               </Button>
-              <Button type="submit" className="bg-main text-black font-heading font-black">
+              <Button
+                type="submit"
+                className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+              >
                 Simpan Perubahan
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
       {/* 7. MODAL: ATUR PEMEGANG VPS CEPAT */}
       <Dialog open={isAssignUsersOpen} onOpenChange={setIsAssignUsersOpen}>
-        <DialogContent className="max-w-md border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-base font-black text-foreground flex items-center gap-2">
-              <Users className="size-4 text-main" />
-              <span>Kelola Pemegang VPS {selectedNode?.hostname}</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Pilih pengguna yang memiliki wewenang untuk memantau dan mengelola VPS ini. Satu VPS bisa ditangani banyak pengguna.
-            </DialogDescription>
+        <DialogContent className="max-w-lg">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-main/15 text-main shadow-[2px_2px_0px_0px_var(--border)]">
+                <Users className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Kelola Pemegang VPS {selectedNode?.hostname}
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Pilih pengguna yang memiliki wewenang untuk memantau dan
+                  mengelola VPS ini. Satu VPS bisa ditangani banyak pengguna.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <div className="space-y-2 py-2 max-h-60 overflow-y-auto">
+          <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
             {users.map((user) => {
               const isSelected = formData.assignedUserIds.includes(user.id)
               return (
-                <div
+                <button
+                  type="button"
                   key={user.id}
                   onClick={() => toggleUserSelection(user.id)}
-                  className={`cursor-pointer flex items-center justify-between p-2.5 rounded-base border-2 transition-all font-mono text-xs ${
+                  className={`flex w-full items-center justify-between gap-2 rounded-base border-2 p-3 text-left font-mono text-xs transition-all ${
                     isSelected
-                      ? "border-main bg-main/15 text-foreground font-bold"
-                      : "border-border hover:border-border/80"
+                      ? "border-main bg-main/15 text-foreground shadow-[2px_2px_0px_0px_var(--border)]"
+                      : "border-border bg-background hover:border-border/80"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      readOnly
-                      className="size-4 accent-main"
-                    />
-                    <div>
-                      <div className="font-heading font-black">{user.name}</div>
-                      <div className="text-[11px] text-muted-foreground">{user.email} • {user.organization || "Personal"}</div>
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span
+                      className={`flex size-4 shrink-0 items-center justify-center rounded-sm border-2 text-[10px] font-black ${
+                        isSelected
+                          ? "border-border bg-main text-black"
+                          : "border-border bg-background"
+                      }`}
+                    >
+                      {isSelected ? "✓" : ""}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="truncate font-heading font-black">
+                        {user.name}
+                      </div>
+                      <div className="truncate text-[11px] text-muted-foreground">
+                        {user.email} &bull; {user.organization || "Personal"}
+                      </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="shrink-0 text-[10px]">
                     {user.role}
                   </Badge>
-                </div>
+                </button>
               )
             })}
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-border">
-            <Button variant="outline" size="sm" onClick={() => setIsAssignUsersOpen(false)}>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAssignUsersOpen(false)}
+              className="h-9 border-2 font-sans text-xs font-bold"
+            >
               Batal
             </Button>
-            <Button size="sm" onClick={handleAssignUsersSubmit} className="bg-main text-black font-heading font-black">
+            <Button
+              size="sm"
+              onClick={handleAssignUsersSubmit}
+              className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+            >
               Terapkan Pemegang
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* 8. MODAL: PANDUAN INSTALASI AGEN SENTINEL */}
       <Dialog open={isInstallGuideOpen} onOpenChange={setIsInstallGuideOpen}>
-        <DialogContent className="max-w-lg border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-base font-black text-foreground flex items-center gap-2">
-              <Terminal className="size-5 text-sky-500" />
-              <span>Pasang Agen Sentinel di VPS {selectedNode?.hostname}</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Jalankan perintah berikut di terminal root VPS ({selectedNode?.ip_v4}) untuk menghubungkan Sentinel Daemon ke sistem SOC Pasax.
-            </DialogDescription>
+        <DialogContent className="max-w-xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-sky-500/15 text-sky-500 shadow-[2px_2px_0px_0px_var(--border)]">
+                <Terminal className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Pasang Agen Sentinel di VPS {selectedNode?.hostname}
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Jalankan perintah berikut di terminal root VPS (
+                  <span className="font-mono text-foreground tabular-nums">
+                    {selectedNode?.ip_v4}
+                  </span>
+                  ) untuk menghubungkan Sentinel Daemon ke sistem SOC Pasax.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
-          <div className="space-y-4 py-2 font-mono text-xs">
-            <div className="rounded-base border-2 border-border bg-black/90 p-4 text-emerald-400">
-              <div className="flex items-center justify-between pb-2 border-b border-border/40 mb-2 text-muted-foreground text-[11px]">
+          <div className="space-y-4 font-mono text-xs">
+            <div className="rounded-base border-2 border-border bg-black/95 p-4 text-emerald-400 shadow-[3px_3px_0px_0px_var(--border)]">
+              <div className="mb-2 flex items-center justify-between border-b border-border/40 pb-2 text-[11px] text-neutral-400">
                 <span>BASH COMMAND</span>
                 <button
+                  type="button"
                   onClick={() =>
                     handleCopy(
-                      `curl -sSL https://pasax-service.vercel.app/install.sh | sudo bash -s -- --node-id ${selectedNode?.node_id}`
+                      `curl -sSL https://pasax.web.id/install.sh | sudo bash -s -- --node-id ${selectedNode?.node_id}`
                     )
                   }
-                  className="flex items-center gap-1 hover:text-foreground font-bold"
+                  className="flex items-center gap-1 font-bold text-white hover:text-emerald-300"
                 >
                   {copiedText ? (
                     <>
@@ -1351,57 +1573,91 @@ export function NodesManagementClient({
                   )}
                 </button>
               </div>
-              <code className="break-all select-all text-xs font-mono">
-                curl -sSL https://pasax-service.vercel.app/install.sh | sudo bash -s -- --node-id {selectedNode?.node_id}
+              <code className="font-mono text-xs leading-relaxed break-all select-all">
+                curl -sSL https://pasax.web.id/install.sh | sudo bash -s --
+                --node-id {selectedNode?.node_id}
               </code>
             </div>
 
-            <div className="space-y-1.5 text-muted-foreground text-[11px]">
-              <p className="font-bold text-foreground">Apa yang dilakukan script ini?</p>
-              <ul className="list-disc pl-4 space-y-1">
-                <li>Menginstal service daemon lightweight Pasax Sentinel di <code>/usr/local/bin/pasax-sentinel</code>.</li>
-                <li>Mengaktifkan proteksi firewall kernel Linux (nftables drop rate &lt; 0.2ms).</li>
-                <li>Memindai otomatis virtual host Nginx &amp; Apache2 beserta sertifikat SSL.</li>
+            <div className="space-y-1.5 font-sans text-xs text-muted-foreground">
+              <p className="font-bold text-foreground">
+                Apa yang dilakukan script ini?
+              </p>
+              <ul className="list-disc space-y-1 pl-4 leading-relaxed">
+                <li>
+                  Menginstal service daemon lightweight Pasax Sentinel di{" "}
+                  <code className="font-mono text-foreground">
+                    /usr/local/bin/pasax-sentinel
+                  </code>
+                  .
+                </li>
+                <li>
+                  Mengaktifkan proteksi firewall kernel Linux (nftables drop
+                  rate &lt; 0.2ms).
+                </li>
+                <li>
+                  Memindai otomatis virtual host Nginx &amp; Apache2 beserta
+                  sertifikat SSL.
+                </li>
                 <li>Mengirim telemetri berkala ke konsol SOC Pasax.</li>
               </ul>
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
-            <Button size="sm" onClick={() => setIsInstallGuideOpen(false)} className="bg-main text-black font-heading font-black">
+          <DialogFooter>
+            <Button
+              size="sm"
+              onClick={() => setIsInstallGuideOpen(false)}
+              className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+            >
               Tutup Panduan
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* 9. MODAL: KONFIRMASI HAPUS VPS */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="max-w-md border-2 border-destructive/40">
+        <DialogContent className="max-w-md border-destructive/60">
           <DialogHeader>
-            <DialogTitle className="font-heading text-base font-black text-destructive flex items-center gap-2">
-              <AlertCircle className="size-5" />
-              <span>Konfirmasi Hapus VPS</span>
+            <div className="mb-1 flex size-10 items-center justify-center rounded-base border-2 border-border bg-destructive/15 text-destructive shadow-[2px_2px_0px_0px_var(--border)]">
+              <AlertCircle className="size-5 stroke-[2.5]" />
+            </div>
+            <DialogTitle className="text-destructive">
+              Konfirmasi Hapus VPS
             </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Apakah Anda yakin ingin menghapus VPS <strong>{selectedNode?.hostname}</strong> ({selectedNode?.ip_v4}) dari pengawasan armada?
-              Semua telemetri dan asosiasi pemegang VPS akan diputuskan.
+            <DialogDescription>
+              Apakah Anda yakin ingin menghapus VPS{" "}
+              <strong className="text-foreground">
+                {selectedNode?.hostname}
+              </strong>{" "}
+              (
+              <span className="font-mono text-foreground tabular-nums">
+                {selectedNode?.ip_v4}
+              </span>
+              ) dari pengawasan armada? Semua telemetri dan asosiasi pemegang
+              VPS akan diputuskan.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" size="sm" onClick={() => setIsDeleteOpen(false)}>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsDeleteOpen(false)}
+              className="h-9 border-2 font-sans text-xs font-bold"
+            >
               Batal
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={handleDeleteSubmit}
-              className="font-heading font-black"
+              className="h-9 border-2 border-border font-heading text-xs font-black shadow-[2px_2px_0px_0px_var(--border)]"
             >
               Hapus VPS dari Armada
             </Button>
-          </div>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

