@@ -38,7 +38,7 @@ const quickSnippets: Record<ProductType, { label: string; cmd: string }> = {
   },
   "pasax-sentinel": {
     label: "Single Binary Download",
-    cmd: "curl -sSL https://get.pasax.is-a.dev/sentinel.sh | sudo bash",
+    cmd: "curl -sSL https://get.pasax.web.id/sentinel.sh | sudo bash",
   },
   core: {
     label: "Full Stack Deployment",

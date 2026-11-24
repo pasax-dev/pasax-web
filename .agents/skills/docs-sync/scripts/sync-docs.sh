@@ -3,7 +3,7 @@ set -e
 
 # ==============================================================================
 # sync-docs.sh — Pasax Suite Docs Sync Helper
-# Portal: https://pasax.is-a.dev/docs/pasax-secure-monitor
+# Portal: https://pasax.web.id/docs/pasax-secure-monitor
 # API:    https://pasax-service.vercel.app/api/v1/docs
 # ==============================================================================
 
@@ -30,9 +30,9 @@ usage() {
     echo "  delete <slug> [product]     Hapus dokumen dari Neon DB"
     echo ""
     echo "Target Produk:"
-    echo "  - pasax-secure-monitor (default) -> https://pasax.is-a.dev/docs/pasax-secure-monitor"
-    echo "  - pasax-sentinel                   -> https://pasax.is-a.dev/docs/pasax-sentinel"
-    echo "  - core                             -> https://pasax.is-a.dev/docs/core"
+    echo "  - pasax-secure-monitor (default) -> https://pasax.web.id/docs/pasax-secure-monitor"
+    echo "  - pasax-sentinel                   -> https://pasax.web.id/docs/pasax-sentinel"
+    echo "  - core                             -> https://pasax.web.id/docs/core"
     exit 1
 }
 
@@ -93,7 +93,7 @@ case "$CMD" in
             -d "$PAYLOAD" | jq .
 
         echo "==> Verifikasi di portal publik:"
-        echo "    https://pasax.is-a.dev/docs/$PROD/$SLUG"
+        echo "    https://pasax.web.id/docs/$PROD/$SLUG"
         ;;
 
     raw-push)
@@ -125,7 +125,7 @@ case "$CMD" in
             -d "$PAYLOAD" | jq .
 
         echo "==> Verifikasi di portal publik:"
-        echo "    https://pasax.is-a.dev/docs/$PROD/$SLUG"
+        echo "    https://pasax.web.id/docs/$PROD/$SLUG"
         ;;
 
     delete)

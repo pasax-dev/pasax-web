@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     "GDPR Compliance Security",
   ],
   alternates: {
-    canonical: "https://pasax.is-a.dev/privacy",
+    canonical: "https://pasax.web.id/privacy",
   },
   openGraph: {
     title: "Privacy Policy | Pasax Security Ecosystem",
     description:
       "Transparent zero-knowledge security telemetry and minimal data retention across Sentinel daemons and Pasax Cloud.",
-    url: "https://pasax.is-a.dev/privacy",
+    url: "https://pasax.web.id/privacy",
     siteName: "Pasax Security",
     images: [
       {
@@ -326,10 +326,10 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
                 <a
-                  href="mailto:privacy@pasax.is-a.dev"
+                  href="mailto:privacy@pasax.web.id"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3.5 py-2 font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
                 >
-                  <span>privacy@pasax.is-a.dev</span>
+                  <span>privacy@pasax.web.id</span>
                 </a>
                 <Link
                   href="/terms"

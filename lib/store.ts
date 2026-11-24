@@ -539,7 +539,7 @@ function ensureInitialized() {
     userId: user1.id,
     licenseKey: keyAdmin.key,
     appName: "Pasax SOC Master Portal",
-    appUrl: "https://pasax.is-a.dev",
+    appUrl: "https://pasax.web.id",
     nodeId: "nd_02JK9A1B234YTR8C7D0S52ZY0B",
     ip: "198.51.100.77",
     environment: "production",
@@ -578,7 +578,7 @@ function ensureInitialized() {
         version: "1.24.0",
         vhosts: [
           {
-            domain: "app.pasax.is-a.dev",
+            domain: "app.pasax.web.id",
             ssl_status: "valid",
             ssl_expires_at: now + 72 * 86400,
             upstream: "127.0.0.1:9000",

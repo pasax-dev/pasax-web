@@ -7,7 +7,7 @@ The agent provisioning subsystem ([`InstallAgentDialog`](../components/install-a
 1. An administrator clicks **"+ Deploy Sentinel Agent"** in the top navigation bar.
 2. The modal displays a cryptographically signed, single-command installation snippet:
    ```bash
-   curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash -s -- --token=PSK_LIVE_8f9c2d14b
+   curl -sSL https://get.pasax.web.id/install.sh | sudo bash -s -- --token=PSK_LIVE_8f9c2d14b
    ```
 3. The host installer executes:
    - Linux distro auto-detection (Ubuntu, Debian, RHEL, AlmaLinux).

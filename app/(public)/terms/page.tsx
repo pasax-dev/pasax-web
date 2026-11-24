@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     "Kernel Daemon Terms",
   ],
   alternates: {
-    canonical: "https://pasax.is-a.dev/terms",
+    canonical: "https://pasax.web.id/terms",
   },
   openGraph: {
     title: "Terms of Service | Pasax Security Ecosystem",
     description:
       "Transparent terms and responsible security use guidelines for Pasax Sentinel, Shield WAF, and Cloud SOC.",
-    url: "https://pasax.is-a.dev/terms",
+    url: "https://pasax.web.id/terms",
     siteName: "Pasax Security",
     images: [
       {
@@ -368,10 +368,10 @@ export default function TermsOfServicePage() {
               </p>
               <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
                 <a
-                  href="mailto:legal@pasax.is-a.dev"
+                  href="mailto:legal@pasax.web.id"
                   className="inline-flex items-center gap-1.5 rounded-lg border border-lp-line bg-lp-paper-2/60 px-3.5 py-2 font-medium text-lp-ink transition-colors hover:bg-lp-paper-2"
                 >
-                  <span>legal@pasax.is-a.dev</span>
+                  <span>legal@pasax.web.id</span>
                 </a>
                 <Link
                   href="/privacy"

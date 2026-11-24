@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "Bulletproof Security for Linux VPS & Web Fleets",
   description:
     "Sub-0.2ms kernel-level nftables packet filtering, instant 11ms File Integrity Monitoring (.env auto-lock), and autonomous cloud SOC mesh for Linux VPS & web servers.",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://pasax.is-a.dev",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://pasax.web.id",
   ogImage: "/logo.png",
   favicon: "/icon.png",
   appleTouchIcon: "/apple-touch-icon.png",

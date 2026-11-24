@@ -11,7 +11,7 @@ export function TerminalInstall() {
   )
 
   const commands = {
-    curl: "curl -fsSL https://get.pasax.is-a.dev/install.sh | sudo bash -s -- --token=psk_live_mesh",
+    curl: "curl -fsSL https://get.pasax.web.id/install.sh | sudo bash -s -- --token=psk_live_mesh",
     docker:
       "docker run -d --name pasax-sentinel --net=host --cap-add=NET_ADMIN -v /:/host:ro pasax/sentinel:v1",
     go: "go install github.com/pasax-suit/pasax-sentinel/cmd/sentinel@latest && sudo sentinel daemon --init",

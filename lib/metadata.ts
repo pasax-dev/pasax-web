@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { siteConfig } from "@/config/site"
 
 export const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://pasax.is-a.dev"
+  process.env.NEXT_PUBLIC_SITE_URL || "https://pasax.web.id"
 
 export function createMetadata(override: Metadata): Metadata {
   return {

@@ -31,7 +31,7 @@
         "version": "1.24.0",
         "vhosts": [
           {
-            "domain": "app.pasax.is-a.dev",
+            "domain": "app.pasax.web.id",
             "ssl_status": "valid",
             "ssl_expires_at": 1800272266,
             "upstream": "127.0.0.1:9000",

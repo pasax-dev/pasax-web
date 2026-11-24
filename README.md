@@ -13,7 +13,7 @@ Built with **Next.js 16**, **React 19**, **Tailwind CSS v4**, and the authentic 
 - 🔬 **Forensic Evidence Inspector**: Interactive modal inspecting raw incident JSON payloads, attacker IPs, process PIDs, and cryptographic SHA-256 before/after hash comparisons.
 - 🌐 **VHost & SSL Reconnaissance**: Auto-discovered virtual hosts across Nginx and Apache2 instances with active SSL certificate expiration countdowns.
 - 🔥 **Crowd Defense Blocklist**: Centralized malicious IP list automatically distributed and enforced across all client nodes at the kernel layer via `nftables` or `iptables`.
-- ⚡ **One-Line Agent Provisioning**: Built-in modal generating one-click curl commands (`curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash ...`) to onboard new Linux servers in under 10 seconds.
+- ⚡ **One-Line Agent Provisioning**: Built-in modal generating one-click curl commands (`curl -sSL https://get.pasax.web.id/install.sh | sudo bash ...`) to onboard new Linux servers in under 10 seconds.
 - 🔌 **High-Throughput Ingestion REST APIs**: Native `/api/v1/` endpoints for `pasax-sentinel` heartbeats, WAF threat dispatches, and blocklist synchronization.
 
 ---

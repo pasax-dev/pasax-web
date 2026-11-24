@@ -21,7 +21,7 @@ export function InstallAgentDialog({
 }) {
   const [copied, setCopied] = React.useState(false)
   const token = "PSK_LIVE_8f9c2d14b"
-  const installCmd = `curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash -s -- --token=${token}`
+  const installCmd = `curl -sSL https://get.pasax.web.id/install.sh | sudo bash -s -- --token=${token}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCmd)

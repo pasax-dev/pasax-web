@@ -221,7 +221,7 @@ const adminProjects: NavProjectItem[] = [
     badge: "HEALTHY",
   },
   {
-    name: "app.pasax.is-a.dev",
+    name: "app.pasax.web.id",
     url: "/vhosts",
     icon: <ShieldCheck className="size-3.5" />,
     badge: "TLS 1.3",

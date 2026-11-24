@@ -14,7 +14,7 @@ export function VpsDeploySteps() {
       title: "Deploy Single Go Binary",
       description:
         "Execute our audited install script via SSH. It fetches a standalone static Linux binary compiled with zero external dependencies.",
-      code: "curl -sSL https://get.pasax.is-a.dev/install.sh | sudo bash",
+      code: "curl -sSL https://get.pasax.web.id/install.sh | sudo bash",
       tag: "< 15s execution time",
     },
     {

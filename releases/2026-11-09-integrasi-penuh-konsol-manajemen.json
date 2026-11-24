@@ -3,21 +3,21 @@
   "type": "deploy",
   "project": {
     "name": "Pasax Cloud Dashboard",
-    "url": "https://pasax.is-a.dev"
+    "url": "https://pasax.web.id"
   },
   "title": {
     "id": "Peluncuran Produksi Konsol Manajemen Pasax Cloud di Domain Resmi",
     "en": "Production Deployment of Pasax Cloud Management Console to Official Domain"
   },
   "body": {
-    "id": "Konsol pusat pemantauan Pasax Cloud resmi disebarkan ke infrastruktur produksi global di pasax.is-a.dev dan terhubung langsung ke mesin koordinasi pasax-api. Memantau armada server, sertifikat SSL domain, peta ancaman serangan 3D waktu nyata, dan kebijakan pemblokiran kernel secara tersentralisasi.",
-    "en": "Pasax Cloud central management console officially deployed to global production infrastructure at pasax.is-a.dev and directly connected to the pasax-api coordination engine. Features fleet monitoring, domain SSL status, real-time 3D attack threat map, and centralized kernel blocklist policies."
+    "id": "Konsol pusat pemantauan Pasax Cloud resmi disebarkan ke infrastruktur produksi global di pasax.web.id dan terhubung langsung ke mesin koordinasi pasax-api. Memantau armada server, sertifikat SSL domain, peta ancaman serangan 3D waktu nyata, dan kebijakan pemblokiran kernel secara tersentralisasi.",
+    "en": "Pasax Cloud central management console officially deployed to global production infrastructure at pasax.web.id and directly connected to the pasax-api coordination engine. Features fleet monitoring, domain SSL status, real-time 3D attack threat map, and centralized kernel blocklist policies."
   },
   "items": [
     {
       "type": "deploy",
-      "id": "Penyebaran Produksi Global: Aplikasi aktif secara penuh di domain resmi pasax.is-a.dev dengan jaringan pengiriman tepi berkinerja tinggi.",
-      "en": "Global Production Deployment: Fully live on official domain pasax.is-a.dev with high-performance edge delivery network."
+      "id": "Penyebaran Produksi Global: Aplikasi aktif secara penuh di domain resmi pasax.web.id dengan jaringan pengiriman tepi berkinerja tinggi.",
+      "en": "Global Production Deployment: Fully live on official domain pasax.web.id with high-performance edge delivery network."
     },
     {
       "type": "feature",

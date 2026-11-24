@@ -56,7 +56,7 @@ export function HeroSection() {
             Get started
           </Link>
           <Command
-            command="curl -fsSL https://get.pasax.is-a.dev | bash"
+            command="curl -fsSL https://get.pasax.web.id | bash"
             className="max-sm:w-full"
           />
           <Link

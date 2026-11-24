@@ -1,28 +1,28 @@
 ---
 name: docs-sync
-description: "ACTIVATE setiap kali selesai mengerjakan perubahan kode, perbaikan bug, atau penambahan fitur di repositori Pasax Suite (pasax, pasax-sentinel, dashboard, pasax-api). Kelola dokumentasi teknis produk via CRUD API /api/v1/docs di Pasax API (Neon Serverless PostgreSQL): baca, tambah, perbarui (update), dan hapus dokumen markdown/mdx secara otomatis agar dokumentasi publik di https://pasax.is-a.dev/docs/pasax-secure-monitor selalu akurat dan sinkron."
+description: "ACTIVATE setiap kali selesai mengerjakan perubahan kode, perbaikan bug, atau penambahan fitur di repositori Pasax Suite (pasax, pasax-sentinel, dashboard, pasax-api). Kelola dokumentasi teknis produk via CRUD API /api/v1/docs di Pasax API (Neon Serverless PostgreSQL): baca, tambah, perbarui (update), dan hapus dokumen markdown/mdx secara otomatis agar dokumentasi publik di https://pasax.web.id/docs/pasax-secure-monitor selalu akurat dan sinkron."
 ---
 
 # Docs Sync — Otomasi Pembaruan Dokumentasi Teknis Pasax Suite (Neon PostgreSQL)
 
 Aturan dan panduan alur kerja bagi AI Agent untuk memperbarui atau menambahkan dokumentasi teknis produk secara langsung ke database **Neon PostgreSQL** melalui REST API CRUD di **Pasax Cloud API** (`https://pasax-service.vercel.app/api/v1/docs`). Dokumentasi yang disimpan di database langsung ditampilkan di portal web publik:
 
-- **Pasax Security Monitor**: [https://pasax.is-a.dev/docs/pasax-secure-monitor](https://pasax.is-a.dev/docs/pasax-secure-monitor)
-- **Pasax Sentinel**: [https://pasax.is-a.dev/docs/pasax-sentinel](https://pasax.is-a.dev/docs/pasax-sentinel)
-- **Core Platform**: [https://pasax.is-a.dev/docs/core](https://pasax.is-a.dev/docs/core)
+- **Pasax Security Monitor**: [https://pasax.web.id/docs/pasax-secure-monitor](https://pasax.web.id/docs/pasax-secure-monitor)
+- **Pasax Sentinel**: [https://pasax.web.id/docs/pasax-sentinel](https://pasax.web.id/docs/pasax-sentinel)
+- **Core Platform**: [https://pasax.web.id/docs/core](https://pasax.web.id/docs/core)
 
 ## Konfigurasi Lingkungan (Wajib Ada)
 
 - **Portal Web Dokumentasi Publik**:
-  - `pasax-secure-monitor`: `https://pasax.is-a.dev/docs/pasax-secure-monitor`
-  - Dokumen bab spesifik: `https://pasax.is-a.dev/docs/pasax-secure-monitor/<SLUG>`
+  - `pasax-secure-monitor`: `https://pasax.web.id/docs/pasax-secure-monitor`
+  - Dokumen bab spesifik: `https://pasax.web.id/docs/pasax-secure-monitor/<SLUG>`
 - **API Endpoint**: `https://pasax-service.vercel.app/api/v1/docs` (atau `http://localhost:3000/api/v1/docs` saat pengembangan lokal `pasax-api`).
 - **Kunci Akses**: Header `X-Docs-Key` — dibaca dari berkas `.DOCS_SYNC_KEY` di folder skill ini (`DOCS_SYNC_KEY=psk_docs_live_sync_key_9f8e7d:...`).
 - **Database Backend**: Neon Serverless PostgreSQL (`docs` table di branch `production`).
 - **Target Produk**:
-  - `pasax-secure-monitor`: Dokumentasi paket Laravel WAF (`content/pasax-secure-monitor/docs/` -> web: `https://pasax.is-a.dev/docs/pasax-secure-monitor`).
-  - `pasax-sentinel`: Dokumentasi daemon Linux Go & kernel nftables (`content/pasax-sentinel/docs/` -> web: `https://pasax.is-a.dev/docs/pasax-sentinel`).
-  - `core`: Dokumentasi arsitektur platform suite & cloud console (`content/docs/` -> web: `https://pasax.is-a.dev/docs/core`).
+  - `pasax-secure-monitor`: Dokumentasi paket Laravel WAF (`content/pasax-secure-monitor/docs/` -> web: `https://pasax.web.id/docs/pasax-secure-monitor`).
+  - `pasax-sentinel`: Dokumentasi daemon Linux Go & kernel nftables (`content/pasax-sentinel/docs/` -> web: `https://pasax.web.id/docs/pasax-sentinel`).
+  - `core`: Dokumentasi arsitektur platform suite & cloud console (`content/docs/` -> web: `https://pasax.web.id/docs/core`).
 
 ---
 
@@ -157,10 +157,10 @@ Setelah membuat, mengubah, atau menghapus dokumen:
    ```
 2. Pastikan respons berstatus `200 OK` dan data tersimpan di Neon PostgreSQL.
 3. Kunjungi URL halaman web publik:
-   - **Halaman Utama Dokumentasi**: [https://pasax.is-a.dev/docs/pasax-secure-monitor](https://pasax.is-a.dev/docs/pasax-secure-monitor)
-   - **Dokumen Bab**: `https://pasax.is-a.dev/docs/pasax-secure-monitor/<SLUG>`
-     (contoh: `https://pasax.is-a.dev/docs/pasax-secure-monitor/getting-started/installation`)
-   - Untuk Sentinel: `https://pasax.is-a.dev/docs/pasax-sentinel/<SLUG>`
+   - **Halaman Utama Dokumentasi**: [https://pasax.web.id/docs/pasax-secure-monitor](https://pasax.web.id/docs/pasax-secure-monitor)
+   - **Dokumen Bab**: `https://pasax.web.id/docs/pasax-secure-monitor/<SLUG>`
+     (contoh: `https://pasax.web.id/docs/pasax-secure-monitor/getting-started/installation`)
+   - Untuk Sentinel: `https://pasax.web.id/docs/pasax-sentinel/<SLUG>`
 
 ---
 
