@@ -77,6 +77,35 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
+        // Dedicated VirtualBox VPS Lab Accounts
+        if (email === "admin@virtualbox.com") {
+          if (password !== "Tiram@1993" && password !== "123") return null
+          return {
+            id: "usr_vbox_admin",
+            name: "VirtualBox VPS Admin (Armada)",
+            email: email,
+            role: "Admin",
+          }
+        }
+        if (email === "programmer@virtualbox.com") {
+          if (password !== "Tiram@1993" && password !== "123") return null
+          return {
+            id: "usr_vbox_programmer",
+            name: "Budi Pratama (Programmer L7)",
+            email: email,
+            role: "Programmer",
+          }
+        }
+        if (email === "maintainer@virtualbox.com") {
+          if (password !== "Tiram@1993" && password !== "123") return null
+          return {
+            id: "usr_vbox_maintainer",
+            name: "Ahmad Fauzi (Server Maintainer / DevOps)",
+            email: email,
+            role: "DevOps",
+          }
+        }
+
         // Check if user already exists in persistent store (e.g. created by Admin as Programmer or DevOps)
         const existing = pasaxStore.getUser(email)
         if (existing) {
@@ -95,9 +124,14 @@ export const authOptions: NextAuthOptions = {
         if (email.includes("programmer") || email.includes("developer")) {
           role = "Programmer"
           name = email.split("@")[0].toUpperCase() + " (Programmer L7)"
-        } else if (email.includes("devops") || email.includes("maintainer") || email.includes("sysadmin")) {
+        } else if (
+          email.includes("devops") ||
+          email.includes("maintainer") ||
+          email.includes("sysadmin")
+        ) {
           role = "DevOps"
-          name = email.split("@")[0].toUpperCase() + " (DevOps / Server Maintainer)"
+          name =
+            email.split("@")[0].toUpperCase() + " (DevOps / Server Maintainer)"
         } else if (email.includes("superadmin")) {
           role = "Superadmin"
         }
@@ -147,8 +181,15 @@ export const authOptions: NextAuthOptions = {
           token.role = stored.role
         } else if (em === "pasak.dev@gmail.com") {
           token.role = "Superadmin"
-        } else if (em === "robyfull.dev@gmail.com") {
+        } else if (
+          em === "robyfull.dev@gmail.com" ||
+          em === "admin@virtualbox.com"
+        ) {
           token.role = "Admin"
+        } else if (em === "programmer@virtualbox.com") {
+          token.role = "Programmer"
+        } else if (em === "maintainer@virtualbox.com") {
+          token.role = "DevOps"
         }
       }
       return token

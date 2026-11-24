@@ -218,7 +218,10 @@ export function UsersManagementClient({
       const res = await fetch("/api/admin/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          createdBy: currentRole === "Admin" ? "admin@virtualbox.com" : undefined,
+        }),
       })
       const result = await res.json()
       if (!res.ok || result.status !== "success") {
@@ -344,7 +347,8 @@ export function UsersManagementClient({
         u.name.toLowerCase().includes(q) ||
         u.email.toLowerCase().includes(q) ||
         (u.organization && u.organization.toLowerCase().includes(q)) ||
-        (u.phone && u.phone.includes(q))
+        (u.phone && u.phone.includes(q)) ||
+        (u.createdBy && u.createdBy.toLowerCase().includes(q))
 
       const matchRole = roleFilter === "all" || u.role === roleFilter
       const matchPlan = planFilter === "all" || u.plan === planFilter
@@ -598,16 +602,26 @@ export function UsersManagementClient({
                         {/* 1. Name & Email */}
                         <TableCell className="font-mono">
                           <div className="flex flex-col">
-                            <span className="font-heading font-black text-foreground text-sm flex items-center gap-1.5">
+                            <span className="font-heading font-black text-foreground text-sm flex items-center gap-1.5 flex-wrap">
                               {u.name}
                               {u.role === "Superadmin" && (
                                 <span title="Superadministrator Utama" className="text-amber-500 text-xs">👑</span>
+                              )}
+                              {u.email === "admin@virtualbox.com" && (
+                                <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500 text-[10px] font-bold py-0 px-1.5">
+                                  👑 Admin VPS VirtualBox
+                                </Badge>
                               )}
                             </span>
                             <span className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                               <Mail className="size-3" />
                               {u.email}
                             </span>
+                            {u.createdBy && (
+                              <span className="text-[10px] text-sky-600 dark:text-sky-400 font-medium flex items-center gap-1 mt-0.5">
+                                👶 Dibuat oleh Admin: <code>{u.createdBy}</code>
+                              </span>
+                            )}
                             <span className="text-[10px] text-muted-foreground/80 mt-0.5">
                               ID: <code className="bg-muted px-1 py-0.5 rounded">{u.id}</code>
                             </span>

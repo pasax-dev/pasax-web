@@ -123,6 +123,7 @@ export interface ManagedUser {
   phone?: string
   organization?: string
   assignedNodeIds?: string[]
+  createdBy?: string
 }
 
 export interface ManagedLicenseKey {
@@ -418,6 +419,53 @@ function ensureInitialized() {
   globalStore.users.set(userProgrammer.id, userProgrammer)
   globalStore.users.set(userDevOps.id, userDevOps)
 
+  // Dedicated VirtualBox VPS Environment Accounts
+  const userVBoxAdmin: ManagedUser = {
+    id: "usr_vbox_admin",
+    name: "VirtualBox VPS Admin (Armada)",
+    email: "admin@virtualbox.com",
+    role: "Admin",
+    plan: "pro",
+    serverQuota: 5,
+    isActive: true,
+    createdAt: now - 5 * 86400,
+    organization: "VirtualBox Lab Infrastructure",
+    phone: "+62 811-2233-4455",
+    assignedNodeIds: ["nod_69be496c5f1b"],
+  }
+  const userVBoxProgrammer: ManagedUser = {
+    id: "usr_vbox_programmer",
+    name: "Budi Pratama (Programmer L7)",
+    email: "programmer@virtualbox.com",
+    role: "Programmer",
+    plan: "pro",
+    serverQuota: 2,
+    isActive: true,
+    createdAt: now - 3 * 86400,
+    organization: "VirtualBox Lab - Dev Team",
+    phone: "+62 812-9988-7766",
+    assignedNodeIds: ["nod_69be496c5f1b"],
+    createdBy: "admin@virtualbox.com",
+  }
+  const userVBoxMaintainer: ManagedUser = {
+    id: "usr_vbox_maintainer",
+    name: "Ahmad Fauzi (Server Maintainer / DevOps)",
+    email: "maintainer@virtualbox.com",
+    role: "DevOps",
+    plan: "pro",
+    serverQuota: 2,
+    isActive: true,
+    createdAt: now - 3 * 86400,
+    organization: "VirtualBox Lab - Infra Team",
+    phone: "+62 813-5544-3322",
+    assignedNodeIds: ["nod_69be496c5f1b"],
+    createdBy: "admin@virtualbox.com",
+  }
+
+  globalStore.users.set(userVBoxAdmin.id, userVBoxAdmin)
+  globalStore.users.set(userVBoxProgrammer.id, userVBoxProgrammer)
+  globalStore.users.set(userVBoxMaintainer.id, userVBoxMaintainer)
+
   // 2. Seed License Keys (Multi-App, Multi-Node Supported)
   const keyTenant: ManagedLicenseKey = {
     id: "lic_tenant_pro_01",
@@ -585,6 +633,47 @@ function ensureInitialized() {
             root: "/var/www/portal/public",
           },
         ],
+      },
+    },
+  })
+
+  globalStore.nodes.set("nod_69be496c5f1b", {
+    node_id: "nod_69be496c5f1b",
+    project_id: "usr_vbox_admin",
+    hostname: "vbox-ubuntu-vps",
+    ip_v4: "10.0.2.15",
+    os: "Ubuntu 26.04.1 LTS (x86_64)",
+    uptime_seconds: 86400,
+    memory_used_percent: 36.4,
+    cpu_used_percent: 12.8,
+    disk_used_percent: 45.0,
+    last_seen: now - 10,
+    status: "ONLINE",
+    assignedUserIds: ["usr_superadmin", "usr_admin", "usr_vbox_admin", "usr_vbox_programmer", "usr_vbox_maintainer"],
+    ssh_port: 2222,
+    description: "VirtualBox Lab VM Target - Ubuntu 26.04 LTS (Laravel 13 CRUD & Sentinel)",
+    tags: ["VirtualBox", "Lab-VPS", "Ubuntu-26.04", "Production-Test"],
+    createdAt: now - 2 * 86400,
+    webservers: {
+      nginx: {
+        installed: true,
+        running: true,
+        version: "1.28.3",
+        vhosts: [
+          {
+            domain: "127.0.0.1:8088 / products",
+            ssl_status: "valid",
+            ssl_expires_at: now + 90 * 86400,
+            upstream: "unix:/run/php/php8.5-fpm.sock",
+            root: "/var/www/pasax-app/public",
+          },
+        ],
+      },
+      apache2: {
+        installed: false,
+        running: false,
+        version: null,
+        vhosts: [],
       },
     },
   })
@@ -925,6 +1014,7 @@ export const pasaxStore = {
     organization?: string
     phone?: string
     assignedNodeIds?: string[]
+    createdBy?: string
   }): { user: ManagedUser; defaultKey: ManagedLicenseKey } {
     ensureInitialized()
     const now = Math.floor(Date.now() / 1000)
@@ -947,6 +1037,7 @@ export const pasaxStore = {
       organization: payload.organization,
       phone: payload.phone,
       assignedNodeIds: nodeIds,
+      createdBy: payload.createdBy,
     }
     globalStore.users.set(id, user)
 

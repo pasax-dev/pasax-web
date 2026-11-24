@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
       assignedNodeIds: Array.isArray(body.assignedNodeIds)
         ? body.assignedNodeIds
         : [],
+      createdBy: body.createdBy,
     })
 
     return NextResponse.json({
@@ -110,16 +111,7 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    let id = searchParams.get("id")
-
-    if (!id) {
-      try {
-        const body = await req.json()
-        id = body?.id
-      } catch {
-        // body might be empty
-      }
-    }
+    const id = searchParams.get("id")
 
     if (!id) {
       return NextResponse.json(
@@ -131,17 +123,14 @@ export async function DELETE(req: NextRequest) {
     const deleted = pasaxStore.deleteUser(id)
     if (!deleted) {
       return NextResponse.json(
-        {
-          status: "error",
-          message: "Pengguna tidak ditemukan atau gagal dihapus.",
-        },
+        { status: "error", message: "Pengguna tidak ditemukan." },
         { status: 404 }
       )
     }
 
     return NextResponse.json({
       status: "success",
-      message: "Pengguna berhasil dihapus.",
+      message: "Pengguna dan akses lisensi berhasil dihapus.",
     })
   } catch (err: any) {
     return NextResponse.json(
