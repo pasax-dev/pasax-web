@@ -6,18 +6,18 @@
     "url": "https://pasax.web.id"
   },
   "title": {
-    "id": "Peluncuran Seksi Publik Katalog Penanganan Ancaman dan Matriks Komparasi",
-    "en": "Launch of Public Threat Defense Catalog and Matrix Comparison Section"
+    "id": "Peluncuran Seksi Publik Penanganan Ancaman, Model Evaluasi 14 Hari, dan Pengujian Otomatis",
+    "en": "Launch of Public Threat Defense Catalog, 14-Day Evaluation Model, and Automated Verification"
   },
   "body": {
-    "id": "Menambahkan seksi interaktif komprehensif pada beranda publik yang merinci 12 vektor ancaman nyata yang ditangani secara otomatis oleh Pasak lintas aplikasi web, kernel Linux, integritas berkas rahasia, dan armada server.",
-    "en": "Introduced a comprehensive interactive section on the public homepage detailing 12 real threat vectors automatically mitigated by Pasak across web applications, Linux kernel, file integrity, and server fleets."
+    "id": "Menambahkan seksi interaktif komprehensif pada beranda publik yang merinci 12 vektor ancaman nyata yang ditangani secara otomatis oleh Pasak, memperbarui model langganan menjadi 2 paket utama dengan masa evaluasi uji coba 14 hari berfitur penuh, serta menghadirkan rangkaian pengujian otomatis antarmuka untuk menjamin kestabilan seluruh alur operasional pengguna.",
+    "en": "Introduced a comprehensive interactive section on the public homepage detailing 12 real-world threat vectors automatically mitigated by Pasak, transitioned to a streamlined 2-tier subscription model featuring full 14-day evaluation access, and delivered automated end-to-end interface verification across all operational workflows."
   },
   "items": [
     {
       "type": "new",
-      "id": "Katalog Interaktif Penanganan Ancaman: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran .env, hingga OOM crash) lengkap dengan skenario masalah dan solusi otomatis Pasak.",
-      "en": "Interactive Threat Defense Catalog: Detailed breakdowns of 12 real-world threat vectors (SQLi, XSS, RCE, DDoS, Shodan recon, honeypots, .env leaks, and OOM crashes) with problem contexts and automatic mitigation."
+      "id": "Katalog Interaktif Penanganan Ancaman: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran berkas rahasia, hingga OOM crash) lengkap dengan skenario masalah dan solusi otomatis Pasak.",
+      "en": "Interactive Threat Defense Catalog: Detailed breakdowns of 12 real-world threat vectors (SQLi, XSS, RCE, DDoS, Shodan recon, honeypots, sensitive file leaks, and memory exhaustion) with context and automated mitigation."
     },
     {
       "type": "new",
@@ -25,9 +25,19 @@
       "en": "Category Filters & Live Comparison Matrix: Users can filter defense vectors across domains (Web L7, Kernel L3/L4, Filesystem FIM, and Fleet SOC) and switch seamlessly to a direct tabular comparison."
     },
     {
+      "type": "new",
+      "id": "Penyelarasan Model Paket Langganan 2-Tier: Menyederhanakan penawaran menjadi 2 tingkat layanan utama dengan evaluasi uji coba Pro 14 hari berfitur lengkap, diiringi mode pengawasan masa tenggang yang ramah pengguna saat evaluasi berakhir.",
+      "en": "2-Tier Pricing & 14-Day Pro Trial: Streamlined plans into 2 primary tiers featuring full 14-day Pro evaluation access and a user-friendly grace period observation mode upon trial conclusion."
+    },
+    {
       "type": "improvement",
-      "id": "Panduan Nilai Tambah per Segmen Pengguna: Rangkuman dampak proteksi nyata yang dirasakan oleh pengembang Laravel, pengelola WordPress, pengembang API Docker, dan tim DevOps multi-server.",
-      "en": "Audience Value Guidance: Tailored breakdowns highlighting concrete security benefits for Laravel developers, WordPress administrators, Docker microservices, and multi-server DevOps teams."
+      "id": "Rangkaian Pengujian Otomatis Antarmuka Pengguna: Menambahkan validasi skenario pengujian komprehensif yang memverifikasi seluruh siklus akun (evaluasi, multi-server, kepatuhan kedaulatan data, hingga masa tenggang) secara otomatis dan konsisten.",
+      "en": "Automated Interface Verification Suite: Added comprehensive test automation validating all operational user states (trial, multi-server clusters, sovereign data compliance, and grace period) with end-to-end reliability."
+    },
+    {
+      "type": "fix",
+      "id": "Penyempurnaan Semantik Elemen Tombol Antarmuka: Menyelaraskan komponen tombol pada panel pengelolaan server untuk memastikan interaksi antarmuka yang mulus tanpa peringatan konsol peramban.",
+      "en": "Interface Button Semantics Refinement: Aligned button primitives across server management tables to ensure seamless user interactions and clean browser console execution."
     }
   ]
 }
