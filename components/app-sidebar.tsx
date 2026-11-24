@@ -25,6 +25,7 @@ import {
   Layers,
   LayoutDashboard,
   Activity,
+  TerminalSquare,
 } from "lucide-react"
 
 const defaultAdminUser = {
@@ -80,6 +81,12 @@ const adminNavSections: NavMainSection[] = [
         url: "/node",
         icon: Server,
         badge: "FLEET",
+      },
+      {
+        title: "Web Terminal (SSH)",
+        url: "/terminal",
+        icon: TerminalSquare,
+        badge: "SSH",
       },
       {
         title: "Tim VPS & Pengguna",
@@ -163,6 +170,12 @@ const userNavSections: NavMainSection[] = [
         url: "/node",
         icon: Server,
         badge: "ACTIVE",
+      },
+      {
+        title: "Web Terminal (SSH)",
+        url: "/terminal",
+        icon: TerminalSquare,
+        badge: "SSH",
       },
       {
         title: "Insiden & Serangan",
@@ -261,18 +274,17 @@ export function AppSidebar({
 }) {
   const currentUser = user || defaultAdminUser
   const isUserRole = role === "User"
-  const isAdminOrSuper = role === "Superadmin" || role === "Admin"
   const teams = isUserRole
     ? userTeams
     : role === "Superadmin"
-    ? adminTeams
-    : [
-        {
-          name: currentUser.name,
-          plan: `${role} • Scoped Workspace`,
-          logo: ShieldCheck,
-        },
-      ]
+      ? adminTeams
+      : [
+          {
+            name: currentUser.name,
+            plan: `${role} • Scoped Workspace`,
+            logo: ShieldCheck,
+          },
+        ]
   const sections = isUserRole ? userNavSections : adminNavSections
   const projects: NavProjectItem[] =
     workspaces !== undefined
@@ -292,8 +304,8 @@ export function AppSidebar({
             },
           ]
       : isUserRole
-      ? userProjects
-      : adminProjects
+        ? userProjects
+        : adminProjects
 
   return (
     <Sidebar collapsible="icon" className="font-sans" {...props}>

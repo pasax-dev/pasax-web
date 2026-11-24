@@ -4,7 +4,7 @@ import Link from "next/link"
 
 import * as React from "react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
@@ -37,6 +37,7 @@ import {
   AlertCircle,
   RefreshCw,
   Terminal,
+  TerminalSquare,
   Globe,
   Filter,
   Clock,
@@ -920,6 +921,18 @@ export function NodesManagementClient({
                           {/* 7. Actions */}
                           <TableCell className="px-2.5 py-2.5 text-right">
                             <div className="flex items-center justify-end gap-0.5">
+                              <Link
+                                href={`/terminal?nodeId=${encodeURIComponent(node.node_id)}`}
+                                title="Buka Web Terminal SSH (Xterm.js)"
+                                className={buttonVariants({
+                                  variant: "ghost",
+                                  size: "icon",
+                                  className:
+                                    "size-7 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-600",
+                                })}
+                              >
+                                <TerminalSquare className="size-3.5" />
+                              </Link>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -1101,16 +1114,30 @@ export function NodesManagementClient({
                   </div>
                 </CardContent>
 
-                <div className="flex items-center justify-between border-t border-border bg-muted/20 p-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => openInstallGuide(node)}
-                    className="border-sky-500/40 font-mono text-xs text-sky-500 hover:bg-sky-500/10"
-                  >
-                    <Terminal className="mr-1.5 size-3" />
-                    Pasang Agen
-                  </Button>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-muted/20 p-3">
+                  <div className="flex items-center gap-1.5">
+                    <Link
+                      href={`/terminal?nodeId=${encodeURIComponent(node.node_id)}`}
+                      className={buttonVariants({
+                        variant: "outline",
+                        size: "sm",
+                        className:
+                          "border-emerald-500/40 font-mono text-xs text-emerald-600 hover:bg-emerald-500/10 dark:text-emerald-400",
+                      })}
+                    >
+                      <TerminalSquare className="mr-1.5 size-3" />
+                      Terminal
+                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openInstallGuide(node)}
+                      className="border-sky-500/40 font-mono text-xs text-sky-500 hover:bg-sky-500/10"
+                    >
+                      <Terminal className="mr-1.5 size-3" />
+                      Agen
+                    </Button>
+                  </div>
 
                   {isAdminOrSuperadmin && (
                     <div className="flex items-center gap-1">
