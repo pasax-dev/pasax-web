@@ -1,41 +1,43 @@
-import type { ReactNode } from 'react';
-import { asMarkdown } from 'fumadocs-core/server';
-import { copy, plain } from '../../content';
-import { block, heading, url } from '../../markdown';
-import { Figure, FigureHeader } from '../../ui/figure';
-import { FIRST, LAYOUTS, TABS, THEME_NAMES, THEMES } from './data';
-import { createHardware } from './hardware';
-import { loadInks } from './presets';
-import { FIRST_POSE, hangRopes } from './scene';
-import { Stage } from './stage';
+import type { ReactNode } from "react"
+import { asMarkdown } from "fumadocs-core/server"
+import { copy, plain } from "../../content"
+import { block, heading, url } from "../../markdown"
+import { Figure, FigureHeader } from "../../ui/figure"
+import { FIRST, LAYOUTS, TABS, THEME_NAMES, THEMES } from "./data"
+import { createHardware } from "./hardware"
+import { loadInks } from "./presets"
+import { FIRST_POSE, hangRopes } from "./scene"
+import { Stage } from "./stage"
 
 export async function Style() {
   if (asMarkdown()) {
-    const lines = ['- Configure defense topologies and telemetry colorways across fleet nodes.'];
+    const lines = [
+      "- Configure defense topologies and telemetry colorways across fleet nodes.",
+    ]
     for (const id of TABS) {
-      const tab = copy.style.tabs[id];
-      lines.push(`- [${tab.label}](${url(tab.href)}): ${tab.line}`);
-      if (id !== 'layouts') continue;
+      const tab = copy.style.tabs[id]
+      lines.push(`- [${tab.label}](${url(tab.href)}): ${tab.line}`)
+      if (id !== "layouts") continue
       lines.push(
-        `  - Node Topologies: ${LAYOUTS.map((layout) => layout.name).join(', ')}`,
-        `  - [Colorways](${url('/docs/core')}): ${THEMES.map((theme) => `${THEME_NAMES[theme]} (\`${theme}\`)`).join(', ')}, each a theme imported as \`@import 'pasax/themes/<id>.css';\``,
-      );
+        `  - Node Topologies: ${LAYOUTS.map((layout) => layout.name).join(", ")}`,
+        `  - [Telemetry Colorways](${url("/docs/core")}): ${THEMES.map((theme) => `${THEME_NAMES[theme]} (\`${theme}\`)`).join(", ")}, each a SOC telemetry palette profile.`
+      )
     }
     return block`
       ${heading(copy.style)}
 
-      ${plain([copy.style.claims.join(' ')])}
+      ${plain([copy.style.claims.join(" ")])}
 
-      ${lines.join('\n')}
-    `;
+      ${lines.join("\n")}
+    `
   }
 
-  const table = await loadInks();
+  const table = await loadInks()
   // the desk's cables in its first pose settle here, once: the browser takes their shape
-  const ropes = hangRopes(FIRST_POSE);
+  const ropes = hangRopes(FIRST_POSE)
   // the long title's claims carry it on in its light voice, a line each after a lit lamp of the
   // switches' kind
-  const claims: ReactNode[] = [];
+  const claims: ReactNode[] = []
   for (const claim of copy.style.claims) {
     claims.push(
       <li key={claim} className="relative ps-5.5 md:ps-3.5">
@@ -44,14 +46,22 @@ export async function Style() {
           className="absolute top-3.25 left-0 size-2 -translate-y-1/2 rounded-full border border-lp-ink bg-lp-sun after:absolute after:top-px after:left-px after:size-0.5 after:bg-lp-yellow"
         />
         {claim}
-      </li>,
-    );
+      </li>
+    )
   }
 
   return (
-    <Figure id="style" aria-label="Style" status={`profile: ${FIRST}`} className="pb-16">
+    <Figure
+      id="style"
+      aria-label="Style"
+      status={`profile: ${FIRST}`}
+      className="pb-16"
+    >
       <div className="px-(--lp-gutter) pt-16 pb-10 md:pb-12">
-        <FigureHeader title={copy.style.title} className="max-w-6xl! text-pretty!" />
+        <FigureHeader
+          title={copy.style.title}
+          className="max-w-6xl! text-pretty!"
+        />
         <ul className="mt-6 flex flex-col gap-3 text-base font-light tracking-tight text-pretty">
           {claims}
         </ul>
@@ -62,5 +72,5 @@ export async function Style() {
         hardware={createHardware()}
       />
     </Figure>
-  );
+  )
 }

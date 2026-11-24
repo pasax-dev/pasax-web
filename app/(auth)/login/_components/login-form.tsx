@@ -154,7 +154,7 @@ function LoginFormInner() {
         </div>
 
         {/* Demo Credentials Helper Box */}
-        <div className="rounded-base border border-dashed border-border/80 bg-muted/40 p-2.5 font-mono text-[10px] text-muted-foreground">
+        {/*<div className="rounded-base border border-dashed border-border/80 bg-muted/40 p-2.5 font-mono text-[10px] text-muted-foreground">
           <div className="flex items-center gap-1 font-bold text-foreground">
             <KeyRound className="size-3 text-main" />
             <span>Kredensial Demo Superadmin:</span>
@@ -169,7 +169,7 @@ function LoginFormInner() {
               <code className="text-foreground">Tiram@1993</code>
             </div>
           </div>
-        </div>
+        </div>*/}
 
         <button
           type="submit"
