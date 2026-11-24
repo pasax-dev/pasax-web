@@ -1,5 +1,5 @@
 import * as React from "react"
-import { AppSidebar } from "@/components/app-sidebar"
+import { AppSidebar, type SidebarWorkspaceItem } from "@/components/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,6 +30,7 @@ export interface AdminTemplateProps {
     role?: string
   }
   role?: string
+  workspaces?: SidebarWorkspaceItem[]
   children?: React.ReactNode
   headerExtra?: React.ReactNode
 }
@@ -62,12 +63,13 @@ export function AdminTemplate({
   breadcrumbs,
   user,
   role = "Superadmin",
+  workspaces,
   children,
   headerExtra,
 }: AdminTemplateProps) {
   return (
     <SidebarProvider>
-      <AppSidebar user={user} role={role} />
+      <AppSidebar user={user} role={role} workspaces={workspaces} />
       <SidebarInset className="relative min-h-screen overflow-x-hidden font-sans">
         {/* Subtle Cyber Tactical Grid Pattern & Ambient Radial Glow */}
         <div

@@ -124,6 +124,7 @@ export function ThreatsClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           node_id: targetNode,
+          project_id: nodes[0]?.project_id || "default",
           event_type: pick.type,
           threat_type: pick.type,
           severity: pick.severity,
@@ -171,7 +172,7 @@ export function ThreatsClient({
   const totalThreats = threats.length
   const criticalThreats = threats.filter((t) => t.severity === "CRITICAL").length
   const highThreats = threats.filter((t) => t.severity === "HIGH").length
-  const blockedCount = 1420 + threats.length
+  const blockedCount = currentRole === "Superadmin" ? 1420 + threats.length : threats.length
 
   return (
     <div className="flex flex-col gap-6 py-2">

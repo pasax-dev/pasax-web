@@ -38,8 +38,9 @@ interface LicensesClientProps {
 export function LicensesClient({
   initialKeys = [],
   initialUsers = [],
-  currentRole = "Superadmin",
+  currentRole = "Admin",
 }: LicensesClientProps) {
+  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
   const [keys, setKeys] = React.useState<ManagedLicenseKey[]>(initialKeys)
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -219,19 +220,21 @@ export function LicensesClient({
             <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Sinkronkan
           </Button>
-          <Button
-            size="sm"
-            onClick={() => {
-              setKeyName("")
-              setFormError(null)
-              setFormSuccess(null)
-              setIsCreateOpen(true)
-            }}
-            className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
-          >
-            <Plus className="mr-1.5 size-4 stroke-[3]" />
-            Terbitkan Token Baru
-          </Button>
+          {isAdminOrSuperadmin && (
+            <Button
+              size="sm"
+              onClick={() => {
+                setKeyName("")
+                setFormError(null)
+                setFormSuccess(null)
+                setIsCreateOpen(true)
+              }}
+              className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+            >
+              <Plus className="mr-1.5 size-4 stroke-[3]" />
+              Terbitkan Token Baru
+            </Button>
+          )}
         </div>
       </div>
 
@@ -254,7 +257,7 @@ export function LicensesClient({
               <span className="font-mono text-xs text-muted-foreground">APLIKASI LARAVEL</span>
               <Globe className="size-4 text-emerald-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">{totalConnectedApps || 3}</div>
+            <div className="mt-2 font-mono text-2xl font-black text-emerald-500">{totalConnectedApps}</div>
             <p className="mt-1 font-mono text-[11px] text-muted-foreground">Terproteksi WAF Layer 7</p>
           </CardContent>
         </Card>
@@ -265,7 +268,7 @@ export function LicensesClient({
               <span className="font-mono text-xs text-muted-foreground">NODE SENTINEL</span>
               <Server className="size-4 text-sky-500" />
             </div>
-            <div className="mt-2 font-mono text-2xl font-black text-sky-500">{totalConnectedNodes || 3}</div>
+            <div className="mt-2 font-mono text-2xl font-black text-sky-500">{totalConnectedNodes}</div>
             <p className="mt-1 font-mono text-[11px] text-muted-foreground">Terhubung ke konsol SOC</p>
           </CardContent>
         </Card>
@@ -407,22 +410,35 @@ export function LicensesClient({
                       </TableCell>
 
                       <TableCell className="text-center">
-                        <button
-                          onClick={() => handleToggle(k)}
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border transition-colors ${
-                            k.isActive
-                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
-                              : "bg-rose-500/10 text-rose-500 border-rose-500/40"
-                          }`}
-                        >
-                          <Power className="size-2.5" />
-                          <span>{k.isActive ? "AKTIF" : "NONAKTIF"}</span>
-                        </button>
+                        {isAdminOrSuperadmin ? (
+                          <button
+                            onClick={() => handleToggle(k)}
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border transition-colors ${
+                              k.isActive
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
+                                : "bg-rose-500/10 text-rose-500 border-rose-500/40"
+                            }`}
+                          >
+                            <Power className="size-2.5" />
+                            <span>{k.isActive ? "AKTIF" : "NONAKTIF"}</span>
+                          </button>
+                        ) : (
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
+                              k.isActive
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
+                                : "bg-rose-500/10 text-rose-500 border-rose-500/40"
+                            }`}
+                          >
+                            <Power className="size-2.5" />
+                            <span>{k.isActive ? "AKTIF" : "NONAKTIF"}</span>
+                          </span>
+                        )}
                       </TableCell>
 
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          {k.isTrial && (
+                          {isAdminOrSuperadmin && k.isTrial && (
                             <>
                               <Button
                                 variant="outline"
@@ -458,14 +474,16 @@ export function LicensesClient({
                             <Terminal className="mr-1 size-3" />
                             Integrasi
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleDelete(k.id)}
-                            className="size-7 text-destructive"
-                          >
-                            <Trash2 className="size-3.5" />
-                          </Button>
+                          {isAdminOrSuperadmin && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleDelete(k.id)}
+                              className="size-7 text-destructive"
+                            >
+                              <Trash2 className="size-3.5" />
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

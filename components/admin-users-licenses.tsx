@@ -55,12 +55,15 @@ import {
 export function AdminUsersLicenses({
   initialUsers = [],
   initialKeys = [],
-  currentRole = "Superadmin",
+  currentRole = "Admin",
+  currentEmail = "",
 }: {
   initialUsers?: ManagedUser[]
   initialKeys?: ManagedLicenseKey[]
   currentRole?: string
+  currentEmail?: string
 }) {
+  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [keys, setKeys] = React.useState<ManagedLicenseKey[]>(initialKeys)
   const [copiedKey, setCopiedKey] = React.useState<string | null>(null)
@@ -70,7 +73,7 @@ export function AdminUsersLicenses({
   const [isCreateUserOpen, setIsCreateUserOpen] = React.useState(false)
   const [userName, setUserName] = React.useState("")
   const [userEmail, setUserEmail] = React.useState("")
-  const [userRole, setUserRole] = React.useState<"Superadmin" | "Admin" | "User">("User")
+  const [userRole, setUserRole] = React.useState<"Superadmin" | "Admin" | "Programmer" | "DevOps" | "Teknis" | "Support" | "User">("Programmer")
   const [userPlan, setUserPlan] = React.useState<"free" | "pro" | "enterprise">("pro")
   const [userOrg, setUserOrg] = React.useState("")
   const [customQuota, setCustomQuota] = React.useState("10")
@@ -104,6 +107,7 @@ export function AdminUsersLicenses({
           plan: userPlan,
           serverQuota: parseInt(customQuota) || (userPlan === "enterprise" ? 100 : userPlan === "pro" ? 10 : 1),
           organization: userOrg,
+          createdBy: currentRole === "Admin" ? currentEmail : undefined,
         }),
       })
 
@@ -194,25 +198,27 @@ export function AdminUsersLicenses({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            size="sm"
-            onClick={() => setIsCreateUserOpen(true)}
-            className="gap-2 font-mono text-xs font-bold border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] bg-main text-main-foreground hover:translate-x-0.5 hover:translate-y-0.5"
-          >
-            <Plus className="size-4" />
-            <span>Daftarkan Pengguna</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setIsGenerateKeyOpen(true)}
-            className="gap-2 font-mono text-xs font-bold border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] bg-background hover:translate-x-0.5 hover:translate-y-0.5"
-          >
-            <Key className="size-4 text-amber-500" />
-            <span>Generate Token Baru</span>
-          </Button>
-        </div>
+        {isAdminOrSuperadmin && (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              onClick={() => setIsCreateUserOpen(true)}
+              className="gap-2 font-mono text-xs font-bold border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] bg-main text-main-foreground hover:translate-x-0.5 hover:translate-y-0.5"
+            >
+              <Plus className="size-4" />
+              <span>Daftarkan Pengguna</span>
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setIsGenerateKeyOpen(true)}
+              className="gap-2 font-mono text-xs font-bold border-2 border-border shadow-[2px_2px_0px_0px_var(--border)] bg-background hover:translate-x-0.5 hover:translate-y-0.5"
+            >
+              <Key className="size-4 text-amber-500" />
+              <span>Generate Token Baru</span>
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Tabs Menu */}
@@ -327,18 +333,22 @@ export function AdminUsersLicenses({
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setSelectedUserId(u.id)
-                              setIsGenerateKeyOpen(true)
-                            }}
-                            className="h-7 px-2 font-mono text-[10px] font-bold border border-border shadow-[1px_1px_0px_0px_var(--border)]"
-                          >
-                            <Key className="mr-1 size-3 text-amber-500" />
-                            Beri Token
-                          </Button>
+                          {isAdminOrSuperadmin ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedUserId(u.id)
+                                setIsGenerateKeyOpen(true)
+                              }}
+                              className="h-7 px-2 font-mono text-[10px] font-bold border border-border shadow-[1px_1px_0px_0px_var(--border)]"
+                            >
+                              <Key className="mr-1 size-3 text-amber-500" />
+                              Beri Token
+                            </Button>
+                          ) : (
+                            <span className="font-mono text-[10px] text-muted-foreground">Akun Anda</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -448,17 +458,21 @@ export function AdminUsersLicenses({
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleToggleKey(k.id)}
-                            className={`h-7 px-2 font-mono text-[10px] font-bold border border-border shadow-[1px_1px_0px_0px_var(--border)] ${
-                              k.isActive ? "hover:bg-rose-500/10 hover:text-rose-600" : "hover:bg-emerald-500/10 hover:text-emerald-600"
-                            }`}
-                          >
-                            <Power className="mr-1 size-3" />
-                            {k.isActive ? "Revoke" : "Aktifkan"}
-                          </Button>
+                          {isAdminOrSuperadmin ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleToggleKey(k.id)}
+                              className={`h-7 px-2 font-mono text-[10px] font-bold border border-border shadow-[1px_1px_0px_0px_var(--border)] ${
+                                k.isActive ? "hover:bg-rose-500/10 hover:text-rose-600" : "hover:bg-emerald-500/10 hover:text-emerald-600"
+                              }`}
+                            >
+                              <Power className="mr-1 size-3" />
+                              {k.isActive ? "Revoke" : "Aktifkan"}
+                            </Button>
+                          ) : (
+                            <span className="font-mono text-[10px] text-muted-foreground">Hanya baca</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -516,9 +530,15 @@ export function AdminUsersLicenses({
                   onChange={(e) => setUserRole(e.target.value as any)}
                   className="mt-1 w-full rounded-base border-2 border-border bg-background px-3 py-2 font-mono text-xs text-foreground"
                 >
+                  <option value="Programmer">Programmer (App L7)</option>
+                  <option value="DevOps">DevOps (Server Maintainer)</option>
+                  <option value="Admin">Admin (Co-Admin / SecOps)</option>
+                  <option value="Teknis">Teknis</option>
+                  <option value="Support">Support</option>
                   <option value="User">User (Tenant)</option>
-                  <option value="Admin">Admin (SecOps)</option>
-                  <option value="Superadmin">Superadmin (Chief SOC)</option>
+                  {currentRole === "Superadmin" && (
+                    <option value="Superadmin">Superadmin (Chief SOC)</option>
+                  )}
                 </select>
               </div>
 

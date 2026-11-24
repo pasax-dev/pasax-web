@@ -44,7 +44,7 @@ export function SiteHeader({
   const user = session?.user
   const name = user?.name || "Operator SOC"
   const email = user?.email || "operator@pasax.id"
-  const role = (user as any)?.role || "Superadmin"
+  const role = (user as any)?.role || "User"
   const avatar = (user as any)?.image || "/avatars/admin.jpg"
 
   const initials =

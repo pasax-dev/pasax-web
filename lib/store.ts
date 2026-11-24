@@ -397,6 +397,7 @@ function ensureInitialized() {
     organization: "Dev App Team",
     phone: "+62 813-2233-4455",
     assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A"],
+    createdBy: "robyfull.dev@gmail.com",
   }
   const userDevOps: ManagedUser = {
     id: "usr_devops_team",
@@ -410,6 +411,7 @@ function ensureInitialized() {
     organization: "Infrastructure & Cloud Ops",
     phone: "+62 818-7788-9900",
     assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A", "nd_02JK9A1B234YTR8C7D0S52ZY0B"],
+    createdBy: "robyfull.dev@gmail.com",
   }
 
   globalStore.users.set(user1.id, user1)
@@ -500,8 +502,61 @@ function ensureInitialized() {
     subscriptionStatus: "active",
   }
 
+  const keyFleetAdmin: ManagedLicenseKey = {
+    id: "lic_fleet_admin_01",
+    userId: user2.id,
+    userEmail: user2.email,
+    userName: user2.name,
+    key: "psk_live_77c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2",
+    name: "SecOps Fleet Admin Key",
+    isActive: true,
+    createdAt: now - 40 * 86400,
+    connectedNodesCount: 3,
+    connectedAppsCount: 1,
+    lastUsedAt: now - 90,
+    isTrial: false,
+    subscriptionStatus: "active",
+  }
+
+  const keyStartup: ManagedLicenseKey = {
+    id: "lic_startup_pro_01",
+    userId: user4.id,
+    userEmail: user4.email,
+    userName: user4.name,
+    key: "psk_live_33e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8",
+    name: "Fintech Sandbox Trial Key",
+    isActive: true,
+    createdAt: now - 5 * 86400,
+    connectedNodesCount: 1,
+    connectedAppsCount: 1,
+    lastUsedAt: now - 300,
+    isTrial: true,
+    trialEndsAt: now + 9 * 86400,
+    subscriptionStatus: "trialing",
+  }
+
+  const keyVBoxAdmin: ManagedLicenseKey = {
+    id: "lic_vbox_pro_01",
+    userId: userVBoxAdmin.id,
+    userEmail: userVBoxAdmin.email,
+    userName: userVBoxAdmin.name,
+    key: "psk_live_88a1b2c3d4e5f60718293a4b5c6d7e8f",
+    name: "VirtualBox VPS Lab Token",
+    isActive: true,
+    createdAt: now - 2 * 86400,
+    connectedNodesCount: 1,
+    connectedAppsCount: 1,
+    lastUsedAt: now - 30,
+    isTrial: true,
+    trialEndsAt: now + 12 * 86400,
+    subscriptionStatus: "trialing",
+  }
+
   globalStore.licenseKeys.set(keyTenant.id, keyTenant)
   globalStore.licenseKeys.set(keyAdmin.id, keyAdmin)
+  globalStore.licenseKeys.set(keyFleetAdmin.id, keyFleetAdmin)
+  globalStore.licenseKeys.set(keyStartup.id, keyStartup)
+  globalStore.licenseKeys.set(keyVBoxAdmin.id, keyVBoxAdmin)
 
   // 3. Seed Connected Web Apps (e.g. Laravel with APP_NAME & APP_URL)
   const app1: ConnectedApp = {
@@ -649,7 +704,7 @@ function ensureInitialized() {
     disk_used_percent: 45.0,
     last_seen: now - 10,
     status: "ONLINE",
-    assignedUserIds: ["usr_superadmin", "usr_admin", "usr_vbox_admin", "usr_vbox_programmer", "usr_vbox_maintainer"],
+    assignedUserIds: ["usr_superadmin", "usr_vbox_admin", "usr_vbox_programmer", "usr_vbox_maintainer"],
     ssh_port: 2222,
     description: "VirtualBox Lab VM Target - Ubuntu 26.04 LTS (Laravel 13 CRUD & Sentinel)",
     tags: ["VirtualBox", "Lab-VPS", "Ubuntu-26.04", "Production-Test"],
@@ -772,6 +827,20 @@ function ensureInitialized() {
         mitigation_action_taken: "DECOY_CAPTURED_IP_FLAGGED",
       },
       timestamp: now - 3600,
+    },
+    {
+      id: "thr_vbox_501",
+      node_id: "nod_69be496c5f1b",
+      project_id: "usr_vbox_admin",
+      event_type: "WAF_INSTANT_BLOCK",
+      severity: "CRITICAL",
+      details: {
+        attacker_ip: "194.26.29.112",
+        attack_pattern: "SQL Injection & XSS Payload Probe on /products?search=...",
+        url: "/products?search=%3Cscript%3Ealert(1)%3C/script%3E",
+        mitigation_action_taken: "NFTABLES_KERNEL_DROP_APPLIED (0.14ms)",
+      },
+      timestamp: now - 120,
     }
   )
 
@@ -921,6 +990,7 @@ export const pasaxStore = {
     const webservers = payload.webservers || {}
 
     const updated: NodeTelemetry = {
+      ...(existing || {}),
       node_id: nodeId,
       project_id: payload.project_id || existing?.project_id || "prj_default",
       hostname: sys.hostname || existing?.hostname || "vps-host-" + nodeId.slice(-4),
@@ -929,8 +999,10 @@ export const pasaxStore = {
       uptime_seconds: sys.uptime_seconds ?? existing?.uptime_seconds ?? 3600,
       memory_used_percent: sys.memory_used_percent ?? existing?.memory_used_percent ?? 50,
       cpu_used_percent: sys.cpu_used_percent ?? existing?.cpu_used_percent ?? 10,
+      disk_used_percent: sys.disk_used_percent ?? existing?.disk_used_percent,
       last_seen: payload.timestamp || Math.floor(Date.now() / 1000),
       status: "ONLINE",
+      assignedUserIds: existing?.assignedUserIds,
       webservers: {
         nginx: webservers.nginx || existing?.webservers?.nginx,
         apache2: webservers.apache2 || existing?.webservers?.apache2,
@@ -1318,7 +1390,7 @@ export const pasaxStore = {
     ensureInitialized()
     let user = this.getUser(userEmailOrId)
     if (!user) {
-      user = Array.from(globalStore.users.values()).find((u) => u.role === "User") || {
+      user = {
         id: "usr_guest",
         name: "Pengguna Layanan",
         email: userEmailOrId,
@@ -1327,30 +1399,63 @@ export const pasaxStore = {
         serverQuota: 10,
         isActive: true,
         createdAt: Math.floor(Date.now() / 1000),
+        assignedNodeIds: [],
       }
     }
 
-    const plan = SUBSCRIPTION_PLANS.find((p) => p.id === user.plan) || SUBSCRIPTION_PLANS[1]
-    const keys = this.getLicenseKeys(user.id)
-    const apps = this.getConnectedApps(user.id)
+    const emailLower = user.email.toLowerCase()
+    const teamUsers =
+      user.role === "Admin"
+        ? Array.from(globalStore.users.values()).filter(
+            (u) => u.id === user!.id || u.createdBy?.toLowerCase() === emailLower
+          )
+        : [user]
+    const teamUserIds = new Set(teamUsers.map((u) => u.id))
+    const teamNodeIds = new Set(teamUsers.flatMap((u) => u.assignedNodeIds || []))
+
+    const plan = SUBSCRIPTION_PLANS.find((p) => p.id === user.plan) || SUBSCRIPTION_PLANS[0]
+    const keys =
+      user.role === "Superadmin"
+        ? this.getLicenseKeys()
+        : this.getLicenseKeys().filter((k) => teamUserIds.has(k.userId) || k.userEmail.toLowerCase() === emailLower)
+    const allApps = this.getConnectedApps()
+    const apps =
+      user.role === "Superadmin"
+        ? allApps
+        : allApps.filter((a) => teamUserIds.has(a.userId) || (a.nodeId && teamNodeIds.has(a.nodeId)))
     const allNodes = this.getNodes()
-    const userNodes = allNodes.filter((n) => n.project_id === user.id || n.project_id === "usr_client_kominfo")
+    const userNodes =
+      user.role === "Superadmin"
+        ? allNodes
+        : allNodes.filter(
+            (n) =>
+              teamNodeIds.has(n.node_id) ||
+              (n.project_id && teamUserIds.has(n.project_id)) ||
+              n.assignedUserIds?.some((uid) => teamUserIds.has(uid))
+          )
+    const userNodeIds = new Set(userNodes.map((n) => n.node_id))
     const allThreats = this.getThreats(100)
-    const userThreats = allThreats.filter((t) => t.project_id === user.id || userNodes.some((n) => n.node_id === t.node_id))
+    const userThreats =
+      user.role === "Superadmin"
+        ? allThreats
+        : allThreats.filter(
+            (t) => userNodeIds.has(t.node_id) || (t.project_id && teamUserIds.has(t.project_id))
+          )
     const blocklist = this.getBlocklist()
 
+    const quota = Math.max(1, user.serverQuota || 1)
     return {
       user,
       plan,
       keys,
       apps,
-      nodes: userNodes.length > 0 ? userNodes : allNodes.slice(0, 2),
-      threats: userThreats.length > 0 ? userThreats : allThreats.slice(0, 5),
+      nodes: userNodes,
+      threats: userThreats,
       blocklist,
       usage: {
-        nodesUsed: userNodes.length > 0 ? userNodes.length : 2,
+        nodesUsed: userNodes.length,
         nodesQuota: user.serverQuota,
-        nodesPercent: Math.round(((userNodes.length > 0 ? userNodes.length : 2) / user.serverQuota) * 100),
+        nodesPercent: Math.min(100, Math.round((userNodes.length / quota) * 100)),
         appsCount: apps.length,
       },
     }

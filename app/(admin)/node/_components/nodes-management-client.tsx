@@ -66,8 +66,9 @@ interface NodesManagementClientProps {
 export function NodesManagementClient({
   initialNodes = [],
   initialUsers = [],
-  currentRole = "Superadmin",
+  currentRole = "Admin",
 }: NodesManagementClientProps) {
+  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
   const [nodes, setNodes] = React.useState<NodeTelemetry[]>(initialNodes)
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -396,14 +397,16 @@ export function NodesManagementClient({
             <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Sinkronkan
           </Button>
-          <Button
-            size="sm"
-            onClick={openRegisterDialog}
-            className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
-          >
-            <Plus className="mr-1.5 size-4 stroke-[3]" />
-            Daftarkan VPS Baru
-          </Button>
+          {isAdminOrSuperadmin && (
+            <Button
+              size="sm"
+              onClick={openRegisterDialog}
+              className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+            >
+              <Plus className="mr-1.5 size-4 stroke-[3]" />
+              Daftarkan VPS Baru
+            </Button>
+          )}
         </div>
       </div>
 
@@ -413,10 +416,22 @@ export function NodesManagementClient({
           <div className="space-y-1 max-w-2xl">
             <div className="flex items-center gap-2 font-heading text-sm font-black text-foreground">
               <ShieldCheck className="size-4.5 text-main" />
-              <span>Monitoring Terpusat Seluruh Armada VPS (Admin View)</span>
+              <span>
+                {isAdminOrSuperadmin
+                  ? `Monitoring Armada VPS Milik Anda (${currentRole} View)`
+                  : `Monitoring Node VPS yang Ditugaskan (${currentRole} View)`}
+              </span>
             </div>
             <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-              Sebagai Admin, Anda dapat memantau <strong>SEMUA node VPS</strong> yang aktif dalam ekosistem, memeriksa beban resource hardware &amp; kernel nftables secara real-time, serta mengatur tim <strong>Programmer Aplikasi</strong> dan <strong>Server Maintainer (DevOps)</strong> pada setiap server.
+              {isAdminOrSuperadmin ? (
+                <>
+                  Anda memantau <strong>node VPS milik akun Anda</strong> serta penugasan untuk tim <strong>Programmer Aplikasi</strong> dan <strong>Server Maintainer (DevOps)</strong> yang Anda buat.
+                </>
+              ) : (
+                <>
+                  Anda memantau <strong>node VPS yang ditugaskan</strong> kepada akun Anda oleh Admin armada.
+                </>
+              )}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -702,13 +717,15 @@ export function NodesManagementClient({
                                 </div>
                               )}
 
-                              <button
-                                onClick={() => openAssignUsersDialog(node)}
-                                className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
-                              >
-                                <Users className="size-3" />
-                                <span>{assignedUsers.length > 0 ? "Atur Pemegang VPS" : "+ Tugaskan Pengguna"}</span>
-                              </button>
+                              {isAdminOrSuperadmin && (
+                                <button
+                                  onClick={() => openAssignUsersDialog(node)}
+                                  className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
+                                >
+                                  <Users className="size-3" />
+                                  <span>{assignedUsers.length > 0 ? "Atur Pemegang VPS" : "+ Tugaskan Pengguna"}</span>
+                                </button>
+                              )}
                             </div>
                           </TableCell>
 
@@ -762,24 +779,28 @@ export function NodesManagementClient({
                               >
                                 <Terminal className="size-3.5" />
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => openEditDialog(node)}
-                                title="Edit VPS"
-                                className="size-8"
-                              >
-                                <Edit className="size-3.5" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => openDeleteDialog(node)}
-                                title="Hapus VPS"
-                                className="size-8 text-destructive hover:bg-destructive/10"
-                              >
-                                <Trash2 className="size-3.5" />
-                              </Button>
+                              {isAdminOrSuperadmin && (
+                                <>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => openEditDialog(node)}
+                                    title="Edit VPS"
+                                    className="size-8"
+                                  >
+                                    <Edit className="size-3.5" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => openDeleteDialog(node)}
+                                    title="Hapus VPS"
+                                    className="size-8 text-destructive hover:bg-destructive/10"
+                                  >
+                                    <Trash2 className="size-3.5" />
+                                  </Button>
+                                </>
+                              )}
                             </div>
                           </TableCell>
                         </TableRow>
@@ -856,12 +877,14 @@ export function NodesManagementClient({
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-[11px] text-muted-foreground">Pemegang VPS:</span>
-                      <button
-                        onClick={() => openAssignUsersDialog(node)}
-                        className="text-[10px] text-main hover:underline font-bold"
-                      >
-                        + Atur Pemegang
-                      </button>
+                      {isAdminOrSuperadmin && (
+                        <button
+                          onClick={() => openAssignUsersDialog(node)}
+                          className="text-[10px] text-main hover:underline font-bold"
+                        >
+                          + Atur Pemegang
+                        </button>
+                      )}
                     </div>
                     {assignedUsers.length === 0 ? (
                       <span className="text-muted-foreground italic text-[11px]">Belum ada pemegang</span>
@@ -907,24 +930,26 @@ export function NodesManagementClient({
                     Pasang Agen
                   </Button>
 
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => openEditDialog(node)}
-                      className="size-8"
-                    >
-                      <Edit className="size-3.5" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => openDeleteDialog(node)}
-                      className="size-8 text-destructive"
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
-                  </div>
+                  {isAdminOrSuperadmin && (
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openEditDialog(node)}
+                        className="size-8"
+                      >
+                        <Edit className="size-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => openDeleteDialog(node)}
+                        className="size-8 text-destructive"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </Card>
             )

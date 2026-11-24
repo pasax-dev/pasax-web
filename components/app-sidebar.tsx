@@ -243,19 +243,57 @@ const userProjects: NavProjectItem[] = [
   },
 ]
 
+export interface SidebarWorkspaceItem {
+  name: string
+  url: string
+  badge: string
+}
+
 export function AppSidebar({
   user,
   role = "Superadmin",
+  workspaces,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   user?: { name: string; email: string; avatar?: string; role?: string }
   role?: string
+  workspaces?: SidebarWorkspaceItem[]
 }) {
   const currentUser = user || defaultAdminUser
   const isUserRole = role === "User"
-  const teams = isUserRole ? userTeams : adminTeams
+  const isAdminOrSuper = role === "Superadmin" || role === "Admin"
+  const teams = isUserRole
+    ? userTeams
+    : role === "Superadmin"
+    ? adminTeams
+    : [
+        {
+          name: currentUser.name,
+          plan: `${role} • Scoped Workspace`,
+          logo: ShieldCheck,
+        },
+      ]
   const sections = isUserRole ? userNavSections : adminNavSections
-  const projects = isUserRole ? userProjects : adminProjects
+  const projects: NavProjectItem[] =
+    workspaces !== undefined
+      ? workspaces.length > 0
+        ? workspaces.map((w) => ({
+            name: w.name,
+            url: w.url,
+            icon: <Server className="size-3.5" />,
+            badge: w.badge,
+          }))
+        : [
+            {
+              name: "Belum ada VPS terhubung",
+              url: "/node",
+              icon: <Server className="size-3.5" />,
+              badge: "SETUP",
+            },
+          ]
+      : isUserRole
+      ? userProjects
+      : adminProjects
 
   return (
     <Sidebar collapsible="icon" className="font-sans" {...props}>

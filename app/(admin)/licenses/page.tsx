@@ -1,8 +1,15 @@
+import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { AdminTemplate } from "@/components/admin-template"
 import { LicensesClient } from "./_components/licenses-client"
-import { pasaxStore } from "@/lib/store"
+import { pasaxCloud } from "@/lib/pasax-cloud"
+import {
+  ensureSessionUser,
+  getScopedLicenseKeys,
+  getScopedUsers,
+  getScopedNodes,
+} from "@/lib/tenant-scope"
 
 export const dynamic = "force-dynamic"
 
@@ -13,23 +20,30 @@ export const metadata = {
 
 export default async function LicensesPage() {
   const session = await getServerSession(authOptions)
+  const ctx = ensureSessionUser(session)
 
-  const userRole = (session?.user as any)?.role || "Superadmin"
-  const userEmail = session?.user?.email || "admin@pasax.id"
-  const userName = session?.user?.name || "Roby Kartis (Chief SOC)"
+  if (!ctx) {
+    redirect("/login")
+  }
 
-  const [keys, users] = await Promise.all([
-    Promise.resolve(pasaxStore.getLicenseKeys()),
-    Promise.resolve(pasaxStore.getUsers()),
-  ])
+  const allNodes = await pasaxCloud.fetchNodes()
+  const nodes = getScopedNodes(session, allNodes)
+  const keys = getScopedLicenseKeys(session)
+  const users = getScopedUsers(session)
+  const workspaces = nodes.slice(0, 3).map((n) => ({
+    name: n.hostname,
+    url: "/node",
+    badge: n.status,
+  }))
 
   return (
     <AdminTemplate
-      role={userRole}
+      role={ctx.role}
+      workspaces={workspaces}
       user={{
-        name: userName,
-        email: userEmail,
-        role: userRole,
+        name: ctx.user.name,
+        email: ctx.email,
+        role: ctx.role,
         avatar: "/avatars/admin.jpg",
       }}
       breadcrumbs={[
@@ -40,7 +54,7 @@ export default async function LicensesPage() {
       <LicensesClient
         initialKeys={keys}
         initialUsers={users}
-        currentRole={userRole}
+        currentRole={ctx.role}
       />
     </AdminTemplate>
   )

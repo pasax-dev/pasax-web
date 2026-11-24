@@ -1,13 +1,33 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { pasaxStore } from "@/lib/store"
+import {
+  ensureSessionUser,
+  getScopedLicenseKeys,
+  canManageTargetUser,
+} from "@/lib/tenant-scope"
 
 export const dynamic = "force-dynamic"
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    const ctx = ensureSessionUser(session)
+    if (!ctx) {
+      return NextResponse.json(
+        { status: "error", message: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
     const { searchParams } = new URL(req.url)
     const userId = searchParams.get("userId") || undefined
-    const keys = pasaxStore.getLicenseKeys(userId)
+    const scopedKeys = getScopedLicenseKeys(session)
+    const keys = userId
+      ? scopedKeys.filter((k) => k.userId === userId)
+      : scopedKeys
+
     return NextResponse.json({ status: "success", data: keys })
   } catch (err: any) {
     return NextResponse.json(
@@ -19,18 +39,41 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json()
-    if (!body.userId) {
+    const session = await getServerSession(authOptions)
+    const ctx = ensureSessionUser(session)
+    if (!ctx) {
       return NextResponse.json(
-        {
-          status: "error",
-          message: "Target userId diperlukan untuk membuat license key.",
-        },
-        { status: 400 }
+        { status: "error", message: "Unauthorized" },
+        { status: 401 }
       )
     }
 
-    const key = pasaxStore.createLicenseKey(body.userId, body.name)
+    if (ctx.role !== "Superadmin" && ctx.role !== "Admin") {
+      return NextResponse.json(
+        {
+          status: "error",
+          message:
+            "Hanya Admin atau Superadmin yang dapat menerbitkan lisensi.",
+        },
+        { status: 403 }
+      )
+    }
+
+    const body = await req.json()
+    const targetUserId = body.userId || ctx.user.id
+
+    if (!canManageTargetUser(session, targetUserId)) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message:
+            "Anda tidak memiliki izin menerbitkan lisensi untuk pengguna ini.",
+        },
+        { status: 403 }
+      )
+    }
+
+    const key = pasaxStore.createLicenseKey(targetUserId, body.name)
     if (!key) {
       return NextResponse.json(
         { status: "error", message: "User tidak ditemukan." },
@@ -53,11 +96,42 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    const ctx = ensureSessionUser(session)
+    if (!ctx) {
+      return NextResponse.json(
+        { status: "error", message: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    if (ctx.role !== "Superadmin" && ctx.role !== "Admin") {
+      return NextResponse.json(
+        {
+          status: "error",
+          message:
+            "Hanya Admin atau Superadmin yang dapat mengubah status lisensi.",
+        },
+        { status: 403 }
+      )
+    }
+
     const body = await req.json()
     if (!body.id) {
       return NextResponse.json(
         { status: "error", message: "ID license diperlukan." },
         { status: 400 }
+      )
+    }
+
+    const scopedKeys = getScopedLicenseKeys(session)
+    if (!scopedKeys.some((k) => k.id === body.id)) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Anda tidak memiliki akses ke lisensi ini.",
+        },
+        { status: 403 }
       )
     }
 
@@ -125,6 +199,25 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
+    const ctx = ensureSessionUser(session)
+    if (!ctx) {
+      return NextResponse.json(
+        { status: "error", message: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+
+    if (ctx.role !== "Superadmin" && ctx.role !== "Admin") {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Hanya Admin atau Superadmin yang dapat mencabut lisensi.",
+        },
+        { status: 403 }
+      )
+    }
+
     const { searchParams } = new URL(req.url)
     let id = searchParams.get("id")
 
@@ -141,6 +234,17 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json(
         { status: "error", message: "ID license diperlukan." },
         { status: 400 }
+      )
+    }
+
+    const scopedKeys = getScopedLicenseKeys(session)
+    if (!scopedKeys.some((k) => k.id === id)) {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Anda tidak memiliki akses untuk menghapus lisensi ini.",
+        },
+        { status: 403 }
       )
     }
 

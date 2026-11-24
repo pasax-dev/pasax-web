@@ -132,8 +132,6 @@ export const authOptions: NextAuthOptions = {
           role = "DevOps"
           name =
             email.split("@")[0].toUpperCase() + " (DevOps / Server Maintainer)"
-        } else if (email.includes("superadmin")) {
-          role = "Superadmin"
         }
 
         // Auto-persist new self-registered user in pasaxStore as Admin with Pro Trial!
@@ -145,7 +143,7 @@ export const authOptions: NextAuthOptions = {
             plan: "pro", // 14-day Pro Trial
             serverQuota: 10,
             organization: "Tenant " + email.split("@")[0].toUpperCase(),
-            assignedNodeIds: ["nd_01HW8P9Y124XQW7V6B9R41ZX9A"],
+            assignedNodeIds: [],
           })
           return {
             id: created.user.id,
@@ -172,23 +170,29 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        token.id = (user as any).id
         token.role = (user as any).role ?? "Admin"
       }
       if (token.email) {
         const em = token.email.toLowerCase().trim()
         const stored = pasaxStore.getUser(em)
         if (stored) {
+          token.id = stored.id
           token.role = stored.role
         } else if (em === "pasak.dev@gmail.com") {
+          token.id = "usr_superadmin"
           token.role = "Superadmin"
-        } else if (
-          em === "robyfull.dev@gmail.com" ||
-          em === "admin@virtualbox.com"
-        ) {
+        } else if (em === "robyfull.dev@gmail.com") {
+          token.id = "usr_admin"
+          token.role = "Admin"
+        } else if (em === "admin@virtualbox.com") {
+          token.id = "usr_vbox_admin"
           token.role = "Admin"
         } else if (em === "programmer@virtualbox.com") {
+          token.id = "usr_vbox_programmer"
           token.role = "Programmer"
         } else if (em === "maintainer@virtualbox.com") {
+          token.id = "usr_vbox_maintainer"
           token.role = "DevOps"
         }
       }
@@ -196,6 +200,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
+        ;(session.user as any).id = token.id
         ;(session.user as any).role = token.role ?? "Admin"
       }
       return session

@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 import { pasaxCloud } from "@/lib/pasax-cloud"
+import { pasaxStore } from "@/lib/store"
+import { getScopedNodes } from "@/lib/tenant-scope"
 
 export const dynamic = "force-dynamic"
 
@@ -29,7 +33,34 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  const nodes = await pasaxCloud.fetchNodes()
-  return NextResponse.json(nodes)
+export async function GET(req: NextRequest) {
+  const session = await getServerSession(authOptions)
+  const allNodes = await pasaxCloud.fetchNodes()
+
+  if (session?.user) {
+    return NextResponse.json(getScopedNodes(session, allNodes))
+  }
+
+  const rawToken =
+    req.headers.get("x-api-key") ||
+    req.headers.get("authorization")?.replace(/^Bearer\s+/i, "")
+  if (rawToken) {
+    const keyRecord = pasaxStore.getLicenseKeyByToken(rawToken)
+    if (keyRecord) {
+      const owner = pasaxStore.getUser(keyRecord.userId)
+      if (owner) {
+        const fakeSession = {
+          user: {
+            id: owner.id,
+            email: owner.email,
+            role: owner.role,
+            name: owner.name,
+          },
+        }
+        return NextResponse.json(getScopedNodes(fakeSession, allNodes))
+      }
+    }
+  }
+
+  return NextResponse.json([], { status: 401 })
 }

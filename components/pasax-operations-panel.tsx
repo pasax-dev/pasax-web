@@ -86,8 +86,10 @@ export function PasaxOperationsPanel({
         fetch("/api/v1/events/threat?limit=50").then((r) => r.json()),
         fetch("/api/v1/threats/global-blocklist").then((r) => r.json()),
       ])
-      if (Array.isArray(resNodes)) setNodes(resNodes)
-      if (Array.isArray(resThreats)) setThreats(resThreats)
+      const nodeList = Array.isArray(resNodes) ? resNodes : resNodes?.data
+      if (Array.isArray(nodeList)) setNodes(nodeList)
+      const threatList = Array.isArray(resThreats) ? resThreats : resThreats?.data
+      if (Array.isArray(threatList)) setThreats(threatList)
       if (Array.isArray(resBlocklist)) setBlocklist(resBlocklist)
     } catch (err) {
       console.error("Failed to refresh Pasax telemetry:", err)
@@ -141,7 +143,7 @@ export function PasaxOperationsPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           node_id: targetNode,
-          project_id: "prj_prod_ecommerce",
+          project_id: nodes[0]?.project_id || "prj_default",
           event_type: chosen.event_type,
           severity: chosen.severity,
           details: chosen.details,

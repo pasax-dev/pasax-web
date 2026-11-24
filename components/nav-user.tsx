@@ -65,7 +65,7 @@ export function NavUser({
   const userName = user.name || session?.user?.name || "Operator SOC"
   const userEmail = user.email || session?.user?.email || "operator@pasax.id"
   const userAvatar = user.avatar || (session?.user as any)?.image || "/avatars/admin.jpg"
-  const userRole = user.role || (session?.user as any)?.role || "Superadmin"
+  const userRole = user.role || (session?.user as any)?.role || "User"
 
   const initials =
     userName

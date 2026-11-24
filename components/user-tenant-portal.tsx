@@ -73,8 +73,7 @@ export function UserTenantPortal({
   const [copiedEnv, setCopiedEnv] = React.useState(false)
 
   const primaryKey = data.keys[0]
-  const activeKey =
-    primaryKey?.key || "psk_live_f90c11e5c1125deebae571815a01384c"
+  const activeKey = primaryKey?.key || ""
 
   // Evaluasi Status Trial 14 Hari & Expired
   const nowMs = Date.now()
@@ -102,18 +101,17 @@ export function UserTenantPortal({
       ? Math.max(0, Math.ceil((trialEndMs - nowMs) / (1000 * 60 * 60 * 24)))
       : 14)
 
-  const totalThreatsCount =
-    data.threats.length > 0 ? 1420 + data.threats.length : 1420
+  const totalThreatsCount = data.threats.length
 
   const handleCopy = (text: string) => {
-    if (isExpired) return
+    if (isExpired || !text) return
     navigator.clipboard.writeText(text)
     setCopiedKey(text)
     setTimeout(() => setCopiedKey(null), 2000)
   }
 
   const handleCopyEnv = () => {
-    if (isExpired) return
+    if (isExpired || !activeKey) return
     const envSnippet = `APP_NAME=Laravel\nAPP_URL=http://localhost:8000\nPASAX_CLOUD_KEY=${activeKey}\nPASAX_CLOUD_URL=https://pasax-service.vercel.app`
     navigator.clipboard.writeText(envSnippet)
     setCopiedEnv(true)
@@ -352,12 +350,12 @@ export function UserTenantPortal({
               <code
                 className={`flex-1 overflow-x-auto rounded border border-border bg-muted px-2.5 py-1.5 font-mono text-xs font-bold ${isExpired ? "text-muted-foreground line-through" : "text-foreground"}`}
               >
-                {activeKey}
+                {activeKey || "Belum ada token lisensi aktif"}
               </code>
               <Button
                 size="sm"
                 variant="outline"
-                disabled={isExpired}
+                disabled={isExpired || !activeKey}
                 onClick={() => handleCopy(activeKey)}
                 className="h-8 border-2 border-border px-2.5 font-mono text-xs font-bold shadow-[1px_1px_0px_0px_var(--border)] disabled:cursor-not-allowed"
               >
@@ -391,7 +389,7 @@ export function UserTenantPortal({
               <Button
                 size="sm"
                 variant="ghost"
-                disabled={isExpired}
+                disabled={isExpired || !activeKey}
                 onClick={handleCopyEnv}
                 className="h-6 px-1.5 font-mono text-[10px] font-bold text-main hover:bg-main hover:text-main-foreground disabled:cursor-not-allowed"
               >
@@ -401,7 +399,7 @@ export function UserTenantPortal({
             <div className="space-y-0.5 rounded border border-border bg-secondary-background/80 p-2 font-mono text-[11px] text-foreground">
               <div>
                 PASAX_CLOUD_KEY=
-                {isExpired ? "psk_expired_renew_required" : activeKey}
+                {isExpired ? "psk_expired_renew_required" : activeKey || "<BELUM_ADA_TOKEN>"}
               </div>
               <div className="text-muted-foreground">
                 PASAX_CLOUD_URL=https://pasax-service.vercel.app

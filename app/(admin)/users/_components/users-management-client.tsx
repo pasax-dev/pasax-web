@@ -58,13 +58,16 @@ interface UsersManagementClientProps {
   initialUsers: ManagedUser[]
   initialNodes: NodeTelemetry[]
   currentRole?: string
+  currentEmail?: string
 }
 
 export function UsersManagementClient({
   initialUsers = [],
   initialNodes = [],
-  currentRole = "Superadmin",
+  currentRole = "Admin",
+  currentEmail = "",
 }: UsersManagementClientProps) {
+  const isAdminOrSuperadmin = currentRole === "Superadmin" || currentRole === "Admin"
   const [users, setUsers] = React.useState<ManagedUser[]>(initialUsers)
   const [nodes, setNodes] = React.useState<NodeTelemetry[]>(initialNodes)
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -220,7 +223,7 @@ export function UsersManagementClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          createdBy: currentRole === "Admin" ? "admin@virtualbox.com" : undefined,
+          createdBy: currentRole === "Admin" ? currentEmail : undefined,
         }),
       })
       const result = await res.json()
@@ -381,7 +384,13 @@ export function UsersManagementClient({
             </Badge>
           </div>
           <p className="mt-1 font-mono text-xs text-muted-foreground">
-            Sebagai Admin, Anda dapat membuat akun untuk <strong>Programmer Aplikasi (L7)</strong> dan <strong>Server Maintainer (DevOps L3/L4)</strong> yang bertugas di VPS armada.
+            {isAdminOrSuperadmin ? (
+              <>
+                Sebagai {currentRole}, Anda hanya melihat akun Anda sendiri serta tim (<strong>Programmer L7</strong> &amp; <strong>Server Maintainer</strong>) yang Anda buat.
+              </>
+            ) : (
+              <>Menampilkan informasi akun Anda serta penugasan node VPS yang diberikan oleh Admin armada.</>
+            )}
           </p>
         </div>
 
@@ -396,14 +405,16 @@ export function UsersManagementClient({
             <RefreshCw className={`mr-1.5 size-3.5 ${isLoading ? "animate-spin" : ""}`} />
             Sinkronkan
           </Button>
-          <Button
-            size="sm"
-            onClick={openCreateDialog}
-            className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
-          >
-            <Plus className="mr-1.5 size-4 stroke-[3]" />
-            Tambah Anggota Tim / VPS
-          </Button>
+          {isAdminOrSuperadmin && (
+            <Button
+              size="sm"
+              onClick={openCreateDialog}
+              className="border-2 bg-main text-black hover:bg-main/90 font-heading text-xs font-black shadow-[3px_3px_0px_0px_var(--border)]"
+            >
+              <Plus className="mr-1.5 size-4 stroke-[3]" />
+              Tambah Anggota Tim / VPS
+            </Button>
+          )}
         </div>
       </div>
 
@@ -704,13 +715,15 @@ export function UsersManagementClient({
                               </div>
                             )}
 
-                            <button
-                              onClick={() => openAssignDialog(u)}
-                              className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
-                            >
-                              <Server className="size-3" />
-                              <span>{assignedNodeList.length > 0 ? "Kelola Penugasan VPS" : "+ Tugaskan VPS"}</span>
-                            </button>
+                            {isAdminOrSuperadmin && (
+                              <button
+                                onClick={() => openAssignDialog(u)}
+                                className="font-mono text-[10px] text-main hover:underline flex items-center gap-1 font-bold w-fit"
+                              >
+                                <Server className="size-3" />
+                                <span>{assignedNodeList.length > 0 ? "Kelola Penugasan VPS" : "+ Tugaskan VPS"}</span>
+                              </button>
+                            )}
                           </div>
                         </TableCell>
 
@@ -731,42 +744,61 @@ export function UsersManagementClient({
 
                         {/* 6. Status Toggle */}
                         <TableCell className="text-center">
-                          <button
-                            onClick={() => handleToggleStatus(u)}
-                            title={u.isActive ? "Klik untuk nonaktifkan" : "Klik untuk aktifkan"}
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border transition-colors ${
-                              u.isActive
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/20"
-                                : "bg-rose-500/10 text-rose-500 border-rose-500/40 hover:bg-rose-500/20"
-                            }`}
-                          >
-                            <Power className="size-2.5" />
-                            <span>{u.isActive ? "AKTIF" : "SUSPENDED"}</span>
-                          </button>
+                          {isAdminOrSuperadmin ? (
+                            <button
+                              onClick={() => handleToggleStatus(u)}
+                              title={u.isActive ? "Klik untuk nonaktifkan" : "Klik untuk aktifkan"}
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border transition-colors ${
+                                u.isActive
+                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/20"
+                                  : "bg-rose-500/10 text-rose-500 border-rose-500/40 hover:bg-rose-500/20"
+                              }`}
+                            >
+                              <Power className="size-2.5" />
+                              <span>{u.isActive ? "AKTIF" : "SUSPENDED"}</span>
+                            </button>
+                          ) : (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
+                                u.isActive
+                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/40"
+                                  : "bg-rose-500/10 text-rose-500 border-rose-500/40"
+                              }`}
+                            >
+                              <Power className="size-2.5" />
+                              <span>{u.isActive ? "AKTIF" : "SUSPENDED"}</span>
+                            </span>
+                          )}
                         </TableCell>
 
                         {/* 7. Actions */}
                         <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openEditDialog(u)}
-                              title="Edit Pengguna"
-                              className="size-8"
-                            >
-                              <Edit className="size-3.5" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => openDeleteDialog(u)}
-                              title="Hapus Pengguna"
-                              className="size-8 text-destructive hover:bg-destructive/10"
-                            >
-                              <Trash2 className="size-3.5" />
-                            </Button>
-                          </div>
+                          {isAdminOrSuperadmin ? (
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => openEditDialog(u)}
+                                title="Edit Pengguna"
+                                className="size-8"
+                              >
+                                <Edit className="size-3.5" />
+                              </Button>
+                              {u.email.toLowerCase() !== currentEmail.toLowerCase() && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openDeleteDialog(u)}
+                                  title="Hapus Pengguna"
+                                  className="size-8 text-destructive hover:bg-destructive/10"
+                                >
+                                  <Trash2 className="size-3.5" />
+                                </Button>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="font-mono text-[10px] text-muted-foreground">Hanya baca</span>
+                          )}
                         </TableCell>
                       </TableRow>
                     )

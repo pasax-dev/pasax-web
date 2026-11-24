@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { AppSidebar } from "@/components/app-sidebar"
@@ -10,29 +11,48 @@ import { UserTenantPortal } from "@/components/user-tenant-portal"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { pasaxCloud } from "@/lib/pasax-cloud"
 import { pasaxStore } from "@/lib/store"
+import {
+  ensureSessionUser,
+  getScopedUsers,
+  getScopedNodes,
+  getScopedLicenseKeys,
+  getScopedThreats,
+} from "@/lib/tenant-scope"
 
 export const dynamic = "force-dynamic"
 
 export default async function Page() {
   const session = await getServerSession(authOptions)
+  const ctx = ensureSessionUser(session)
 
-  // Determine current user and role
-  const userRole = (session?.user as any)?.role || "Superadmin"
-  const userEmail = session?.user?.email || "superadmin@pasax.id"
-  const userName = session?.user?.name || "Roby Kartis (Chief SOC)"
+  if (!ctx) {
+    redirect("/login")
+  }
 
-  // Fetch all fleet telemetry in parallel
-  const [nodes, threats, blocklist] = await Promise.all([
+  const userRole = ctx.role
+  const userEmail = ctx.email
+  const userName = ctx.user.name
+
+  // Fetch all fleet telemetry in parallel, then scope strictly to the logged-in user
+  const [allNodes, allThreats, blocklist] = await Promise.all([
     pasaxCloud.fetchNodes(),
     pasaxCloud.fetchThreats(50),
     pasaxCloud.fetchBlocklist(),
   ])
 
-  const users = pasaxStore.getUsers()
-  const licenseKeys = pasaxStore.getLicenseKeys()
+  const users = getScopedUsers(session)
+  const nodes = getScopedNodes(session, allNodes)
+  const threats = getScopedThreats(session, allThreats, nodes)
+  const licenseKeys = getScopedLicenseKeys(session)
   const tenantOverview = pasaxStore.getUserTenantOverview(userEmail)
 
-  // Calculate vhosts count across all nodes
+  const workspaces = nodes.slice(0, 3).map((n) => ({
+    name: n.hostname,
+    url: "/node",
+    badge: n.status,
+  }))
+
+  // Calculate vhosts count across ONLY the logged-in user's nodes
   let vhostsCount = 0
   nodes.forEach((n) => {
     vhostsCount +=
@@ -46,6 +66,7 @@ export default async function Page() {
     <SidebarProvider>
       <AppSidebar
         role={userRole}
+        workspaces={workspaces}
         user={{
           name: userName,
           email: userEmail,
@@ -57,7 +78,7 @@ export default async function Page() {
         {/* Subtle Cyber Tactical Grid Pattern & Ambient Radial Glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#0099ff1f_1.2px,transparent_1.2px)] [background-size:24px_24px] dark:bg-[radial-gradient(#38bdf826_1.2px,transparent_1.2px)] opacity-90"
+          className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(#0099ff1f_1.2px,transparent_1.2px)] [background-size:24px_24px] opacity-90 dark:bg-[radial-gradient(#38bdf826_1.2px,transparent_1.2px)]"
         />
         <div
           aria-hidden="true"
@@ -76,27 +97,31 @@ export default async function Page() {
               </div>
             ) : (
               // ---------------------------------------------------------
-              // ROLE: SUPERADMIN & ADMIN (FULL SOC MASTER SUITE)
+              // ROLE: SUPERADMIN / ADMIN / TIM (SCOPED TO LOGGED-IN USER)
               // ---------------------------------------------------------
               <div className="flex flex-col gap-6 py-2 md:py-4">
-                {/* 1. Global Stat Cards */}
+                {/* 1. Scoped Stat Cards */}
                 <div id="overview">
                   <SectionCards
                     stats={{
-                      score: 98,
+                      score: nodes.length > 0 ? 98 : 100,
                       activeNodes: nodes.length,
                       vhostsCount: vhostsCount,
-                      totalBlocks: 1420 + threats.length,
+                      totalBlocks:
+                        userRole === "Superadmin"
+                          ? 1420 + threats.length
+                          : threats.length,
                     }}
                   />
                 </div>
 
-                {/* 2. Modul Pendaftaran User, Lisensi Multi-App & Model Bisnis */}
+                {/* 2. Modul Pengguna & Lisensi (Tersaring sesuai akun login & tim bentukan Admin) */}
                 <div id="auth-licenses">
                   <AdminUsersLicenses
                     initialUsers={users}
                     initialKeys={licenseKeys}
                     currentRole={userRole}
+                    currentEmail={userEmail}
                   />
                 </div>
 
@@ -115,18 +140,23 @@ export default async function Page() {
                 </div>
 
                 {/* 5. Pratinjau Perspektif Pelanggan (Tenant Portal Preview) */}
-                <div id="tenant-portal" className="border-t-2 border-border/80 pt-6">
-                  <div className="px-4 lg:px-6 mb-2">
+                <div
+                  id="tenant-portal"
+                  className="border-t-2 border-border/80 pt-6"
+                >
+                  <div className="mb-2 px-4 lg:px-6">
                     <div className="flex items-center gap-2">
                       <span className="font-heading text-lg font-black tracking-tight text-foreground">
-                        👁️ Pratinjau Portal Pelanggan (Tenant Customer View)
+                        👁️ Ringkasan Portal Akun &amp; Lisensi ({userName})
                       </span>
-                      <span className="font-mono text-[10px] bg-secondary-background border border-border px-2 py-0.5 rounded font-bold text-muted-foreground">
-                        MODE INSPEKSI ADMIN
+                      <span className="rounded border border-border bg-secondary-background px-2 py-0.5 font-mono text-[10px] font-bold text-muted-foreground">
+                        ISOLASI DATA TENANT
                       </span>
                     </div>
-                    <p className="font-mono text-xs text-muted-foreground mt-0.5">
-                      Tampilan berikut adalah persis yang dilihat oleh pelanggan/user saat mengakses dashboard.
+                    <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+                      Menampilkan hanya informasi VPS, kunci lisensi, aplikasi,
+                      dan ancaman milik akun Anda
+                      {userRole === "Admin" ? " serta tim yang Anda buat" : ""}.
                     </p>
                   </div>
                   <UserTenantPortal initialData={tenantOverview} />
