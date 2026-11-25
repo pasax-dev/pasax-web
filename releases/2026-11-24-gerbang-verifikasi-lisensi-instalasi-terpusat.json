@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-24",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasax.web.id"
+  },
+  "title": {
+    "id": "Gerbang Verifikasi Kunci Lisensi untuk Instalasi Aplikasi Web",
+    "en": "Centralized License Key Verification Gateway for Application Setup"
+  },
+  "body": {
+    "id": "Menghadirkan titik verifikasi kunci lisensi resmi pada portal agar proses instalasi komponen keamanan di aplikasi web memvalidasi keaslian dan status langganan akun secara langsung.",
+    "en": "Added an official license key verification gateway on the portal so web application security module installations validate account authenticity and active subscription status online."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Verifikasi Kunci Lisensi Saat Instalasi: Memastikan setiap pemasangan pengaman aplikasi web terhubung dengan kunci lisensi aktif yang terdaftar resmi pada portal.",
+      "en": "Installation-Time License Verification: Ensures every web security module installation connects using an active license key registered in the portal."
+    }
+  ]
+}

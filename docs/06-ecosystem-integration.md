@@ -20,7 +20,7 @@ This chapter details how Laravel applications protected by `pasax/secure-monitor
 | **Laravel Compatibility** | `^10.0 \| ^11.0 \| ^12.0 \| ^13.0` |
 | **Design Standard** | 100% Pure PHP & Decoupled Standalone Library (Zero NPM) |
 | **Local Bridge** | Unix Domain Socket `/run/pasax/agent.sock` or `http://127.0.0.1:9099` |
-| **Cloud Bridge** | `PasaxCloudService` connecting to `https://pasax-service.vercel.app` |
+| **Cloud Bridge** | `PasaxCloudService` connecting to `https://service.pasax.web.id` |
 
 ---
 
@@ -70,7 +70,7 @@ PASAX_BLOCK_ENFORCEMENT=true
 
 # Connect to Pasax Cloud Dashboard
 PASAX_CLOUD_ENABLED=true
-PASAX_CLOUD_URL=https://pasax-service.vercel.app
+PASAX_CLOUD_URL=https://service.pasax.web.id
 PASAX_CLOUD_KEY=psk_live_8f9c2d14b901a1c3
 
 # Local Sentinel Daemon Unix Socket

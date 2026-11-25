@@ -1,6 +1,6 @@
 {
   "name": "pasax-web",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "type": "module",
   "private": true,
   "scripts": {
@@ -63,7 +63,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ssh2": "^1.15.6",
-    "@types/three": "^0.187.0",
+    "@types/three": "^187.0.0",
     "@types/topojson-client": "^3.1.5",
     "@types/topojson-specification": "^1.0.5",
     "eslint": "^9",

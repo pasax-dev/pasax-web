@@ -69,7 +69,7 @@ Jika daemon `pasax-sentinel` belum ada atau belum berjalan sebagai service:
    ```bash
    curl -sSL https://raw.githubusercontent.com/pasax-dev/pasax-sentinel/main/scripts/install.sh | sudo bash -s -- \
      --token="<TOKEN_LISENSI_USER>" \
-     --cloud-url="https://pasax-service.vercel.app"
+     --cloud-url="https://service.pasax.web.id"
    ```
    *(Gunakan token lisensi pengguna dari dashboard https://pasax-web.vercel.app).*
 
@@ -80,7 +80,7 @@ Jika daemon `pasax-sentinel` belum ada atau belum berjalan sebagai service:
      path: "/run/pasax/agent.sock"
      permissions: "0666"
    cloud:
-     base_url: "https://pasax-service.vercel.app"
+     base_url: "https://service.pasax.web.id"
    ```
 
 3. Pastikan service berjalan aktif:
@@ -153,7 +153,7 @@ Jalankan rangkaian pengujian berikut untuk memastikan seluruh rantai keamanan be
 4. **Verifikasi Sinkronisasi Cloud Telemetry**:
    Cek apakah node server dan event ancaman tercatat di Cloud API:
    ```bash
-   curl -s https://pasax-service.vercel.app/api/v1/nodes | grep -o "$(hostname)"
+   curl -s https://service.pasax.web.id/api/v1/nodes | grep -o "$(hostname)"
    ```
    Buka dashboard publik [https://pasax-web.vercel.app/threats-map](https://pasax-web.vercel.app/threats-map) untuk memantau status VPS secara langsung di peta ancaman.
 
@@ -215,5 +215,5 @@ Setelah menyelesaikan audit dan eksekusi di atas, berikan tabel ringkasan:
 | `PASAX_SENTINEL_ENABLED` | `.env` Laravel | `true` | Mengaktifkan driver jembatan kernel di WAF Laravel. |
 | `PASAX_SENTINEL_SOCKET` | `.env` Laravel | `/run/pasax/agent.sock` | Lokasi berkas IPC Unix Domain Socket. |
 | `permissions` | `/etc/pasax/sentinel.yaml` | `"0666"` | Memastikan PHP-FPM (`www-data`) dapat menulis ke socket tanpa root. |
-| `cloud.base_url` | `/etc/pasax/sentinel.yaml` | `https://pasax-service.vercel.app` | URL Cloud Control Plane resmi. |
+| `cloud.base_url` | `/etc/pasax/sentinel.yaml` | `https://service.pasax.web.id` | URL Cloud Control Plane resmi. |
 | `cloud.activation_token` | `/etc/pasax/sentinel.yaml` | `<LICENSE_KEY>` | Kunci lisensi untuk otentikasi node di Cloud Mesh. |

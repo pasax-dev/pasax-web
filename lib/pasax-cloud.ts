@@ -115,7 +115,7 @@ export interface SavedSshProfile {
 
 import { NodeTelemetry, ThreatEvent, pasaxStore, VHostInfo } from "./store"
 
-const DEFAULT_API_URL = "https://pasax-service.vercel.app"
+const DEFAULT_API_URL = "https://service.pasax.web.id"
 
 export function getPasaxApiUrl(): string {
   if (typeof process !== "undefined" && (process.env.PASAX_API_URL || process.env.PASAK_API_URL)) {

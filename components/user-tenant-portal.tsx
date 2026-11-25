@@ -112,7 +112,7 @@ export function UserTenantPortal({
 
   const handleCopyEnv = () => {
     if (isExpired || !activeKey) return
-    const envSnippet = `APP_NAME=Laravel\nAPP_URL=http://localhost:8000\nPASAX_CLOUD_KEY=${activeKey}\nPASAX_CLOUD_URL=https://pasax-service.vercel.app`
+    const envSnippet = `APP_NAME=Laravel\nAPP_URL=http://localhost:8000\nPASAX_CLOUD_KEY=${activeKey}\nPASAX_CLOUD_URL=https://service.pasax.web.id`
     navigator.clipboard.writeText(envSnippet)
     setCopiedEnv(true)
     setTimeout(() => setCopiedEnv(false), 2000)
@@ -402,7 +402,7 @@ export function UserTenantPortal({
                 {isExpired ? "psk_expired_renew_required" : activeKey || "<BELUM_ADA_TOKEN>"}
               </div>
               <div className="text-muted-foreground">
-                PASAX_CLOUD_URL=https://pasax-service.vercel.app
+                PASAX_CLOUD_URL=https://service.pasax.web.id
               </div>
             </div>
             <div className="font-mono text-[10px] text-muted-foreground">

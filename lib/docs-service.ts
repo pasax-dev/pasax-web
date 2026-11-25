@@ -21,7 +21,7 @@ const PASAX_API_URL =
   process.env.PASAX_API_URL ||
   process.env.NEXT_PUBLIC_PASAK_API_URL ||
   process.env.PASAK_API_URL ||
-  "https://pasax-service.vercel.app"
+  "https://service.pasax.web.id"
 
 function slugify(text: string): string {
   return text

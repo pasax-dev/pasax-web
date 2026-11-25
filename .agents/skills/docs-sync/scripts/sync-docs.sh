@@ -4,11 +4,11 @@ set -e
 # ==============================================================================
 # sync-docs.sh — Pasax Suite Docs Sync Helper
 # Portal: https://pasax.web.id/docs/pasax-secure-monitor
-# API:    https://pasax-service.vercel.app/api/v1/docs
+# API:    https://service.pasax.web.id/api/v1/docs
 # ==============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-API_URL="${DOCS_API_URL:-https://pasax-service.vercel.app/api/v1/docs}"
+API_URL="${DOCS_API_URL:-https://service.pasax.web.id/api/v1/docs}"
 KEY_FILE="$SCRIPT_DIR/.DOCS_SYNC_KEY"
 
 # Baca API Key

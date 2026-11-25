@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-22",
+  "type": "feature",
+  "project": {
+    "name": "Pasak Cloud Dashboard",
+    "url": "https://pasax.web.id"
+  },
+  "title": {
+    "id": "Katalog Paket Langganan, Diskon Promo, dan Konversi Mata Uang Langsung",
+    "en": "Subscription Tier Catalogue, Promotional Discounts & Live Currency Conversion"
+  },
+  "body": {
+    "id": "Menambahkan tabel perbandingan paket layanan pada halaman depan, halaman pengelolaan paket khusus Superadmin, dukungan persentase diskon promo dengan perhitungan tahunan otomatis, serta integrasi konversi nilai tukar Rupiah dan Dolar AS secara langsung.",
+    "en": "Added a public subscription tier comparison table on the homepage, a dedicated Superadmin package management console, promotional discount percentages with automatic annual calculations, and live IDR/USD currency conversion."
+  },
+  "items": [
+    {
+      "type": "new",
+      "id": "Tabel Perbandingan Paket di Halaman Publik: Menampilkan fitur, kuota layanan, dan harga paket berlangganan secara jelas dan responsif untuk calon pengguna.",
+      "en": "Public Subscription Comparison Table: Presents plan features, service quotas, and pricing transparently on the public portal."
+    },
+    {
+      "type": "new",
+      "id": "Konsol Pengelolaan Paket Superadmin: Memungkinkan pengelola utama menambah, memperbarui, dan mengatur daftar paket serta penawaran promosi secara terpusat.",
+      "en": "Superadmin Plan Management Console: Enables administrators to create, customize, and manage subscription plans and promotional campaigns centrally."
+    },
+    {
+      "type": "new",
+      "id": "Diskon Promo & Konversi Kurs Langsung: Menampilkan harga coret promo, perhitungan biaya tahunan otomatis, serta peralihan mata uang Rupiah dan Dolar AS secara akurat.",
+      "en": "Promo Pricing & Live Exchange Conversion: Displays strikethrough promotional pricing, automatic annual billing totals, and real-time IDR/USD currency switching."
+    }
+  ]
+}

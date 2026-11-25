@@ -5,7 +5,7 @@ description: "ACTIVATE setiap kali selesai mengerjakan perubahan kode, perbaikan
 
 # Docs Sync — Otomasi Pembaruan Dokumentasi Teknis Pasax Suite (Neon PostgreSQL)
 
-Aturan dan panduan alur kerja bagi AI Agent untuk memperbarui atau menambahkan dokumentasi teknis produk secara langsung ke database **Neon PostgreSQL** melalui REST API CRUD di **Pasax Cloud API** (`https://pasax-service.vercel.app/api/v1/docs`). Dokumentasi yang disimpan di database langsung ditampilkan di portal web publik:
+Aturan dan panduan alur kerja bagi AI Agent untuk memperbarui atau menambahkan dokumentasi teknis produk secara langsung ke database **Neon PostgreSQL** melalui REST API CRUD di **Pasax Cloud API** (`https://service.pasax.web.id/api/v1/docs`). Dokumentasi yang disimpan di database langsung ditampilkan di portal web publik:
 
 - **Pasax Security Monitor**: [https://pasax.web.id/docs/pasax-secure-monitor](https://pasax.web.id/docs/pasax-secure-monitor)
 - **Pasax Sentinel**: [https://pasax.web.id/docs/pasax-sentinel](https://pasax.web.id/docs/pasax-sentinel)
@@ -16,7 +16,7 @@ Aturan dan panduan alur kerja bagi AI Agent untuk memperbarui atau menambahkan d
 - **Portal Web Dokumentasi Publik**:
   - `pasax-secure-monitor`: `https://pasax.web.id/docs/pasax-secure-monitor`
   - Dokumen bab spesifik: `https://pasax.web.id/docs/pasax-secure-monitor/<SLUG>`
-- **API Endpoint**: `https://pasax-service.vercel.app/api/v1/docs` (atau `http://localhost:3000/api/v1/docs` saat pengembangan lokal `pasax-api`).
+- **API Endpoint**: `https://service.pasax.web.id/api/v1/docs` (atau `http://localhost:3000/api/v1/docs` saat pengembangan lokal `pasax-api`).
 - **Kunci Akses**: Header `X-Docs-Key` — dibaca dari berkas `.DOCS_SYNC_KEY` di folder skill ini (`DOCS_SYNC_KEY=psk_docs_live_sync_key_9f8e7d:...`).
 - **Database Backend**: Neon Serverless PostgreSQL (`docs` table di branch `production`).
 - **Target Produk**:
@@ -32,12 +32,12 @@ Sebelum mengubah atau menambah dokumen, periksa dulu daftar dokumen yang tersimp
 
 ```bash
 # Ringkasan seluruh produk
-curl -s "https://pasax-service.vercel.app/api/v1/docs"
+curl -s "https://service.pasax.web.id/api/v1/docs"
 
 # Daftar dokumen spesifik produk:
-curl -s "https://pasax-service.vercel.app/api/v1/docs?product=pasax-secure-monitor"
-curl -s "https://pasax-service.vercel.app/api/v1/docs?product=pasax-sentinel"
-curl -s "https://pasax-service.vercel.app/api/v1/docs?product=core"
+curl -s "https://service.pasax.web.id/api/v1/docs?product=pasax-secure-monitor"
+curl -s "https://service.pasax.web.id/api/v1/docs?product=pasax-sentinel"
+curl -s "https://service.pasax.web.id/api/v1/docs?product=core"
 ```
 
 Respons mengembalikan daftar `docs`: `id`, `product`, `slug`, `title`, `description`, `category`, `order`, dan `updatedAt`.
@@ -49,15 +49,15 @@ Respons mengembalikan daftar `docs`: `id`, `product`, `slug`, `title`, `descript
 Untuk membaca konten lengkap dokumen dari Neon DB:
 
 ```bash
-curl -s "https://pasax-service.vercel.app/api/v1/docs/<PRODUK>/<SLUG>"
+curl -s "https://service.pasax.web.id/api/v1/docs/<PRODUK>/<SLUG>"
 # atau
-curl -s "https://pasax-service.vercel.app/api/v1/docs?product=<PRODUK>&slug=<SLUG>"
+curl -s "https://service.pasax.web.id/api/v1/docs?product=<PRODUK>&slug=<SLUG>"
 ```
 
 Contoh membaca dokumen Pasax Security Monitor:
 
 ```bash
-curl -s "https://pasax-service.vercel.app/api/v1/docs/pasax-secure-monitor/getting-started/installation"
+curl -s "https://service.pasax.web.id/api/v1/docs/pasax-secure-monitor/getting-started/installation"
 ```
 
 Respons:
@@ -90,7 +90,7 @@ Gunakan metode **`POST /api/v1/docs`** untuk membuat dokumen baru atau merevisi 
 ### Format Standar (Metadata + Konten Markdown)
 
 ```bash
-curl -X POST "https://pasax-service.vercel.app/api/v1/docs" \
+curl -X POST "https://service.pasax.web.id/api/v1/docs" \
   -H "Content-Type: application/json" \
   -H "X-Docs-Key: psk_docs_live_sync_key_9f8e7d:Pasax Dashboard Docs Sync" \
   -d '{
@@ -110,7 +110,7 @@ curl -X POST "https://pasax-service.vercel.app/api/v1/docs" \
 Jika Anda sudah memiliki berkas Markdown utuh:
 
 ```bash
-curl -X POST "https://pasax-service.vercel.app/api/v1/docs" \
+curl -X POST "https://service.pasax.web.id/api/v1/docs" \
   -H "Content-Type: application/json" \
   -H "X-Docs-Key: psk_docs_live_sync_key_9f8e7d:Pasax Dashboard Docs Sync" \
   -d "{
@@ -132,14 +132,14 @@ Respons berhasil:
 Jika ada modul atau fitur yang dihapus, hapus dokumen terkait dari database Neon PostgreSQL:
 
 ```bash
-curl -X DELETE "https://pasax-service.vercel.app/api/v1/docs?product=<PRODUK>&slug=<SLUG>" \
+curl -X DELETE "https://service.pasax.web.id/api/v1/docs?product=<PRODUK>&slug=<SLUG>" \
   -H "X-Docs-Key: psk_docs_live_sync_key_9f8e7d:Pasax Dashboard Docs Sync"
 ```
 
 Contoh:
 
 ```bash
-curl -X DELETE "https://pasax-service.vercel.app/api/v1/docs?product=pasax-secure-monitor&slug=deprecated-module" \
+curl -X DELETE "https://service.pasax.web.id/api/v1/docs?product=pasax-secure-monitor&slug=deprecated-module" \
   -H "X-Docs-Key: psk_docs_live_sync_key_9f8e7d:Pasax Dashboard Docs Sync"
 ```
 
@@ -153,7 +153,7 @@ Setelah membuat, mengubah, atau menghapus dokumen:
 
 1. Periksa endpoint API:
    ```bash
-   curl -s "https://pasax-service.vercel.app/api/v1/docs/<PRODUK>/<SLUG>"
+   curl -s "https://service.pasax.web.id/api/v1/docs/<PRODUK>/<SLUG>"
    ```
 2. Pastikan respons berstatus `200 OK` dan data tersimpan di Neon PostgreSQL.
 3. Kunjungi URL halaman web publik:

@@ -18,12 +18,12 @@ Jalankan perintah berikut di terminal server Linux dengan hak akses `root` atau 
 ```bash
 curl -sSL https://raw.githubusercontent.com/pasax-dev/pasax-sentinel/main/scripts/install.sh | sudo bash -s -- \
   --token="<TOKEN_LISENSI_ANDA>" \
-  --cloud-url="https://pasax-service.vercel.app"
+  --cloud-url="https://service.pasax.web.id"
 ```
 
 ### Opsi Parameter Skrip:
 - `--token=...` : Token aktivasi lisensi dari dashboard [Pasax Market](https://pasax-web.vercel.app).
-- `--cloud-url=...` : URL endpoint Cloud API (default: `https://pasax-service.vercel.app`).
+- `--cloud-url=...` : URL endpoint Cloud API (default: `https://service.pasax.web.id`).
 - `--project=...` : ID Proyek (opsional, default: `default`).
 
 Skrip otomatis melakukan:
@@ -61,7 +61,7 @@ node_id: ""
 license_key: "<TOKEN_LISENSI_ANDA>"
 
 cloud:
-  base_url: "https://pasax-service.vercel.app"
+  base_url: "https://service.pasax.web.id"
   activation_token: "<TOKEN_LISENSI_ANDA>"
   heartbeat_interval: 60s
   timeout: 10s

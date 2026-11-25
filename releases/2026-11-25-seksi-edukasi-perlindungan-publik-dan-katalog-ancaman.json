@@ -10,8 +10,8 @@
     "en": "Threat Catalog, Multi-Account Isolation & Multi-Config Web Terminal"
   },
   "body": {
-    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, halaman Tutorial Tahap Demi Tahap interaktif, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, Konsol Terminal Server di peramban dengan multi-konfigurasi terverifikasi dan mode layar penuh, serta persetujuan akses cookie dan dasbor Intelijen Pengunjung khusus Superadmin.",
-    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, an interactive Step-by-Step Onboarding Tutorial page, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, a browser-based Server Terminal supporting multiple saved verified access profiles and fullscreen mode, plus Cookie Consent controls and a Superadmin-only Visitor Intelligence console."
+    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, halaman Tutorial Tahap Demi Tahap interaktif, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman alamat portal dan layanan ke pasax.web.id serta service.pasax.web.id, Konsol Terminal Server di peramban dengan multi-konfigurasi terverifikasi dan mode layar penuh, persetujuan akses cookie dan dasbor Intelijen Pengunjung khusus Superadmin, serta percepatan pemuatan halaman.",
+    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, an interactive Step-by-Step Onboarding Tutorial page, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified portal and coordination links at pasax.web.id and service.pasax.web.id, a browser-based Server Terminal supporting multiple saved verified access profiles and fullscreen mode, Cookie Consent controls with a Superadmin Visitor Intelligence console, and faster page loading performance."
   },
   "items": [
     {
@@ -46,8 +46,8 @@
     },
     {
       "type": "improvement",
-      "id": "Penyeragaman Alamat Portal Resmi & Penyempurnaan Antarmuka Pengelola: Mengganti seluruh rujukan alamat layanan ke https://pasax.web.id serta merapikan modal pendaftaran pengguna baru, navigasi atas, dialog inspeksi, dan tabel responsif.",
-      "en": "Official Portal URL Unification & Admin UI Refinement: Migrated all service links to https://pasax.web.id and polished registration modals, header breadcrumbs, inspection dialogs, and responsive administration tables."
+      "id": "Penyeragaman Alamat Resmi, Kecepatan Akses & Antarmuka Pengelola: Mengarahkan portal ke https://pasax.web.id serta layanan koordinasi ke https://service.pasax.web.id, mempercepat waktu muat halaman dan deteksi lokasi, serta merapikan modal dan tabel responsif.",
+      "en": "Official URL Unification, Speed & Admin UI Refinement: Unified portal links to https://pasax.web.id and coordination endpoints to https://service.pasax.web.id, improved page loading and location lookup speed, and polished modals and responsive tables."
     },
     {
       "type": "improvement",

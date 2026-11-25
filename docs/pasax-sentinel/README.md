@@ -25,5 +25,5 @@ Welcome to the technical documentation for **Pasax Sentinel**, the high-performa
 - **Config file**: `/etc/pasax/sentinel.yaml` (template: `config/sentinel.example.yaml`)
 - **Socket Path**: `/run/pasax/agent.sock` (fallback: `/tmp/pasax/agent.sock`)
 - **Unit File**: `scripts/pasax-sentinel.service`
-- **Cloud Control Plane**: `https://pasax-service.vercel.app`
+- **Cloud Control Plane**: `https://service.pasax.web.id`
 - **Public Market Portal**: `https://pasax-web.vercel.app`
