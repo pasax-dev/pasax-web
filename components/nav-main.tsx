@@ -142,7 +142,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                               }}
                             />
                           ) : (
-                            <Link href={item.url} />
+                            <Link href={item.url} prefetch={false} />
                           )
                         }
                       >
@@ -224,7 +224,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                         }}
                       />
                     ) : (
-                      <Link href={item.url} />
+                      <Link href={item.url} prefetch={false} />
                     )
                   }
                 >
@@ -309,7 +309,7 @@ export function NavMain({ items, sections, label = "Platform" }: NavMainProps) {
                                   }}
                                 />
                               ) : (
-                                <Link href={subItem.url} />
+                                <Link href={subItem.url} prefetch={false} />
                               )
                             }
                           >

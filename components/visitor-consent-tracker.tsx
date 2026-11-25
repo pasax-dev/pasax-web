@@ -269,6 +269,17 @@ export function VisitorConsentTracker() {
     if (!pathname) return
     const routeKey = `${pathname}${typeof window !== "undefined" ? window.location.search : ""}`
     if (lastTrackedPathRef.current === routeKey) return
+    try {
+      const dedupKey = `pasax_vt_${routeKey}`
+      const prevTs = Number(sessionStorage.getItem(dedupKey) || "0")
+      if (prevTs && Date.now() - prevTs < 60_000) {
+        lastTrackedPathRef.current = routeKey
+        return
+      }
+      sessionStorage.setItem(dedupKey, String(Date.now()))
+    } catch {
+      // ignore storage restrictions
+    }
     lastTrackedPathRef.current = routeKey
 
     let cancelled = false

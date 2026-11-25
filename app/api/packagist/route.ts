@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { fetchPackagistData } from "@/lib/packagist"
 
 export const dynamic = "force-dynamic"
-export const revalidate = 60
+export const revalidate = 3600
 
 /**
  * Dynamic Packagist API Route
@@ -14,12 +14,15 @@ export async function GET() {
     return NextResponse.json(data, {
       status: 200,
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=21600",
       },
     })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch dynamic Packagist data", details: String(error) },
+      {
+        error: "Failed to fetch dynamic Packagist data",
+        details: String(error),
+      },
       { status: 500 }
     )
   }

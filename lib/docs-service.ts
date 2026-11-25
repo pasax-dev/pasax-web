@@ -69,7 +69,7 @@ export async function getDocContent(slug: string): Promise<ParsedDoc | null> {
       const res = await fetch(
         `${PASAX_API_URL}/api/v1/docs/${item.product}/${item.slug}`,
         {
-          next: { revalidate: 60 },
+          next: { revalidate: 21600 },
           headers: { Accept: "application/json" },
           signal: AbortSignal.timeout(3000),
         }

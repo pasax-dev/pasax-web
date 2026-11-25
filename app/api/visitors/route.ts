@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         gpsLat: body?.gpsLat,
         gpsLon: body?.gpsLon,
         clientTimezone: typeof body?.timezone === "string" ? body.timezone : null,
+        isBot: parsedUa.isBot,
       }),
       getServerSession(authOptions).catch(() => null),
     ])

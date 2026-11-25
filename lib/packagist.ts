@@ -151,7 +151,7 @@ export async function fetchPackagistData(): Promise<PackagistData> {
     const res = await fetch(
       "https://packagist.org/packages/pasax/secure-monitor.json",
       {
-        next: { revalidate: 60 },
+        next: { revalidate: 21600 },
       }
     )
 

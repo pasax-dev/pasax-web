@@ -282,8 +282,9 @@ export async function lookupGeoAndAddress(params: {
   gpsLat?: number | string | null
   gpsLon?: number | string | null
   clientTimezone?: string | null
+  isBot?: boolean
 }): Promise<GeoAddressResult> {
-  const { ipAddress, headers, gpsLat, gpsLon, clientTimezone } = params
+  const { ipAddress, headers, gpsLat, gpsLon, clientTimezone, isBot = false } = params
 
   const result: GeoAddressResult = {
     country: null,
@@ -314,6 +315,7 @@ export async function lookupGeoAndAddress(params: {
     try {
       const geoRes = await fetch(`https://ipwho.is/${encodeURIComponent(ipAddress)}`, {
         headers: { Accept: "application/json" },
+        next: { revalidate: 86400 },
         signal: AbortSignal.timeout(1600),
       })
       if (geoRes.ok) {
@@ -373,16 +375,21 @@ export async function lookupGeoAndAddress(params: {
     result.geoSource = "browser_gps"
   }
 
-  if (targetLat && targetLon) {
+  if (targetLat && targetLon && (!isBot || hasGps)) {
     try {
+      const latNum = Number(targetLat)
+      const lonNum = Number(targetLon)
+      const cacheLat = Number.isFinite(latNum) ? latNum.toFixed(hasGps ? 4 : 3) : targetLat
+      const cacheLon = Number.isFinite(lonNum) ? lonNum.toFixed(hasGps ? 4 : 3) : targetLon
       const nomUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
-        targetLat
-      )}&lon=${encodeURIComponent(targetLon)}&zoom=18&addressdetails=1`
+        cacheLat
+      )}&lon=${encodeURIComponent(cacheLon)}&zoom=18&addressdetails=1`
       const nomRes = await fetch(nomUrl, {
         headers: {
           Accept: "application/json",
           "User-Agent": "PasaxSecuritySuite/1.0 (https://pasax.web.id)",
         },
+        next: { revalidate: 86400 },
         signal: AbortSignal.timeout(1800),
       })
       if (nomRes.ok) {
