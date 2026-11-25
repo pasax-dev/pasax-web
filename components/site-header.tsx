@@ -41,7 +41,9 @@ export function SiteHeader({
   const name = user?.name || "Operator SOC"
   const email = user?.email || "operator@pasax.id"
   const role = (user as any)?.role || "User"
-  const avatar = (user as any)?.image || "/avatars/admin.jpg"
+  const rawAvatar = (user as any)?.image
+  const avatar =
+    rawAvatar && rawAvatar !== "/avatars/admin.jpg" ? rawAvatar : ""
 
   const initials =
     name
@@ -166,7 +168,7 @@ export function SiteHeader({
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <div className="flex shrink-0 items-center gap-2 rounded-base border-2 border-border bg-secondary-background/70 py-0.5 pr-2.5 pl-1 shadow-[2px_2px_0px_0px_var(--border)]">
               <Avatar className="size-7 shrink-0 rounded-base border border-border">
-                <AvatarImage src={avatar} alt={name} />
+                {avatar ? <AvatarImage src={avatar} alt={name} /> : null}
                 <AvatarFallback className="rounded-base bg-main font-mono text-[11px] font-black text-black">
                   {initials}
                 </AvatarFallback>

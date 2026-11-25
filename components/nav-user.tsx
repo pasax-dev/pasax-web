@@ -3,11 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,9 +32,7 @@ import {
 import {
   ChevronsUpDown,
   Sparkles,
-  BadgeCheck,
   CreditCard,
-  Bell,
   LogOut,
   AlertTriangle,
   Key,
@@ -64,7 +58,12 @@ export function NavUser({
   // Use session fallback if available
   const userName = user.name || session?.user?.name || "Operator SOC"
   const userEmail = user.email || session?.user?.email || "operator@pasax.id"
-  const userAvatar = user.avatar || (session?.user as any)?.image || "/avatars/admin.jpg"
+  const userAvatar =
+    (user.avatar && user.avatar !== "/avatars/admin.jpg" ? user.avatar : "") ||
+    ((session?.user as any)?.image &&
+    (session?.user as any)?.image !== "/avatars/admin.jpg"
+      ? (session?.user as any)?.image
+      : "")
   const userRole = user.role || (session?.user as any)?.role || "User"
 
   const initials =
@@ -83,7 +82,9 @@ export function NavUser({
 
   const scrollToHash = (hash: string) => {
     window.location.hash = hash
-    const el = document.getElementById(hash) || document.getElementById("operations-matrix")
+    const el =
+      document.getElementById(hash) ||
+      document.getElementById("operations-matrix")
     el?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -95,15 +96,17 @@ export function NavUser({
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton
                 size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground font-sans cursor-pointer"
+                className="cursor-pointer font-sans data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar className="size-8 rounded-lg shrink-0">
-                  <AvatarImage src={userAvatar} alt={userName} />
+                <Avatar className="size-8 shrink-0 rounded-lg">
+                  {userAvatar ? (
+                    <AvatarImage src={userAvatar} alt={userName} />
+                  ) : null}
                   <AvatarFallback className="rounded-lg bg-main font-mono text-xs font-black text-black">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight min-w-0">
+                <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-bold tracking-tight text-foreground">
                     {userName}
                   </span>
@@ -115,7 +118,7 @@ export function NavUser({
               </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-64 rounded-xl p-1.5 font-sans shadow-lg border border-border bg-popover"
+              className="w-64 rounded-xl border border-border bg-popover p-1.5 font-sans shadow-lg"
               side={isMobile ? "bottom" : "right"}
               align="end"
               sideOffset={4}
@@ -124,15 +127,19 @@ export function NavUser({
               <DropdownMenuGroup>
                 <div className="flex items-center gap-2.5 p-2">
                   <Avatar className="size-9 rounded-lg border border-border">
-                    <AvatarImage src={userAvatar} alt={userName} />
+                    {userAvatar ? (
+                      <AvatarImage src={userAvatar} alt={userName} />
+                    ) : null}
                     <AvatarFallback className="rounded-lg bg-main font-mono text-xs font-black text-black">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-xs leading-tight min-w-0">
+                  <div className="grid min-w-0 flex-1 text-left text-xs leading-tight">
                     <div className="flex items-center gap-1.5">
-                      <span className="font-bold text-foreground truncate">{userName}</span>
-                      <span className="rounded-md border border-main/50 bg-main/20 px-1 py-0.2 font-mono text-[9px] font-black uppercase text-foreground">
+                      <span className="truncate font-bold text-foreground">
+                        {userName}
+                      </span>
+                      <span className="py-0.2 rounded-md border border-main/50 bg-main/20 px-1 font-mono text-[9px] font-black text-foreground uppercase">
                         {userRole}
                       </span>
                     </div>
@@ -150,8 +157,8 @@ export function NavUser({
                 <div className="rounded-lg bg-sidebar-accent/60 p-2 text-xs">
                   <div className="flex items-center justify-between font-mono text-[11px]">
                     <span className="text-muted-foreground">Armada Pasax:</span>
-                    <span className="font-bold text-emerald-500 flex items-center gap-1">
-                      <span className="size-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+                    <span className="flex items-center gap-1 font-bold text-emerald-500">
+                      <span className="inline-block size-1.5 animate-ping rounded-full bg-emerald-500" />
                       Sovereign Air-Gapped
                     </span>
                   </div>
@@ -166,33 +173,33 @@ export function NavUser({
 
               {/* Navigation & Management Actions */}
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <DropdownMenuLabel className="font-mono text-[10px] font-bold tracking-wider text-muted-foreground uppercase">
                   Pusat Kendali SOC
                 </DropdownMenuLabel>
                 <DropdownMenuItem
                   onClick={() => scrollToHash("overview")}
-                  className="gap-2 text-xs cursor-pointer"
+                  className="cursor-pointer gap-2 text-xs"
                 >
                   <Sparkles className="size-4 text-main" />
                   <span>Fleet Health & Skor SOC</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => scrollToHash("auth-licenses")}
-                  className="gap-2 text-xs cursor-pointer"
+                  className="cursor-pointer gap-2 text-xs"
                 >
                   <Key className="size-4 text-sky-500" />
                   <span>Otoritas Pengguna & Kunci API</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => scrollToHash("business")}
-                  className="gap-2 text-xs cursor-pointer"
+                  className="cursor-pointer gap-2 text-xs"
                 >
                   <CreditCard className="size-4 text-purple-500" />
                   <span>Model Bisnis & Tier Armada</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => scrollToHash("threats")}
-                  className="gap-2 text-xs cursor-pointer"
+                  className="cursor-pointer gap-2 text-xs"
                 >
                   <Shield className="size-4 text-rose-500" />
                   <span>Insiden & Ancaman WAF</span>
@@ -224,7 +231,7 @@ export function NavUser({
               {/* Danger Zone: Log Out Trigger with Dialog */}
               <DropdownMenuItem
                 onClick={() => setShowLogoutDialog(true)}
-                className="gap-2 text-xs text-rose-500 focus:bg-rose-500/10 focus:text-rose-500 cursor-pointer"
+                className="cursor-pointer gap-2 text-xs text-rose-500 focus:bg-rose-500/10 focus:text-rose-500"
               >
                 <LogOut className="size-4" />
                 <span className="font-bold">Keluar dari Sesi SOC</span>
@@ -240,11 +247,17 @@ export function NavUser({
           <AlertDialogHeader>
             <div className="flex items-center gap-2 text-rose-500">
               <AlertTriangle className="size-5 shrink-0" />
-              <AlertDialogTitle className="font-bold">Konfirmasi Keluar Sesi SOC</AlertDialogTitle>
+              <AlertDialogTitle className="font-bold">
+                Konfirmasi Keluar Sesi SOC
+              </AlertDialogTitle>
             </div>
-            <AlertDialogDescription className="text-xs text-muted-foreground leading-relaxed pt-1">
-              Anda akan mengakhiri sesi aktif sebagai <strong className="text-foreground">{userName} ({userRole})</strong>.
-              Sistem akan memutus token autentikasi lokal dan mengembalikan Anda ke gerbang masuk aman.
+            <AlertDialogDescription className="pt-1 text-xs leading-relaxed text-muted-foreground">
+              Anda akan mengakhiri sesi aktif sebagai{" "}
+              <strong className="text-foreground">
+                {userName} ({userRole})
+              </strong>
+              . Sistem akan memutus token autentikasi lokal dan mengembalikan
+              Anda ke gerbang masuk aman.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2 pt-2">

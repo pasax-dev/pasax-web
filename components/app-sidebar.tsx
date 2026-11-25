@@ -26,12 +26,13 @@ import {
   LayoutDashboard,
   Activity,
   TerminalSquare,
+  Radar,
 } from "lucide-react"
 
 const defaultAdminUser = {
   name: "Roby Kartis (Chief SOC)",
   email: "pasak.dev@gmail.com",
-  avatar: "/avatars/admin.jpg",
+  avatar: "",
   role: "Superadmin",
 }
 
@@ -274,9 +275,10 @@ export function AppSidebar({
 }) {
   const currentUser = user || defaultAdminUser
   const isUserRole = role === "User"
+  const isSuperadmin = role === "Superadmin"
   const teams = isUserRole
     ? userTeams
-    : role === "Superadmin"
+    : isSuperadmin
       ? adminTeams
       : [
           {
@@ -285,7 +287,27 @@ export function AppSidebar({
             logo: ShieldCheck,
           },
         ]
-  const sections = isUserRole ? userNavSections : adminNavSections
+
+  const sections = React.useMemo(() => {
+    if (isUserRole) return userNavSections
+    if (!isSuperadmin) return adminNavSections
+    return adminNavSections.map((sec, idx) =>
+      idx === 0
+        ? {
+            ...sec,
+            items: [
+              ...sec.items,
+              {
+                title: "Visitor Intelligence",
+                url: "/visitors",
+                icon: Radar,
+                badge: "GEO",
+              },
+            ],
+          }
+        : sec
+    )
+  }, [isUserRole, isSuperadmin])
   const projects: NavProjectItem[] =
     workspaces !== undefined
       ? workspaces.length > 0
@@ -329,7 +351,7 @@ export function AppSidebar({
           user={{
             name: currentUser.name,
             email: currentUser.email,
-            avatar: currentUser.avatar || "/avatars/admin.jpg",
+            avatar: currentUser.avatar || "",
             role: currentUser.role || role,
           }}
         />

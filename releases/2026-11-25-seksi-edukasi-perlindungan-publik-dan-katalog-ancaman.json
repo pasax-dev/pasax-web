@@ -10,10 +10,15 @@
     "en": "Threat Catalog, Multi-Account Isolation & Multi-Config Web Terminal"
   },
   "body": {
-    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, halaman Tutorial Tahap Demi Tahap interaktif, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, serta Konsol Terminal Server di peramban yang mendukung penyimpanan banyak konfigurasi terverifikasi dan mode layar penuh.",
-    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, an interactive Step-by-Step Onboarding Tutorial page, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, and a browser-based Server Terminal supporting multiple saved verified access profiles and clean fullscreen mode."
+    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, halaman Tutorial Tahap Demi Tahap interaktif, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, Konsol Terminal Server di peramban dengan multi-konfigurasi terverifikasi dan mode layar penuh, serta persetujuan akses cookie dan dasbor Intelijen Pengunjung khusus Superadmin.",
+    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, an interactive Step-by-Step Onboarding Tutorial page, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, a browser-based Server Terminal supporting multiple saved verified access profiles and fullscreen mode, plus Cookie Consent controls and a Superadmin-only Visitor Intelligence console."
   },
   "items": [
+    {
+      "type": "new",
+      "id": "Persetujuan Akses Cookie & Dasbor Intelijen Pengunjung Superadmin: Banner persetujuan cookie yang fleksibel (Terima Semua, Esensial, atau Atur preferensi analitik dan geolokasi presisi) dengan pengaturan ulang di footer, penangkapan otomatis informasi lengkap kunjungan (alamat lengkap, kota, negara, IP, ISP/ASN, OS, browser, perangkat, dan rujukan), serta konsol pemantauan dan ekspor khusus Superadmin.",
+      "en": "Cookie Consent Controls & Superadmin Visitor Intelligence Console: Flexible cookie consent banner (Accept All, Essential, or Custom analytics and precision location preferences) with footer controls, automatic capture of comprehensive visit details (full address, city, country, IP, ISP/ASN, OS, browser, hardware, and referrer), and a strictly Superadmin-gated monitoring and export console."
+    },
     {
       "type": "new",
       "id": "Halaman Tutorial Tahap Demi Tahap Interaktif: Panduan lengkap dari nol mulai pendaftaran uji coba Pro 14 hari, instalasi agen pelindung di server Linux, integrasi pengaman aplikasi web, pengelolaan multi-konfigurasi Terminal Web, delegasi tim, hingga simulasi uji keamanan dengan daftar periksa kemajuan dan kustomisasi perintah langsung.",
@@ -21,13 +26,8 @@
     },
     {
       "type": "new",
-      "id": "Katalog Interaktif Penanganan Ancaman: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran berkas rahasia, hingga OOM crash) lengkap dengan skenario masalah dan solusi otomatis Pasak.",
-      "en": "Interactive Threat Defense Catalog: Detailed breakdowns of 12 real-world threat vectors (SQLi, XSS, RCE, DDoS, Shodan recon, honeypots, sensitive file leaks, and memory exhaustion) with context and automated mitigation."
-    },
-    {
-      "type": "new",
-      "id": "Filter Kategori & Matriks Komparasi Langsung: Pengguna dapat memfilter vektor proteksi berdasarkan domain (Aplikasi Web, Kernel Jaringan, Integritas Berkas, dan Armada) serta beralih ke tabel perbandingan langsung.",
-      "en": "Category Filters & Live Comparison Matrix: Users can filter defense vectors across protection domains and switch seamlessly to a direct comparison matrix."
+      "id": "Katalog Interaktif 12 Ancaman & Matriks Komparasi: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran berkas rahasia, hingga OOM crash) lengkap dengan filter domain proteksi dan tabel perbandingan langsung.",
+      "en": "Interactive 12-Vector Threat Catalog & Comparison Matrix: Detailed breakdowns of 12 real-world threat vectors (SQLi, XSS, RCE, DDoS, Shodan recon, honeypots, sensitive file leaks, and memory exhaustion) with domain filters and a live comparison matrix."
     },
     {
       "type": "new",
@@ -41,18 +41,18 @@
     },
     {
       "type": "security",
-      "id": "Isolasi Data Akun & Tim Pengelola: Memastikan setiap pengguna yang masuk—termasuk akun delegasi yang dibuat admin—hanya mengakses informasi server, pengguna, lisensi, dan insiden miliknya sendiri.",
-      "en": "Strict Account & Delegated Team Isolation: Ensures every signed-in user—including admin-provisioned team members—sees and manages only their own assigned servers, licenses, users, and security events."
+      "id": "Isolasi Data Akun, Tim & Hak Akses Superadmin: Memastikan setiap pengguna hanya mengakses data server, pengguna, lisensi, dan insiden miliknya sendiri, sementara telemetri intelijen pengunjung terkunci eksklusif untuk peran Superadmin.",
+      "en": "Account, Team & Superadmin Access Isolation: Ensures every user accesses only their own assigned servers, licenses, users, and security events, while visitor intelligence telemetry remains strictly restricted to the Superadmin role."
     },
     {
       "type": "improvement",
-      "id": "Penyeragaman Alamat Portal Resmi & Penyempurnaan Antarmuka Pengelola: Mengganti seluruh rujukan alamat layanan ke https://pasax.web.id serta merapikan modal pendaftaran pengguna baru, navigasi atas, dan tabel responsif.",
-      "en": "Official Portal URL Unification & Admin UI Refinement: Migrated all service links to https://pasax.web.id and polished registration modals, header breadcrumbs, and responsive administration tables."
+      "id": "Penyeragaman Alamat Portal Resmi & Penyempurnaan Antarmuka Pengelola: Mengganti seluruh rujukan alamat layanan ke https://pasax.web.id serta merapikan modal pendaftaran pengguna baru, navigasi atas, dialog inspeksi, dan tabel responsif.",
+      "en": "Official Portal URL Unification & Admin UI Refinement: Migrated all service links to https://pasax.web.id and polished registration modals, header breadcrumbs, inspection dialogs, and responsive administration tables."
     },
     {
       "type": "improvement",
-      "id": "Rangkaian Pengujian Otomatis Antarmuka Pengguna: Menambahkan validasi skenario pengujian menyeluruh yang memverifikasi siklus akun, isolasi data, serta kestabilan tampilan lintas ukuran layar.",
-      "en": "Automated Interface Verification Suite: Added comprehensive end-to-end validation covering account lifecycles, tenant data isolation, and responsive visual stability."
+      "id": "Rangkaian Pengujian Otomatis Antarmuka Pengguna: Menambahkan validasi skenario pengujian menyeluruh yang memverifikasi siklus akun, isolasi data, persetujuan cookie, serta kestabilan tampilan lintas ukuran layar.",
+      "en": "Automated Interface Verification Suite: Added comprehensive end-to-end validation covering account lifecycles, tenant data isolation, cookie consent flows, and responsive visual stability."
     },
     {
       "type": "fix",
@@ -61,8 +61,8 @@
     },
     {
       "type": "fix",
-      "id": "Penyempurnaan Semantik Elemen Tombol Antarmuka: Menyelaraskan komponen tombol pada panel pengelolaan server untuk memastikan interaksi antarmuka yang mulus.",
-      "en": "Interface Button Semantics Refinement: Aligned interactive button elements across server management panels for smooth user interactions."
+      "id": "Penyempurnaan Semantik Tombol & Pembersihan Aset Konsol: Menyelaraskan elemen tombol panel pengelolaan server serta memperbaiki rujukan avatar profil agar konsol peramban bebas dari peringatan aset hilang.",
+      "en": "Button Semantics & Console Asset Cleanup: Aligned interactive button elements across server management panels and fixed profile avatar fallbacks so browser consoles stay completely clean."
     }
   ]
 }

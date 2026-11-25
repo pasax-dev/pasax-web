@@ -1,3 +1,101 @@
+export interface VisitorConsentPreferences {
+  essential: boolean
+  analytics: boolean
+  telemetry: boolean
+  geolocation: boolean
+}
+
+export interface VisitorLogRecord {
+  id: string
+  visitorId: string | null
+  sessionId: string | null
+  consentStatus: "pending" | "accepted_all" | "essential_only" | "custom" | "declined" | string
+  consentPreferences: VisitorConsentPreferences
+  ipAddress: string
+  forwardedFor: string | null
+  isp: string | null
+  asn: string | null
+  org: string | null
+  isProxy: boolean
+  isHosting: boolean
+  country: string | null
+  countryCode: string | null
+  region: string | null
+  regionCode: string | null
+  city: string | null
+  district: string | null
+  streetAddress: string | null
+  fullAddress: string | null
+  postalCode: string | null
+  latitude: string | null
+  longitude: string | null
+  geoSource: string
+  timezone: string | null
+  currency: string | null
+  userAgent: string
+  osName: string | null
+  osVersion: string | null
+  browserName: string | null
+  browserVersion: string | null
+  browserEngine: string | null
+  deviceType: string
+  deviceVendor: string | null
+  deviceModel: string | null
+  platform: string | null
+  architecture: string | null
+  isMobile: boolean
+  isBot: boolean
+  screenResolution: string | null
+  viewportSize: string | null
+  pixelRatio: string | null
+  colorDepth: number | null
+  cpuCores: number | null
+  deviceMemoryGb: string | null
+  touchSupport: boolean
+  maxTouchPoints: number
+  gpuRenderer: string | null
+  batteryInfo: { level?: number; charging?: boolean } | null
+  language: string | null
+  languages: string[]
+  connectionType: string | null
+  downlinkMbps: string | null
+  rttMs: number | null
+  pagePath: string
+  pageUrl: string | null
+  pageTitle: string | null
+  referrer: string | null
+  utmSource: string | null
+  utmMedium: string | null
+  utmCampaign: string | null
+  cookiesEnabled: boolean
+  doNotTrack: boolean
+  authenticatedEmail: string | null
+  authenticatedRole: string | null
+  rawHeaders: Record<string, string>
+  extraMetadata: Record<string, unknown>
+  visitedAt: string
+  updatedAt: string
+}
+
+export interface VisitorBreakdownItem {
+  name: string
+  count: number
+}
+
+export interface VisitorSummary {
+  totalVisits: number
+  uniqueVisitors: number
+  uniqueIps: number
+  consentedCount: number
+  gpsPrecisionCount: number
+  topCountries: VisitorBreakdownItem[]
+  topCities: VisitorBreakdownItem[]
+  deviceBreakdown: VisitorBreakdownItem[]
+  osBreakdown: VisitorBreakdownItem[]
+  browserBreakdown: VisitorBreakdownItem[]
+  consentBreakdown: VisitorBreakdownItem[]
+}
+
 export interface SavedSshProfile {
   id: string
   ownerEmail: string
@@ -459,6 +557,107 @@ export const pasaxCloud = {
       return res.ok
     } catch (err) {
       console.warn("[PasaxCloud] Failed to delete SSH profile:", err)
+      return false
+    }
+  },
+
+  async recordVisitor(payload: Record<string, unknown>): Promise<VisitorLogRecord | null> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/visitors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        return json?.data || null
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to record visitor:", err)
+    }
+    return null
+  },
+
+  async updateVisitor(id: string, payload: Record<string, unknown>): Promise<VisitorLogRecord | null> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/visitors/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      })
+      if (res.ok) {
+        const json = await res.json()
+        return json?.data || null
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to update visitor:", err)
+    }
+    return null
+  },
+
+  async fetchVisitors(params?: {
+    q?: string
+    country?: string
+    deviceType?: string
+    consentStatus?: string
+    limit?: number
+    offset?: number
+  }): Promise<{ summary: VisitorSummary; data: VisitorLogRecord[]; count: number }> {
+    const apiUrl = getPasaxApiUrl()
+    const qs = new URLSearchParams()
+    if (params?.q) qs.set("q", params.q)
+    if (params?.country && params.country !== "all") qs.set("country", params.country)
+    if (params?.deviceType && params.deviceType !== "all") qs.set("deviceType", params.deviceType)
+    if (params?.consentStatus && params.consentStatus !== "all") qs.set("consentStatus", params.consentStatus)
+    if (params?.limit) qs.set("limit", String(params.limit))
+    if (params?.offset) qs.set("offset", String(params.offset))
+
+    const emptySummary: VisitorSummary = {
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      uniqueIps: 0,
+      consentedCount: 0,
+      gpsPrecisionCount: 0,
+      topCountries: [],
+      topCities: [],
+      deviceBreakdown: [],
+      osBreakdown: [],
+      browserBreakdown: [],
+      consentBreakdown: [],
+    }
+
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/visitors?${qs.toString()}`, {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+        next: { revalidate: 0 },
+      })
+      if (res.ok) {
+        const json = await res.json()
+        return {
+          summary: json.summary || emptySummary,
+          data: Array.isArray(json.data) ? json.data : [],
+          count: Number(json.count || 0),
+        }
+      }
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to fetch visitors:", err)
+    }
+    return { summary: emptySummary, data: [], count: 0 }
+  },
+
+  async deleteVisitor(id: string): Promise<boolean> {
+    const apiUrl = getPasaxApiUrl()
+    try {
+      const res = await fetch(`${apiUrl}/api/v1/visitors/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        headers: { Accept: "application/json" },
+      })
+      return res.ok
+    } catch (err) {
+      console.warn("[PasaxCloud] Failed to delete visitor:", err)
       return false
     }
   },

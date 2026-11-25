@@ -39,6 +39,17 @@ export function PublicFooter() {
               {link.text}
             </Link>
           ))}
+          <button
+            type="button"
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("pasax:open-cookie-settings")
+              )
+            }
+            className="inline-flex h-9 cursor-pointer items-center px-2.5 text-sm transition-none hover:bg-lp-ink hover:text-lp-paper focus-visible:bg-lp-ink focus-visible:text-lp-paper focus-visible:outline-none"
+          >
+            Cookie
+          </button>
         </nav>
         <p className="text-sm text-lp-ink-2">
           MIT licensed. Built by{" "}

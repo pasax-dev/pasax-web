@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { SessionProvider } from "@/components/auth/session-provider"
 import { SearchProvider } from "@/components/search/search-provider"
+import { VisitorConsentTracker } from "@/components/visitor-consent-tracker"
 import { siteConfig } from "@/config/site"
 
 const THEME_INIT_SCRIPT = `(function(){try{var s=localStorage.getItem('theme')||'dark';var t=s==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):s;var r=document.documentElement;r.classList.remove('light','dark');if(t==='light'||t==='dark'){r.classList.add(t);r.style.colorScheme=t;}}catch(e){document.documentElement.classList.add('dark');}})();`
@@ -151,7 +152,10 @@ export default function RootLayout({
         >
           <SessionProvider>
             <TooltipProvider>
-              <SearchProvider>{children}</SearchProvider>
+              <SearchProvider>
+                {children}
+                <VisitorConsentTracker />
+              </SearchProvider>
             </TooltipProvider>
           </SessionProvider>
         </ThemeProvider>
