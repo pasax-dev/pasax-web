@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-const links = [
+const links: { text: string; href: string; external?: boolean }[] = [
   { text: "Tutorial", href: "/tutorial" },
   { text: "Docs", href: "/docs" },
   { text: "Threat Map", href: "/threats-map" },
@@ -43,7 +43,7 @@ export function PublicFooter() {
         <p className="text-sm text-lp-ink-2">
           MIT licensed. Built by{" "}
           <a
-            href="https://github.com/pasax-dev"
+            href="#"
             target="_blank"
             rel="noreferrer noopener"
             className="underline decoration-lp-line-strong underline-offset-4 hover:text-lp-ink"
