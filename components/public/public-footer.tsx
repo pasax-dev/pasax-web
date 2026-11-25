@@ -5,13 +5,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const links = [
+  { text: "Tutorial", href: "/tutorial" },
   { text: "Docs", href: "/docs" },
   { text: "Threat Map", href: "/threats-map" },
   { text: "Sentinel", href: "/docs/pasax-sentinel" },
   { text: "Shield WAF", href: "/docs/pasax-secure-monitor" },
   { text: "Changelog", href: "/changelog" },
   { text: "FAQ", href: "/faq" },
-  { text: "GitHub", href: "https://github.com/pasax-dev", external: true },
   { text: "Privacy", href: "/privacy" },
   { text: "Terms", href: "/terms" },
 ]

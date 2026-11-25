@@ -14,6 +14,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/tutorial`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/docs`,
       lastModified: now,
       changeFrequency: "daily",
@@ -24,6 +30,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "hourly",
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/faq`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/changelog`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/privacy`,
@@ -40,12 +58,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   // Product routes
-  const productRoutes: MetadataRoute.Sitemap = Object.keys(PRODUCTS_CONFIG).map((prodKey) => ({
-    url: `${baseUrl}/docs/${prodKey}`,
-    lastModified: now,
-    changeFrequency: "weekly" as const,
-    priority: 0.85,
-  }))
+  const productRoutes: MetadataRoute.Sitemap = Object.keys(PRODUCTS_CONFIG).map(
+    (prodKey) => ({
+      url: `${baseUrl}/docs/${prodKey}`,
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.85,
+    })
+  )
 
   // Documentation article routes
   const docRoutes: MetadataRoute.Sitemap = ALL_DOCS.map((doc) => ({

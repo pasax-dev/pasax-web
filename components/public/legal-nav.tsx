@@ -3,13 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  Scale,
-  ShieldCheck,
-  ArrowRight,
-  BookOpen,
-  HelpCircle,
-} from "lucide-react"
+import { Scale, ShieldCheck, BookOpen, HelpCircle, Compass } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export function LegalNav() {
@@ -17,18 +11,18 @@ export function LegalNav() {
 
   const tabs = [
     {
-      label: "Terms of Service",
-      sub: "Ketentuan Layanan & Tanggung Jawab Root",
-      href: "/terms",
-      icon: Scale,
-      active: pathname === "/terms",
+      label: "Tutorial",
+      sub: "Panduan Langkah Demi Langkah",
+      href: "/tutorial",
+      icon: Compass,
+      active: pathname === "/tutorial",
     },
     {
-      label: "Privacy Policy",
-      sub: "Privasi Telemetri & Zero-Knowledge",
-      href: "/privacy",
-      icon: ShieldCheck,
-      active: pathname === "/privacy",
+      label: "FAQ",
+      sub: "Pertanyaan Umum & Jawaban",
+      href: "/faq",
+      icon: HelpCircle,
+      active: pathname === "/faq",
     },
     {
       label: "Changelog",
@@ -38,11 +32,18 @@ export function LegalNav() {
       active: pathname === "/changelog",
     },
     {
-      label: "FAQ",
-      sub: "Pertanyaan Umum & Jawaban",
-      href: "/faq",
-      icon: HelpCircle,
-      active: pathname === "/faq",
+      label: "Privacy Policy",
+      sub: "Privasi Telemetri & Zero-Knowledge",
+      href: "/privacy",
+      icon: ShieldCheck,
+      active: pathname === "/privacy",
+    },
+    {
+      label: "Terms of Service",
+      sub: "Ketentuan Layanan & Tanggung Jawab Root",
+      href: "/terms",
+      icon: Scale,
+      active: pathname === "/terms",
     },
   ]
 

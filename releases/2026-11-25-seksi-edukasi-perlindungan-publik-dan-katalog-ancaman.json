@@ -10,10 +10,15 @@
     "en": "Threat Catalog, Multi-Account Isolation & Multi-Config Web Terminal"
   },
   "body": {
-    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, serta fitur Konsol Terminal Server di peramban yang mendukung penyimpanan banyak konfigurasi terverifikasi dan mode layar penuh penuh.",
-    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, and a browser-based Server Terminal supporting multiple saved verified access profiles and clean fullscreen mode."
+    "id": "Menghadirkan katalog 12 vektor ancaman di beranda publik, halaman Tutorial Tahap Demi Tahap interaktif, model langganan 2 paket dengan uji coba Pro 14 hari, isolasi data ketat per akun dan tim pengelola, penyeragaman tautan resmi ke pasax.web.id, serta Konsol Terminal Server di peramban yang mendukung penyimpanan banyak konfigurasi terverifikasi dan mode layar penuh.",
+    "en": "Delivered an interactive 12-vector threat defense catalog on the public homepage, an interactive Step-by-Step Onboarding Tutorial page, a streamlined 2-tier subscription model with a 14-day Pro trial, strict per-account and team data isolation, unified links to pasax.web.id, and a browser-based Server Terminal supporting multiple saved verified access profiles and clean fullscreen mode."
   },
   "items": [
+    {
+      "type": "new",
+      "id": "Halaman Tutorial Tahap Demi Tahap Interaktif: Panduan lengkap dari nol mulai pendaftaran uji coba Pro 14 hari, instalasi agen pelindung di server Linux, integrasi pengaman aplikasi web, pengelolaan multi-konfigurasi Terminal Web, delegasi tim, hingga simulasi uji keamanan dengan daftar periksa kemajuan dan kustomisasi perintah langsung.",
+      "en": "Interactive Step-by-Step Onboarding Tutorial: Guided walkthrough from 14-day Pro trial registration, Linux server agent installation, web application defense setup, multi-profile Web Terminal access, team delegation, to safe security verification tests with progress checklists and live command customization."
+    },
     {
       "type": "new",
       "id": "Katalog Interaktif Penanganan Ancaman: Penyajian 12 vektor ancaman nyata (SQLi, XSS, RCE, DDoS, Shodan recon, honeypot decoy, kebocoran berkas rahasia, hingga OOM crash) lengkap dengan skenario masalah dan solusi otomatis Pasak.",

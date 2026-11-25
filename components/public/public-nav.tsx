@@ -19,6 +19,7 @@ import {
   LogIn,
   UserPlus,
   LayoutDashboard,
+  Compass,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SearchTrigger } from "@/components/search/search-trigger"
@@ -75,7 +76,15 @@ export function PublicNav() {
             className="hidden items-center gap-1 md:flex"
           >
             {/* Documentation Mega-Menu Dropdown */}
-            <div className="relative" ref={dropdownRef} onMouseEnter={() => setDocsDropdownOpen(true)} onMouseLeave={() => setDocsDropdownOpen(false)}>
+            <div
+              className="relative"
+
+              ref={dropdownRef}
+
+              onMouseEnter={() => setDocsDropdownOpen(true)}
+
+              onMouseLeave={() => setDocsDropdownOpen(false)}
+            >
               <button
                 type="button"
                 onClick={() => setDocsDropdownOpen((v) => !v)}
@@ -95,9 +104,7 @@ export function PublicNav() {
               </button>
 
               {docsDropdownOpen && (
-                <div
-                  className="absolute top-full left-0 mt-1 w-[640px] animate-in rounded-xl border border-lp-line bg-lp-paper p-3 shadow-2xl transition-all fade-in-0 zoom-in-95"
-                >
+                <div className="absolute top-full left-0 mt-1 w-[640px] animate-in rounded-xl border border-lp-line bg-lp-paper p-3 shadow-2xl transition-all fade-in-0 zoom-in-95">
                   <div className="grid grid-cols-12 gap-3">
                     {/* Left Preview Card */}
                     <Link
@@ -224,8 +231,21 @@ export function PublicNav() {
                       </Link>
                     </div>
 
-                    {/* Bottom Full-Width Bar: Changelog / Release Notes */}
-                    <div className="col-span-12 border-t border-lp-line pt-2">
+                    {/* Bottom Full-Width Bar: Tutorial & Changelog */}
+                    <div className="col-span-12 grid grid-cols-2 gap-2 border-t border-lp-line pt-2">
+                      <Link
+                        href="/tutorial"
+                        onClick={() => setDocsDropdownOpen(false)}
+                        className="group flex items-center justify-between rounded-lg p-2 text-xs text-lp-ink-2 transition-colors hover:bg-lp-paper-2 hover:text-lp-ink"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Compass className="size-3.5 text-lp-orange" />
+                          <span className="font-medium text-lp-ink">
+                            Tutorial Bertahap
+                          </span>
+                        </div>
+                        <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                      </Link>
                       <Link
                         href="/changelog"
                         onClick={() => setDocsDropdownOpen(false)}
@@ -234,10 +254,7 @@ export function PublicNav() {
                         <div className="flex items-center gap-2">
                           <History className="size-3.5 text-lp-orange" />
                           <span className="font-medium text-lp-ink">
-                            Changelog &amp; Release Notes
-                          </span>
-                          <span className="text-[11px] text-lp-ink-2">
-                            &bull; Latest security patches and advisories
+                            Changelog &amp; Releases
                           </span>
                         </div>
                         <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
@@ -249,6 +266,13 @@ export function PublicNav() {
             </div>
 
             {/* Direct Links */}
+            <Link
+              href="/tutorial"
+              className="inline-flex h-8 items-center px-2.5 text-xs font-medium text-lp-ink-2 transition-colors hover:text-lp-ink"
+            >
+              Tutorial
+            </Link>
+
             <Link
               href="/threats-map"
               className="inline-flex h-8 items-center px-2.5 text-xs font-medium text-lp-ink-2 transition-colors hover:text-lp-ink"
@@ -283,24 +307,6 @@ export function PublicNav() {
           {/* Global Fumadocs Search */}
           <SearchTrigger variant="navbar" className="hidden sm:inline-flex" />
           <SearchTrigger variant="icon" className="sm:hidden" />
-
-          {/* GitHub Icon Link */}
-          <a
-            href="https://github.com/pasax-dev"
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="GitHub Repository"
-            className="inline-flex size-8 items-center justify-center rounded-lg border border-lp-line bg-lp-paper text-lp-ink transition-colors hover:bg-lp-paper-2"
-          >
-            <svg
-              role="img"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="size-4"
-            >
-              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-            </svg>
-          </a>
 
           {/* Clean Theme Toggle */}
           <ThemeToggle />
@@ -361,6 +367,15 @@ export function PublicNav() {
             />
 
             <nav className="flex flex-col gap-1 pt-2">
+              <Link
+                href="/tutorial"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 rounded-lg p-2 text-xs font-medium text-lp-ink hover:bg-lp-paper-2"
+              >
+                <Compass className="size-4 text-lp-orange" />
+                <span>Tutorial Tahap Demi Tahap</span>
+              </Link>
+
               <Link
                 href="/docs"
                 onClick={() => setMobileMenuOpen(false)}
